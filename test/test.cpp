@@ -10,17 +10,23 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-
-TEST_CASE("reading vector tiles") {
-
-    std::string filename("./test/14_8716_8015.vector.pbf");
-    std::ifstream stream(filename.c_str(),std::ios_base::in|std::ios_base::binary);
+std::string get_file_data(const std::string& filename) {
+    std::ifstream stream(filename.c_str(), std::ios_base::in|std::ios_base::binary);
     if (!stream.is_open())
     {
         throw std::runtime_error("could not open: '" + filename + "'");
     }
     std::string buffer(std::istreambuf_iterator<char>(stream.rdbuf()), (std::istreambuf_iterator<char>()));
     stream.close();
+
+    return buffer;
+}
+
+
+TEST_CASE("reading vector tiles") {
+
+    std::string buffer = get_file_data("./test/14_8716_8015.vector.pbf");
+
     mapbox::util::pbf item(buffer.data(), buffer.size());
 
     std::vector<std::string> layer_names;

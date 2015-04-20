@@ -5,12 +5,14 @@ LDFLAGS := $(LDFLAGS)
 
 OS:=$(shell uname -s)
 ifeq ($(OS),Darwin)
-	CXXFLAGS += -stdlib=libc++
-	LDFLAGS += -stdlib=libc++
+    CXXFLAGS += -stdlib=libc++
+    LDFLAGS += -stdlib=libc++
 endif
 
-./test/test: test/test.cpp pbf.hpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) test/test.cpp -o ./test/test -lz
+UNIT_TESTS=$(wildcard test/t/*/runtest.cpp)
+
+./test/test: test/test.cpp pbf.hpp $(UNIT_TESTS)
+	$(CXX) -Itest $(CXXFLAGS) $(LDFLAGS) test/test.cpp $(UNIT_TESTS) -o ./test/test -lz
 
 test: ./test/test
 	./test/test
