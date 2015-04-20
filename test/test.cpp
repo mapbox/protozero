@@ -7,8 +7,11 @@
 
 #include "../pbf.hpp"
 
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
 
-int main() {
+
+TEST_CASE("reading vector tiles") {
 
     std::string filename("./test/14_8716_8015.vector.pbf");
     std::ifstream stream(filename.c_str(),std::ios_base::in|std::ios_base::binary);
@@ -16,10 +19,11 @@ int main() {
     {
         throw std::runtime_error("could not open: '" + filename + "'");
     }
-    std::string buffer(std::istreambuf_iterator<char>(stream.rdbuf()),(std::istreambuf_iterator<char>()));
+    std::string buffer(std::istreambuf_iterator<char>(stream.rdbuf()), (std::istreambuf_iterator<char>()));
     stream.close();
     mapbox::util::pbf item(buffer.data(), buffer.size());
-    std::clog << "layer names:\n";
+
+    std::vector<std::string> layer_names;
     while (item.next()) {
         // it's a layer according to
         // https://github.com/mapbox/mapnik-vector-tile/blob/master/proto/vector_tile.proto
@@ -27,7 +31,7 @@ int main() {
             mapbox::util::pbf layermsg { item.message() };
             while (layermsg.next()) {
                 if (layermsg.tag == 1) {
-                    std::clog << "\t" << layermsg.string() << "\n";
+                    layer_names.push_back(layermsg.string());
                 } else {
                     layermsg.skip();
                 }
@@ -36,5 +40,15 @@ int main() {
             item.skip();
         }
     }
+
+    std::vector<std::string> expected_layer_names = {
+        "landuse", "waterway", "water", "aeroway", "barrier_line", "building",
+        "landuse_overlay", "tunnel", "road", "bridge", "admin",
+        "country_label_line", "country_label", "marine_label", "state_label",
+        "place_label", "water_label", "area_label", "rail_station_label",
+        "airport_label", "road_label", "waterway_label", "building_label"
+    };
+
+    REQUIRE(layer_names == expected_layer_names);
 }
 

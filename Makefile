@@ -9,7 +9,7 @@ ifeq ($(OS),Darwin)
 	LDFLAGS += -stdlib=libc++
 endif
 
-./test/test: pbf.hpp
+./test/test: test/test.cpp pbf.hpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) test/test.cpp -o ./test/test -lz
 
 test: ./test/test
