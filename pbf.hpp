@@ -91,7 +91,7 @@ bool pbf::next(uint32_t requested_tag) {
 
 template <typename T>
 T pbf::varint() {
-    char byte = 0x80;
+    char byte = static_cast<char>(0x80);
     T result = 0;
     int bitpos;
     for (bitpos = 0; bitpos < 70 && (byte & 0x80); bitpos += 7) {
