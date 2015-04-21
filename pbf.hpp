@@ -43,7 +43,6 @@ public:
 
     PBF_INLINE bool next();
     PBF_INLINE uint64_t varint();
-    PBF_INLINE uint64_t varint2();
     PBF_INLINE int64_t svarint();
     PBF_INLINE std::string string();
     PBF_INLINE float float32();
@@ -90,42 +89,6 @@ uint64_t message::varint()
     }
 
     return result;
-}
-
-static const int8_t kMaxVarintLength64 = 10;
-
-uint64_t message::varint2() {
-  const int8_t* begin = reinterpret_cast<const int8_t*>(data_);
-  const int8_t* iend = reinterpret_cast<const int8_t*>(end_);
-  const int8_t* p = begin;
-  uint64_t val = 0;
-
-  if (LIKELY(iend - begin >= kMaxVarintLength64)) {  // fast path
-    int64_t b;
-    do {
-      b = *p++; val  = static_cast<uint64_t>((b & 0x7f)     ); if (b >= 0) break;
-      b = *p++; val |= static_cast<uint64_t>((b & 0x7f) <<  7); if (b >= 0) break;
-      b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 14); if (b >= 0) break;
-      b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 21); if (b >= 0) break;
-      b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 28); if (b >= 0) break;
-      b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 35); if (b >= 0) break;
-      b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 42); if (b >= 0) break;
-      b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 49); if (b >= 0) break;
-      b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 56); if (b >= 0) break;
-      b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 63); if (b >= 0) break;
-      throw std::invalid_argument("Invalid varint value");  // too big
-    } while (false);
-  } else {
-    int shift = 0;
-    while (p != iend && *p < 0) {
-      val |= static_cast<uint64_t>(*p++ & 0x7f) << shift;
-      shift += 7;
-    }
-    if (p == iend) throw std::invalid_argument("Invalid varint value");
-    val |= static_cast<uint64_t>(*p++) << shift;
-  }
-  data_ = reinterpret_cast<value_type>(p);
-  return val;
 }
 
 int64_t message::svarint()
