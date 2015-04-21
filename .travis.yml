@@ -3,8 +3,8 @@ language: cpp
 sudo: required
 
 os:
-  - linux
-  - osx
+ - linux
+ - osx
 
 compiler:
  - clang
@@ -16,7 +16,7 @@ matrix:
        compiler: gcc
 
 before_install:
- - curl https://raw.githubusercontent.com/mapbox/mason/master/scripts/setup_cpp11_toolchain.sh -o ./cpp11 && source ./cpp11
+ - curl --silent https://raw.githubusercontent.com/mapbox/mason/master/scripts/setup_cpp11_toolchain.sh -o ./cpp11 && source ./cpp11
 
 install:
  - make
