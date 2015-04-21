@@ -1,5 +1,5 @@
-#ifndef MBGL_UTIL_PBF
-#define MBGL_UTIL_PBF
+#ifndef MAPBOX_UTIL_PBF_HPP
+#define MAPBOX_UTIL_PBF_HPP
 
 /*
  * Some parts are from upb - a minimalist implementation of protocol buffers.
@@ -8,10 +8,11 @@
  * Author: Josh Haberman <jhaberman@gmail.com>
  */
 
-#include <string>
 #include <cstring>
+#include <exception>
+#include <string>
 
-namespace mbgl {
+namespace mapbox { namespace util {
 
 struct pbf {
     struct exception : std::exception { const char *what() const noexcept { return "pbf exception"; } };
@@ -179,6 +180,6 @@ void pbf::skipBytes(uint32_t bytes) {
     data += bytes;
 }
 
-} // end namespace mbgl
+}} // end namespace mapbox::util
 
-#endif
+#endif // MAPBOX_UTIL_PBF_HPP
