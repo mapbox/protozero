@@ -1,5 +1,5 @@
-#ifndef __PBF_HPP__
-#define __PBF_HPP__
+#ifndef MBGL_UTIL_PBF
+#define MBGL_UTIL_PBF
 
 /*
  * Some parts are from upb - a minimalist implementation of protocol buffers.
@@ -8,136 +8,152 @@
  * Author: Josh Haberman <jhaberman@gmail.com>
  */
 
-#include <stdint.h>
-#include <stdexcept>
 #include <string>
 #include <cstring>
-#include <cassert>
 
-#undef LIKELY
-#undef UNLIKELY
+namespace mbgl {
 
-#if defined(__GNUC__) && __GNUC__ >= 4
-#define LIKELY(x)   (__builtin_expect((x), 1))
-#define UNLIKELY(x) (__builtin_expect((x), 0))
-#else
-#define LIKELY(x)   (x)
-#define UNLIKELY(x) (x)
-#endif
+struct pbf {
+    struct exception : std::exception { const char *what() const noexcept { return "pbf exception"; } };
+    struct unterminated_varint_exception : exception { const char *what() const noexcept { return "pbf unterminated varint exception"; } };
+    struct varint_too_long_exception : exception { const char *what() const noexcept { return "pbf varint too long exception"; } };
+    struct unknown_field_type_exception : exception { const char *what() const noexcept { return "pbf unknown field type exception"; } };
+    struct end_of_buffer_exception : exception { const char *what() const noexcept { return "pbf end of buffer exception"; } };
 
-namespace protobuf {
+    inline pbf(const unsigned char *data, size_t length);
+    inline pbf();
 
-#define FORCEINLINE inline __attribute__((always_inline))
-#define NOINLINE __attribute__((noinline))
-#define PBF_INLINE FORCEINLINE
+    inline operator bool() const;
 
-class message {
-    typedef const char * value_type;
-    value_type data_;
-    value_type end_;
-public:
-    uint64_t value;
-    uint32_t tag;
+    inline bool next();
+    inline bool next(uint32_t tag);
+    template <typename T = uint32_t> inline T varint();
+    template <typename T = uint32_t> inline T svarint();
 
-    PBF_INLINE message(value_type data, std::size_t length);
+    template <typename T = uint32_t, int bytes = 4> inline T fixed();
+    inline float float32();
+    inline double float64();
 
-    PBF_INLINE bool next();
-    PBF_INLINE uint64_t varint();
-    PBF_INLINE int64_t svarint();
-    PBF_INLINE std::string string();
-    PBF_INLINE float float32();
-    PBF_INLINE double float64();
-    PBF_INLINE int64_t int64();
-    PBF_INLINE bool boolean();
-    PBF_INLINE void skip();
-    PBF_INLINE void skipValue(uint64_t val);
-    PBF_INLINE void skipBytes(uint64_t bytes);
-    PBF_INLINE value_type getData();
+    inline std::string string();
+    inline bool boolean();
+
+    inline pbf message();
+
+    inline void skip();
+    inline void skipValue(uint32_t val);
+    inline void skipBytes(uint32_t bytes);
+
+    const uint8_t *data = nullptr;
+    const uint8_t *end = nullptr;
+    uint32_t value = 0;
+    uint32_t tag = 0;
 };
 
-message::message(value_type data, std::size_t length)
-    : data_(data),
-      end_(data + length)
-{
+pbf::pbf(const unsigned char *data_, size_t length)
+    : data(data_),
+      end(data_ + length),
+      value(0),
+      tag(0) {
 }
 
-bool message::next()
-{
-    if (data_ < end_) {
-        value = varint();
-        tag = static_cast<uint32_t>(value >> 3);
+pbf::pbf()
+    : data(nullptr),
+      end(nullptr),
+      value(0),
+      tag(0) {
+}
+
+
+pbf::operator bool() const {
+    return data < end;
+}
+
+bool pbf::next() {
+    if (data < end) {
+        value = static_cast<uint32_t>(varint());
+        tag = value >> 3;
         return true;
     }
     return false;
 }
 
+bool pbf::next(uint32_t requested_tag) {
+    while (next()) {
+        if (tag == requested_tag) {
+            return true;
+        } else {
+            skip();
+        }
+    }
+    return false;
+}
 
-uint64_t message::varint()
-{
-    int8_t byte = static_cast<int8_t>(0x80);
-    uint64_t result = 0;
+template <typename T>
+T pbf::varint() {
+    uint8_t byte = 0x80;
+    T result = 0;
     int bitpos;
     for (bitpos = 0; bitpos < 70 && (byte & 0x80); bitpos += 7) {
-        if (data_ >= end_) {
-            throw std::runtime_error("unterminated varint, unexpected end of buffer");
+        if (data >= end) {
+            throw unterminated_varint_exception();
         }
-        result |= ((uint64_t)(byte = *data_) & 0x7F) << bitpos;
-        data_++;
+        result |= ((T)(byte = *data) & 0x7F) << bitpos;
+
+        data++;
     }
     if (bitpos == 70 && (byte & 0x80)) {
-        throw std::runtime_error("unterminated varint (too long)");
+        throw varint_too_long_exception();
     }
 
     return result;
 }
 
-int64_t message::svarint()
-{
-    uint64_t n = varint();
-    return (n >> 1) ^ -static_cast<int64_t>((n & 1));
+template <typename T>
+T pbf::svarint() {
+    T n = varint<T>();
+    return (n >> 1) ^ -(T)(n & 1);
 }
 
-std::string message::string()
-{
-    uint64_t len = varint();
-    value_type string = static_cast<value_type>(data_);
-    skipBytes(len);
-    return std::string(string, len);
-}
-
-float message::float32()
-{
-    skipBytes(4);
-    float result;
-    std::memcpy(&result, data_ - 4, 4);
-    return result;
-}
-double message::float64()
-{
-    skipBytes(8);
-    double result;
-    std::memcpy(&result, data_ - 8, 8);
+template <typename T, int bytes>
+T pbf::fixed() {
+    skipBytes(bytes);
+    T result;
+    memcpy(&result, data - bytes, bytes);
     return result;
 }
 
-int64_t message::int64()
-{
-    return (int64_t)varint();
+float pbf::float32() {
+    return fixed<float, 4>();
 }
 
-bool message::boolean()
-{
+double pbf::float64() {
+    return fixed<double, 8>();
+}
+
+std::string pbf::string() {
+    uint32_t bytes = static_cast<uint32_t>(varint());
+    const char *string_data = reinterpret_cast<const char*>(data);
+    skipBytes(bytes);
+    return std::string(string_data, bytes);
+}
+
+bool pbf::boolean() {
     skipBytes(1);
-    return *(bool *)(data_ - 1);
+    return *(bool *)(data - 1);
 }
 
-void message::skip()
-{
+pbf pbf::message() {
+    uint32_t bytes = static_cast<uint32_t>(varint());
+    const uint8_t *pos = data;
+    skipBytes(bytes);
+    return pbf(pos, bytes);
+}
+
+void pbf::skip() {
     skipValue(value);
 }
 
-void message::skipValue(uint64_t val)
-{
+void pbf::skipValue(uint32_t val) {
     switch (val & 0x7) {
         case 0: // varint
             varint();
@@ -146,31 +162,23 @@ void message::skipValue(uint64_t val)
             skipBytes(8);
             break;
         case 2: // string/message
-            skipBytes(varint());
+            skipBytes(static_cast<uint32_t>(varint()));
             break;
         case 5: // 32 bit
             skipBytes(4);
             break;
         default:
-            char msg[80];
-            snprintf(msg, 80, "cannot skip unknown type %lld", val & 0x7);
-            throw std::runtime_error(msg);
+            throw unknown_field_type_exception();
     }
 }
 
-void message::skipBytes(uint64_t bytes)
-{
-    data_ += bytes;
-    if (data_ > end_) {
-        throw std::runtime_error("unexpected end of buffer");
+void pbf::skipBytes(uint32_t bytes) {
+    if (data + bytes > end) {
+        throw end_of_buffer_exception();
     }
+    data += bytes;
 }
 
-message::value_type message::getData()
-{
-  return data_;
-}
+} // end namespace mbgl
 
-}
-
-#endif // __PBF_HPP__
+#endif
