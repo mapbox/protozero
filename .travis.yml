@@ -1,6 +1,6 @@
 language: cpp
 
-sudo: false
+sudo: required
 
 os:
   - linux
@@ -17,8 +17,12 @@ matrix:
 
 before_install:
  - curl https://raw.githubusercontent.com/mapbox/mason/master/scripts/setup_cpp11_toolchain.sh -o ./cpp11 && source ./cpp11
+
 install:
  - make
 
-script:
+before_script:
  - make test
+
+script:
+ - ./scripts/${TRAVIS_OS_NAME}.sh

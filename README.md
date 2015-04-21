@@ -7,6 +7,7 @@ This is header-only, meaning there is nothing to build. Just include it in your 
 Low-level: this is designed to be a building block for writing a very customized, lazy decoder for a stable protobuf schema. If your protobuf schema is changing frequently or lazy decoding is not critical for your application then this approach offers no value: just use the decoding API available via the C++ API that can be generated via the Google Protobufs `protoc` program.
 
 [![Build Status](https://travis-ci.org/mapbox/pbf.hpp.svg?branch=master)](https://travis-ci.org/mapbox/pbf.hpp)
+[![Coverage Status](https://coveralls.io/repos/mapbox/pbf.hpp/badge.svg?branch=master)](https://coveralls.io/r/mapbox/pbf.hpp?branch=master)
 
 ## Depends
 
