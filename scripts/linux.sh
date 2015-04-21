@@ -7,7 +7,7 @@ if [[ ${CXX} =~ "clang" ]]; then
     make clean
     make coverage
     ./out/cov-test
-    cp unit*gc* test/
+    cp *gc* test/
     sudo pip install cpp-coveralls
     coveralls -i pbf.hpp --gcov-options '\-lp'
 else
