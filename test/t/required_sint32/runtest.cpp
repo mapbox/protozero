@@ -6,7 +6,7 @@ TEST_CASE("required_sint32") {
     SECTION("positive") {
         std::string buffer = get_file_data("test/t/required_sint32/data1.bin");
 
-        protobuf::message item(buffer.data(), buffer.size());
+        mapbox::util::pbf item(buffer.data(), buffer.size());
 
         while (item.next()) {
             REQUIRE(item.svarint() == 17);
@@ -16,7 +16,7 @@ TEST_CASE("required_sint32") {
     SECTION("negativ") {
         std::string buffer = get_file_data("test/t/required_sint32/data2.bin");
 
-        protobuf::message item(buffer.data(), buffer.size());
+        mapbox::util::pbf item(buffer.data(), buffer.size());
 
         while (item.next()) {
             REQUIRE(item.svarint() == -1);
