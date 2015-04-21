@@ -1,6 +1,6 @@
 language: cpp
 
-sudo: false
+sudo: required
 
 os:
  - linux
@@ -21,6 +21,8 @@ before_install:
 install:
  - make
 
-script:
+before_script:
  - make test
 
+script:
+ - ./scripts/${TRAVIS_OS_NAME}.sh
