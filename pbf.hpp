@@ -21,7 +21,7 @@ struct pbf {
     struct unknown_field_type_exception : exception { const char *what() const noexcept { return "pbf unknown field type exception"; } };
     struct end_of_buffer_exception : exception { const char *what() const noexcept { return "pbf end of buffer exception"; } };
 
-    inline pbf(const unsigned char *data, size_t length);
+    inline pbf(const char *data, size_t length);
     inline pbf();
 
     inline operator bool() const;
@@ -44,13 +44,13 @@ struct pbf {
     inline void skipValue(uint32_t val);
     inline void skipBytes(uint32_t bytes);
 
-    const uint8_t *data = nullptr;
-    const uint8_t *end = nullptr;
+    const char *data = nullptr;
+    const char *end = nullptr;
     uint32_t value = 0;
     uint32_t tag = 0;
 };
 
-pbf::pbf(const unsigned char *data_, size_t length)
+pbf::pbf(const char *data_, size_t length)
     : data(data_),
       end(data_ + length),
       value(0),
@@ -91,7 +91,7 @@ bool pbf::next(uint32_t requested_tag) {
 
 template <typename T>
 T pbf::varint() {
-    uint8_t byte = 0x80;
+    char byte = 0x80;
     T result = 0;
     int bitpos;
     for (bitpos = 0; bitpos < 70 && (byte & 0x80); bitpos += 7) {
@@ -145,7 +145,7 @@ bool pbf::boolean() {
 
 pbf pbf::message() {
     uint32_t bytes = static_cast<uint32_t>(varint());
-    const uint8_t *pos = data;
+    const char *pos = data;
     skipBytes(bytes);
     return pbf(pos, bytes);
 }

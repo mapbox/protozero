@@ -18,7 +18,7 @@ int main() {
     }
     std::string buffer(std::istreambuf_iterator<char>(stream.rdbuf()),(std::istreambuf_iterator<char>()));
     stream.close();
-    mapbox::util::pbf item(reinterpret_cast<const unsigned char*>(buffer.data()), buffer.size());
+    mapbox::util::pbf item(buffer.data(), buffer.size());
     std::clog << "layer names:\n";
     while (item.next()) {
         // it's a layer according to
