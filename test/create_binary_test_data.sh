@@ -9,7 +9,7 @@
 for dir in t/*; do
     cd $dir
     protoc --cpp_out=. testcase.proto
-    $CXX -std=c++11 -o testcase testcase.cpp testcase.pb.cc -lprotobuf -pthreads
+    $CXX -std=c++11 -o testcase testcase.cpp testcase.pb.cc -lprotobuf-lite -pthreads
     ./testcase
     cd ../..
 done
