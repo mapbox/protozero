@@ -22,7 +22,10 @@ struct pbf {
     struct end_of_buffer_exception : exception { const char *what() const noexcept { return "pbf end of buffer exception"; } };
 
     inline pbf(const char *data, size_t length);
-    inline pbf();
+    inline pbf() = default;
+
+    inline int wire_type() const;
+    inline bool is_wire_type(int type) const;
 
     inline operator bool() const;
 
@@ -57,13 +60,13 @@ pbf::pbf(const char *data_, size_t length)
       tag(0) {
 }
 
-pbf::pbf()
-    : data(nullptr),
-      end(nullptr),
-      value(0),
-      tag(0) {
+int pbf::wire_type() const {
+    return value & 0x7;
 }
 
+bool pbf::is_wire_type(int type) const {
+    return wire_type() == type;
+}
 
 pbf::operator bool() const {
     return data < end;
