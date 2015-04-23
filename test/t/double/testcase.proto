@@ -1,0 +1,9 @@
+
+package TestDouble;
+
+message Test {
+
+    required double x = 1;
+
+}
+

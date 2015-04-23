@@ -1,0 +1,9 @@
+
+package TestString;
+
+message Test {
+
+    required string s = 1;
+
+}
+
