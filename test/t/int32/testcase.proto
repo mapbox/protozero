@@ -1,5 +1,5 @@
 
-package TestRequiredInt32;
+package TestInt32;
 
 message Test {
 

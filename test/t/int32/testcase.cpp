@@ -5,7 +5,7 @@
 #include "testcase.pb.h"
 
 int main(int c, char *argv[]) {
-    TestRequiredSInt32::Test msg;
+    TestInt32::Test msg;
     msg.set_i(17);
 
     std::string out;

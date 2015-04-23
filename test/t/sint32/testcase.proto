@@ -1,5 +1,5 @@
 
-package TestRequiredSInt32;
+package TestSInt32;
 
 message Test {
 

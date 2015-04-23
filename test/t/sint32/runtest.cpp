@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("required_sint32") {
+TEST_CASE("sint32") {
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/required_sint32/data1.bin");
+        std::string buffer = get_file_data("test/t/sint32/data1.bin");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -13,8 +13,8 @@ TEST_CASE("required_sint32") {
         }
     }
 
-    SECTION("negativ") {
-        std::string buffer = get_file_data("test/t/required_sint32/data2.bin");
+    SECTION("negative") {
+        std::string buffer = get_file_data("test/t/sint32/data2.bin");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
