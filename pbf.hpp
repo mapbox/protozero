@@ -143,9 +143,9 @@ double pbf::float64() {
 std::string pbf::string() {
     assert(is_wire_type(2) && "not a string");
     uint32_t bytes = static_cast<uint32_t>(varint());
-    const char *string_data = reinterpret_cast<const char*>(data);
+    const char *pos = data;
     skipBytes(bytes);
-    return std::string(string_data, bytes);
+    return std::string(pos, bytes);
 }
 
 bool pbf::boolean() {
