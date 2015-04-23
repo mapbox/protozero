@@ -152,7 +152,7 @@ bool pbf::boolean() {
     assert(is_wire_type(0) && "not a varint");
     assert((*data & 0x80) == 0 && "not a 1 byte varint");
     skipBytes(1);
-    return *(bool *)(data - 1);
+    return data[-1] != 0;
 }
 
 pbf pbf::message() {
