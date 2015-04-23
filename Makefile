@@ -15,7 +15,7 @@ endif
 UNIT_TESTS=$(wildcard test/t/*/runtest.cpp)
 
 ./test/test: test/test.cpp pbf.hpp $(UNIT_TESTS)
-	$(CXX) -Itest $(CXXFLAGS) $(COMMON_FLAGS) $(RELEASE_FLAGS) $(LDFLAGS) test/test.cpp $(UNIT_TESTS) -o ./test/test -lz
+	$(CXX) -Itest $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $(LDFLAGS) test/test.cpp $(UNIT_TESTS) -o ./test/test -lz
 
 test: ./test/test
 	./test/test
