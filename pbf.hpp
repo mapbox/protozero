@@ -8,6 +8,7 @@
  * Author: Josh Haberman <jhaberman@gmail.com>
  */
 
+#include <cassert>
 #include <cstring>
 #include <exception>
 #include <string>
@@ -94,6 +95,7 @@ bool pbf::next(uint32_t requested_tag) {
 
 template <typename T>
 T pbf::varint() {
+    assert((is_wire_type(0) || is_wire_type(2)) && "not a varint");
     char byte = static_cast<char>(0x80);
     T result = 0;
     int bitpos;
@@ -120,6 +122,8 @@ T pbf::svarint() {
 
 template <typename T, int bytes>
 T pbf::fixed() {
+    assert(((is_wire_type(5) && bytes == 4) ||
+            (is_wire_type(1) && bytes == 8)) && "not a fixed of right size");
     skipBytes(bytes);
     T result;
     memcpy(&result, data - bytes, bytes);
@@ -127,14 +131,17 @@ T pbf::fixed() {
 }
 
 float pbf::float32() {
+    assert(is_wire_type(5) && "not a 32-bit fixed");
     return fixed<float, 4>();
 }
 
 double pbf::float64() {
+    assert(is_wire_type(1) && "not a 64-bit fixed");
     return fixed<double, 8>();
 }
 
 std::string pbf::string() {
+    assert(is_wire_type(2) && "not a string");
     uint32_t bytes = static_cast<uint32_t>(varint());
     const char *string_data = reinterpret_cast<const char*>(data);
     skipBytes(bytes);
@@ -142,11 +149,14 @@ std::string pbf::string() {
 }
 
 bool pbf::boolean() {
+    assert(is_wire_type(0) && "not a varint");
+    assert((*data & 0x80) == 0 && "not a 1 byte varint");
     skipBytes(1);
     return *(bool *)(data - 1);
 }
 
 pbf pbf::message() {
+    assert(is_wire_type(2) && "not a message");
     uint32_t bytes = static_cast<uint32_t>(varint());
     const char *pos = data;
     skipBytes(bytes);
