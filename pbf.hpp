@@ -15,7 +15,12 @@
 
 namespace mapbox { namespace util {
 
-struct pbf {
+class pbf {
+
+    template <typename T> inline T fixed();
+
+public:
+
     struct exception : std::exception { const char *what() const noexcept { return "pbf exception"; } };
     struct unterminated_varint_exception : exception { const char *what() const noexcept { return "pbf unterminated varint exception"; } };
     struct varint_too_long_exception : exception { const char *what() const noexcept { return "pbf varint too long exception"; } };
@@ -35,7 +40,11 @@ struct pbf {
     template <typename T = uint32_t> inline T varint();
     template <typename T = uint32_t> inline T svarint();
 
-    template <typename T> inline T fixed();
+    inline uint32_t fixed32();
+    inline int32_t sfixed32();
+    inline uint64_t fixed64();
+    inline int64_t sfixed64();
+
     inline float float32();
     inline double float64();
 
@@ -52,7 +61,8 @@ struct pbf {
     const char *end = nullptr;
     uint32_t value = 0;
     uint32_t tag = 0;
-};
+
+}; // class pbf
 
 pbf::pbf(const char *data_, size_t length)
     : data(data_),
@@ -122,12 +132,30 @@ T pbf::svarint() {
 
 template <typename T>
 T pbf::fixed() {
-    assert(((is_wire_type(5) && sizeof(T) == 4) ||
-            (is_wire_type(1) && sizeof(T) == 8)) && "not a fixed of right size");
     skipBytes(sizeof(T));
     T result;
     memcpy(&result, data - sizeof(T), sizeof(T));
     return result;
+}
+
+uint32_t pbf::fixed32() {
+    assert(is_wire_type(5) && "not a 32-bit fixed");
+    return fixed<uint32_t>();
+}
+
+int32_t pbf::sfixed32() {
+    assert(is_wire_type(5) && "not a 32-bit fixed");
+    return fixed<int32_t>();
+}
+
+uint64_t pbf::fixed64() {
+    assert(is_wire_type(1) && "not a 32-bit fixed");
+    return fixed<uint64_t>();
+}
+
+int64_t pbf::sfixed64() {
+    assert(is_wire_type(1) && "not a 32-bit fixed");
+    return fixed<int64_t>();
 }
 
 float pbf::float32() {
