@@ -18,8 +18,13 @@ namespace mapbox { namespace util {
 class pbf {
 
     template <typename T> inline T fixed();
+    inline uint64_t varint_impl();
+    inline int64_t svarint_impl();
 
 public:
+
+    static inline int32_t zigzag_decode(uint32_t n) noexcept;
+    static inline int64_t zigzag_decode(uint64_t n) noexcept;
 
     struct exception : std::exception { const char *what() const noexcept { return "pbf exception"; } };
     struct unterminated_varint_exception : exception { const char *what() const noexcept { return "pbf unterminated varint exception"; } };
@@ -103,31 +108,65 @@ bool pbf::next(uint32_t requested_tag) {
     return false;
 }
 
+// from https://github.com/facebook/folly/blob/master/folly/Varint.h
+static const int8_t kMaxVarintLength64 = 10;
+
+inline uint64_t pbf::varint_impl() {
+    const int8_t* begin = reinterpret_cast<const int8_t*>(data);
+    const int8_t* iend = reinterpret_cast<const int8_t*>(end);
+    const int8_t* p = begin;
+    uint64_t val = 0;
+
+    if (iend - begin >= kMaxVarintLength64) {  // fast path
+        int64_t b;
+        do {
+            b = *p++; val  = static_cast<uint64_t>((b & 0x7f)      ); if (b >= 0) break;
+            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) <<  7); if (b >= 0) break;
+            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 14); if (b >= 0) break;
+            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 21); if (b >= 0) break;
+            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 28); if (b >= 0) break;
+            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 35); if (b >= 0) break;
+            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 42); if (b >= 0) break;
+            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 49); if (b >= 0) break;
+            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 56); if (b >= 0) break;
+            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 63); if (b >= 0) break;
+            throw varint_too_long_exception();
+        } while (false);
+    } else {
+        int shift = 0;
+        while (p != iend && *p < 0) {
+            val |= static_cast<uint64_t>(*p++ & 0x7f) << shift;
+            shift += 7;
+        }
+        if (p == iend) {
+            throw end_of_buffer_exception();
+        }
+        val |= static_cast<uint64_t>(*p++) << shift;
+    }
+    data = reinterpret_cast<const char*>(p);
+    return val;
+}
+
 template <typename T>
 T pbf::varint() {
-    assert((is_wire_type(0) || is_wire_type(2)) && "not a varint");
-    char byte = static_cast<char>(0x80);
-    T result = 0;
-    int bitpos;
-    for (bitpos = 0; bitpos < 70 && (byte & 0x80); bitpos += 7) {
-        if (data >= end) {
-            throw unterminated_varint_exception();
-        }
-        result |= ((T)(byte = *data) & 0x7F) << bitpos;
+    return static_cast<T>(varint_impl());
+}
 
-        data++;
-    }
-    if (bitpos == 70 && (byte & 0x80)) {
-        throw varint_too_long_exception();
-    }
+inline int32_t pbf::zigzag_decode(uint32_t n) noexcept {
+    return static_cast<int32_t>(n >> 1) ^ -static_cast<int32_t>((n & 1));
+}
 
-    return result;
+inline int64_t pbf::zigzag_decode(uint64_t n) noexcept {
+    return static_cast<int64_t>(n >> 1) ^ -static_cast<int64_t>((n & 1));
+}
+
+int64_t pbf::svarint_impl() {
+    return zigzag_decode(varint_impl());
 }
 
 template <typename T>
 T pbf::svarint() {
-    T n = varint<T>();
-    return (n >> 1) ^ -(T)(n & 1);
+    return static_cast<T>(svarint_impl());
 }
 
 template <typename T>
