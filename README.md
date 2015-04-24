@@ -30,6 +30,8 @@ implementations. The developer using `pbf.hpp` has to manually "translate" the
 information from the `.proto` description. This results in a few restrictions:
 
 * The names of the fields are not available.
+* Enum names are not available, you'll have to use the values they are defined
+  with.
 * Default values are not available.
 * Field types have to be hardcoded. The library does not know which types to
   expect, so the user of the library has to supply the right types. Some checks
