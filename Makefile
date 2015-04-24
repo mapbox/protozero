@@ -26,6 +26,9 @@ coverage:
 
 clean:
 	rm -f ./test/test
+	rm -f ./test/t/*/testcase.pb.cc
+	rm -f ./test/t/*/testcase.pb.h
+	rm -f ./test/t/*/testcase
 	rm -rf ./out
 	rm -f test.gc*
 
