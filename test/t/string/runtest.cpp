@@ -8,9 +8,9 @@ TEST_CASE("string") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.string() == "foobar");
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.string() == "foobar");
+        REQUIRE(!item.next());
     }
 
     SECTION("negative") {
@@ -18,9 +18,9 @@ TEST_CASE("string") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.string() == "");
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.string() == "");
+        REQUIRE(!item.next());
     }
 
 }

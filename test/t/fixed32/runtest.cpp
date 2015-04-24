@@ -8,9 +8,9 @@ TEST_CASE("fixed32") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.fixed<int32_t>() == 0);
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.fixed<int32_t>() == 0);
+        REQUIRE(!item.next());
     }
 
     SECTION("max-int") {
@@ -18,9 +18,9 @@ TEST_CASE("fixed32") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.fixed<int32_t>() == std::numeric_limits<int32_t>::max());
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.fixed<int32_t>() == std::numeric_limits<int32_t>::max());
+        REQUIRE(!item.next());
     }
 
     SECTION("min-int") {
@@ -28,9 +28,9 @@ TEST_CASE("fixed32") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.fixed<int32_t>() == std::numeric_limits<int32_t>::min());
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.fixed<int32_t>() == std::numeric_limits<int32_t>::min());
+        REQUIRE(!item.next());
     }
 
     SECTION("max-uint") {
@@ -38,9 +38,9 @@ TEST_CASE("fixed32") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.fixed<uint32_t>() == std::numeric_limits<uint32_t>::max());
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.fixed<uint32_t>() == std::numeric_limits<uint32_t>::max());
+        REQUIRE(!item.next());
     }
 
     SECTION("min-uint") {
@@ -48,9 +48,9 @@ TEST_CASE("fixed32") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.fixed<uint32_t>() == std::numeric_limits<uint32_t>::min());
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.fixed<uint32_t>() == std::numeric_limits<uint32_t>::min());
+        REQUIRE(!item.next());
     }
 
 }

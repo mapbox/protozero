@@ -8,9 +8,9 @@ TEST_CASE("double") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.float64() == 4.893);
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.float64() == 4.893);
+        REQUIRE(!item.next());
     }
 
     SECTION("negative") {
@@ -18,9 +18,9 @@ TEST_CASE("double") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.float64() == -9232.33);
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.float64() == -9232.33);
+        REQUIRE(!item.next());
     }
 
 }

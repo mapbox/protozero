@@ -8,9 +8,9 @@ TEST_CASE("int32") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.varint() == 17);
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.varint() == 17);
+        REQUIRE(!item.next());
     }
 
     SECTION("negative") {
@@ -18,9 +18,9 @@ TEST_CASE("int32") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        while (item.next()) {
-            REQUIRE(item.varint() == -1);
-        }
+        REQUIRE(item.next());
+        REQUIRE(item.varint() == -1);
+        REQUIRE(!item.next());
     }
 
 }
