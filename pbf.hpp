@@ -13,6 +13,7 @@
 #include <exception>
 #include <string>
 #include <type_traits>
+#include <utility>
 
 namespace mapbox { namespace util {
 
@@ -58,9 +59,10 @@ public:
     inline float float32();
     inline double float64();
 
-    inline std::string string();
     inline bool boolean();
 
+    inline std::pair<const char*, uint32_t> getData();
+    inline std::string string();
     inline pbf message();
 
     inline void skip();
@@ -212,14 +214,6 @@ double pbf::float64() {
     return fixed<double>();
 }
 
-std::string pbf::string() {
-    assert(is_wire_type(2) && "not a string");
-    uint32_t bytes = varint<uint32_t>();
-    const char *pos = data;
-    skipBytes(bytes);
-    return std::string(pos, bytes);
-}
-
 bool pbf::boolean() {
     assert(is_wire_type(0) && "not a varint");
     assert((*data & 0x80) == 0 && "not a 1 byte varint");
@@ -227,12 +221,22 @@ bool pbf::boolean() {
     return *(bool *)(data - 1);
 }
 
-pbf pbf::message() {
-    assert(is_wire_type(2) && "not a message");
+std::pair<const char*, uint32_t> pbf::getData() {
+    assert(is_wire_type(2) && "not a string or message");
     uint32_t bytes = varint<uint32_t>();
     const char *pos = data;
     skipBytes(bytes);
-    return pbf(pos, bytes);
+    return std::make_pair(pos, bytes);
+}
+
+std::string pbf::string() {
+    auto d = getData();
+    return std::string(d.first, d.second);
+}
+
+pbf pbf::message() {
+    auto d = getData();
+    return pbf(d.first, d.second);
 }
 
 void pbf::skip() {
