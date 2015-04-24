@@ -6,6 +6,8 @@
 #  description and the testcase.cpp code.
 #
 
+set -e
+
 for dir in t/*; do
     cd $dir
     protoc --cpp_out=. testcase.proto
