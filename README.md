@@ -26,6 +26,8 @@ C++ API that can be generated via the Google Protobufs `protoc` program.
 
 * The current implementation does not support big-endian machines. Fixed sized
   integers and floats/doubles will not decode properly.
+* A protobuf message has to fit into memory completely, otherwise it can not
+  be parsed with this library. There is no streaming support.
 
 
 ## Tests
