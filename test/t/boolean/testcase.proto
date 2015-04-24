@@ -5,7 +5,7 @@ package TestBoolean;
 
 message Test {
 
-    required int32 i = 1;
+    required bool b = 1;
 
 }
 
