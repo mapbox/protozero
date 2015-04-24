@@ -9,7 +9,7 @@ TEST_CASE("fixed64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         while (item.next()) {
-            int64_t data = item.fixed<int64_t, 8>();
+            int64_t data = item.fixed<int64_t>();
             REQUIRE(data == (1ll << 40));
         }
     }
@@ -20,7 +20,7 @@ TEST_CASE("fixed64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         while (item.next()) {
-            int64_t data = item.fixed<int64_t, 8>();
+            int64_t data = item.fixed<int64_t>();
             REQUIRE(data == - (1ll << 42));
         }
     }

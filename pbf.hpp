@@ -35,7 +35,7 @@ struct pbf {
     template <typename T = uint32_t> inline T varint();
     template <typename T = uint32_t> inline T svarint();
 
-    template <typename T = uint32_t, int bytes = 4> inline T fixed();
+    template <typename T> inline T fixed();
     inline float float32();
     inline double float64();
 
@@ -120,24 +120,24 @@ T pbf::svarint() {
     return (n >> 1) ^ -(T)(n & 1);
 }
 
-template <typename T, int bytes>
+template <typename T>
 T pbf::fixed() {
-    assert(((is_wire_type(5) && bytes == 4) ||
-            (is_wire_type(1) && bytes == 8)) && "not a fixed of right size");
-    skipBytes(bytes);
+    assert(((is_wire_type(5) && sizeof(T) == 4) ||
+            (is_wire_type(1) && sizeof(T) == 8)) && "not a fixed of right size");
+    skipBytes(sizeof(T));
     T result;
-    memcpy(&result, data - bytes, bytes);
+    memcpy(&result, data - sizeof(T), sizeof(T));
     return result;
 }
 
 float pbf::float32() {
     assert(is_wire_type(5) && "not a 32-bit fixed");
-    return fixed<float, 4>();
+    return fixed<float>();
 }
 
 double pbf::float64() {
     assert(is_wire_type(1) && "not a 64-bit fixed");
-    return fixed<double, 8>();
+    return fixed<double>();
 }
 
 std::string pbf::string() {
