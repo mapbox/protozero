@@ -37,8 +37,8 @@ public:
 
     inline bool next();
     inline bool next(uint32_t tag);
-    template <typename T = uint32_t> inline T varint();
-    template <typename T = uint32_t> inline T svarint();
+    template <typename T> inline T varint();
+    template <typename T> inline T svarint();
 
     inline uint32_t fixed32();
     inline int32_t sfixed32();
@@ -85,7 +85,7 @@ pbf::operator bool() const {
 
 bool pbf::next() {
     if (data < end) {
-        value = static_cast<uint32_t>(varint());
+        value = varint<uint32_t>();
         tag = value >> 3;
         return true;
     }
@@ -170,7 +170,7 @@ double pbf::float64() {
 
 std::string pbf::string() {
     assert(is_wire_type(2) && "not a string");
-    uint32_t bytes = static_cast<uint32_t>(varint());
+    uint32_t bytes = varint<uint32_t>();
     const char *pos = data;
     skipBytes(bytes);
     return std::string(pos, bytes);
@@ -185,7 +185,7 @@ bool pbf::boolean() {
 
 pbf pbf::message() {
     assert(is_wire_type(2) && "not a message");
-    uint32_t bytes = static_cast<uint32_t>(varint());
+    uint32_t bytes = varint<uint32_t>();
     const char *pos = data;
     skipBytes(bytes);
     return pbf(pos, bytes);
@@ -198,13 +198,13 @@ void pbf::skip() {
 void pbf::skipValue(uint32_t val) {
     switch (val & 0x7) {
         case 0: // varint
-            varint();
+            varint<uint32_t>();
             break;
         case 1: // 64 bit
             skipBytes(8);
             break;
         case 2: // string/message
-            skipBytes(static_cast<uint32_t>(varint()));
+            skipBytes(varint<uint32_t>());
             break;
         case 5: // 32 bit
             skipBytes(4);

@@ -9,7 +9,7 @@ TEST_CASE("int32") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint() == 17);
+        REQUIRE(item.varint<uint32_t>() == 17);
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("int32") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint() == -1);
+        REQUIRE(item.varint<uint32_t>() == -1);
         REQUIRE(!item.next());
     }
 

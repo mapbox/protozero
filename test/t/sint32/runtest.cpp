@@ -9,7 +9,7 @@ TEST_CASE("sint32") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.svarint() == 17);
+        REQUIRE(item.svarint<int32_t>() == 17);
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("sint32") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.svarint() == -1);
+        REQUIRE(item.svarint<int32_t>() == -1);
         REQUIRE(!item.next());
     }
 
