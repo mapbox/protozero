@@ -3,25 +3,53 @@
 
 TEST_CASE("fixed64") {
 
-    SECTION("positive") {
-        std::string buffer = get_file_data("test/t/fixed64/data1.bin");
+    SECTION("zero") {
+        std::string buffer = get_file_data("test/t/fixed64/data-zero.bin");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         while (item.next()) {
-            int64_t data = item.fixed<int64_t>();
-            REQUIRE(data == (1ll << 40));
+            REQUIRE(item.fixed<int64_t>() == 0);
         }
     }
 
-    SECTION("negative") {
-        std::string buffer = get_file_data("test/t/fixed64/data2.bin");
+    SECTION("max-int") {
+        std::string buffer = get_file_data("test/t/fixed64/data-max-int.bin");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         while (item.next()) {
-            int64_t data = item.fixed<int64_t>();
-            REQUIRE(data == - (1ll << 42));
+            REQUIRE(item.fixed<int64_t>() == std::numeric_limits<int64_t>::max());
+        }
+    }
+
+    SECTION("min-int") {
+        std::string buffer = get_file_data("test/t/fixed64/data-min-int.bin");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        while (item.next()) {
+            REQUIRE(item.fixed<int64_t>() == std::numeric_limits<int64_t>::min());
+        }
+    }
+
+    SECTION("max-uint") {
+        std::string buffer = get_file_data("test/t/fixed64/data-max-uint.bin");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        while (item.next()) {
+            REQUIRE(item.fixed<uint64_t>() == std::numeric_limits<uint64_t>::max());
+        }
+    }
+
+    SECTION("min-uint") {
+        std::string buffer = get_file_data("test/t/fixed64/data-min-uint.bin");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        while (item.next()) {
+            REQUIRE(item.fixed<uint64_t>() == std::numeric_limits<uint64_t>::min());
         }
     }
 
