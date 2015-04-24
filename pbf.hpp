@@ -12,6 +12,7 @@
 #include <cstring>
 #include <exception>
 #include <string>
+#include <type_traits>
 
 namespace mapbox { namespace util {
 
@@ -42,8 +43,12 @@ public:
 
     inline bool next();
     inline bool next(uint32_t tag);
-    template <typename T> inline T varint();
-    template <typename T> inline T svarint();
+
+    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
+    inline T varint();
+
+    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
+    inline T svarint();
 
     inline uint32_t fixed32();
     inline int32_t sfixed32();
@@ -147,7 +152,7 @@ inline uint64_t pbf::varint_impl() {
     return val;
 }
 
-template <typename T>
+template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type>
 T pbf::varint() {
     return static_cast<T>(varint_impl());
 }
@@ -164,7 +169,7 @@ int64_t pbf::svarint_impl() {
     return zigzag_decode(varint_impl());
 }
 
-template <typename T>
+template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type>
 T pbf::svarint() {
     return static_cast<T>(svarint_impl());
 }
