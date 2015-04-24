@@ -30,10 +30,10 @@ public:
     inline pbf(const char *data, size_t length);
     inline pbf() = default;
 
-    inline int wire_type() const;
-    inline bool is_wire_type(int type) const;
+    inline int wire_type() const noexcept;
+    inline bool is_wire_type(int type) const noexcept;
 
-    inline operator bool() const;
+    inline operator bool() const noexcept;
 
     inline bool next();
     inline bool next(uint32_t tag);
@@ -71,15 +71,15 @@ pbf::pbf(const char *data_, size_t length)
       tag(0) {
 }
 
-int pbf::wire_type() const {
+int pbf::wire_type() const noexcept {
     return value & 0x7;
 }
 
-bool pbf::is_wire_type(int type) const {
+bool pbf::is_wire_type(int type) const noexcept {
     return wire_type() == type;
 }
 
-pbf::operator bool() const {
+pbf::operator bool() const noexcept {
     return data < end;
 }
 
