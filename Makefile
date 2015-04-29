@@ -12,10 +12,17 @@ ifeq ($(OS),Darwin)
     LDFLAGS += -stdlib=libc++
 endif
 
-UNIT_TESTS=$(wildcard test/t/*/runtest.cpp)
+UNIT_TESTS := $(wildcard test/t/*/runtest.cpp)
+UNIT_TESTS_O := $(subst .cpp,.o,$(UNIT_TESTS))
 
-./test/test: test/test.cpp pbf.hpp $(UNIT_TESTS)
-	$(CXX) -Itest $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $(LDFLAGS) test/test.cpp $(UNIT_TESTS) -o ./test/test -lz
+./test/t/%/runtest.o: test/t/%/runtest.cpp pbf.hpp
+	$(CXX) -c -Itest $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+
+./test/test.o: test/test.cpp pbf.hpp
+	$(CXX) -c -Itest $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+
+./test/test: test/test.o $(UNIT_TESTS_O)
+	$(CXX) $(LDFLAGS) -lz $^ -o ./test/test
 
 test: ./test/test
 	./test/test
