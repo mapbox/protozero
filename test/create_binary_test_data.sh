@@ -9,6 +9,7 @@
 set -e
 
 for dir in t/*; do
+    echo "Generating $dir..."
     cd $dir
     protoc --cpp_out=. testcase.proto
     $CXX -std=c++11 -o testcase testcase.cpp testcase.pb.cc -lprotobuf-lite -pthreads
