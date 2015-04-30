@@ -2,9 +2,13 @@
 CXX := $(CXX)
 CXXFLAGS := $(CXXFLAGS)
 LDFLAGS := $(LDFLAGS)
-COMMON_FLAGS = -Wall -Wsign-compare -Wsign-conversion -Wshadow -Wunused-parameter -pedantic -fvisibility-inlines-hidden -std=c++11
-RELEASE_FLAGS = -O3 -DNDEBUG -march=native -Wpadded
-DEBUG_FLAGS = -O0 -g -DDEBUG -fno-inline-functions
+
+WARNING_FLAGS := -Wall -Wextra -pedantic -Wsign-compare -Wsign-conversion -Wshadow -Wunused-parameter
+MORE_WARNING_FLAGS := -Weverything -Wno-weak-vtables -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-exit-time-destructors -Wno-switch-enum
+COMMON_FLAGS := -fvisibility-inlines-hidden -std=c++11 $(WARNING_FLAGS) $(MORE_WARNING_FLAGS)
+
+RELEASE_FLAGS := -O3 -DNDEBUG -march=native -Wpadded
+DEBUG_FLAGS := -O0 -g -DDEBUG -fno-inline-functions
 
 OS:=$(shell uname -s)
 ifeq ($(OS),Darwin)
@@ -33,9 +37,12 @@ coverage:
 
 clean:
 	rm -f ./test/test
+	rm -f ./test/test.o
 	rm -f ./test/t/*/testcase.pb.cc
 	rm -f ./test/t/*/testcase.pb.h
+	rm -f ./test/t/*/testcase.o
 	rm -f ./test/t/*/testcase
+	rm -f ./test/t/*/runtest.o
 	rm -rf ./out
 	rm -f test.gc*
 
