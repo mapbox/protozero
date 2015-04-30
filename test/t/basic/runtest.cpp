@@ -14,5 +14,18 @@ TEST_CASE("basic") {
         REQUIRE(!item.next());
     }
 
+    SECTION("check every possible value for single byte in buffer") {
+        char buffer[1];
+        for (int i = 0; i <= 255; ++i) {
+            *buffer = static_cast<char>(i);
+            mapbox::util::pbf item(buffer, 1);
+
+            REQUIRE_THROWS({
+                item.next();
+                item.skip();
+            });
+        }
+    }
+
 }
 
