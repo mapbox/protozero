@@ -9,7 +9,7 @@ TEST_CASE("double") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.float64() == 0.0);
+        REQUIRE(item.float64() == Approx(0.0));
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("double") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.float64() == 4.893);
+        REQUIRE(item.float64() == Approx(4.893));
         REQUIRE(!item.next());
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("double") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.float64() == -9232.33);
+        REQUIRE(item.float64() == Approx(-9232.33));
         REQUIRE(!item.next());
     }
 

@@ -9,7 +9,7 @@ TEST_CASE("float") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.float32() == 0.0f);
+        REQUIRE(item.float32() == Approx(0.0f));
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("float") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.float32() == 5.34f);
+        REQUIRE(item.float32() == Approx(5.34f));
         REQUIRE(!item.next());
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("float") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.float32() == -1.71f);
+        REQUIRE(item.float32() == Approx(-1.71f));
         REQUIRE(!item.next());
     }
 

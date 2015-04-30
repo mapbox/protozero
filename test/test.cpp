@@ -5,10 +5,8 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../pbf.hpp"
-
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include "test.hpp"
 
 std::string get_file_data(const std::string& filename) {
     std::ifstream stream(filename.c_str(), std::ios_base::in|std::ios_base::binary);
