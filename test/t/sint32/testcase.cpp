@@ -6,18 +6,18 @@ int main(int c, char *argv[]) {
     TestSInt32::Test msg;
 
     msg.set_i(0l);
-    write_to_file(msg, "data-zero.bin");
+    write_to_file(msg, "data-zero.pbf");
 
     msg.set_i(1l);
-    write_to_file(msg, "data-pos.bin");
+    write_to_file(msg, "data-pos.pbf");
 
     msg.set_i(-1l);
-    write_to_file(msg, "data-neg.bin");
+    write_to_file(msg, "data-neg.pbf");
 
     msg.set_i(std::numeric_limits<int32_t>::max());
-    write_to_file(msg, "data-max.bin");
+    write_to_file(msg, "data-max.pbf");
 
     msg.set_i(std::numeric_limits<int32_t>::min());
-    write_to_file(msg, "data-min.bin");
+    write_to_file(msg, "data-min.pbf");
 }
 

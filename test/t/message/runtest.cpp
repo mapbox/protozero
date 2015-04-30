@@ -4,7 +4,7 @@
 TEST_CASE("message") {
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/message/data-message.bin");
+        std::string buffer = get_file_data("test/t/message/data-message.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -18,7 +18,7 @@ TEST_CASE("message") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/message/data-message.bin");
+        std::string buffer = get_file_data("test/t/message/data-message.pbf");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);

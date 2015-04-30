@@ -4,7 +4,7 @@
 TEST_CASE("bytes") {
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/bytes/data-empty.bin");
+        std::string buffer = get_file_data("test/t/bytes/data-empty.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("bytes") {
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/bytes/data-one.bin");
+        std::string buffer = get_file_data("test/t/bytes/data-one.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("bytes") {
     }
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/bytes/data-string.bin");
+        std::string buffer = get_file_data("test/t/bytes/data-string.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("bytes") {
     }
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/bytes/data-binary.bin");
+        std::string buffer = get_file_data("test/t/bytes/data-binary.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -48,7 +48,7 @@ TEST_CASE("bytes") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/bytes/data-binary.bin");
+        std::string buffer = get_file_data("test/t/bytes/data-binary.pbf");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);

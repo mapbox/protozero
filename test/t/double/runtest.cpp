@@ -4,7 +4,7 @@
 TEST_CASE("double") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/double/data-zero.bin");
+        std::string buffer = get_file_data("test/t/double/data-zero.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("double") {
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/double/data-pos.bin");
+        std::string buffer = get_file_data("test/t/double/data-pos.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("double") {
     }
 
     SECTION("negative") {
-        std::string buffer = get_file_data("test/t/double/data-neg.bin");
+        std::string buffer = get_file_data("test/t/double/data-neg.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("double") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/double/data-neg.bin");
+        std::string buffer = get_file_data("test/t/double/data-neg.pbf");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);

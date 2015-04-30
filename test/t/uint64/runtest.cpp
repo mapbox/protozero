@@ -4,7 +4,7 @@
 TEST_CASE("uint64") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/uint64/data-zero.bin");
+        std::string buffer = get_file_data("test/t/uint64/data-zero.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("uint64") {
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/uint64/data-pos.bin");
+        std::string buffer = get_file_data("test/t/uint64/data-pos.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("uint64") {
     }
 
     SECTION("max") {
-        std::string buffer = get_file_data("test/t/uint64/data-max.bin");
+        std::string buffer = get_file_data("test/t/uint64/data-max.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("uint64") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/uint64/data-max.bin");
+        std::string buffer = get_file_data("test/t/uint64/data-max.pbf");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);

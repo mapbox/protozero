@@ -4,7 +4,7 @@
 TEST_CASE("repeated") {
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/repeated/data-empty.bin");
+        std::string buffer = get_file_data("test/t/repeated/data-empty.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -12,7 +12,7 @@ TEST_CASE("repeated") {
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/repeated/data-one.bin");
+        std::string buffer = get_file_data("test/t/repeated/data-one.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -22,7 +22,7 @@ TEST_CASE("repeated") {
     }
 
     SECTION("many") {
-        std::string buffer = get_file_data("test/t/repeated/data-many.bin");
+        std::string buffer = get_file_data("test/t/repeated/data-many.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -45,7 +45,7 @@ TEST_CASE("repeated") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/repeated/data-one.bin");
+        std::string buffer = get_file_data("test/t/repeated/data-one.pbf");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);

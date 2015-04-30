@@ -5,14 +5,14 @@
 int main(int c, char *argv[]) {
     TestRepeatedPackedUInt64::Test msg;
 
-    write_to_file(msg, "data-empty.bin");
+    write_to_file(msg, "data-empty.pbf");
 
     msg.add_i(17);
-    write_to_file(msg, "data-one.bin");
+    write_to_file(msg, "data-one.pbf");
 
     msg.add_i(0);
     msg.add_i(1);
     msg.add_i(std::numeric_limits<uint64_t>::max());
-    write_to_file(msg, "data-many.bin");
+    write_to_file(msg, "data-many.pbf");
 }
 

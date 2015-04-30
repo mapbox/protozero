@@ -4,7 +4,7 @@
 TEST_CASE("fixed64") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/fixed64/data-zero.bin");
+        std::string buffer = get_file_data("test/t/fixed64/data-zero.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("fixed64") {
     }
 
     SECTION("max-uint") {
-        std::string buffer = get_file_data("test/t/fixed64/data-max-uint.bin");
+        std::string buffer = get_file_data("test/t/fixed64/data-max-uint.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("fixed64") {
     }
 
     SECTION("min-uint") {
-        std::string buffer = get_file_data("test/t/fixed64/data-min-uint.bin");
+        std::string buffer = get_file_data("test/t/fixed64/data-min-uint.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("fixed64") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/fixed64/data-min-uint.bin");
+        std::string buffer = get_file_data("test/t/fixed64/data-min-uint.pbf");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);

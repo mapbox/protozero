@@ -4,7 +4,7 @@
 TEST_CASE("boolean") {
 
     SECTION("false") {
-        std::string buffer = get_file_data("test/t/boolean/data-false.bin");
+        std::string buffer = get_file_data("test/t/boolean/data-false.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("boolean") {
     }
 
     SECTION("true") {
-        std::string buffer = get_file_data("test/t/boolean/data-true.bin");
+        std::string buffer = get_file_data("test/t/boolean/data-true.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("boolean") {
     }
 
     SECTION("also true") {
-        std::string buffer = get_file_data("test/t/boolean/data-also-true.bin");
+        std::string buffer = get_file_data("test/t/boolean/data-also-true.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("boolean") {
     }
 
     SECTION("still true") {
-        std::string buffer = get_file_data("test/t/boolean/data-still-true.bin");
+        std::string buffer = get_file_data("test/t/boolean/data-still-true.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 

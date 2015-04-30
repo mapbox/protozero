@@ -8,6 +8,6 @@ int main(int c, char *argv[]) {
     TestMessage::Sub* submsg = msg.mutable_submessage();
     submsg->set_s("foobar");
 
-    write_to_file(msg, "data-message.bin");
+    write_to_file(msg, "data-message.pbf");
 }
 

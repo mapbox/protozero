@@ -4,7 +4,7 @@
 TEST_CASE("sfixed32") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/sfixed32/data-zero.bin");
+        std::string buffer = get_file_data("test/t/sfixed32/data-zero.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("sfixed32") {
     }
 
     SECTION("max-int") {
-        std::string buffer = get_file_data("test/t/sfixed32/data-max-int.bin");
+        std::string buffer = get_file_data("test/t/sfixed32/data-max-int.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("sfixed32") {
     }
 
     SECTION("min-int") {
-        std::string buffer = get_file_data("test/t/sfixed32/data-min-int.bin");
+        std::string buffer = get_file_data("test/t/sfixed32/data-min-int.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("sfixed32") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/sfixed32/data-min-int.bin");
+        std::string buffer = get_file_data("test/t/sfixed32/data-min-int.pbf");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);

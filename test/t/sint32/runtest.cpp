@@ -4,7 +4,7 @@
 TEST_CASE("sint32") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/sint32/data-zero.bin");
+        std::string buffer = get_file_data("test/t/sint32/data-zero.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("sint32") {
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/sint32/data-pos.bin");
+        std::string buffer = get_file_data("test/t/sint32/data-pos.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("sint32") {
     }
 
     SECTION("negative") {
-        std::string buffer = get_file_data("test/t/sint32/data-neg.bin");
+        std::string buffer = get_file_data("test/t/sint32/data-neg.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("sint32") {
     }
 
     SECTION("max") {
-        std::string buffer = get_file_data("test/t/sint32/data-max.bin");
+        std::string buffer = get_file_data("test/t/sint32/data-max.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -44,7 +44,7 @@ TEST_CASE("sint32") {
     }
 
     SECTION("min") {
-        std::string buffer = get_file_data("test/t/sint32/data-min.bin");
+        std::string buffer = get_file_data("test/t/sint32/data-min.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -54,7 +54,7 @@ TEST_CASE("sint32") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/sint32/data-min.bin");
+        std::string buffer = get_file_data("test/t/sint32/data-min.pbf");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
