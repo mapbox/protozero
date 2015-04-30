@@ -22,28 +22,29 @@ UNIT_TESTS_O := $(subst .cpp,.o,$(UNIT_TESTS))
 ./test/t/%/runtest.o: test/t/%/runtest.cpp pbf.hpp
 	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
-./test/test.o: test/test.cpp pbf.hpp
+./test/run_all_tests.o: test/run_all_tests.cpp pbf.hpp
 	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
-./test/test: test/test.o $(UNIT_TESTS_O)
-	$(CXX) $(LDFLAGS) -lz $^ -o ./test/test
+./test/run_all_tests: test/run_all_tests.o $(UNIT_TESTS_O)
+	$(CXX) $(LDFLAGS) -lz $^ -o $@
 
-test: ./test/test
-	./test/test
+test: ./test/run_all_tests
+	./test/run_all_tests
 
 coverage:
 	mkdir -p ./out
-	$(CXX) -o out/cov-test --coverage test/test.cpp -I./ $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $(LDFLAGS)
+	$(CXX) -o out/cov-test --coverage test/run_all_tests.cpp -I./ $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $(LDFLAGS)
 
 clean:
-	rm -f ./test/test
-	rm -f ./test/test.o
+	rm -f ./test/run_all_tests
+	rm -f ./test/run_all_tests.o
 	rm -f ./test/t/*/testcase.pb.cc
 	rm -f ./test/t/*/testcase.pb.h
 	rm -f ./test/t/*/testcase.o
 	rm -f ./test/t/*/testcase
 	rm -f ./test/t/*/runtest.o
 	rm -rf ./out
-	rm -f test.gc*
+	rm -f run_all_tests.gc*
 
 .PHONY: test
+

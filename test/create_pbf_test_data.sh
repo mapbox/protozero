@@ -1,9 +1,9 @@
 #!/bin/sh
 #
-#  create_binary_test_data.sh
+#  create_pbf_test_data.sh
 #
-#  Create the serialized test data in protobuf format using the testcase.proto
-#  description and the testcase.cpp code.
+#  For each test case, this script creates the test data in protobuf format
+#  using the testcase.proto description and the testcase.cpp code.
 #
 
 set -e
