@@ -1,3 +1,5 @@
+#ifndef TESTCASE_HPP
+#define TESTCASE_HPP
 
 #include <cassert>
 #include <string>
@@ -13,3 +15,4 @@ void write_to_file(const T& msg, const char* filename) {
     d << out;
 }
 
+#endif // TESTCASE_HPP
