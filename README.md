@@ -36,6 +36,7 @@ information from the `.proto` description. This results in a few restrictions:
 * Field types have to be hardcoded. The library does not know which types to
   expect, so the user of the library has to supply the right types. Some checks
   are made using `assert()`, but mostly the user has to take care of that.
+* The length of a string, bytes, or submessage can't be more than 2^31-1.
 
 The library will make sure not to overrun the buffer it was given, but
 basically all other checks have to be made in user code!
