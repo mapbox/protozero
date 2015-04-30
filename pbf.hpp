@@ -107,6 +107,7 @@ public:
     inline bool boolean();
 
     inline std::pair<const char*, uint32_t> getData();
+    inline std::string bytes();
     inline std::string string();
     inline pbf message();
 
@@ -324,9 +325,13 @@ std::pair<const char*, uint32_t> pbf::getData() {
     return std::make_pair(pos, bytes);
 }
 
-std::string pbf::string() {
+std::string pbf::bytes() {
     auto d = getData();
     return std::string(d.first, d.second);
+}
+
+std::string pbf::string() {
+    return bytes();
 }
 
 pbf pbf::message() {
