@@ -11,6 +11,7 @@
 #include <cassert>
 #include <cstring>
 #include <exception>
+#include <iterator>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -18,6 +19,47 @@
 namespace mapbox { namespace util {
 
 class pbf {
+
+    // from https://github.com/facebook/folly/blob/master/folly/Varint.h
+    static const int8_t kMaxVarintLength64 = 10;
+
+    static uint64_t get_varint(const char** data, const char* end) {
+        const int8_t* begin = reinterpret_cast<const int8_t*>(*data);
+        const int8_t* iend = reinterpret_cast<const int8_t*>(end);
+        const int8_t* p = begin;
+        uint64_t val = 0;
+
+        if (iend - begin >= kMaxVarintLength64) {  // fast path
+            int64_t b;
+            do {
+                b = *p++; val  = static_cast<uint64_t>((b & 0x7f)      ); if (b >= 0) break;
+                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) <<  7); if (b >= 0) break;
+                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 14); if (b >= 0) break;
+                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 21); if (b >= 0) break;
+                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 28); if (b >= 0) break;
+                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 35); if (b >= 0) break;
+                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 42); if (b >= 0) break;
+                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 49); if (b >= 0) break;
+                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 56); if (b >= 0) break;
+                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 63); if (b >= 0) break;
+                throw pbf::varint_too_long_exception();
+            } while (false);
+        } else {
+            int shift = 0;
+            while (p != iend && *p < 0) {
+                val |= static_cast<uint64_t>(*p++ & 0x7f) << shift;
+                shift += 7;
+            }
+            if (p == iend) {
+                throw pbf::end_of_buffer_exception();
+            }
+            val |= static_cast<uint64_t>(*p++) << shift;
+        }
+
+        *data = reinterpret_cast<const char*>(p);
+        return val;
+    }
+
 
     template <typename T> inline T fixed();
     inline uint64_t varint_impl();
@@ -77,6 +119,86 @@ public:
     inline std::pair<const int32_t*, const int32_t*> packed_sfixed32();
     inline std::pair<const int64_t*, const int64_t*> packed_sfixed64();
 
+    template <typename T>
+    class const_varint_iterator : public std::iterator<std::forward_iterator_tag, T> {
+
+    protected:
+
+        const char* data;
+        const char* end;
+
+    public:
+
+        const_varint_iterator(const char *data_, const char* end_) noexcept :
+            data(data_),
+            end(end_) {
+        }
+
+        T operator*() {
+            const char* d = data; // will be thrown away
+            return static_cast<T>(get_varint(&d, end));
+        }
+
+        const_varint_iterator& operator++() noexcept {
+            // Ignore the result, we call get_varint() just for the
+            // side-effect of updating data.
+            get_varint(&data, end);
+            return *this;
+        }
+
+        const_varint_iterator operator++(int) noexcept {
+            const const_varint_iterator tmp(*this);
+            ++(*this);
+            return tmp;
+        }
+
+        bool operator==(const const_varint_iterator& rhs) const noexcept {
+            return data == rhs.data && end == rhs.end;
+        }
+
+        bool operator!=(const const_varint_iterator& rhs) const noexcept {
+            return !(*this == rhs);
+        }
+
+    }; // class const_varint_iterator
+
+    template <typename T>
+    class const_svarint_iterator : public const_varint_iterator<T> {
+
+    public:
+
+        const_svarint_iterator(const char *data_, const char* end_) noexcept :
+            const_varint_iterator<T>(data_, end_) {
+        }
+
+        T operator*() {
+            const char* d = this->data; // will be thrown away
+            return static_cast<T>(zigzag_decode(get_varint(&d, this->end)));
+        }
+
+        const_svarint_iterator& operator++() noexcept {
+            // Ignore the result, we call get_varint() just for the
+            // side-effect of updating data.
+            get_varint(&this->data, this->end);
+            return *this;
+        }
+
+        const_svarint_iterator operator++(int) noexcept {
+            const const_svarint_iterator tmp(*this);
+            ++(*this);
+            return tmp;
+        }
+
+    }; // class const_svarint_iterator
+
+    inline std::pair<pbf::const_varint_iterator<int32_t>, pbf::const_varint_iterator<int32_t>> packed_int32();
+    inline std::pair<pbf::const_varint_iterator<uint32_t>, pbf::const_varint_iterator<uint32_t>> packed_uint32();
+    inline std::pair<pbf::const_svarint_iterator<int32_t>, pbf::const_svarint_iterator<int32_t>> packed_sint32();
+
+    inline std::pair<pbf::const_varint_iterator<int64_t>, pbf::const_varint_iterator<int64_t>> packed_int64();
+    inline std::pair<pbf::const_varint_iterator<uint64_t>, pbf::const_varint_iterator<uint64_t>> packed_uint64();
+    inline std::pair<pbf::const_svarint_iterator<int64_t>, pbf::const_svarint_iterator<int64_t>> packed_sint64();
+
     const char *data = nullptr;
     const char *end = nullptr;
     uint32_t value = 0;
@@ -123,43 +245,8 @@ bool pbf::next(uint32_t requested_tag) {
     return false;
 }
 
-// from https://github.com/facebook/folly/blob/master/folly/Varint.h
-static const int8_t kMaxVarintLength64 = 10;
-
 inline uint64_t pbf::varint_impl() {
-    const int8_t* begin = reinterpret_cast<const int8_t*>(data);
-    const int8_t* iend = reinterpret_cast<const int8_t*>(end);
-    const int8_t* p = begin;
-    uint64_t val = 0;
-
-    if (iend - begin >= kMaxVarintLength64) {  // fast path
-        int64_t b;
-        do {
-            b = *p++; val  = static_cast<uint64_t>((b & 0x7f)      ); if (b >= 0) break;
-            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) <<  7); if (b >= 0) break;
-            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 14); if (b >= 0) break;
-            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 21); if (b >= 0) break;
-            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 28); if (b >= 0) break;
-            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 35); if (b >= 0) break;
-            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 42); if (b >= 0) break;
-            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 49); if (b >= 0) break;
-            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 56); if (b >= 0) break;
-            b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 63); if (b >= 0) break;
-            throw varint_too_long_exception();
-        } while (false);
-    } else {
-        int shift = 0;
-        while (p != iend && *p < 0) {
-            val |= static_cast<uint64_t>(*p++ & 0x7f) << shift;
-            shift += 7;
-        }
-        if (p == iend) {
-            throw end_of_buffer_exception();
-        }
-        val |= static_cast<uint64_t>(*p++) << shift;
-    }
-    data = reinterpret_cast<const char*>(p);
-    return val;
+    return get_varint(&data, end);
 }
 
 template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type>
@@ -299,6 +386,42 @@ std::pair<const int32_t*, const int32_t*> pbf::packed_sfixed32() {
 
 std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
     return packed_fixed_impl<int64_t>();
+}
+
+std::pair<pbf::const_varint_iterator<int32_t>, pbf::const_varint_iterator<int32_t>> pbf::packed_int32() {
+    uint32_t len = varint<uint32_t>();
+    skipBytes(len);
+    return std::make_pair(pbf::const_varint_iterator<int32_t>(data-len, data), pbf::const_varint_iterator<int32_t>(data, data));
+}
+
+std::pair<pbf::const_varint_iterator<uint32_t>, pbf::const_varint_iterator<uint32_t>> pbf::packed_uint32() {
+    uint32_t len = varint<uint32_t>();
+    skipBytes(len);
+    return std::make_pair(pbf::const_varint_iterator<uint32_t>(data-len, data), pbf::const_varint_iterator<uint32_t>(data, data));
+}
+
+std::pair<pbf::const_svarint_iterator<int32_t>, pbf::const_svarint_iterator<int32_t>> pbf::packed_sint32() {
+    uint32_t len = varint<uint32_t>();
+    skipBytes(len);
+    return std::make_pair(pbf::const_svarint_iterator<int32_t>(data-len, data), pbf::const_svarint_iterator<int32_t>(data, data));
+}
+
+std::pair<pbf::const_varint_iterator<int64_t>, pbf::const_varint_iterator<int64_t>> pbf::packed_int64() {
+    uint32_t len = varint<uint32_t>();
+    skipBytes(len);
+    return std::make_pair(pbf::const_varint_iterator<int64_t>(data-len, data), pbf::const_varint_iterator<int64_t>(data, data));
+}
+
+std::pair<pbf::const_varint_iterator<uint64_t>, pbf::const_varint_iterator<uint64_t>> pbf::packed_uint64() {
+    uint32_t len = varint<uint32_t>();
+    skipBytes(len);
+    return std::make_pair(pbf::const_varint_iterator<uint64_t>(data-len, data), pbf::const_varint_iterator<uint64_t>(data, data));
+}
+
+std::pair<pbf::const_svarint_iterator<int64_t>, pbf::const_svarint_iterator<int64_t>> pbf::packed_sint64() {
+    uint32_t len = varint<uint32_t>();
+    skipBytes(len);
+    return std::make_pair(pbf::const_svarint_iterator<int64_t>(data-len, data), pbf::const_svarint_iterator<int64_t>(data, data));
 }
 
 }} // end namespace mapbox::util
