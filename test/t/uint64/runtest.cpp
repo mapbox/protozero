@@ -33,5 +33,15 @@ TEST_CASE("uint64") {
         REQUIRE(!item.next());
     }
 
+    SECTION("end_of_buffer") {
+        std::string buffer = get_file_data("test/t/uint64/data-max.bin");
+
+        for (size_t i=1; i < buffer.size(); ++i) {
+            mapbox::util::pbf item(buffer.data(), i);
+            REQUIRE(item.next());
+            REQUIRE_THROWS_AS(item.varint<uint64_t>(), mapbox::util::pbf::end_of_buffer_exception);
+        }
+    }
+
 }
 

@@ -43,5 +43,15 @@ TEST_CASE("repeated_packed_sint32") {
         REQUIRE(it == it_pair.second);
     }
 
+    SECTION("end_of_buffer") {
+        std::string buffer = get_file_data("test/t/repeated_packed_sint32/data-many.bin");
+
+        for (size_t i=1; i < buffer.size(); ++i) {
+            mapbox::util::pbf item(buffer.data(), i);
+            REQUIRE(item.next());
+            REQUIRE_THROWS_AS(item.packed_sint32(), mapbox::util::pbf::end_of_buffer_exception);
+        }
+    }
+
 }
 

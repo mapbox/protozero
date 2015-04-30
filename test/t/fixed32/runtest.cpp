@@ -33,5 +33,15 @@ TEST_CASE("fixed32") {
         REQUIRE(!item.next());
     }
 
+    SECTION("end_of_buffer") {
+        std::string buffer = get_file_data("test/t/fixed32/data-min-uint.bin");
+
+        for (size_t i=1; i < buffer.size(); ++i) {
+            mapbox::util::pbf item(buffer.data(), i);
+            REQUIRE(item.next());
+            REQUIRE_THROWS_AS(item.fixed32(), mapbox::util::pbf::end_of_buffer_exception);
+        }
+    }
+
 }
 

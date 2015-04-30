@@ -44,5 +44,15 @@ TEST_CASE("repeated") {
         REQUIRE(!item.next());
     }
 
+    SECTION("end_of_buffer") {
+        std::string buffer = get_file_data("test/t/repeated/data-one.bin");
+
+        for (size_t i=1; i < buffer.size(); ++i) {
+            mapbox::util::pbf item(buffer.data(), i);
+            REQUIRE(item.next());
+            REQUIRE_THROWS_AS(item.varint<int32_t>(), mapbox::util::pbf::end_of_buffer_exception);
+        }
+    }
+
 }
 

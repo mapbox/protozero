@@ -47,5 +47,15 @@ TEST_CASE("bytes") {
         REQUIRE(!item.next());
     }
 
+    SECTION("end_of_buffer") {
+        std::string buffer = get_file_data("test/t/bytes/data-binary.bin");
+
+        for (size_t i=1; i < buffer.size(); ++i) {
+            mapbox::util::pbf item(buffer.data(), i);
+            REQUIRE(item.next());
+            REQUIRE_THROWS_AS(item.string(), mapbox::util::pbf::end_of_buffer_exception);
+        }
+    }
+
 }
 
