@@ -23,6 +23,9 @@ class pbf {
     inline uint64_t varint_impl();
     inline int64_t svarint_impl();
 
+    template <typename T>
+    inline std::pair<const T*, const T*> packed_fixed_impl();
+
 public:
 
     static inline int32_t zigzag_decode(uint32_t n) noexcept;
@@ -68,6 +71,11 @@ public:
     inline void skip();
     inline void skipValue(uint32_t val);
     inline void skipBytes(uint32_t bytes);
+
+    inline std::pair<const uint32_t*, const uint32_t*> packed_fixed32();
+    inline std::pair<const uint64_t*, const uint64_t*> packed_fixed64();
+    inline std::pair<const int32_t*, const int32_t*> packed_sfixed32();
+    inline std::pair<const int64_t*, const int64_t*> packed_sfixed64();
 
     const char *data = nullptr;
     const char *end = nullptr;
@@ -267,6 +275,30 @@ void pbf::skipBytes(uint32_t bytes) {
         throw end_of_buffer_exception();
     }
     data += bytes;
+}
+
+template <typename T>
+std::pair<const T*, const T*> pbf::packed_fixed_impl() {
+    uint32_t len = varint<uint32_t>();
+    assert(len % sizeof(T) == 0);
+    skipBytes(len);
+    return std::make_pair(reinterpret_cast<const T*>(data-len), reinterpret_cast<const T*>(data));
+}
+
+std::pair<const uint32_t*, const uint32_t*> pbf::packed_fixed32() {
+    return packed_fixed_impl<uint32_t>();
+}
+
+std::pair<const uint64_t*, const uint64_t*> pbf::packed_fixed64() {
+    return packed_fixed_impl<uint64_t>();
+}
+
+std::pair<const int32_t*, const int32_t*> pbf::packed_sfixed32() {
+    return packed_fixed_impl<int32_t>();
+}
+
+std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
+    return packed_fixed_impl<int64_t>();
 }
 
 }} // end namespace mapbox::util
