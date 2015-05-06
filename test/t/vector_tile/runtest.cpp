@@ -87,14 +87,14 @@ TEST_CASE("reading vector tiles") {
                         switch (feature.tag) {
                             case 1: { // optional uint64 id
                                 auto id = feature.varint<uint64_t>();
-                                REQUIRE(id >= 1);
-                                REQUIRE(id <= 504);
+                                REQUIRE(id >=   1ULL);
+                                REQUIRE(id <= 504ULL);
                                 break;
                             }
                             case 3: { // optional GeomType
                                 auto geom_type = feature.varint<uint32_t>();
-                                REQUIRE(geom_type >= 1);
-                                REQUIRE(geom_type <= 3);
+                                REQUIRE(geom_type >= 1UL);
+                                REQUIRE(geom_type <= 3UL);
                                 break;
                             }
                             default:
