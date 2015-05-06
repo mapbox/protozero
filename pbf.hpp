@@ -70,8 +70,11 @@ class pbf {
 
 public:
 
-    static inline int32_t zigzag_decode(uint32_t n) noexcept;
-    static inline int64_t zigzag_decode(uint64_t n) noexcept;
+    static inline uint32_t zigzag_encode32(int32_t n) noexcept;
+    static inline uint64_t zigzag_encode64(int64_t n) noexcept;
+
+    static inline int32_t zigzag_decode32(uint32_t n) noexcept;
+    static inline int64_t zigzag_decode64(uint64_t n) noexcept;
 
     struct exception : std::exception { const char *what() const noexcept { return "pbf exception"; } };
     struct unterminated_varint_exception : exception { const char *what() const noexcept { return "pbf unterminated varint exception"; } };
@@ -174,7 +177,7 @@ public:
 
         T operator*() {
             const char* d = this->data; // will be thrown away
-            return static_cast<T>(zigzag_decode(get_varint(&d, this->end)));
+            return static_cast<T>(zigzag_decode64(get_varint(&d, this->end)));
         }
 
         const_svarint_iterator& operator++() {
@@ -255,16 +258,24 @@ T pbf::varint() {
     return static_cast<T>(varint_impl());
 }
 
-inline int32_t pbf::zigzag_decode(uint32_t n) noexcept {
+inline uint32_t pbf::zigzag_encode32(int32_t n) noexcept {
+    return static_cast<uint32_t>(n << 1) ^ static_cast<uint32_t>(n >> 31);
+}
+
+inline uint64_t pbf::zigzag_encode64(int64_t n) noexcept {
+    return static_cast<uint64_t>(n << 1) ^ static_cast<uint64_t>(n >> 63);
+}
+
+inline int32_t pbf::zigzag_decode32(uint32_t n) noexcept {
     return static_cast<int32_t>(n >> 1) ^ -static_cast<int32_t>((n & 1));
 }
 
-inline int64_t pbf::zigzag_decode(uint64_t n) noexcept {
+inline int64_t pbf::zigzag_decode64(uint64_t n) noexcept {
     return static_cast<int64_t>(n >> 1) ^ -static_cast<int64_t>((n & 1));
 }
 
 int64_t pbf::svarint_impl() {
-    return zigzag_decode(varint_impl());
+    return zigzag_decode64(varint_impl());
 }
 
 template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type>
