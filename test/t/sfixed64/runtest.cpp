@@ -9,7 +9,7 @@ TEST_CASE("sfixed64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.sfixed64() == 0ll);
+        REQUIRE(item.sfixed64() == 0LL);
         REQUIRE(!item.next());
     }
 

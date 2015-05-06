@@ -20,7 +20,7 @@ TEST_CASE("repeated_packed_int64") {
         auto it_pair = item.packed_int64();
         REQUIRE(!item.next());
 
-        REQUIRE(*it_pair.first == 17l);
+        REQUIRE(*it_pair.first == 17LL);
         REQUIRE(++it_pair.first == it_pair.second);
     }
 
@@ -34,10 +34,12 @@ TEST_CASE("repeated_packed_int64") {
         REQUIRE(!item.next());
 
         auto it = it_pair.first;
-        REQUIRE(*it++ == 17l);
-        REQUIRE(*it++ == 0l);
-        REQUIRE(*it++ == 1l);
+        REQUIRE(*it++ == 17LL);
+        REQUIRE(*it++ ==  0LL);
+        REQUIRE(*it++ ==  1LL);
+        REQUIRE(*it++ == -1LL);
         REQUIRE(*it++ == std::numeric_limits<int64_t>::max());
+        REQUIRE(*it++ == std::numeric_limits<int64_t>::min());
         REQUIRE(it == it_pair.second);
     }
 

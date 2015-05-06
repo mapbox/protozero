@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("repeated_packed_sint64") {
+TEST_CASE("repeated_packed_sfixed64") {
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-empty.pbf");
+        std::string buffer = get_file_data("test/t/repeated_packed_sfixed64/data-empty.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -12,12 +12,12 @@ TEST_CASE("repeated_packed_sint64") {
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-one.pbf");
+        std::string buffer = get_file_data("test/t/repeated_packed_sfixed64/data-one.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        auto it_pair = item.packed_sint64();
+        auto it_pair = item.packed_sfixed64();
         REQUIRE(!item.next());
 
         REQUIRE(*it_pair.first == 17LL);
@@ -25,12 +25,12 @@ TEST_CASE("repeated_packed_sint64") {
     }
 
     SECTION("many") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-many.pbf");
+        std::string buffer = get_file_data("test/t/repeated_packed_sfixed64/data-many.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        auto it_pair = item.packed_sint64();
+        auto it_pair = item.packed_sfixed64();
         REQUIRE(!item.next());
 
         auto it = it_pair.first;
@@ -44,12 +44,12 @@ TEST_CASE("repeated_packed_sint64") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-many.pbf");
+        std::string buffer = get_file_data("test/t/repeated_packed_sfixed64/data-many.pbf");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.packed_sint64(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.packed_sfixed64(), mapbox::util::pbf::end_of_buffer_exception);
         }
     }
 

@@ -5,13 +5,13 @@
 int main(int c, char *argv[]) {
     TestSInt32::Test msg;
 
-    msg.set_i(0l);
+    msg.set_i(0L);
     write_to_file(msg, "data-zero.pbf");
 
-    msg.set_i(1l);
+    msg.set_i(1L);
     write_to_file(msg, "data-pos.pbf");
 
-    msg.set_i(-1l);
+    msg.set_i(-1L);
     write_to_file(msg, "data-neg.pbf");
 
     msg.set_i(std::numeric_limits<int32_t>::max());

@@ -20,7 +20,7 @@ TEST_CASE("repeated_packed_int32") {
         auto it_pair = item.packed_int32();
         REQUIRE(!item.next());
 
-        REQUIRE(*it_pair.first == 17l);
+        REQUIRE(*it_pair.first == 17L);
         REQUIRE(++it_pair.first == it_pair.second);
     }
 
@@ -34,9 +34,9 @@ TEST_CASE("repeated_packed_int32") {
         REQUIRE(!item.next());
 
         auto it = it_pair.first;
-        REQUIRE(*it++ == 17l);
-        REQUIRE(*it++ == 0l);
-        REQUIRE(*it++ == 1l);
+        REQUIRE(*it++ == 17L);
+        REQUIRE(*it++ ==  0L);
+        REQUIRE(*it++ ==  1L);
         REQUIRE(*it++ == std::numeric_limits<int32_t>::max());
         REQUIRE(it == it_pair.second);
     }

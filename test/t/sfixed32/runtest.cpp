@@ -9,7 +9,7 @@ TEST_CASE("sfixed32") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.sfixed32() == 0);
+        REQUIRE(item.sfixed32() == 0L);
         REQUIRE(!item.next());
     }
 

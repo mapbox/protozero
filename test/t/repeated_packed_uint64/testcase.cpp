@@ -7,11 +7,11 @@ int main(int c, char *argv[]) {
 
     write_to_file(msg, "data-empty.pbf");
 
-    msg.add_i(17);
+    msg.add_i(17ULL);
     write_to_file(msg, "data-one.pbf");
 
-    msg.add_i(0);
-    msg.add_i(1);
+    msg.add_i(0ULL);
+    msg.add_i(1ULL);
     msg.add_i(std::numeric_limits<uint64_t>::max());
     write_to_file(msg, "data-many.pbf");
 }

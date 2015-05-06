@@ -9,7 +9,7 @@ TEST_CASE("int64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<int64_t>() == 0l);
+        REQUIRE(item.varint<int64_t>() == 0LL);
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("int64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<int64_t>() == 1l);
+        REQUIRE(item.varint<int64_t>() == 1LL);
         REQUIRE(!item.next());
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("int64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<int64_t>() == -1l);
+        REQUIRE(item.varint<int64_t>() == -1LL);
         REQUIRE(!item.next());
     }
 
