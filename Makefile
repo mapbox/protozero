@@ -23,7 +23,7 @@ endif
 UNIT_TESTS := $(wildcard test/t/*/runtest.cpp)
 UNIT_TESTS_O := $(subst .cpp,.o,$(UNIT_TESTS))
 
-all: test
+all: ./test/run_all_tests
 
 ./test/t/%/runtest.o: test/t/%/runtest.cpp pbf.hpp
 	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
@@ -51,5 +51,5 @@ clean:
 	rm -f ./test/t/*/runtest.o
 	rm -f ./test/t/*/runtest.gc*
 
-.PHONY: test all
+.PHONY: test
 
