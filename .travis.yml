@@ -1,28 +1,31 @@
+#-----------------------------------------------------------------------------
+#
+#  Configuration for continuous integration service at travis-ci.org
+#
+#-----------------------------------------------------------------------------
+
 language: cpp
 
 sudo: required
 
-os:
- - linux
- - osx
-
-compiler:
- - clang
- - gcc
-
 matrix:
-  exclude:
-     - os: osx
-       compiler: gcc
+    include:
+        - os: linux
+          compiler: clang
+        - os: linux
+          compiler: gcc
+        - os: osx
+          compiler: clang
 
 before_install:
- - curl --silent https://raw.githubusercontent.com/mapbox/mason/master/scripts/setup_cpp11_toolchain.sh -o ./cpp11 && source ./cpp11
+    - curl --silent https://raw.githubusercontent.com/mapbox/mason/master/scripts/setup_cpp11_toolchain.sh -o ./cpp11 && source ./cpp11
 
 install:
- - make
+    - make
 
 before_script:
- - make test
+    - make test
 
 script:
- - ./scripts/${TRAVIS_OS_NAME}.sh
+    - ./scripts/${TRAVIS_OS_NAME}.sh
+
