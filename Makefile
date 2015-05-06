@@ -37,13 +37,13 @@ check: pbf.hpp test/run_all_tests.cpp test/include/test.hpp test/include/testcas
 clean:
 	rm -f ./test/run_all_tests
 	rm -f ./test/run_all_tests.o
+	rm -f ./test/run_all_tests.gc*
 	rm -f ./test/t/*/testcase.pb.cc
 	rm -f ./test/t/*/testcase.pb.h
 	rm -f ./test/t/*/testcase.o
 	rm -f ./test/t/*/testcase
 	rm -f ./test/t/*/runtest.o
-	rm -rf ./out
-	rm -f run_all_tests.gc*
+	rm -f ./test/t/*/runtest.gc*
 
 .PHONY: test
 
