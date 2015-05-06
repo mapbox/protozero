@@ -75,7 +75,6 @@ TEST_CASE("reading vector tiles") {
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
-        std::vector<std::string> layer_names;
         int n=0;
         while (item.next(3)) { // repeated message Layer
             mapbox::util::pbf layer { item.message() };
