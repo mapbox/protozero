@@ -89,7 +89,13 @@ ignore this field.
 
 ## Tests
 
-Minimal right now. To see how to extract the layer names from [a vector tile](https://github.com/mapbox/vector-tile-spec) run:
+Minimal right now. Call
 
-    make clean && make test
+    make test
+
+to build all tests and run them.
+
+With Clang you can get a test coverage report with
+
+    CXXFLAGS="--coverage" LDFLAGS="--coverage" make test
 

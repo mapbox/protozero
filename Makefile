@@ -31,10 +31,6 @@ UNIT_TESTS_O := $(subst .cpp,.o,$(UNIT_TESTS))
 test: ./test/run_all_tests
 	./test/run_all_tests
 
-coverage:
-	mkdir -p ./out
-	$(CXX) -o out/cov-test --coverage test/run_all_tests.cpp -I./ $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $(LDFLAGS)
-
 clean:
 	rm -f ./test/run_all_tests
 	rm -f ./test/run_all_tests.o
