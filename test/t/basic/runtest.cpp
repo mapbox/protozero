@@ -11,6 +11,7 @@ TEST_CASE("basic") {
     SECTION("empty buffer is okay") {
         std::string buffer;
         mapbox::util::pbf item(buffer.data(), 0);
+        REQUIRE(!item); // test operator bool()
         REQUIRE(!item.next());
     }
 
@@ -20,6 +21,7 @@ TEST_CASE("basic") {
             *buffer = static_cast<char>(i);
             mapbox::util::pbf item(buffer, 1);
 
+            REQUIRE(!!item); // test operator bool()
             REQUIRE_THROWS({
                 item.next();
                 item.skip();
