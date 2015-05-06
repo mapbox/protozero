@@ -42,7 +42,7 @@ class pbf {
                 b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 49); if (b >= 0) break;
                 b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 56); if (b >= 0) break;
                 b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 63); if (b >= 0) break;
-                throw pbf::varint_too_long_exception();
+                throw varint_too_long_exception();
             } while (false);
         } else {
             int shift = 0;
@@ -51,7 +51,7 @@ class pbf {
                 shift += 7;
             }
             if (p == iend) {
-                throw pbf::end_of_buffer_exception();
+                throw end_of_buffer_exception();
             }
             val |= static_cast<uint64_t>(*p++) << shift;
         }
