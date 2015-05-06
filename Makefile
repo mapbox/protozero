@@ -31,6 +31,9 @@ UNIT_TESTS_O := $(subst .cpp,.o,$(UNIT_TESTS))
 test: ./test/run_all_tests
 	./test/run_all_tests
 
+check: pbf.hpp test/run_all_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(UNIT_TESTS)
+	cppcheck --std=c++11 --enable=all $^
+
 clean:
 	rm -f ./test/run_all_tests
 	rm -f ./test/run_all_tests.o

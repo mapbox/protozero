@@ -99,3 +99,9 @@ With Clang you can get a test coverage report with
 
     CXXFLAGS="--coverage" LDFLAGS="--coverage" make test
 
+## Cppcheck
+
+For extra checks with [Cppcheck](http://cppcheck.sourceforge.net/) you can call
+
+    make check
+
