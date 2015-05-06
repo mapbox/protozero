@@ -30,8 +30,8 @@ class pbf {
         uint64_t val = 0;
 
         if (iend - begin >= kMaxVarintLength64) {  // fast path
-            int64_t b;
             do {
+                int64_t b;
                 b = *p++; val  = static_cast<uint64_t>((b & 0x7f)      ); if (b >= 0) break;
                 b = *p++; val |= static_cast<uint64_t>((b & 0x7f) <<  7); if (b >= 0) break;
                 b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 14); if (b >= 0) break;
