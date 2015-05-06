@@ -140,7 +140,7 @@ public:
             return static_cast<T>(get_varint(&d, end));
         }
 
-        const_varint_iterator& operator++() noexcept {
+        const_varint_iterator& operator++() {
             // Ignore the result, we call get_varint() just for the
             // side-effect of updating data.
             get_varint(&data, end);
@@ -177,7 +177,7 @@ public:
             return static_cast<T>(zigzag_decode(get_varint(&d, this->end)));
         }
 
-        const_svarint_iterator& operator++() noexcept {
+        const_svarint_iterator& operator++() {
             // Ignore the result, we call get_varint() just for the
             // side-effect of updating data.
             get_varint(&this->data, this->end);
