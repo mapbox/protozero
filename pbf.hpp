@@ -113,7 +113,7 @@ public:
 
     inline void skip();
     inline void skipValue(uint32_t val);
-    inline void skipBytes(uint32_t bytes);
+    inline void skipBytes(uint32_t len);
 
     inline std::pair<const uint32_t*, const uint32_t*> packed_fixed32();
     inline std::pair<const uint64_t*, const uint64_t*> packed_fixed64();
@@ -319,10 +319,10 @@ bool pbf::boolean() {
 
 std::pair<const char*, uint32_t> pbf::getData() {
     assert(is_wire_type(2) && "not a string or message");
-    uint32_t bytes = varint<uint32_t>();
+    uint32_t len = varint<uint32_t>();
     const char *pos = data;
-    skipBytes(bytes);
-    return std::make_pair(pos, bytes);
+    skipBytes(len);
+    return std::make_pair(pos, len);
 }
 
 std::string pbf::bytes() {
@@ -362,11 +362,11 @@ void pbf::skipValue(uint32_t val) {
     }
 }
 
-void pbf::skipBytes(uint32_t bytes) {
-    if (data + bytes > end) {
+void pbf::skipBytes(uint32_t len) {
+    if (data + len > end) {
         throw end_of_buffer_exception();
     }
-    data += bytes;
+    data += len;
 }
 
 template <typename T>
