@@ -4,8 +4,12 @@ CXXFLAGS := $(CXXFLAGS)
 LDFLAGS := $(LDFLAGS)
 
 WARNING_FLAGS := -Wall -Wextra -pedantic -Wsign-compare -Wsign-conversion -Wshadow -Wunused-parameter
-MORE_WARNING_FLAGS := -Weverything -Wno-weak-vtables -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-exit-time-destructors -Wno-switch-enum
-COMMON_FLAGS := -fvisibility-inlines-hidden -std=c++11 $(WARNING_FLAGS) $(MORE_WARNING_FLAGS)
+
+ifneq ($(findstring clang,$(CXX)),)
+    WARNING_FLAGS += -Weverything -Wno-weak-vtables -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-exit-time-destructors -Wno-switch-enum
+endif
+
+COMMON_FLAGS := -fvisibility-inlines-hidden -std=c++11 $(WARNING_FLAGS)
 
 RELEASE_FLAGS := -O3 -DNDEBUG -march=native -Wpadded
 DEBUG_FLAGS := -O0 -g -DDEBUG -fno-inline-functions
