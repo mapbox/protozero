@@ -21,11 +21,12 @@ documentation.
  */
 
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <exception>
 #include <iterator>
 #include <string>
-#include <type_traits>
 #include <utility>
 
 namespace mapbox { namespace util {

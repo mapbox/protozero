@@ -37,6 +37,10 @@ all: ./test/run_all_tests
 test: ./test/run_all_tests
 	./test/run_all_tests
 
+iwyu: pbf.hpp test/run_all_tests.cpp $(UNIT_TESTS)
+	iwyu -Xiwyu -- -std=c++11 -I. pbf.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -I. -Itest/include test/run_all_tests.cpp || true
+
 check: pbf.hpp test/run_all_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(UNIT_TESTS)
 	cppcheck --std=c++11 --enable=all $^
 
