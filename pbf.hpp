@@ -161,6 +161,11 @@ public:
 
     public:
 
+        const_varint_iterator() noexcept :
+            m_data(nullptr),
+            m_end(nullptr) {
+        }
+
         const_varint_iterator(const char *data, const char* end) noexcept :
             m_data(data),
             m_end(end) {
@@ -206,6 +211,10 @@ public:
     class const_svarint_iterator : public const_varint_iterator<T> {
 
     public:
+
+        const_svarint_iterator() noexcept :
+            const_varint_iterator<T>() {
+        }
 
         const_svarint_iterator(const char *data, const char* end) noexcept :
             const_varint_iterator<T>(data, end) {
