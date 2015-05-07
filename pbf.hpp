@@ -75,6 +75,9 @@ class pbf {
     template <typename T>
     inline std::pair<const T*, const T*> packed_fixed_impl();
 
+    inline void skip_value(uint32_t val);
+    inline void skip_bytes(uint32_t len);
+
 public:
 
     static inline uint32_t zigzag_encode32(int32_t n) noexcept;
@@ -132,8 +135,6 @@ public:
     inline pbf get_message();
 
     inline void skip();
-    inline void skip_value(uint32_t val);
-    inline void skip_bytes(uint32_t len);
 
     inline std::pair<const uint32_t*, const uint32_t*> packed_fixed32();
     inline std::pair<const uint64_t*, const uint64_t*> packed_fixed64();
