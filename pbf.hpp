@@ -220,13 +220,21 @@ public:
 
     }; // class const_svarint_iterator
 
-    inline std::pair<pbf::const_varint_iterator<int32_t>, pbf::const_varint_iterator<int32_t>> packed_int32();
-    inline std::pair<pbf::const_varint_iterator<uint32_t>, pbf::const_varint_iterator<uint32_t>> packed_uint32();
-    inline std::pair<pbf::const_svarint_iterator<int32_t>, pbf::const_svarint_iterator<int32_t>> packed_sint32();
+    typedef const_varint_iterator< int32_t> const_int32_iterator;
+    typedef const_varint_iterator<uint32_t> const_uint32_iterator;
+    typedef const_svarint_iterator<int32_t> const_sint32_iterator;
 
-    inline std::pair<pbf::const_varint_iterator<int64_t>, pbf::const_varint_iterator<int64_t>> packed_int64();
-    inline std::pair<pbf::const_varint_iterator<uint64_t>, pbf::const_varint_iterator<uint64_t>> packed_uint64();
-    inline std::pair<pbf::const_svarint_iterator<int64_t>, pbf::const_svarint_iterator<int64_t>> packed_sint64();
+    typedef const_varint_iterator< int64_t> const_int64_iterator;
+    typedef const_varint_iterator<uint64_t> const_uint64_iterator;
+    typedef const_svarint_iterator<int64_t> const_sint64_iterator;
+
+    inline std::pair<pbf::const_int32_iterator,  pbf::const_int32_iterator>  packed_int32();
+    inline std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> packed_uint32();
+    inline std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> packed_sint32();
+
+    inline std::pair<pbf::const_int64_iterator,  pbf::const_int64_iterator>  packed_int64();
+    inline std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> packed_uint64();
+    inline std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> packed_sint64();
 
     const char *data = nullptr;
     const char *end = nullptr;
@@ -421,40 +429,46 @@ std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
     return packed_fixed<int64_t>();
 }
 
-std::pair<pbf::const_varint_iterator<int32_t>, pbf::const_varint_iterator<int32_t>> pbf::packed_int32() {
+std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> pbf::packed_int32() {
     uint32_t len = varint<uint32_t>();
     skip_bytes(len);
-    return std::make_pair(pbf::const_varint_iterator<int32_t>(data-len, data), pbf::const_varint_iterator<int32_t>(data, data));
+    return std::make_pair(pbf::const_int32_iterator(data-len, data),
+                          pbf::const_int32_iterator(data, data));
 }
 
-std::pair<pbf::const_varint_iterator<uint32_t>, pbf::const_varint_iterator<uint32_t>> pbf::packed_uint32() {
+std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> pbf::packed_uint32() {
     uint32_t len = varint<uint32_t>();
     skip_bytes(len);
-    return std::make_pair(pbf::const_varint_iterator<uint32_t>(data-len, data), pbf::const_varint_iterator<uint32_t>(data, data));
+    return std::make_pair(pbf::const_uint32_iterator(data-len, data),
+                          pbf::const_uint32_iterator(data, data));
 }
 
-std::pair<pbf::const_svarint_iterator<int32_t>, pbf::const_svarint_iterator<int32_t>> pbf::packed_sint32() {
+std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> pbf::packed_sint32() {
     uint32_t len = varint<uint32_t>();
     skip_bytes(len);
-    return std::make_pair(pbf::const_svarint_iterator<int32_t>(data-len, data), pbf::const_svarint_iterator<int32_t>(data, data));
+    return std::make_pair(pbf::const_sint32_iterator(data-len, data),
+                          pbf::const_sint32_iterator(data, data));
 }
 
-std::pair<pbf::const_varint_iterator<int64_t>, pbf::const_varint_iterator<int64_t>> pbf::packed_int64() {
+std::pair<pbf::const_int64_iterator, pbf::const_int64_iterator> pbf::packed_int64() {
     uint32_t len = varint<uint32_t>();
     skip_bytes(len);
-    return std::make_pair(pbf::const_varint_iterator<int64_t>(data-len, data), pbf::const_varint_iterator<int64_t>(data, data));
+    return std::make_pair(pbf::const_int64_iterator(data-len, data),
+                          pbf::const_int64_iterator(data, data));
 }
 
-std::pair<pbf::const_varint_iterator<uint64_t>, pbf::const_varint_iterator<uint64_t>> pbf::packed_uint64() {
+std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> pbf::packed_uint64() {
     uint32_t len = varint<uint32_t>();
     skip_bytes(len);
-    return std::make_pair(pbf::const_varint_iterator<uint64_t>(data-len, data), pbf::const_varint_iterator<uint64_t>(data, data));
+    return std::make_pair(pbf::const_uint64_iterator(data-len, data),
+                          pbf::const_uint64_iterator(data, data));
 }
 
-std::pair<pbf::const_svarint_iterator<int64_t>, pbf::const_svarint_iterator<int64_t>> pbf::packed_sint64() {
+std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> pbf::packed_sint64() {
     uint32_t len = varint<uint32_t>();
     skip_bytes(len);
-    return std::make_pair(pbf::const_svarint_iterator<int64_t>(data-len, data), pbf::const_svarint_iterator<int64_t>(data, data));
+    return std::make_pair(pbf::const_sint64_iterator(data-len, data),
+                          pbf::const_sint64_iterator(data, data));
 }
 
 }} // end namespace mapbox::util
