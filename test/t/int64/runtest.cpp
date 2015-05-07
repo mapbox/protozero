@@ -63,5 +63,14 @@ TEST_CASE("int64") {
         }
     }
 
+    SECTION("varint overflow") {
+        std::string buffer = get_file_data("test/t/int64/data-overflow.pbf");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        REQUIRE(item.next());
+        REQUIRE_THROWS_AS(item.get_int64(), mapbox::util::pbf::varint_too_long_exception);
+    }
+
 }
 
