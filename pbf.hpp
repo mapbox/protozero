@@ -93,9 +93,16 @@ class pbf {
         return val;
     }
 
+    // A pointer to the next unread data.
     const char *m_data = nullptr;
+
+    // A pointer to one past the end of data.
     const char *m_end = nullptr;
-    uint32_t m_value = 0;
+
+    // The wire type of the current field.
+    uint32_t m_wire_type = 0;
+
+    // The tag of the current field.
     uint32_t m_tag = 0;
 
     template <typename T> inline T fixed();
@@ -109,18 +116,88 @@ class pbf {
 
 public:
 
+    /**
+     * ZigZag encodes a 32 bit integer.
+     *
+     * This is a helper function used inside the pbf class, but could be
+     * useful in other contexts.
+     */
     static inline uint32_t encode_zigzag32(int32_t n) noexcept;
+
+    /**
+     * ZigZag encodes a 64 bit integer.
+     *
+     * This is a helper function used inside the pbf class, but could be
+     * useful in other contexts.
+     */
     static inline uint64_t encode_zigzag64(int64_t n) noexcept;
 
+    /**
+     * Decodes a 32 bit ZigZag-encoded integer.
+     *
+     * This is a helper function used inside the pbf class, but could be
+     * useful in other contexts.
+     */
     static inline int32_t decode_zigzag32(uint32_t n) noexcept;
+
+    /**
+     * Decodes a 64 bit ZigZag-encoded integer.
+     *
+     * This is a helper function used inside the pbf class, but could be
+     * useful in other contexts.
+     */
     static inline int64_t decode_zigzag64(uint64_t n) noexcept;
 
-    struct exception : std::exception { const char *what() const noexcept { return "pbf exception"; } };
-    struct varint_too_long_exception : exception { const char *what() const noexcept { return "pbf varint too long exception"; } };
-    struct unknown_field_type_exception : exception { const char *what() const noexcept { return "pbf unknown field type exception"; } };
-    struct end_of_buffer_exception : exception { const char *what() const noexcept { return "pbf end of buffer exception"; } };
+    /**
+     * All exceptions thrown by the functions of the pbf class derive from
+     * this exception.
+     */
+    struct exception : std::exception {
+        const char *what() const noexcept { return "pbf exception"; }
+    };
 
+    /**
+     * This exception is thrown when parsing a varint thats larger than allowed.
+     * This should never happen unless the data is corrupted.
+     * After the exception the pbf object is in an unknown
+     * state and you cannot recover from that.
+     */
+    struct varint_too_long_exception : exception {
+        const char *what() const noexcept { return "pbf varint too long exception"; }
+    };
+
+    /**
+     * This exception is thrown when the type of a field is unknown.
+     * This should never happen unless the data is corrupted.
+     * After the exception the pbf object is in an unknown
+     * state and you cannot recover from that.
+     */
+    struct unknown_field_type_exception : exception {
+        const char *what() const noexcept { return "pbf unknown field type exception"; }
+    };
+
+    /**
+     * This exception is thrown when we are trying to read a field and there
+     * are not enough bytes left in the buffer to read it. Almost all functions
+     * can throw this exception.
+     * This should never happen unless the data is corrupted or you have
+     * initialized the pbf object with incomplete data.
+     * After the exception the pbf object is in an unknown
+     * state and you cannot recover from that.
+     */
+    struct end_of_buffer_exception : exception {
+        const char *what() const noexcept { return "pbf end of buffer exception"; }
+    };
+
+    /**
+     * Construct a pbf message from a data pointer and a length. The pointer
+     * will be stored inside the pbf object, no data is copied. So you must
+     * make sure the buffer stays valid as long as the pbf object is used.
+     *
+     * The buffer must contain a complete protobuf message.
+     */
     inline pbf(const char *data, size_t length);
+
     inline pbf() = default;
 
     inline pbf(const pbf&) = default;
@@ -131,14 +208,83 @@ public:
 
     inline ~pbf() = default;
 
+    /**
+     * The tag of the current field. The tag is the field number from the
+     * description in the .proto file.
+     *
+     * Call next() before calling this function to set the current field.
+     *
+     * @returns tag of the current field.
+     */
     inline uint32_t tag() const noexcept { return m_tag; }
 
-    inline int wire_type() const noexcept;
-    inline bool is_wire_type(int type) const noexcept;
+    /**
+     * Get the wire type of the current field. The wire types are:
+     *
+     * 0 - varint
+     * 1 - 64 bit
+     * 2 - length-delimited
+     * 5 - 32 bit
+     *
+     * All other types are illegal.
+     *
+     * Call next() before calling this function to set the current field.
+     *
+     * @returns wire type of the current field.
+     */
+    inline uint32_t wire_type() const noexcept;
 
+    /**
+     * Check the wire type of the current field.
+     *
+     * @returns true if the current field has the given wire type.
+     */
+    inline bool has_wire_type(uint32_t type) const noexcept;
+
+    /**
+     * In a boolean context the pbf class evaluates to true if there are still
+     * fields available and to false if the last field has been read.
+     */
     inline operator bool() const noexcept;
 
+    /**
+     * Set next field in the message as the current field. This is usually
+     * called in a while loop:
+     *
+     * @code
+     *    pbf message(...);
+     *    while (message.next()) {
+     *        // handle field
+     *    }
+     * @endcode
+     *
+     * @returns true if there is a next field, false if not.
+     */
     inline bool next();
+
+    /**
+     * Set next field with given tag in the message as the current field.
+     * Fields with other tags are skipped. This is usually called in a while
+     * loop for repeated fields:
+     *
+     * @code
+     *    pbf message(...);
+     *    while (message.next(17)) {
+     *        // handle field
+     *    }
+     * @endcode
+     *
+     * or you can call it just once to get the one field with this tag:
+     *
+     * @code
+     *    pbf message(...);
+     *    if (message.next(17)) {
+     *        // handle field
+     *    }
+     * @endcode
+     *
+     * @returns true if there is a next field with this tag, false if not.
+     */
     inline bool next(uint32_t tag);
 
     inline int32_t get_int32() { return varint<int32_t>(); }
@@ -289,15 +435,15 @@ public:
 pbf::pbf(const char *data, size_t length)
     : m_data(data),
       m_end(data + length),
-      m_value(0),
+      m_wire_type(0),
       m_tag(0) {
 }
 
-int pbf::wire_type() const noexcept {
-    return m_value & 0x7;
+uint32_t pbf::wire_type() const noexcept {
+    return m_wire_type;
 }
 
-bool pbf::is_wire_type(int type) const noexcept {
+bool pbf::has_wire_type(uint32_t type) const noexcept {
     return wire_type() == type;
 }
 
@@ -307,8 +453,9 @@ pbf::operator bool() const noexcept {
 
 bool pbf::next() {
     if (m_data < m_end) {
-        m_value = get_uint32();
-        m_tag = m_value >> 3;
+        auto value = get_uint32();
+        m_tag = value >> 3;
+        m_wire_type = value & 0x07;
         return true;
     }
     return false;
@@ -360,44 +507,44 @@ T pbf::fixed() {
 }
 
 uint32_t pbf::get_fixed32() {
-    assert(is_wire_type(5) && "not a 32-bit fixed");
+    assert(has_wire_type(5) && "not a 32-bit fixed");
     return fixed<uint32_t>();
 }
 
 int32_t pbf::get_sfixed32() {
-    assert(is_wire_type(5) && "not a 32-bit fixed");
+    assert(has_wire_type(5) && "not a 32-bit fixed");
     return fixed<int32_t>();
 }
 
 uint64_t pbf::get_fixed64() {
-    assert(is_wire_type(1) && "not a 64-bit fixed");
+    assert(has_wire_type(1) && "not a 64-bit fixed");
     return fixed<uint64_t>();
 }
 
 int64_t pbf::get_sfixed64() {
-    assert(is_wire_type(1) && "not a 64-bit fixed");
+    assert(has_wire_type(1) && "not a 64-bit fixed");
     return fixed<int64_t>();
 }
 
 float pbf::get_float() {
-    assert(is_wire_type(5) && "not a 32-bit fixed");
+    assert(has_wire_type(5) && "not a 32-bit fixed");
     return fixed<float>();
 }
 
 double pbf::get_double() {
-    assert(is_wire_type(1) && "not a 64-bit fixed");
+    assert(has_wire_type(1) && "not a 64-bit fixed");
     return fixed<double>();
 }
 
 bool pbf::get_bool() {
-    assert(is_wire_type(0) && "not a varint");
+    assert(has_wire_type(0) && "not a varint");
     assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
     skip_bytes(1);
     return *reinterpret_cast<const bool *>(m_data - 1);
 }
 
 std::pair<const char*, uint32_t> pbf::get_data() {
-    assert(is_wire_type(2) && "not of type string, bytes or message");
+    assert(has_wire_type(2) && "not of type string, bytes or message");
     auto len = get_len_and_skip();
     return std::make_pair(m_data-len, len);
 }
@@ -424,7 +571,7 @@ void pbf::skip_bytes(uint32_t len) {
 }
 
 void pbf::skip() {
-    switch (m_value & 0x7) {
+    switch (wire_type()) {
         case 0: // varint
             get_uint32();
             break;

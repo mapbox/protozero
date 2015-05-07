@@ -29,5 +29,13 @@ TEST_CASE("basic") {
         }
     }
 
+    SECTION("illegal wire type") {
+        char buffer[1] = { 1 << 3 | 7 };
+
+        mapbox::util::pbf item(buffer, 1);
+        REQUIRE(item.next());
+        REQUIRE_THROWS_AS(item.skip(), mapbox::util::pbf::unknown_field_type_exception);
+    }
+
 }
 
