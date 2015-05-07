@@ -60,7 +60,6 @@ class pbf {
         return val;
     }
 
-
     template <typename T> inline T fixed();
     template <typename T> inline T varint();
     template <typename T> inline T svarint();
@@ -68,6 +67,8 @@ class pbf {
 
     inline void skip_value(uint32_t val);
     inline void skip_bytes(uint32_t len);
+
+    inline uint32_t get_len_and_skip();
 
 public:
 
@@ -355,10 +356,8 @@ bool pbf::get_bool() {
 
 std::pair<const char*, uint32_t> pbf::get_data() {
     assert(is_wire_type(2) && "not of type string, bytes or message");
-    uint32_t len = varint<uint32_t>();
-    const char *pos = data;
-    skip_bytes(len);
-    return std::make_pair(pos, len);
+    auto len = get_len_and_skip();
+    return std::make_pair(data-len, len);
 }
 
 std::string pbf::get_bytes() {
@@ -382,13 +381,13 @@ void pbf::skip() {
 void pbf::skip_value(uint32_t val) {
     switch (val & 0x7) {
         case 0: // varint
-            varint<uint32_t>();
+            get_uint32();
             break;
         case 1: // 64 bit
             skip_bytes(8);
             break;
         case 2: // string/bytes/message
-            skip_bytes(varint<uint32_t>());
+            skip_bytes(get_uint32());
             break;
         case 5: // 32 bit
             skip_bytes(4);
@@ -405,11 +404,16 @@ void pbf::skip_bytes(uint32_t len) {
     data += len;
 }
 
+uint32_t pbf::get_len_and_skip() {
+    uint32_t len = get_uint32();
+    skip_bytes(len);
+    return len;
+}
+
 template <typename T>
 std::pair<const T*, const T*> pbf::packed_fixed() {
-    uint32_t len = varint<uint32_t>();
+    auto len = get_len_and_skip();
     assert(len % sizeof(T) == 0);
-    skip_bytes(len);
     return std::make_pair(reinterpret_cast<const T*>(data-len), reinterpret_cast<const T*>(data));
 }
 
@@ -430,43 +434,37 @@ std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
 }
 
 std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> pbf::packed_int32() {
-    uint32_t len = varint<uint32_t>();
-    skip_bytes(len);
+    auto len = get_len_and_skip();
     return std::make_pair(pbf::const_int32_iterator(data-len, data),
                           pbf::const_int32_iterator(data, data));
 }
 
 std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> pbf::packed_uint32() {
-    uint32_t len = varint<uint32_t>();
-    skip_bytes(len);
+    auto len = get_len_and_skip();
     return std::make_pair(pbf::const_uint32_iterator(data-len, data),
                           pbf::const_uint32_iterator(data, data));
 }
 
 std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> pbf::packed_sint32() {
-    uint32_t len = varint<uint32_t>();
-    skip_bytes(len);
+    auto len = get_len_and_skip();
     return std::make_pair(pbf::const_sint32_iterator(data-len, data),
                           pbf::const_sint32_iterator(data, data));
 }
 
 std::pair<pbf::const_int64_iterator, pbf::const_int64_iterator> pbf::packed_int64() {
-    uint32_t len = varint<uint32_t>();
-    skip_bytes(len);
+    auto len = get_len_and_skip();
     return std::make_pair(pbf::const_int64_iterator(data-len, data),
                           pbf::const_int64_iterator(data, data));
 }
 
 std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> pbf::packed_uint64() {
-    uint32_t len = varint<uint32_t>();
-    skip_bytes(len);
+    auto len = get_len_and_skip();
     return std::make_pair(pbf::const_uint64_iterator(data-len, data),
                           pbf::const_uint64_iterator(data, data));
 }
 
 std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> pbf::packed_sint64() {
-    uint32_t len = varint<uint32_t>();
-    skip_bytes(len);
+    auto len = get_len_and_skip();
     return std::make_pair(pbf::const_sint64_iterator(data-len, data),
                           pbf::const_sint64_iterator(data, data));
 }
