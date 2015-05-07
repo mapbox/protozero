@@ -31,6 +31,26 @@ documentation.
 
 namespace mapbox { namespace util {
 
+/**
+ * This class represents a protobuf message. Either a top-level message or
+ * a nested sub-message. Top-level messages can be created from any buffer
+ * with a pointer and length:
+ *
+ * @code
+ *    std::string buffer;
+ *    // fill buffer...
+ *    pbf message(buffer.data(), buffer.size());
+ * @endcode
+ *
+ * Sub-messages are created using get_message():
+ *
+ * @code
+ *    pbf message(...);
+ *    message.next();
+ *    pbf submessage = message.get_message();
+ * @endcode
+ *
+ */
 class pbf {
 
     // from https://github.com/facebook/folly/blob/master/folly/Varint.h

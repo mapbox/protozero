@@ -44,6 +44,9 @@ iwyu: pbf.hpp test/run_all_tests.cpp $(UNIT_TESTS)
 check: pbf.hpp test/run_all_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(UNIT_TESTS)
 	cppcheck --std=c++11 --enable=all $^
 
+doc: doc/Doxyfile pbf.hpp
+	doxygen doc/Doxyfile
+
 clean:
 	rm -f ./test/run_all_tests
 	rm -f ./test/run_all_tests.o
@@ -54,6 +57,7 @@ clean:
 	rm -f ./test/t/*/testcase
 	rm -f ./test/t/*/runtest.o
 	rm -f ./test/t/*/runtest.gc*
+	rm -fr doc/doxygen_sqlite3.db doc/html
 
-.PHONY: test
+.PHONY: test doc
 
