@@ -1,6 +1,18 @@
 #ifndef MAPBOX_UTIL_PBF_HPP
 #define MAPBOX_UTIL_PBF_HPP
 
+/*****************************************************************************
+
+Minimalistic fast C++ decoder for a subset of the protocol buffer format.
+
+This is header-only, meaning there is nothing to build. Just include this file
+in your C++ application.
+
+This file is from https://github.com/mapbox/pbf.hpp where you can find more
+documentation.
+
+*****************************************************************************/
+
 /*
  * Some parts are from upb - a minimalist implementation of protocol buffers.
  *
