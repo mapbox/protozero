@@ -145,14 +145,14 @@ public:
 
     protected:
 
-        const char* data;
-        const char* end;
+        const char* m_data;
+        const char* m_end;
 
     public:
 
-        const_varint_iterator(const char *data_, const char* end_) noexcept :
-            data(data_),
-            end(end_) {
+        const_varint_iterator(const char *data, const char* end) noexcept :
+            m_data(data),
+            m_end(end) {
         }
 
         const_varint_iterator(const const_varint_iterator&) = default;
@@ -164,14 +164,14 @@ public:
         ~const_varint_iterator() = default;
 
         T operator*() {
-            const char* d = data; // will be thrown away
-            return static_cast<T>(decode_varint(&d, end));
+            const char* d = m_data; // will be thrown away
+            return static_cast<T>(decode_varint(&d, m_end));
         }
 
         const_varint_iterator& operator++() {
             // Ignore the result, we call decode_varint() just for the
             // side-effect of updating data.
-            decode_varint(&data, end);
+            decode_varint(&m_data, m_end);
             return *this;
         }
 
@@ -182,7 +182,7 @@ public:
         }
 
         bool operator==(const const_varint_iterator& rhs) const noexcept {
-            return data == rhs.data && end == rhs.end;
+            return m_data == rhs.m_data && m_end == rhs.m_end;
         }
 
         bool operator!=(const const_varint_iterator& rhs) const noexcept {
@@ -196,8 +196,8 @@ public:
 
     public:
 
-        const_svarint_iterator(const char *data_, const char* end_) noexcept :
-            const_varint_iterator<T>(data_, end_) {
+        const_svarint_iterator(const char *data, const char* end) noexcept :
+            const_varint_iterator<T>(data, end) {
         }
 
         const_svarint_iterator(const const_svarint_iterator&) = default;
@@ -209,14 +209,14 @@ public:
         ~const_svarint_iterator() = default;
 
         T operator*() {
-            const char* d = this->data; // will be thrown away
-            return static_cast<T>(decode_zigzag64(decode_varint(&d, this->end)));
+            const char* d = this->m_data; // will be thrown away
+            return static_cast<T>(decode_zigzag64(decode_varint(&d, this->m_end)));
         }
 
         const_svarint_iterator& operator++() {
             // Ignore the result, we call decode_varint() just for the
             // side-effect of updating data.
-            decode_varint(&this->data, this->end);
+            decode_varint(&this->m_data, this->m_end);
             return *this;
         }
 
