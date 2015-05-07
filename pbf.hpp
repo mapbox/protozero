@@ -70,7 +70,6 @@ class pbf {
     template <typename T> inline T svarint();
     template <typename T> inline std::pair<const T*, const T*> packed_fixed();
 
-    inline void skip_value(uint32_t val);
     inline void skip_bytes(uint32_t len);
 
     inline uint32_t get_len_and_skip();
@@ -100,7 +99,7 @@ public:
 
     inline ~pbf() = default;
 
-    inline uint32_t tag() { return m_tag; }
+    inline uint32_t tag() const noexcept { return m_tag; }
 
     inline int wire_type() const noexcept;
     inline bool is_wire_type(int type) const noexcept;
@@ -267,7 +266,7 @@ pbf::operator bool() const noexcept {
 
 bool pbf::next() {
     if (m_data < m_end) {
-        m_value = varint<uint32_t>();
+        m_value = get_uint32();
         m_tag = m_value >> 3;
         return true;
     }
@@ -330,12 +329,12 @@ int32_t pbf::get_sfixed32() {
 }
 
 uint64_t pbf::get_fixed64() {
-    assert(is_wire_type(1) && "not a 32-bit fixed");
+    assert(is_wire_type(1) && "not a 64-bit fixed");
     return fixed<uint64_t>();
 }
 
 int64_t pbf::get_sfixed64() {
-    assert(is_wire_type(1) && "not a 32-bit fixed");
+    assert(is_wire_type(1) && "not a 64-bit fixed");
     return fixed<int64_t>();
 }
 
@@ -376,12 +375,15 @@ pbf pbf::get_message() {
     return pbf(d.first, d.second);
 }
 
-void pbf::skip() {
-    skip_value(m_value);
+void pbf::skip_bytes(uint32_t len) {
+    if (m_data + len > m_end) {
+        throw end_of_buffer_exception();
+    }
+    m_data += len;
 }
 
-void pbf::skip_value(uint32_t val) {
-    switch (val & 0x7) {
+void pbf::skip() {
+    switch (m_value & 0x7) {
         case 0: // varint
             get_uint32();
             break;
@@ -397,13 +399,6 @@ void pbf::skip_value(uint32_t val) {
         default:
             throw unknown_field_type_exception();
     }
-}
-
-void pbf::skip_bytes(uint32_t len) {
-    if (m_data + len > m_end) {
-        throw end_of_buffer_exception();
-    }
-    m_data += len;
 }
 
 uint32_t pbf::get_len_and_skip() {
