@@ -9,7 +9,7 @@ TEST_CASE("uint32") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<uint32_t>() == 0ul);
+        REQUIRE(item.get_uint32() == 0ul);
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("uint32") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<uint32_t>() == 1ul);
+        REQUIRE(item.get_uint32() == 1ul);
         REQUIRE(!item.next());
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("uint32") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<uint32_t>() == std::numeric_limits<uint32_t>::max());
+        REQUIRE(item.get_uint32() == std::numeric_limits<uint32_t>::max());
         REQUIRE(!item.next());
     }
 
@@ -39,7 +39,7 @@ TEST_CASE("uint32") {
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.varint<uint32_t>(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_uint32(), mapbox::util::pbf::end_of_buffer_exception);
         }
     }
 

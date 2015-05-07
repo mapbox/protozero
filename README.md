@@ -52,12 +52,12 @@ Your code will basically always look like this:
         // switch depending on the tag (because the name is not available)
         switch (message.tag) {
             case 1:
-                // get data for tag 1 (in this case a varint)
-                uint32_t x = message.varint<uint32_t>();
+                // get data for tag 1 (in this case an uint32)
+                uint32_t x = message.get_uint32();
                 break;
             case 2:
                 // get data for tag 2 (in this case a string)
-                std::string s = message.string();
+                std::string s = message.get_string();
                 break;
             case 17:
                 // ignore data for tag 17
@@ -69,7 +69,7 @@ Your code will basically always look like this:
     }
 
 You always have to call `next()` and then either one of the accessor functions
-to get the field value (like `varint<uint32_t>()` or `string()`) or `skip()` to
+to get the field value (like `get_uint32()` or `get_string()`) or `skip()` to
 ignore this field.
 
 

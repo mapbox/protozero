@@ -9,11 +9,11 @@ TEST_CASE("message") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        mapbox::util::pbf subitem { item.message() };
+        mapbox::util::pbf subitem { item.get_message() };
         REQUIRE(!item.next());
 
         REQUIRE(subitem.next());
-        REQUIRE(subitem.string() == "foobar");
+        REQUIRE(subitem.get_string() == "foobar");
         REQUIRE(!subitem.next());
     }
 
@@ -23,7 +23,7 @@ TEST_CASE("message") {
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.string(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_string(), mapbox::util::pbf::end_of_buffer_exception);
         }
     }
 

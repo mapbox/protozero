@@ -62,8 +62,15 @@ class pbf {
 
 
     template <typename T> inline T fixed();
+
     inline uint64_t varint_impl();
     inline int64_t svarint_impl();
+
+    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
+    inline T varint();
+
+    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
+    inline T svarint();
 
     template <typename T>
     inline std::pair<const T*, const T*> packed_fixed_impl();
@@ -101,26 +108,28 @@ public:
     inline bool next();
     inline bool next(uint32_t tag);
 
-    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
-    inline T varint();
+    inline int32_t get_int32() { return varint<int32_t>(); }
+    inline int32_t get_sint32() { return svarint<int32_t>(); }
+    inline uint32_t get_uint32() { return varint<uint32_t>(); }
 
-    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
-    inline T svarint();
+    inline int64_t get_int64() { return varint<int64_t>(); }
+    inline int64_t get_sint64() { return svarint<int64_t>(); }
+    inline uint64_t get_uint64() { return varint<uint64_t>(); }
 
-    inline uint32_t fixed32();
-    inline int32_t sfixed32();
-    inline uint64_t fixed64();
-    inline int64_t sfixed64();
+    inline uint32_t get_fixed32();
+    inline int32_t get_sfixed32();
+    inline uint64_t get_fixed64();
+    inline int64_t get_sfixed64();
 
-    inline float float32();
-    inline double float64();
+    inline float get_float();
+    inline double get_double();
 
-    inline bool boolean();
+    inline bool get_bool();
 
-    inline std::pair<const char*, uint32_t> getData();
-    inline std::string bytes();
-    inline std::string string();
-    inline pbf message();
+    inline std::pair<const char*, uint32_t> get_data();
+    inline std::string get_bytes();
+    inline std::string get_string();
+    inline pbf get_message();
 
     inline void skip();
     inline void skipValue(uint32_t val);
@@ -315,62 +324,62 @@ T pbf::fixed() {
     return result;
 }
 
-uint32_t pbf::fixed32() {
+uint32_t pbf::get_fixed32() {
     assert(is_wire_type(5) && "not a 32-bit fixed");
     return fixed<uint32_t>();
 }
 
-int32_t pbf::sfixed32() {
+int32_t pbf::get_sfixed32() {
     assert(is_wire_type(5) && "not a 32-bit fixed");
     return fixed<int32_t>();
 }
 
-uint64_t pbf::fixed64() {
+uint64_t pbf::get_fixed64() {
     assert(is_wire_type(1) && "not a 32-bit fixed");
     return fixed<uint64_t>();
 }
 
-int64_t pbf::sfixed64() {
+int64_t pbf::get_sfixed64() {
     assert(is_wire_type(1) && "not a 32-bit fixed");
     return fixed<int64_t>();
 }
 
-float pbf::float32() {
+float pbf::get_float() {
     assert(is_wire_type(5) && "not a 32-bit fixed");
     return fixed<float>();
 }
 
-double pbf::float64() {
+double pbf::get_double() {
     assert(is_wire_type(1) && "not a 64-bit fixed");
     return fixed<double>();
 }
 
-bool pbf::boolean() {
+bool pbf::get_bool() {
     assert(is_wire_type(0) && "not a varint");
     assert((*data & 0x80) == 0 && "not a 1 byte varint");
     skipBytes(1);
     return *reinterpret_cast<const bool *>(data - 1);
 }
 
-std::pair<const char*, uint32_t> pbf::getData() {
-    assert(is_wire_type(2) && "not a string or message");
+std::pair<const char*, uint32_t> pbf::get_data() {
+    assert(is_wire_type(2) && "not of type string, bytes or message");
     uint32_t len = varint<uint32_t>();
     const char *pos = data;
     skipBytes(len);
     return std::make_pair(pos, len);
 }
 
-std::string pbf::bytes() {
-    auto d = getData();
+std::string pbf::get_bytes() {
+    auto d = get_data();
     return std::string(d.first, d.second);
 }
 
-std::string pbf::string() {
-    return bytes();
+std::string pbf::get_string() {
+    return get_bytes();
 }
 
-pbf pbf::message() {
-    auto d = getData();
+pbf pbf::get_message() {
+    auto d = get_data();
     return pbf(d.first, d.second);
 }
 
@@ -386,7 +395,7 @@ void pbf::skipValue(uint32_t val) {
         case 1: // 64 bit
             skipBytes(8);
             break;
-        case 2: // string/message
+        case 2: // string/bytes/message
             skipBytes(varint<uint32_t>());
             break;
         case 5: // 32 bit

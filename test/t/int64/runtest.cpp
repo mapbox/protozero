@@ -9,7 +9,7 @@ TEST_CASE("int64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<int64_t>() == 0LL);
+        REQUIRE(item.get_int64() == 0LL);
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("int64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<int64_t>() == 1LL);
+        REQUIRE(item.get_int64() == 1LL);
         REQUIRE(!item.next());
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("int64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<int64_t>() == -1LL);
+        REQUIRE(item.get_int64() == -1LL);
         REQUIRE(!item.next());
     }
 
@@ -39,7 +39,7 @@ TEST_CASE("int64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<int64_t>() == std::numeric_limits<int64_t>::max());
+        REQUIRE(item.get_int64() == std::numeric_limits<int64_t>::max());
         REQUIRE(!item.next());
     }
 
@@ -49,7 +49,7 @@ TEST_CASE("int64") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.varint<int64_t>() == std::numeric_limits<int64_t>::min());
+        REQUIRE(item.get_int64() == std::numeric_limits<int64_t>::min());
         REQUIRE(!item.next());
     }
 
@@ -59,7 +59,7 @@ TEST_CASE("int64") {
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.varint<int64_t>(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_int64(), mapbox::util::pbf::end_of_buffer_exception);
         }
     }
 

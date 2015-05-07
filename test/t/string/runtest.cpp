@@ -9,7 +9,7 @@ TEST_CASE("string") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.string() == "");
+        REQUIRE(item.get_string() == "");
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("string") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.string() == "x");
+        REQUIRE(item.get_string() == "x");
         REQUIRE(!item.next());
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("string") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.string() == "foobar");
+        REQUIRE(item.get_string() == "foobar");
         REQUIRE(!item.next());
     }
 
@@ -39,7 +39,7 @@ TEST_CASE("string") {
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.string(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_string(), mapbox::util::pbf::end_of_buffer_exception);
         }
     }
 

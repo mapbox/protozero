@@ -9,7 +9,7 @@ TEST_CASE("boolean") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(!item.boolean());
+        REQUIRE(!item.get_bool());
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("boolean") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.boolean());
+        REQUIRE(item.get_bool());
         REQUIRE(!item.next());
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("boolean") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.boolean());
+        REQUIRE(item.get_bool());
         REQUIRE(!item.next());
     }
 
@@ -39,7 +39,7 @@ TEST_CASE("boolean") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.boolean());
+        REQUIRE(item.get_bool());
         REQUIRE(!item.next());
     }
 

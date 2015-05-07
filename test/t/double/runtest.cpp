@@ -9,7 +9,7 @@ TEST_CASE("double") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.float64() == Approx(0.0));
+        REQUIRE(item.get_double() == Approx(0.0));
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("double") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.float64() == Approx(4.893));
+        REQUIRE(item.get_double() == Approx(4.893));
         REQUIRE(!item.next());
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("double") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE(item.float64() == Approx(-9232.33));
+        REQUIRE(item.get_double() == Approx(-9232.33));
         REQUIRE(!item.next());
     }
 
@@ -39,7 +39,7 @@ TEST_CASE("double") {
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.float64(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_double(), mapbox::util::pbf::end_of_buffer_exception);
         }
     }
 
