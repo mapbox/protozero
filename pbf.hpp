@@ -60,6 +60,11 @@ class pbf {
         return val;
     }
 
+    const char *m_data = nullptr;
+    const char *m_end = nullptr;
+    uint32_t m_value = 0;
+    uint32_t m_tag = 0;
+
     template <typename T> inline T fixed();
     template <typename T> inline T varint();
     template <typename T> inline T svarint();
@@ -94,6 +99,8 @@ public:
     inline pbf& operator=(pbf&& other) = default;
 
     inline ~pbf() = default;
+
+    inline uint32_t tag() { return m_tag; }
 
     inline int wire_type() const noexcept;
     inline bool is_wire_type(int type) const noexcept;
@@ -237,22 +244,17 @@ public:
     inline std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> packed_uint64();
     inline std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> packed_sint64();
 
-    const char *data = nullptr;
-    const char *end = nullptr;
-    uint32_t value = 0;
-    uint32_t tag = 0;
-
 }; // class pbf
 
-pbf::pbf(const char *data_, size_t length)
-    : data(data_),
-      end(data_ + length),
-      value(0),
-      tag(0) {
+pbf::pbf(const char *data, size_t length)
+    : m_data(data),
+      m_end(data + length),
+      m_value(0),
+      m_tag(0) {
 }
 
 int pbf::wire_type() const noexcept {
-    return value & 0x7;
+    return m_value & 0x7;
 }
 
 bool pbf::is_wire_type(int type) const noexcept {
@@ -260,13 +262,13 @@ bool pbf::is_wire_type(int type) const noexcept {
 }
 
 pbf::operator bool() const noexcept {
-    return data < end;
+    return m_data < m_end;
 }
 
 bool pbf::next() {
-    if (data < end) {
-        value = varint<uint32_t>();
-        tag = value >> 3;
+    if (m_data < m_end) {
+        m_value = varint<uint32_t>();
+        m_tag = m_value >> 3;
         return true;
     }
     return false;
@@ -274,7 +276,7 @@ bool pbf::next() {
 
 bool pbf::next(uint32_t requested_tag) {
     while (next()) {
-        if (tag == requested_tag) {
+        if (m_tag == requested_tag) {
             return true;
         } else {
             skip();
@@ -285,7 +287,7 @@ bool pbf::next(uint32_t requested_tag) {
 
 template <typename T>
 T pbf::varint() {
-    return static_cast<T>(decode_varint(&data, end));
+    return static_cast<T>(decode_varint(&m_data, m_end));
 }
 
 inline uint32_t pbf::encode_zigzag32(int32_t n) noexcept {
@@ -306,14 +308,14 @@ inline int64_t pbf::decode_zigzag64(uint64_t n) noexcept {
 
 template <typename T>
 T pbf::svarint() {
-    return static_cast<T>(decode_zigzag64(decode_varint(&data, end)));
+    return static_cast<T>(decode_zigzag64(decode_varint(&m_data, m_end)));
 }
 
 template <typename T>
 T pbf::fixed() {
     skip_bytes(sizeof(T));
     T result;
-    memcpy(&result, data - sizeof(T), sizeof(T));
+    memcpy(&result, m_data - sizeof(T), sizeof(T));
     return result;
 }
 
@@ -349,15 +351,15 @@ double pbf::get_double() {
 
 bool pbf::get_bool() {
     assert(is_wire_type(0) && "not a varint");
-    assert((*data & 0x80) == 0 && "not a 1 byte varint");
+    assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
     skip_bytes(1);
-    return *reinterpret_cast<const bool *>(data - 1);
+    return *reinterpret_cast<const bool *>(m_data - 1);
 }
 
 std::pair<const char*, uint32_t> pbf::get_data() {
     assert(is_wire_type(2) && "not of type string, bytes or message");
     auto len = get_len_and_skip();
-    return std::make_pair(data-len, len);
+    return std::make_pair(m_data-len, len);
 }
 
 std::string pbf::get_bytes() {
@@ -375,7 +377,7 @@ pbf pbf::get_message() {
 }
 
 void pbf::skip() {
-    skip_value(value);
+    skip_value(m_value);
 }
 
 void pbf::skip_value(uint32_t val) {
@@ -398,10 +400,10 @@ void pbf::skip_value(uint32_t val) {
 }
 
 void pbf::skip_bytes(uint32_t len) {
-    if (data + len > end) {
+    if (m_data + len > m_end) {
         throw end_of_buffer_exception();
     }
-    data += len;
+    m_data += len;
 }
 
 uint32_t pbf::get_len_and_skip() {
@@ -414,7 +416,7 @@ template <typename T>
 std::pair<const T*, const T*> pbf::packed_fixed() {
     auto len = get_len_and_skip();
     assert(len % sizeof(T) == 0);
-    return std::make_pair(reinterpret_cast<const T*>(data-len), reinterpret_cast<const T*>(data));
+    return std::make_pair(reinterpret_cast<const T*>(m_data-len), reinterpret_cast<const T*>(m_data));
 }
 
 std::pair<const uint32_t*, const uint32_t*> pbf::packed_fixed32() {
@@ -435,38 +437,38 @@ std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
 
 std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> pbf::packed_int32() {
     auto len = get_len_and_skip();
-    return std::make_pair(pbf::const_int32_iterator(data-len, data),
-                          pbf::const_int32_iterator(data, data));
+    return std::make_pair(pbf::const_int32_iterator(m_data-len, m_data),
+                          pbf::const_int32_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> pbf::packed_uint32() {
     auto len = get_len_and_skip();
-    return std::make_pair(pbf::const_uint32_iterator(data-len, data),
-                          pbf::const_uint32_iterator(data, data));
+    return std::make_pair(pbf::const_uint32_iterator(m_data-len, m_data),
+                          pbf::const_uint32_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> pbf::packed_sint32() {
     auto len = get_len_and_skip();
-    return std::make_pair(pbf::const_sint32_iterator(data-len, data),
-                          pbf::const_sint32_iterator(data, data));
+    return std::make_pair(pbf::const_sint32_iterator(m_data-len, m_data),
+                          pbf::const_sint32_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_int64_iterator, pbf::const_int64_iterator> pbf::packed_int64() {
     auto len = get_len_and_skip();
-    return std::make_pair(pbf::const_int64_iterator(data-len, data),
-                          pbf::const_int64_iterator(data, data));
+    return std::make_pair(pbf::const_int64_iterator(m_data-len, m_data),
+                          pbf::const_int64_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> pbf::packed_uint64() {
     auto len = get_len_and_skip();
-    return std::make_pair(pbf::const_uint64_iterator(data-len, data),
-                          pbf::const_uint64_iterator(data, data));
+    return std::make_pair(pbf::const_uint64_iterator(m_data-len, m_data),
+                          pbf::const_uint64_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> pbf::packed_sint64() {
     auto len = get_len_and_skip();
-    return std::make_pair(pbf::const_sint64_iterator(data-len, data),
-                          pbf::const_sint64_iterator(data, data));
+    return std::make_pair(pbf::const_sint64_iterator(m_data-len, m_data),
+                          pbf::const_sint64_iterator(m_data, m_data));
 }
 
 }} // end namespace mapbox::util

@@ -35,10 +35,10 @@ TEST_CASE("reading vector tiles") {
 
         std::vector<std::string> layer_names;
         while (item.next()) {
-            if (item.tag == 3) { // repeated message Layer
+            if (item.tag() == 3) { // repeated message Layer
                 mapbox::util::pbf layer { item.get_message() };
                 while (layer.next()) {
-                    switch (layer.tag) {
+                    switch (layer.tag()) {
                         case 1: // required string name
                             layer_names.push_back(layer.get_string());
                             break;
@@ -84,7 +84,7 @@ TEST_CASE("reading vector tiles") {
                     ++n;
                     mapbox::util::pbf feature { layer.get_message() };
                     while (feature.next()) {
-                        switch (feature.tag) {
+                        switch (feature.tag()) {
                             case 1: { // optional uint64 id
                                 auto id = feature.get_uint64();
                                 REQUIRE(id >=   1ULL);
