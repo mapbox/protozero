@@ -23,7 +23,7 @@ class pbf {
     // from https://github.com/facebook/folly/blob/master/folly/Varint.h
     static const int8_t kMaxVarintLength64 = 10;
 
-    static uint64_t get_varint(const char** data, const char* end) {
+    static uint64_t decode_varint(const char** data, const char* end) {
         const int8_t* begin = reinterpret_cast<const int8_t*>(*data);
         const int8_t* iend = reinterpret_cast<const int8_t*>(end);
         const int8_t* p = begin;
@@ -62,29 +62,20 @@ class pbf {
 
 
     template <typename T> inline T fixed();
-
-    inline uint64_t varint_impl();
-    inline int64_t svarint_impl();
-
-    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
-    inline T varint();
-
-    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>
-    inline T svarint();
-
-    template <typename T>
-    inline std::pair<const T*, const T*> packed_fixed_impl();
+    template <typename T> inline T varint();
+    template <typename T> inline T svarint();
+    template <typename T> inline std::pair<const T*, const T*> packed_fixed();
 
     inline void skip_value(uint32_t val);
     inline void skip_bytes(uint32_t len);
 
 public:
 
-    static inline uint32_t zigzag_encode32(int32_t n) noexcept;
-    static inline uint64_t zigzag_encode64(int64_t n) noexcept;
+    static inline uint32_t encode_zigzag32(int32_t n) noexcept;
+    static inline uint64_t encode_zigzag64(int64_t n) noexcept;
 
-    static inline int32_t zigzag_decode32(uint32_t n) noexcept;
-    static inline int64_t zigzag_decode64(uint64_t n) noexcept;
+    static inline int32_t decode_zigzag32(uint32_t n) noexcept;
+    static inline int64_t decode_zigzag64(uint64_t n) noexcept;
 
     struct exception : std::exception { const char *what() const noexcept { return "pbf exception"; } };
     struct unterminated_varint_exception : exception { const char *what() const noexcept { return "pbf unterminated varint exception"; } };
@@ -166,13 +157,13 @@ public:
 
         T operator*() {
             const char* d = data; // will be thrown away
-            return static_cast<T>(get_varint(&d, end));
+            return static_cast<T>(decode_varint(&d, end));
         }
 
         const_varint_iterator& operator++() {
-            // Ignore the result, we call get_varint() just for the
+            // Ignore the result, we call decode_varint() just for the
             // side-effect of updating data.
-            get_varint(&data, end);
+            decode_varint(&data, end);
             return *this;
         }
 
@@ -211,13 +202,13 @@ public:
 
         T operator*() {
             const char* d = this->data; // will be thrown away
-            return static_cast<T>(zigzag_decode64(get_varint(&d, this->end)));
+            return static_cast<T>(decode_zigzag64(decode_varint(&d, this->end)));
         }
 
         const_svarint_iterator& operator++() {
-            // Ignore the result, we call get_varint() just for the
+            // Ignore the result, we call decode_varint() just for the
             // side-effect of updating data.
-            get_varint(&this->data, this->end);
+            decode_varint(&this->data, this->end);
             return *this;
         }
 
@@ -283,38 +274,30 @@ bool pbf::next(uint32_t requested_tag) {
     return false;
 }
 
-inline uint64_t pbf::varint_impl() {
-    return get_varint(&data, end);
-}
-
-template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type>
+template <typename T>
 T pbf::varint() {
-    return static_cast<T>(varint_impl());
+    return static_cast<T>(decode_varint(&data, end));
 }
 
-inline uint32_t pbf::zigzag_encode32(int32_t n) noexcept {
+inline uint32_t pbf::encode_zigzag32(int32_t n) noexcept {
     return static_cast<uint32_t>(n << 1) ^ static_cast<uint32_t>(n >> 31);
 }
 
-inline uint64_t pbf::zigzag_encode64(int64_t n) noexcept {
+inline uint64_t pbf::encode_zigzag64(int64_t n) noexcept {
     return static_cast<uint64_t>(n << 1) ^ static_cast<uint64_t>(n >> 63);
 }
 
-inline int32_t pbf::zigzag_decode32(uint32_t n) noexcept {
+inline int32_t pbf::decode_zigzag32(uint32_t n) noexcept {
     return static_cast<int32_t>(n >> 1) ^ -static_cast<int32_t>((n & 1));
 }
 
-inline int64_t pbf::zigzag_decode64(uint64_t n) noexcept {
+inline int64_t pbf::decode_zigzag64(uint64_t n) noexcept {
     return static_cast<int64_t>(n >> 1) ^ -static_cast<int64_t>((n & 1));
 }
 
-int64_t pbf::svarint_impl() {
-    return zigzag_decode64(varint_impl());
-}
-
-template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type>
+template <typename T>
 T pbf::svarint() {
-    return static_cast<T>(svarint_impl());
+    return static_cast<T>(decode_zigzag64(decode_varint(&data, end)));
 }
 
 template <typename T>
@@ -415,7 +398,7 @@ void pbf::skip_bytes(uint32_t len) {
 }
 
 template <typename T>
-std::pair<const T*, const T*> pbf::packed_fixed_impl() {
+std::pair<const T*, const T*> pbf::packed_fixed() {
     uint32_t len = varint<uint32_t>();
     assert(len % sizeof(T) == 0);
     skip_bytes(len);
@@ -423,19 +406,19 @@ std::pair<const T*, const T*> pbf::packed_fixed_impl() {
 }
 
 std::pair<const uint32_t*, const uint32_t*> pbf::packed_fixed32() {
-    return packed_fixed_impl<uint32_t>();
+    return packed_fixed<uint32_t>();
 }
 
 std::pair<const uint64_t*, const uint64_t*> pbf::packed_fixed64() {
-    return packed_fixed_impl<uint64_t>();
+    return packed_fixed<uint64_t>();
 }
 
 std::pair<const int32_t*, const int32_t*> pbf::packed_sfixed32() {
-    return packed_fixed_impl<int32_t>();
+    return packed_fixed<int32_t>();
 }
 
 std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
-    return packed_fixed_impl<int64_t>();
+    return packed_fixed<int64_t>();
 }
 
 std::pair<pbf::const_varint_iterator<int32_t>, pbf::const_varint_iterator<int32_t>> pbf::packed_int32() {

@@ -4,32 +4,32 @@
 using mapbox::util::pbf;
 
 inline int32_t zz32(int32_t val) {
-    return pbf::zigzag_decode32(pbf::zigzag_encode32(val));
+    return pbf::decode_zigzag32(pbf::encode_zigzag32(val));
 }
 
 inline int64_t zz64(int64_t val) {
-    return pbf::zigzag_decode64(pbf::zigzag_encode64(val));
+    return pbf::decode_zigzag64(pbf::encode_zigzag64(val));
 }
 
 TEST_CASE("zigzag") {
 
     SECTION("some values - 32bit") {
 
-        REQUIRE(pbf::zigzag_encode32( 0L) == 0UL);
-        REQUIRE(pbf::zigzag_encode32(-1L) == 1UL);
-        REQUIRE(pbf::zigzag_encode32( 1L) == 2UL);
-        REQUIRE(pbf::zigzag_encode32(-2L) == 3UL);
-        REQUIRE(pbf::zigzag_encode32( 2L) == 4UL);
+        REQUIRE(pbf::encode_zigzag32( 0L) == 0UL);
+        REQUIRE(pbf::encode_zigzag32(-1L) == 1UL);
+        REQUIRE(pbf::encode_zigzag32( 1L) == 2UL);
+        REQUIRE(pbf::encode_zigzag32(-2L) == 3UL);
+        REQUIRE(pbf::encode_zigzag32( 2L) == 4UL);
 
     }
 
     SECTION("some values - 64bit") {
 
-        REQUIRE(pbf::zigzag_encode64( 0LL) == 0ULL);
-        REQUIRE(pbf::zigzag_encode64(-1LL) == 1ULL);
-        REQUIRE(pbf::zigzag_encode64( 1LL) == 2ULL);
-        REQUIRE(pbf::zigzag_encode64(-2LL) == 3ULL);
-        REQUIRE(pbf::zigzag_encode64( 2LL) == 4ULL);
+        REQUIRE(pbf::encode_zigzag64( 0LL) == 0ULL);
+        REQUIRE(pbf::encode_zigzag64(-1LL) == 1ULL);
+        REQUIRE(pbf::encode_zigzag64( 1LL) == 2ULL);
+        REQUIRE(pbf::encode_zigzag64(-2LL) == 3ULL);
+        REQUIRE(pbf::encode_zigzag64( 2LL) == 4ULL);
 
     }
 
