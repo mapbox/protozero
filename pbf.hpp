@@ -132,8 +132,8 @@ public:
     inline pbf get_message();
 
     inline void skip();
-    inline void skipValue(uint32_t val);
-    inline void skipBytes(uint32_t len);
+    inline void skip_value(uint32_t val);
+    inline void skip_bytes(uint32_t len);
 
     inline std::pair<const uint32_t*, const uint32_t*> packed_fixed32();
     inline std::pair<const uint64_t*, const uint64_t*> packed_fixed64();
@@ -318,7 +318,7 @@ T pbf::svarint() {
 
 template <typename T>
 T pbf::fixed() {
-    skipBytes(sizeof(T));
+    skip_bytes(sizeof(T));
     T result;
     memcpy(&result, data - sizeof(T), sizeof(T));
     return result;
@@ -357,7 +357,7 @@ double pbf::get_double() {
 bool pbf::get_bool() {
     assert(is_wire_type(0) && "not a varint");
     assert((*data & 0x80) == 0 && "not a 1 byte varint");
-    skipBytes(1);
+    skip_bytes(1);
     return *reinterpret_cast<const bool *>(data - 1);
 }
 
@@ -365,7 +365,7 @@ std::pair<const char*, uint32_t> pbf::get_data() {
     assert(is_wire_type(2) && "not of type string, bytes or message");
     uint32_t len = varint<uint32_t>();
     const char *pos = data;
-    skipBytes(len);
+    skip_bytes(len);
     return std::make_pair(pos, len);
 }
 
@@ -384,29 +384,29 @@ pbf pbf::get_message() {
 }
 
 void pbf::skip() {
-    skipValue(value);
+    skip_value(value);
 }
 
-void pbf::skipValue(uint32_t val) {
+void pbf::skip_value(uint32_t val) {
     switch (val & 0x7) {
         case 0: // varint
             varint<uint32_t>();
             break;
         case 1: // 64 bit
-            skipBytes(8);
+            skip_bytes(8);
             break;
         case 2: // string/bytes/message
-            skipBytes(varint<uint32_t>());
+            skip_bytes(varint<uint32_t>());
             break;
         case 5: // 32 bit
-            skipBytes(4);
+            skip_bytes(4);
             break;
         default:
             throw unknown_field_type_exception();
     }
 }
 
-void pbf::skipBytes(uint32_t len) {
+void pbf::skip_bytes(uint32_t len) {
     if (data + len > end) {
         throw end_of_buffer_exception();
     }
@@ -417,7 +417,7 @@ template <typename T>
 std::pair<const T*, const T*> pbf::packed_fixed_impl() {
     uint32_t len = varint<uint32_t>();
     assert(len % sizeof(T) == 0);
-    skipBytes(len);
+    skip_bytes(len);
     return std::make_pair(reinterpret_cast<const T*>(data-len), reinterpret_cast<const T*>(data));
 }
 
@@ -439,37 +439,37 @@ std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
 
 std::pair<pbf::const_varint_iterator<int32_t>, pbf::const_varint_iterator<int32_t>> pbf::packed_int32() {
     uint32_t len = varint<uint32_t>();
-    skipBytes(len);
+    skip_bytes(len);
     return std::make_pair(pbf::const_varint_iterator<int32_t>(data-len, data), pbf::const_varint_iterator<int32_t>(data, data));
 }
 
 std::pair<pbf::const_varint_iterator<uint32_t>, pbf::const_varint_iterator<uint32_t>> pbf::packed_uint32() {
     uint32_t len = varint<uint32_t>();
-    skipBytes(len);
+    skip_bytes(len);
     return std::make_pair(pbf::const_varint_iterator<uint32_t>(data-len, data), pbf::const_varint_iterator<uint32_t>(data, data));
 }
 
 std::pair<pbf::const_svarint_iterator<int32_t>, pbf::const_svarint_iterator<int32_t>> pbf::packed_sint32() {
     uint32_t len = varint<uint32_t>();
-    skipBytes(len);
+    skip_bytes(len);
     return std::make_pair(pbf::const_svarint_iterator<int32_t>(data-len, data), pbf::const_svarint_iterator<int32_t>(data, data));
 }
 
 std::pair<pbf::const_varint_iterator<int64_t>, pbf::const_varint_iterator<int64_t>> pbf::packed_int64() {
     uint32_t len = varint<uint32_t>();
-    skipBytes(len);
+    skip_bytes(len);
     return std::make_pair(pbf::const_varint_iterator<int64_t>(data-len, data), pbf::const_varint_iterator<int64_t>(data, data));
 }
 
 std::pair<pbf::const_varint_iterator<uint64_t>, pbf::const_varint_iterator<uint64_t>> pbf::packed_uint64() {
     uint32_t len = varint<uint32_t>();
-    skipBytes(len);
+    skip_bytes(len);
     return std::make_pair(pbf::const_varint_iterator<uint64_t>(data-len, data), pbf::const_varint_iterator<uint64_t>(data, data));
 }
 
 std::pair<pbf::const_svarint_iterator<int64_t>, pbf::const_svarint_iterator<int64_t>> pbf::packed_sint64() {
     uint32_t len = varint<uint32_t>();
-    skipBytes(len);
+    skip_bytes(len);
     return std::make_pair(pbf::const_svarint_iterator<int64_t>(data-len, data), pbf::const_svarint_iterator<int64_t>(data, data));
 }
 
