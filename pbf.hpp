@@ -85,6 +85,14 @@ public:
     inline pbf(const char *data, size_t length);
     inline pbf() = default;
 
+    inline pbf(const pbf&) = default;
+    inline pbf(pbf&&) = default;
+
+    inline pbf& operator=(const pbf& other) = default;
+    inline pbf& operator=(pbf&& other) = default;
+
+    inline ~pbf() = default;
+
     inline int wire_type() const noexcept;
     inline bool is_wire_type(int type) const noexcept;
 
@@ -138,6 +146,14 @@ public:
             end(end_) {
         }
 
+        const_varint_iterator(const const_varint_iterator&) = default;
+        const_varint_iterator(const_varint_iterator&&) = default;
+
+        const_varint_iterator& operator=(const const_varint_iterator&) = default;
+        const_varint_iterator& operator=(const_varint_iterator&&) = default;
+
+        ~const_varint_iterator() = default;
+
         T operator*() {
             const char* d = data; // will be thrown away
             return static_cast<T>(get_varint(&d, end));
@@ -174,6 +190,14 @@ public:
         const_svarint_iterator(const char *data_, const char* end_) noexcept :
             const_varint_iterator<T>(data_, end_) {
         }
+
+        const_svarint_iterator(const const_svarint_iterator&) = default;
+        const_svarint_iterator(const_svarint_iterator&&) = default;
+
+        const_svarint_iterator& operator=(const const_svarint_iterator&) = default;
+        const_svarint_iterator& operator=(const_svarint_iterator&&) = default;
+
+        ~const_svarint_iterator() = default;
 
         T operator*() {
             const char* d = this->data; // will be thrown away
