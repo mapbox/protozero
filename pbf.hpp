@@ -323,6 +323,15 @@ public:
      */
 
     /**
+     * Consume and return value of current "enum" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "enum".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline int32_t get_enum() { return varint<int32_t>(); }
+
+    /**
      * Consume and return value of current "int32" varint field.
      *
      * @pre There must be a current field (ie. next() must have returned `true`).
