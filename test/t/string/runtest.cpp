@@ -43,5 +43,14 @@ TEST_CASE("string") {
         }
     }
 
+    SECTION("check assert on fixed int access") {
+        std::string buffer = get_file_data("test/t/string/data-string.pbf");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        REQUIRE(item.next());
+        REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
+    }
+
 }
 

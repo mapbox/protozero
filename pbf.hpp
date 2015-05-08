@@ -20,7 +20,10 @@ documentation.
  * Author: Josh Haberman <jhaberman@gmail.com>
  */
 
-#include <cassert>
+#ifndef assert
+# include <cassert>
+#endif
+
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -728,6 +731,11 @@ bool pbf::next() {
     if (m_data < m_end) {
         auto value = get_uint32();
         m_tag = value >> 3;
+
+        // tags 0 and 19000 to 19999 are not allowed as per
+        // https://developers.google.com/protocol-buffers/docs/proto
+        assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999)) && "tag out of range");
+
         m_wire_type = value & 0x07;
         return true;
     }
@@ -812,6 +820,7 @@ T pbf::varint() {
 
 template <typename T>
 T pbf::svarint() {
+    assert((has_wire_type(0) || has_wire_type(2)) && "not a varint");
     return static_cast<T>(decode_zigzag64(decode_varint(&m_data, m_end)));
 }
 

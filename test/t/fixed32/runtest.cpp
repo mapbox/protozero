@@ -43,5 +43,15 @@ TEST_CASE("fixed32") {
         }
     }
 
+    SECTION("check assert on varint/string access") {
+        std::string buffer = get_file_data("test/t/fixed32/data-zero.pbf");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        REQUIRE(item.next());
+        REQUIRE_THROWS_AS(item.get_string(), assert_error);
+        REQUIRE_THROWS_AS(item.get_int32(), assert_error);
+    }
+
 }
 
