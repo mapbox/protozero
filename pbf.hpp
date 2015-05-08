@@ -323,6 +323,15 @@ public:
      */
 
     /**
+     * Consume and return value of current "bool" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "bool".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline bool get_bool();
+
+    /**
      * Consume and return value of current "enum" field.
      *
      * @pre There must be a current field (ie. next() must have returned `true`).
@@ -438,15 +447,6 @@ public:
      * @post The current field was consumed and there is no current field now.
      */
     inline double get_double();
-
-    /**
-     * Consume and return value of current "bool" field.
-     *
-     * @pre There must be a current field (ie. next() must have returned `true`).
-     * @pre The current field must be of type "bool".
-     * @post The current field was consumed and there is no current field now.
-     */
-    inline bool get_bool();
 
     /**
      * Consume and return value of current "bytes" or "string" field.
