@@ -36,41 +36,15 @@ information from the `.proto` description. This results in a few restrictions:
 * Field types have to be hardcoded. The library does not know which types to
   expect, so the user of the library has to supply the right types. Some checks
   are made using `assert()`, but mostly the user has to take care of that.
-* The length of a string, bytes, or submessage can't be more than 2^31-1.
 
 The library will make sure not to overrun the buffer it was given, but
 basically all other checks have to be made in user code!
 
-Your code will basically always look like this:
+See the [tutorial](tutorial.md) for more information on how to use it.
 
-    // get data from somewhere
-    // initialize pbf message with this data
-    mapbox::util::pbf message(input.data(), input.size());
-
-    // iterate over fields in the message
-    while (message.next()) {
-        // switch depending on the tag (because the name is not available)
-        switch (message.tag) {
-            case 1:
-                // get data for tag 1 (in this case an uint32)
-                uint32_t x = message.get_uint32();
-                break;
-            case 2:
-                // get data for tag 2 (in this case a string)
-                std::string s = message.get_string();
-                break;
-            case 17:
-                // ignore data for tag 17
-                message.skip();
-                break;
-            default:
-                // error: unknown tag / or ignore
-        }
-    }
-
-You always have to call `next()` and then either one of the accessor functions
-to get the field value (like `get_uint32()` or `get_string()`) or `skip()` to
-ignore this field.
+Call `make doc` to build the Doxygen documentation. (You'll need
+[Doxygen](http://www.stack.nl/~dimitri/doxygen/) installed.) Then open
+`doc/html/index.html` in your browser to read it.
 
 
 ## Limitations
@@ -79,7 +53,7 @@ ignore this field.
   integers and floats/doubles will not decode properly.
 * A protobuf message has to fit into memory completely, otherwise it can not
   be parsed with this library. There is no streaming support.
-* Default values are not available.
+* The length of a string, bytes, or submessage can't be more than 2^31-1.
 * The Google Protobuf spec documents that a non-repeated field can actually
   appear several times in a message and the implementation is required to
   return the value of the last version of that field in this case. `pbf.hpp`
@@ -89,7 +63,7 @@ ignore this field.
 
 ## Tests
 
-Minimal right now. Call
+Extensive tests are included. Call
 
     make test
 
@@ -98,6 +72,7 @@ to build all tests and run them.
 With Clang you can get a test coverage report with
 
     CXXFLAGS="--coverage" LDFLAGS="--coverage" make test
+
 
 ## Cppcheck
 
