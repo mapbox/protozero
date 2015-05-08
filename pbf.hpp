@@ -153,6 +153,7 @@ public:
      * this exception.
      */
     struct exception : std::exception {
+        /// Returns the explanatory string.
         const char *what() const noexcept { return "pbf exception"; }
     };
 
@@ -163,6 +164,7 @@ public:
      * state and you cannot recover from that.
      */
     struct varint_too_long_exception : exception {
+        /// Returns the explanatory string.
         const char *what() const noexcept { return "pbf varint too long exception"; }
     };
 
@@ -173,6 +175,7 @@ public:
      * state and you cannot recover from that.
      */
     struct unknown_field_type_exception : exception {
+        /// Returns the explanatory string.
         const char *what() const noexcept { return "pbf unknown field type exception"; }
     };
 
@@ -186,6 +189,7 @@ public:
      * state and you cannot recover from that.
      */
     struct end_of_buffer_exception : exception {
+        /// Returns the explanatory string.
         const char *what() const noexcept { return "pbf end of buffer exception"; }
     };
 
@@ -195,55 +199,30 @@ public:
      * make sure the buffer stays valid as long as the pbf object is used.
      *
      * The buffer must contain a complete protobuf message.
+     *
+     * @post There is no current field.
      */
     inline pbf(const char *data, size_t length);
 
     inline pbf() = default;
 
+    /// pbf messages can be copied trivially.
     inline pbf(const pbf&) = default;
+
+    /// pbf messages can be moved trivially.
     inline pbf(pbf&&) = default;
 
+    /// pbf messages can be copied trivially.
     inline pbf& operator=(const pbf& other) = default;
+
+    /// pbf messages can be moved trivially.
     inline pbf& operator=(pbf&& other) = default;
 
     inline ~pbf() = default;
 
     /**
-     * The tag of the current field. The tag is the field number from the
-     * description in the .proto file.
-     *
-     * Call next() before calling this function to set the current field.
-     *
-     * @returns tag of the current field.
-     */
-    inline uint32_t tag() const noexcept { return m_tag; }
-
-    /**
-     * Get the wire type of the current field. The wire types are:
-     *
-     * 0 - varint
-     * 1 - 64 bit
-     * 2 - length-delimited
-     * 5 - 32 bit
-     *
-     * All other types are illegal.
-     *
-     * Call next() before calling this function to set the current field.
-     *
-     * @returns wire type of the current field.
-     */
-    inline uint32_t wire_type() const noexcept;
-
-    /**
-     * Check the wire type of the current field.
-     *
-     * @returns true if the current field has the given wire type.
-     */
-    inline bool has_wire_type(uint32_t type) const noexcept;
-
-    /**
-     * In a boolean context the pbf class evaluates to true if there are still
-     * fields available and to false if the last field has been read.
+     * In a boolean context the pbf class evaluates to `true` if there are
+     * still fields available and to `false` if the last field has been read.
      */
     inline operator bool() const noexcept;
 
@@ -258,7 +237,9 @@ public:
      *    }
      * @endcode
      *
-     * @returns true if there is a next field, false if not.
+     * @returns `true` if there is a next field, `false` if not.
+     * @pre There must be no current field.
+     * @post If it returns `true` there is a current field now.
      */
     inline bool next();
 
@@ -283,39 +264,218 @@ public:
      *    }
      * @endcode
      *
-     * @returns true if there is a next field with this tag, false if not.
+     * @returns `true` if there is a next field with this tag.
+     * @pre There must be no current field.
+     * @post If it returns `true` there is a current field now with the given tag.
      */
     inline bool next(uint32_t tag);
 
-    inline int32_t get_int32() { return varint<int32_t>(); }
-    inline int32_t get_sint32() { return svarint<int32_t>(); }
-    inline uint32_t get_uint32() { return varint<uint32_t>(); }
+    /**
+     * The tag of the current field. The tag is the field number from the
+     * description in the .proto file.
+     *
+     * Call next() before calling this function to set the current field.
+     *
+     * @returns tag of the current field.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     */
+    inline uint32_t tag() const noexcept;
 
-    inline int64_t get_int64() { return varint<int64_t>(); }
-    inline int64_t get_sint64() { return svarint<int64_t>(); }
-    inline uint64_t get_uint64() { return varint<uint64_t>(); }
+    /**
+     * Get the wire type of the current field. The wire types are:
+     *
+     * * 0 - varint
+     * * 1 - 64 bit
+     * * 2 - length-delimited
+     * * 5 - 32 bit
+     *
+     * All other types are illegal.
+     *
+     * Call next() before calling this function to set the current field.
+     *
+     * @returns wire type of the current field.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     */
+    inline uint32_t wire_type() const noexcept;
 
-    inline uint32_t get_fixed32();
-    inline int32_t get_sfixed32();
-    inline uint64_t get_fixed64();
-    inline int64_t get_sfixed64();
+    /**
+     * Check the wire type of the current field.
+     *
+     * @returns `true` if the current field has the given wire type.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     */
+    inline bool has_wire_type(uint32_t type) const noexcept;
 
-    inline float get_float();
-    inline double get_double();
-
-    inline bool get_bool();
-
-    inline std::pair<const char*, uint32_t> get_data();
-    inline std::string get_bytes();
-    inline std::string get_string();
-    inline pbf get_message();
-
+    /**
+     * Consume the current field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @post The current field was consumed and there is no current field now.
+     */
     inline void skip();
 
-    inline std::pair<const uint32_t*, const uint32_t*> packed_fixed32();
-    inline std::pair<const uint64_t*, const uint64_t*> packed_fixed64();
-    inline std::pair<const int32_t*, const int32_t*> packed_sfixed32();
-    inline std::pair<const int64_t*, const int64_t*> packed_sfixed64();
+    ///@{
+    /**
+     * @name Scalar field accessor functions
+     */
+
+    /**
+     * Consume and return value of current "int32" varint field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "int32".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline int32_t get_int32() { return varint<int32_t>(); }
+
+    /**
+     * Consume and return value of current "sint32" varint field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "sint32".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline int32_t get_sint32() { return svarint<int32_t>(); }
+
+    /**
+     * Consume and return value of current "uint32" varint field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "uint32".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline uint32_t get_uint32() { return varint<uint32_t>(); }
+
+    /**
+     * Consume and return value of current "int64" varint field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "int64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline int64_t get_int64() { return varint<int64_t>(); }
+
+    /**
+     * Consume and return value of current "sint64" varint field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "sint64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline int64_t get_sint64() { return svarint<int64_t>(); }
+
+    /**
+     * Consume and return value of current "uint64" varint field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "uint64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline uint64_t get_uint64() { return varint<uint64_t>(); }
+
+    /**
+     * Consume and return value of current "fixed32" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "fixed32".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline uint32_t get_fixed32();
+
+    /**
+     * Consume and return value of current "sfixed32" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "sfixed32".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline int32_t get_sfixed32();
+
+    /**
+     * Consume and return value of current "fixed64" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "fixed64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline uint64_t get_fixed64();
+
+    /**
+     * Consume and return value of current "sfixed64" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "sfixed64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline int64_t get_sfixed64();
+
+    /**
+     * Consume and return value of current "float" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "float".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline float get_float();
+
+    /**
+     * Consume and return value of current "double" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "double".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline double get_double();
+
+    /**
+     * Consume and return value of current "bool" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "bool".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline bool get_bool();
+
+    /**
+     * Consume and return value of current "bytes" or "string" field.
+     *
+     * @returns A pair with a pointer to the data and the length of the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "bytes" or "string".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const char*, uint32_t> get_data();
+
+    /**
+     * Consume and return value of current "bytes" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "bytes".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::string get_bytes();
+
+    /**
+     * Consume and return value of current "string" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "string".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::string get_string();
+
+    /**
+     * Consume and return value of current "message" field.
+     *
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "message".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline pbf get_message();
+
+    ///@}
+
+private:
 
     template <typename T>
     class const_varint_iterator : public std::iterator<std::forward_iterator_tag, T> {
@@ -414,21 +574,142 @@ public:
 
     }; // class const_svarint_iterator
 
+public:
+
+    /// Forward iterator for iterating over int32 (varint) values.
     typedef const_varint_iterator< int32_t> const_int32_iterator;
+
+    /// Forward iterator for iterating over uint32 (varint) values.
     typedef const_varint_iterator<uint32_t> const_uint32_iterator;
+
+    /// Forward iterator for iterating over sint32 (varint) values.
     typedef const_svarint_iterator<int32_t> const_sint32_iterator;
 
+    /// Forward iterator for iterating over int64 (varint) values.
     typedef const_varint_iterator< int64_t> const_int64_iterator;
+
+    /// Forward iterator for iterating over uint64 (varint) values.
     typedef const_varint_iterator<uint64_t> const_uint64_iterator;
+
+    /// Forward iterator for iterating over sint64 (varint) values.
     typedef const_svarint_iterator<int64_t> const_sint64_iterator;
 
+    ///@{
+    /**
+     * @name Repeated packed field accessor functions
+     */
+
+    /**
+     * Consume current "repeated packed fixed32" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed fixed32".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const uint32_t*, const uint32_t*> packed_fixed32();
+
+    /**
+     * Consume current "repeated packed fixed64" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed fixed64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const uint64_t*, const uint64_t*> packed_fixed64();
+
+    /**
+     * Consume current "repeated packed sfixed32" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed sfixed32".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const int32_t*, const int32_t*> packed_sfixed32();
+
+    /**
+     * Consume current "repeated packed sfixed64" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed sfixed64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const int64_t*, const int64_t*> packed_sfixed64();
+
+    /**
+     * Consume current "repeated packed int32" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed int32".
+     * @post The current field was consumed and there is no current field now.
+     */
     inline std::pair<pbf::const_int32_iterator,  pbf::const_int32_iterator>  packed_int32();
+
+    /**
+     * Consume current "repeated packed uint32" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed uint32".
+     * @post The current field was consumed and there is no current field now.
+     */
     inline std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> packed_uint32();
+
+    /**
+     * Consume current "repeated packed sint32" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed sint32".
+     * @post The current field was consumed and there is no current field now.
+     */
     inline std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> packed_sint32();
 
+    /**
+     * Consume current "repeated packed int64" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed int64".
+     * @post The current field was consumed and there is no current field now.
+     */
     inline std::pair<pbf::const_int64_iterator,  pbf::const_int64_iterator>  packed_int64();
+
+    /**
+     * Consume current "repeated packed uint64" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed uint64".
+     * @post The current field was consumed and there is no current field now.
+     */
     inline std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> packed_uint64();
+
+    /**
+     * Consume current "repeated packed sint64" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed sint64".
+     * @post The current field was consumed and there is no current field now.
+     */
     inline std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> packed_sint64();
+
+    ///@}
 
 }; // class pbf
 
@@ -437,14 +718,6 @@ pbf::pbf(const char *data, size_t length)
       m_end(data + length),
       m_wire_type(0),
       m_tag(0) {
-}
-
-uint32_t pbf::wire_type() const noexcept {
-    return m_wire_type;
-}
-
-bool pbf::has_wire_type(uint32_t type) const noexcept {
-    return wire_type() == type;
 }
 
 pbf::operator bool() const noexcept {
@@ -472,9 +745,48 @@ bool pbf::next(uint32_t requested_tag) {
     return false;
 }
 
-template <typename T>
-T pbf::varint() {
-    return static_cast<T>(decode_varint(&m_data, m_end));
+uint32_t pbf::tag() const noexcept {
+    return m_tag;
+}
+
+uint32_t pbf::wire_type() const noexcept {
+    return m_wire_type;
+}
+
+bool pbf::has_wire_type(uint32_t type) const noexcept {
+    return wire_type() == type;
+}
+
+void pbf::skip_bytes(uint32_t len) {
+    if (m_data + len > m_end) {
+        throw end_of_buffer_exception();
+    }
+    m_data += len;
+}
+
+void pbf::skip() {
+    switch (wire_type()) {
+        case 0: // varint
+            get_uint32();
+            break;
+        case 1: // 64 bit
+            skip_bytes(8);
+            break;
+        case 2: // string/bytes/message
+            skip_bytes(get_uint32());
+            break;
+        case 5: // 32 bit
+            skip_bytes(4);
+            break;
+        default:
+            throw unknown_field_type_exception();
+    }
+}
+
+uint32_t pbf::get_len_and_skip() {
+    uint32_t len = get_uint32();
+    skip_bytes(len);
+    return len;
 }
 
 inline uint32_t pbf::encode_zigzag32(int32_t n) noexcept {
@@ -491,6 +803,11 @@ inline int32_t pbf::decode_zigzag32(uint32_t n) noexcept {
 
 inline int64_t pbf::decode_zigzag64(uint64_t n) noexcept {
     return static_cast<int64_t>(n >> 1) ^ -static_cast<int64_t>((n & 1));
+}
+
+template <typename T>
+T pbf::varint() {
+    return static_cast<T>(decode_varint(&m_data, m_end));
 }
 
 template <typename T>
@@ -561,38 +878,6 @@ std::string pbf::get_string() {
 pbf pbf::get_message() {
     auto d = get_data();
     return pbf(d.first, d.second);
-}
-
-void pbf::skip_bytes(uint32_t len) {
-    if (m_data + len > m_end) {
-        throw end_of_buffer_exception();
-    }
-    m_data += len;
-}
-
-void pbf::skip() {
-    switch (wire_type()) {
-        case 0: // varint
-            get_uint32();
-            break;
-        case 1: // 64 bit
-            skip_bytes(8);
-            break;
-        case 2: // string/bytes/message
-            skip_bytes(get_uint32());
-            break;
-        case 5: // 32 bit
-            skip_bytes(4);
-            break;
-        default:
-            throw unknown_field_type_exception();
-    }
-}
-
-uint32_t pbf::get_len_and_skip() {
-    uint32_t len = get_uint32();
-    skip_bytes(len);
-    return len;
 }
 
 template <typename T>
