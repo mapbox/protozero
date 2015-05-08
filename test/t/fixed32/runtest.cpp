@@ -50,7 +50,6 @@ TEST_CASE("fixed32") {
 
         REQUIRE(item.next());
         REQUIRE_THROWS_AS(item.get_string(), assert_error);
-        REQUIRE_THROWS_AS(item.get_int32(), assert_error);
     }
 
 }
