@@ -12,7 +12,7 @@ endif
 COMMON_FLAGS := -fvisibility-inlines-hidden -std=c++11 $(WARNING_FLAGS)
 
 RELEASE_FLAGS := -O3 -DNDEBUG -march=native -Wpadded
-DEBUG_FLAGS := -O0 -g -DDEBUG -fno-inline-functions
+DEBUG_FLAGS := -O0 -g -fno-inline-functions
 
 OS:=$(shell uname -s)
 ifeq ($(OS),Darwin)
