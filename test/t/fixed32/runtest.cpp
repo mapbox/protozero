@@ -52,5 +52,29 @@ TEST_CASE("fixed32") {
         REQUIRE_THROWS_AS(item.get_string(), assert_error);
     }
 
+    SECTION("assert detecting tag==0") {
+        std::string buffer = get_file_data("test/t/fixed32/data-zero.pbf");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
+        REQUIRE(item.next());
+        REQUIRE(item.get_fixed32() == 0UL);
+        REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
+        REQUIRE(!item.next());
+    }
+
+    SECTION("skip") {
+        std::string buffer = get_file_data("test/t/fixed32/data-zero.pbf");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        REQUIRE_THROWS_AS(item.skip(), assert_error);
+        REQUIRE(item.next());
+        item.skip();
+        REQUIRE_THROWS_AS(item.skip(), assert_error);
+        REQUIRE(!item.next());
+    }
+
 }
 

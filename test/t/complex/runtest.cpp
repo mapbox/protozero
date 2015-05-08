@@ -121,5 +121,29 @@ TEST_CASE("complex") {
         REQUIRE(number_of_u == 5);
     }
 
+    SECTION("skip everything") {
+        std::string buffer = get_file_data("test/t/complex/data-all.pbf");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        while (item.next()) {
+            switch (item.tag()) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 7:
+                case 8:
+                    item.skip();
+                    break;
+                default: {
+                    REQUIRE(false); // should not be here
+                    break;
+                }
+            }
+        }
+    }
+
 }
 
