@@ -33,7 +33,7 @@ TEST_CASE("bytes") {
         REQUIRE(!item.next());
     }
 
-    SECTION("string") {
+    SECTION("binary") {
         std::string buffer = get_file_data("test/t/bytes/data-binary.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
@@ -55,6 +55,55 @@ TEST_CASE("bytes") {
             REQUIRE(item.next());
             REQUIRE_THROWS_AS(item.get_string(), mapbox::util::pbf::end_of_buffer_exception);
         }
+    }
+
+}
+
+TEST_CASE("write bytes") {
+
+    SECTION("empty") {
+        std::string buffer = get_file_data("test/t/bytes/data-empty.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_string(1, "");
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("one") {
+        std::string buffer = get_file_data("test/t/bytes/data-one.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_string(1, "x");
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("string") {
+        std::string buffer = get_file_data("test/t/bytes/data-string.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_string(1, "foobar");
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("binary") {
+        std::string buffer = get_file_data("test/t/bytes/data-binary.pbf");
+
+        std::string data;
+        data.append(1, char(1));
+        data.append(1, char(2));
+        data.append(1, char(3));
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_string(1, data);
+
+        REQUIRE(buffer == wbuffer);
     }
 
 }

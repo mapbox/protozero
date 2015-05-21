@@ -45,3 +45,37 @@ TEST_CASE("double") {
 
 }
 
+TEST_CASE("write double") {
+
+    SECTION("zero") {
+        std::string buffer = get_file_data("test/t/double/data-zero.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_double(1, 0.0);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("positive") {
+        std::string buffer = get_file_data("test/t/double/data-pos.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_double(1, 4.893);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("negative") {
+        std::string buffer = get_file_data("test/t/double/data-neg.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_double(1, -9232.33);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+

@@ -45,3 +45,37 @@ TEST_CASE("uint32") {
 
 }
 
+TEST_CASE("write uint32") {
+
+    SECTION("zero") {
+        std::string buffer = get_file_data("test/t/uint32/data-zero.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_uint32(1, 0UL);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("positive") {
+        std::string buffer = get_file_data("test/t/uint32/data-pos.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_uint32(1, 1UL);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("max") {
+        std::string buffer = get_file_data("test/t/uint32/data-max.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_uint32(1, std::numeric_limits<uint32_t>::max());
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+

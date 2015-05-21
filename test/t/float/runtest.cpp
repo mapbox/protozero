@@ -45,3 +45,37 @@ TEST_CASE("float") {
 
 }
 
+TEST_CASE("write float") {
+
+    SECTION("zero") {
+        std::string buffer = get_file_data("test/t/float/data-zero.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_float(1, 0.0f);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("positive") {
+        std::string buffer = get_file_data("test/t/float/data-pos.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_float(1, 5.34f);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("negative") {
+        std::string buffer = get_file_data("test/t/float/data-neg.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_float(1, -1.71f);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+

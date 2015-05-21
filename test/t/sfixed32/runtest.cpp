@@ -45,3 +45,37 @@ TEST_CASE("sfixed32") {
 
 }
 
+TEST_CASE("write sfixed32") {
+
+    SECTION("zero") {
+        std::string buffer = get_file_data("test/t/sfixed32/data-zero.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_sfixed32(1, 0);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("max-uint") {
+        std::string buffer = get_file_data("test/t/sfixed32/data-max-int.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_sfixed32(1, std::numeric_limits<int32_t>::max());
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("min-uint") {
+        std::string buffer = get_file_data("test/t/sfixed32/data-min-int.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_sfixed32(1, std::numeric_limits<int32_t>::min());
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+

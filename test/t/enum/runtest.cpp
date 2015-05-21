@@ -25,3 +25,27 @@ TEST_CASE("enum") {
 
 }
 
+TEST_CASE("write enum") {
+
+    SECTION("zero") {
+        std::string buffer = get_file_data("test/t/enum/data-black.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_enum(1, 0L);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("positive") {
+        std::string buffer = get_file_data("test/t/enum/data-blue.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_enum(1, 3L);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+

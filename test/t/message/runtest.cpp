@@ -29,3 +29,20 @@ TEST_CASE("message") {
 
 }
 
+TEST_CASE("write message") {
+
+    SECTION("string") {
+        std::string buffer = get_file_data("test/t/message/data-message.pbf");
+
+        std::string sbuffer;
+        mapbox::util::pbf_writer pws(sbuffer);
+        pws.add_string(1, "foobar");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_message(1, sbuffer);
+
+        REQUIRE(buffer == wbuffer);
+    }
+}
+

@@ -74,3 +74,57 @@ TEST_CASE("int64") {
 
 }
 
+TEST_CASE("write int64") {
+
+    SECTION("zero") {
+        std::string buffer = get_file_data("test/t/int64/data-zero.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_int64(1, 0LL);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("positive") {
+        std::string buffer = get_file_data("test/t/int64/data-pos.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_int64(1, 1LL);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("negative") {
+        std::string buffer = get_file_data("test/t/int64/data-neg.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_int64(1, -1LL);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("max") {
+        std::string buffer = get_file_data("test/t/int64/data-max.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_int64(1, std::numeric_limits<int64_t>::max());
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("min") {
+        std::string buffer = get_file_data("test/t/int64/data-min.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_int64(1, std::numeric_limits<int64_t>::min());
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+

@@ -54,3 +54,37 @@ TEST_CASE("string") {
 
 }
 
+TEST_CASE("write string") {
+
+    SECTION("empty") {
+        std::string buffer = get_file_data("test/t/string/data-empty.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_string(1, "");
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("one") {
+        std::string buffer = get_file_data("test/t/string/data-one.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_string(1, "x");
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("string") {
+        std::string buffer = get_file_data("test/t/string/data-string.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_string(1, "foobar");
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+

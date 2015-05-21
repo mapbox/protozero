@@ -45,3 +45,27 @@ TEST_CASE("boolean") {
 
 }
 
+TEST_CASE("write boolean") {
+
+    SECTION("false") {
+        std::string buffer = get_file_data("test/t/boolean/data-false.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_bool(1, false);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("true") {
+        std::string buffer = get_file_data("test/t/boolean/data-true.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_bool(1, true);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+

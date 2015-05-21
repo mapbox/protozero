@@ -56,3 +56,31 @@ TEST_CASE("repeated") {
 
 }
 
+TEST_CASE("write repeated") {
+
+    SECTION("one") {
+        std::string buffer = get_file_data("test/t/repeated/data-one.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_int32(1, 0L);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("many") {
+        std::string buffer = get_file_data("test/t/repeated/data-many.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_int32(1, 0L);
+        pw.add_int32(1, 1L);
+        pw.add_int32(1, -1L);
+        pw.add_int32(1, std::numeric_limits<int32_t>::max());
+        pw.add_int32(1, std::numeric_limits<int32_t>::min());
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+

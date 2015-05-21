@@ -53,3 +53,45 @@ TEST_CASE("repeated_packed_uint64") {
 
 }
 
+TEST_CASE("write repeated_packed_uint64") {
+
+    SECTION("empty") {
+        std::string buffer = get_file_data("test/t/repeated_packed_uint64/data-empty.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_packed_uint64(1, nullptr, nullptr);
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("one") {
+        std::string buffer = get_file_data("test/t/repeated_packed_uint64/data-one.pbf");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        uint64_t data[] = { 17UL };
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_packed_uint64(1, std::begin(data), std::end(data));
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+    SECTION("many") {
+        std::string buffer = get_file_data("test/t/repeated_packed_uint64/data-many.pbf");
+
+        mapbox::util::pbf item(buffer.data(), buffer.size());
+
+        uint64_t data[] = { 17UL, 0UL, 1UL, std::numeric_limits<uint64_t>::max() };
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+        pw.add_packed_uint64(1, std::begin(data), std::end(data));
+
+        REQUIRE(buffer == wbuffer);
+    }
+
+}
+
