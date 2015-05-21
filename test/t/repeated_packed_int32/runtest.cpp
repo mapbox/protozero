@@ -39,7 +39,9 @@ TEST_CASE("repeated_packed_int32") {
         REQUIRE(*it++ == 17L);
         REQUIRE(*it++ ==  0L);
         REQUIRE(*it++ ==  1L);
+        REQUIRE(*it++ ==  -1L);
         REQUIRE(*it++ == std::numeric_limits<int32_t>::max());
+        REQUIRE(*it++ == std::numeric_limits<int32_t>::min());
         REQUIRE(it == it_pair.second);
     }
 
