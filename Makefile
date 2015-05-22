@@ -46,7 +46,7 @@ iwyu: $(HPP_FILES) test/run_all_tests.cpp $(UNIT_TESTS)
 	iwyu -Xiwyu -- -std=c++11 -I. -Itest/include test/run_all_tests.cpp || true
 
 check: $(HPP_FILES) test/run_all_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(UNIT_TESTS)
-	cppcheck --std=c++11 --enable=all --suppress=incorrectStringBooleanError $^
+	cppcheck -Uassert --std=c++11 --enable=all --suppress=incorrectStringBooleanError $^
 
 doc: doc/Doxyfile README.md tutorial.md $(HPP_FILES)
 	doxygen doc/Doxyfile
