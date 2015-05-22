@@ -58,6 +58,7 @@ class pbf_writer {
     }
 
     inline void add_field(pbf_tag_type tag, pbf_wire_type type) {
+        assert(((tag > 0 && tag < 19000) || (tag > 19999 && tag <= ((1 << 29) - 1))) && "tag out of range");
         uint32_t b = (tag << 3) | uint32_t(type);
         add_varint(b);
     }

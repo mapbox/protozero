@@ -729,7 +729,7 @@ bool pbf::next() {
 
         // tags 0 and 19000 to 19999 are not allowed as per
         // https://developers.google.com/protocol-buffers/docs/proto
-        assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999)) && "tag out of range");
+        assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999 && m_tag <= ((1 << 29) - 1))) && "tag out of range");
 
         m_wire_type = pbf_wire_type(value & 0x07);
 // XXX do we want this check? or should it throw an exception?
