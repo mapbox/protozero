@@ -146,6 +146,12 @@ public:
         m_data(data) {
     }
 
+    pbf_writer(const pbf_writer&) = delete;
+    pbf_writer& operator=(const pbf_writer&) = delete;
+
+    inline pbf_writer(pbf_writer&&) = default;
+    inline pbf_writer& operator=(pbf_writer&&) = default;
+
     inline ~pbf_writer() = default;
 
     ///@{
@@ -332,6 +338,12 @@ public:
         m_writer(writer),
         m_pos(writer.open_sub(tag)) {
     }
+
+    pbf_subwriter(const pbf_subwriter&) = delete;
+    pbf_subwriter& operator=(const pbf_subwriter&) = delete;
+
+    inline pbf_subwriter(pbf_subwriter&&) = default;
+    inline pbf_subwriter& operator=(pbf_subwriter&&) = default;
 
     inline ~pbf_subwriter() {
         m_writer.close_sub(m_pos);
