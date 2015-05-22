@@ -1,6 +1,18 @@
 #ifndef MAPBOX_UTIL_PBF_WRITER_HPP
 #define MAPBOX_UTIL_PBF_WRITER_HPP
 
+/*****************************************************************************
+
+Minimalistic fast C++ encoder for a subset of the protocol buffer format.
+
+This is header-only, meaning there is nothing to build. Just include this file
+in your C++ application.
+
+This file is from https://github.com/mapbox/pbf.hpp where you can find more
+documentation.
+
+*****************************************************************************/
+
 #include <cstring>
 #include <iterator>
 #include <string>
@@ -27,17 +39,22 @@ private:
         fixed32          = 5
     };
 
-    inline int add_varint(uint64_t value) {
+    template <typename T>
+    static inline int write_varint(T data, uint64_t value) {
         int n=1;
 
         while (value >= 0x80) {
-            m_data.append(1, char((value & 0x7f) | 0x80));
+            *data++ = char((value & 0x7f) | 0x80);
             value >>= 7;
             ++n;
         }
-        m_data.append(1, char(value));
+        *data++ = char(value);
 
         return n;
+    }
+
+    inline int add_varint(uint64_t value) {
+        return write_varint(std::back_inserter(m_data), value);
     }
 
     inline void add_tagged_varint(tag_type tag, uint64_t value) {
@@ -100,6 +117,12 @@ private:
         add_field(tag, wire_type::length_delimited);
         add_varint(data.size());
         m_data.append(data);
+    }
+
+    static const int reserve_bytes = 10;
+
+    inline void reserve_space() {
+        m_data.append(size_t(reserve_bytes), '\0');
     }
 
 public:
@@ -243,7 +266,57 @@ public:
         add_packed_svarint<int64_t>(tag, begin, end);
     }
 
+    inline size_t open_sub(tag_type tag) {
+        add_field(tag, pbf_writer::wire_type::length_delimited);
+        reserve_space();
+        return m_data.size();
+    }
+
+    inline void close_sub(size_t pos) {
+        auto length = uint32_t(m_data.size() - pos);
+
+        assert(m_data.size() >= pos - reserve_bytes);
+        int n = write_varint(&m_data[pos - reserve_bytes], length);
+
+        m_data.erase(m_data.begin() + long(pos) - reserve_bytes + n, m_data.begin() + long(pos));
+    }
+
+    void append_sub(const std::string& value) {
+        m_data.append(value);
+    }
+
+    void append_sub(const char* value, size_t size) {
+        m_data.append(value, size);
+    }
+
 }; // class pbf_writer
+
+
+class pbf_subwriter {
+
+    pbf_writer& m_writer;
+    size_t m_pos = 0;
+
+public:
+
+    pbf_subwriter(pbf_writer& writer, pbf_writer::tag_type tag) :
+        m_writer(writer),
+        m_pos(writer.open_sub(tag)) {
+    }
+
+    ~pbf_subwriter() {
+        m_writer.close_sub(m_pos);
+    }
+
+    void append(const std::string& value) {
+        m_writer.append_sub(value);
+    }
+
+    void append(const char* value, size_t size) {
+        m_writer.append_sub(value, size);
+    }
+
+}; // class pbf_subwriter
 
 }} // end namespace mapbox::util
 

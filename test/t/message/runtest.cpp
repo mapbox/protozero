@@ -46,3 +46,20 @@ TEST_CASE("write message") {
     }
 }
 
+TEST_CASE("write message with subwriter") {
+
+    SECTION("string") {
+        std::string buffer = get_file_data("test/t/message/data-message.pbf");
+
+        std::string wbuffer;
+        mapbox::util::pbf_writer pw(wbuffer);
+
+        {
+            mapbox::util::pbf_subwriter sw(pw, 1);
+            pw.add_string(1, "foobar");
+        }
+
+        REQUIRE(buffer == wbuffer);
+    }
+}
+

@@ -306,3 +306,50 @@ TEST_CASE("write complex") {
     }
 }
 
+static void check_message(const std::string& buffer) {
+    mapbox::util::pbf item(buffer.data(), buffer.size());
+
+    while (item.next()) {
+        switch (item.tag()) {
+            case 1: {
+                REQUIRE(item.get_fixed32() == 42L);
+                break;
+            }
+            case 5: {
+                mapbox::util::pbf subitem = item.get_message();
+                REQUIRE(subitem.next());
+                REQUIRE(subitem.get_string() == "foobar");
+                REQUIRE(!subitem.next());
+                break;
+            }
+            default: {
+                REQUIRE(false); // should not be here
+                break;
+            }
+        }
+    }
+}
+
+TEST_CASE("write complex with subwriter") {
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
+    pw.add_fixed32(1, 42L);
+
+    SECTION("message in message") {
+        mapbox::util::pbf_subwriter sw_submessage(pw, 5);
+        pw.add_string(1, "foobar");
+    }
+
+    SECTION("string in message in message") {
+        mapbox::util::pbf_subwriter sw_submessage(pw, 5);
+        {
+            mapbox::util::pbf_subwriter sw_submessage_s(pw, 1);
+
+            sw_submessage_s.append("foo");
+            sw_submessage_s.append("bar");
+        }
+    }
+
+    check_message(buffer);
+}
+
