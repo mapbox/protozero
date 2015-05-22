@@ -746,6 +746,8 @@ bool pbf::next() {
         assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999)) && "tag out of range");
 
         m_wire_type = value & 0x07;
+// XXX do we want this check? or should it throw an exception?
+//        assert((m_wire_type <=2 || m_wire_type == 5) && "illegal wire type");
         return true;
     }
     return false;
