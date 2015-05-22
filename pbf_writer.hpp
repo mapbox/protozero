@@ -20,8 +20,6 @@ documentation.
 #include <iterator>
 #include <string>
 
-#include "pbf_reader.hpp"
-
 namespace mapbox { namespace util {
 
 class pbf_writer {
@@ -113,7 +111,7 @@ private:
         std::string data;
         pbf_writer w(data);
         for (; begin != end; ++begin) {
-            w.add_varint(pbf::encode_zigzag64(int64_t(*begin)));
+            w.add_varint(encode_zigzag64(int64_t(*begin)));
         }
 
         add_field(tag, wire_type::length_delimited);
@@ -128,6 +126,22 @@ private:
     }
 
 public:
+
+    /**
+     * ZigZag encodes a 32 bit integer.
+     *
+     * This is a helper function used inside the pbf class, but could be
+     * useful in other contexts.
+     */
+    static inline uint32_t encode_zigzag32(int32_t n) noexcept;
+
+    /**
+     * ZigZag encodes a 64 bit integer.
+     *
+     * This is a helper function used inside the pbf class, but could be
+     * useful in other contexts.
+     */
+    static inline uint64_t encode_zigzag64(int64_t n) noexcept;
 
     inline pbf_writer(std::string& data) :
         m_data(data) {
@@ -149,7 +163,7 @@ public:
     }
 
     inline void add_sint32(tag_type tag, int32_t value) {
-        add_tagged_varint(tag, pbf::encode_zigzag32(value));
+        add_tagged_varint(tag, encode_zigzag32(value));
     }
 
     inline void add_uint32(tag_type tag, uint32_t value) {
@@ -161,7 +175,7 @@ public:
     }
 
     inline void add_sint64(tag_type tag, int64_t value) {
-        add_tagged_varint(tag, pbf::encode_zigzag64(value));
+        add_tagged_varint(tag, encode_zigzag64(value));
     }
 
     inline void add_uint64(tag_type tag, uint64_t value) {
@@ -319,6 +333,14 @@ public:
     }
 
 }; // class pbf_subwriter
+
+inline uint32_t pbf_writer::encode_zigzag32(int32_t n) noexcept {
+    return static_cast<uint32_t>(n << 1) ^ static_cast<uint32_t>(n >> 31);
+}
+
+inline uint64_t pbf_writer::encode_zigzag64(int64_t n) noexcept {
+    return static_cast<uint64_t>(n << 1) ^ static_cast<uint64_t>(n >> 63);
+}
 
 }} // end namespace mapbox::util
 

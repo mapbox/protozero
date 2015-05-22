@@ -120,22 +120,6 @@ class pbf {
 public:
 
     /**
-     * ZigZag encodes a 32 bit integer.
-     *
-     * This is a helper function used inside the pbf class, but could be
-     * useful in other contexts.
-     */
-    static inline uint32_t encode_zigzag32(int32_t n) noexcept;
-
-    /**
-     * ZigZag encodes a 64 bit integer.
-     *
-     * This is a helper function used inside the pbf class, but could be
-     * useful in other contexts.
-     */
-    static inline uint64_t encode_zigzag64(int64_t n) noexcept;
-
-    /**
      * Decodes a 32 bit ZigZag-encoded integer.
      *
      * This is a helper function used inside the pbf class, but could be
@@ -813,14 +797,6 @@ uint32_t pbf::get_len_and_skip() {
     uint32_t len = get_uint32();
     skip_bytes(len);
     return len;
-}
-
-inline uint32_t pbf::encode_zigzag32(int32_t n) noexcept {
-    return static_cast<uint32_t>(n << 1) ^ static_cast<uint32_t>(n >> 31);
-}
-
-inline uint64_t pbf::encode_zigzag64(int64_t n) noexcept {
-    return static_cast<uint64_t>(n << 1) ^ static_cast<uint64_t>(n >> 63);
 }
 
 inline int32_t pbf::decode_zigzag32(uint32_t n) noexcept {

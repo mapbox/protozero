@@ -2,34 +2,35 @@
 #include <test.hpp>
 
 using mapbox::util::pbf;
+using mapbox::util::pbf_writer;
 
 inline int32_t zz32(int32_t val) {
-    return pbf::decode_zigzag32(pbf::encode_zigzag32(val));
+    return pbf::decode_zigzag32(pbf_writer::encode_zigzag32(val));
 }
 
 inline int64_t zz64(int64_t val) {
-    return pbf::decode_zigzag64(pbf::encode_zigzag64(val));
+    return pbf::decode_zigzag64(pbf_writer::encode_zigzag64(val));
 }
 
 TEST_CASE("zigzag") {
 
     SECTION("some values - 32bit") {
 
-        REQUIRE(pbf::encode_zigzag32( 0L) == 0UL);
-        REQUIRE(pbf::encode_zigzag32(-1L) == 1UL);
-        REQUIRE(pbf::encode_zigzag32( 1L) == 2UL);
-        REQUIRE(pbf::encode_zigzag32(-2L) == 3UL);
-        REQUIRE(pbf::encode_zigzag32( 2L) == 4UL);
+        REQUIRE(pbf_writer::encode_zigzag32( 0L) == 0UL);
+        REQUIRE(pbf_writer::encode_zigzag32(-1L) == 1UL);
+        REQUIRE(pbf_writer::encode_zigzag32( 1L) == 2UL);
+        REQUIRE(pbf_writer::encode_zigzag32(-2L) == 3UL);
+        REQUIRE(pbf_writer::encode_zigzag32( 2L) == 4UL);
 
     }
 
     SECTION("some values - 64bit") {
 
-        REQUIRE(pbf::encode_zigzag64( 0LL) == 0ULL);
-        REQUIRE(pbf::encode_zigzag64(-1LL) == 1ULL);
-        REQUIRE(pbf::encode_zigzag64( 1LL) == 2ULL);
-        REQUIRE(pbf::encode_zigzag64(-2LL) == 3ULL);
-        REQUIRE(pbf::encode_zigzag64( 2LL) == 4ULL);
+        REQUIRE(pbf_writer::encode_zigzag64( 0LL) == 0ULL);
+        REQUIRE(pbf_writer::encode_zigzag64(-1LL) == 1ULL);
+        REQUIRE(pbf_writer::encode_zigzag64( 1LL) == 2ULL);
+        REQUIRE(pbf_writer::encode_zigzag64(-2LL) == 3ULL);
+        REQUIRE(pbf_writer::encode_zigzag64( 2LL) == 4ULL);
 
     }
 
