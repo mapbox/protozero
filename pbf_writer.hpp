@@ -13,10 +13,12 @@ documentation.
 
 *****************************************************************************/
 
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include <iterator>
 #include <string>
-#include <type_traits>
 
 #include "pbf.hpp"
 
