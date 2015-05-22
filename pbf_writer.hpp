@@ -27,6 +27,9 @@ documentation.
 
 namespace mapbox { namespace util {
 
+/**
+ * The pbf_writer is used to write PBF formatted messages into a buffer.
+ */
 class pbf_writer {
 
     std::string& m_data;
@@ -122,7 +125,7 @@ public:
     /**
      * ZigZag encodes a 32 bit integer.
      *
-     * This is a helper function used inside the pbf class, but could be
+     * This is a helper function used inside the pbf_writer class, but could be
      * useful in other contexts.
      */
     static inline uint32_t encode_zigzag32(int32_t n) noexcept;
@@ -130,16 +133,25 @@ public:
     /**
      * ZigZag encodes a 64 bit integer.
      *
-     * This is a helper function used inside the pbf class, but could be
+     * This is a helper function used inside the pbf_writer class, but could be
      * useful in other contexts.
      */
     static inline uint64_t encode_zigzag64(int64_t n) noexcept;
 
+    /**
+     * Create a writer using the given string as a data store. The pbf_writer
+     * stores a reference to that string and adds all data to it.
+     */
     inline pbf_writer(std::string& data) :
         m_data(data) {
     }
 
     inline ~pbf_writer() = default;
+
+    ///@{
+    /**
+     * @name Scalar field writer functions
+     */
 
     inline void add_bool(pbf_tag_type tag, bool value) {
         add_field(tag, pbf_wire_type::varint);
@@ -234,6 +246,13 @@ public:
         add_bytes(tag, value);
     }
 
+    ///@}
+
+    ///@{
+    /**
+     * @name Repeated packed field writer functions
+     */
+
     inline void add_packed_fixed32(pbf_tag_type tag, uint32_t* begin, uint32_t* end) {
         add_packed_fixed<uint32_t>(tag, begin, end);
     }
@@ -274,6 +293,8 @@ public:
         add_packed_svarint<int64_t>(tag, begin, end);
     }
 
+    ///@}
+
     inline size_t open_sub(pbf_tag_type tag) {
         add_field(tag, pbf_wire_type::length_delimited);
         reserve_space();
@@ -307,20 +328,20 @@ class pbf_subwriter {
 
 public:
 
-    pbf_subwriter(pbf_writer& writer, pbf_tag_type tag) :
+    inline pbf_subwriter(pbf_writer& writer, pbf_tag_type tag) :
         m_writer(writer),
         m_pos(writer.open_sub(tag)) {
     }
 
-    ~pbf_subwriter() {
+    inline ~pbf_subwriter() {
         m_writer.close_sub(m_pos);
     }
 
-    void append(const std::string& value) {
+    inline void append(const std::string& value) {
         m_writer.append_sub(value);
     }
 
-    void append(const char* value, size_t size) {
+    inline void append(const char* value, size_t size) {
         m_writer.append_sub(value, size);
     }
 
