@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("boolean") {
+TEST_CASE("bool") {
 
     SECTION("false") {
-        std::string buffer = get_file_data("test/t/boolean/data-false.pbf");
+        std::string buffer = get_file_data("test/t/bool/data-false.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("boolean") {
     }
 
     SECTION("true") {
-        std::string buffer = get_file_data("test/t/boolean/data-true.pbf");
+        std::string buffer = get_file_data("test/t/bool/data-true.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("boolean") {
     }
 
     SECTION("also true") {
-        std::string buffer = get_file_data("test/t/boolean/data-also-true.pbf");
+        std::string buffer = get_file_data("test/t/bool/data-also-true.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("boolean") {
     }
 
     SECTION("still true") {
-        std::string buffer = get_file_data("test/t/boolean/data-still-true.pbf");
+        std::string buffer = get_file_data("test/t/bool/data-still-true.pbf");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -45,10 +45,10 @@ TEST_CASE("boolean") {
 
 }
 
-TEST_CASE("write boolean") {
+TEST_CASE("write bool") {
 
     SECTION("false") {
-        std::string buffer = get_file_data("test/t/boolean/data-false.pbf");
+        std::string buffer = get_file_data("test/t/bool/data-false.pbf");
 
         std::string wbuffer;
         mapbox::util::pbf_writer pw(wbuffer);
@@ -58,7 +58,7 @@ TEST_CASE("write boolean") {
     }
 
     SECTION("true") {
-        std::string buffer = get_file_data("test/t/boolean/data-true.pbf");
+        std::string buffer = get_file_data("test/t/bool/data-true.pbf");
 
         std::string wbuffer;
         mapbox::util::pbf_writer pw(wbuffer);

@@ -6,8 +6,8 @@ TEST_CASE("skip") {
     SECTION("check that skip skips the right amount of bytes") {
 
         std::vector<std::string> filenames = {
-            "boolean/data-true",
-            "boolean/data-false",
+            "bool/data-true",
+            "bool/data-false",
             "bytes/data-one",
             "bytes/data-string",
             "bytes/data-binary",
