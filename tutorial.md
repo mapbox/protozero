@@ -21,13 +21,14 @@ if you are getting lost.
 
 ## Using pbf.hpp
 
-All you have to do to use `pbf.hpp` is to include it in your C++ program:
+All you have to do to use `pbf_reader.hpp` is to include it in your C++
+program:
 
-    #include <pbf.hpp>
+    #include <pbf_reader.hpp>
 
 You need a C++11-capable compiler for `pbf.hpp` to work.
 
-`pbf.hpp` contains asserts that will detect some programming errors. We
+`pbf_reader.hpp` contains asserts that will detect some programming errors. We
 encourage you to compile with asserts enabled in your debug builds.
 
 
@@ -44,7 +45,7 @@ Lets say you have a protocol description in a `.proto` file like this:
 To read messages created according to that description, you will have code that
 looks somewhat like this:
 
-    #include <pbf.hpp>
+    #include <pbf_reader.hpp>
 
     // get data from somewhere into the input string
     std::string input = get_input_data();
@@ -203,7 +204,7 @@ this into the symbolic name yourself. See the `enum` test case for an example.
 
 ## Exceptions
 
-All exceptions thrown by `pbf.hpp` functions derive from
+All exceptions thrown by `pbf_reader.hpp` functions derive from
 `mapbox::util::pbf::exception`.
 
 Note that all exceptions can also happen if you are expecting a data field of

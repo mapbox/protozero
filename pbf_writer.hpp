@@ -20,7 +20,7 @@ documentation.
 #include <iterator>
 #include <string>
 
-#include "pbf.hpp"
+#include "pbf_reader.hpp"
 
 namespace mapbox { namespace util {
 

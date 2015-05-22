@@ -56,9 +56,9 @@ Call `make doc` to build the Doxygen documentation. (You'll need
 * The length of a string, bytes, or submessage can't be more than 2^31-1.
 * The Google Protobuf spec documents that a non-repeated field can actually
   appear several times in a message and the implementation is required to
-  return the value of the last version of that field in this case. `pbf.hpp`
-  does not enforce this. If this feature is needed in your case, you have to
-  do this yourself.
+  return the value of the last version of that field in this case.
+  `pbf_reader.hpp` does not enforce this. If this feature is needed in your
+  case, you have to do this yourself.
 
 
 ## Tests
