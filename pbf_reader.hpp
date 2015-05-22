@@ -1,5 +1,5 @@
-#ifndef MAPBOX_UTIL_PBF_HPP
-#define MAPBOX_UTIL_PBF_HPP
+#ifndef MAPBOX_UTIL_PBF_READER_HPP
+#define MAPBOX_UTIL_PBF_READER_HPP
 
 /*****************************************************************************
 
@@ -31,6 +31,8 @@ documentation.
 #include <iterator>
 #include <string>
 #include <utility>
+
+#include "pbf_common.hpp"
 
 namespace mapbox { namespace util {
 
@@ -103,10 +105,10 @@ class pbf {
     const char *m_end = nullptr;
 
     // The wire type of the current field.
-    uint32_t m_wire_type = 0;
+    pbf_wire_type m_wire_type = pbf_wire_type::unknown;
 
     // The tag of the current field.
-    uint32_t m_tag = 0;
+    pbf_tag_type m_tag = 0;
 
     template <typename T> inline T fixed();
     template <typename T> inline T varint();
@@ -255,7 +257,7 @@ public:
      * @pre There must be no current field.
      * @post If it returns `true` there is a current field now with the given tag.
      */
-    inline bool next(uint32_t tag);
+    inline bool next(pbf_tag_type tag);
 
     /**
      * The tag of the current field. The tag is the field number from the
@@ -266,7 +268,7 @@ public:
      * @returns tag of the current field.
      * @pre There must be a current field (ie. next() must have returned `true`).
      */
-    inline uint32_t tag() const noexcept;
+    inline pbf_tag_type tag() const noexcept;
 
     /**
      * Get the wire type of the current field. The wire types are:
@@ -283,7 +285,7 @@ public:
      * @returns wire type of the current field.
      * @pre There must be a current field (ie. next() must have returned `true`).
      */
-    inline uint32_t wire_type() const noexcept;
+    inline pbf_wire_type wire_type() const noexcept;
 
     /**
      * Check the wire type of the current field.
@@ -291,7 +293,7 @@ public:
      * @returns `true` if the current field has the given wire type.
      * @pre There must be a current field (ie. next() must have returned `true`).
      */
-    inline bool has_wire_type(uint32_t type) const noexcept;
+    inline bool has_wire_type(pbf_wire_type type) const noexcept;
 
     /**
      * Consume the current field.
@@ -712,7 +714,7 @@ public:
 pbf::pbf(const char *data, size_t length)
     : m_data(data),
       m_end(data + length),
-      m_wire_type(0),
+      m_wire_type(pbf_wire_type::unknown),
       m_tag(0) {
 }
 
@@ -729,7 +731,7 @@ bool pbf::next() {
         // https://developers.google.com/protocol-buffers/docs/proto
         assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999)) && "tag out of range");
 
-        m_wire_type = value & 0x07;
+        m_wire_type = pbf_wire_type(value & 0x07);
 // XXX do we want this check? or should it throw an exception?
 //        assert((m_wire_type <=2 || m_wire_type == 5) && "illegal wire type");
         return true;
@@ -737,7 +739,7 @@ bool pbf::next() {
     return false;
 }
 
-bool pbf::next(uint32_t requested_tag) {
+bool pbf::next(pbf_tag_type requested_tag) {
     while (next()) {
         if (m_tag == requested_tag) {
             return true;
@@ -748,15 +750,15 @@ bool pbf::next(uint32_t requested_tag) {
     return false;
 }
 
-uint32_t pbf::tag() const noexcept {
+pbf_tag_type pbf::tag() const noexcept {
     return m_tag;
 }
 
-uint32_t pbf::wire_type() const noexcept {
+pbf_wire_type pbf::wire_type() const noexcept {
     return m_wire_type;
 }
 
-bool pbf::has_wire_type(uint32_t type) const noexcept {
+bool pbf::has_wire_type(pbf_wire_type type) const noexcept {
     return wire_type() == type;
 }
 
@@ -776,16 +778,16 @@ void pbf::skip_bytes(uint32_t len) {
 void pbf::skip() {
     assert(tag() != 0 && "call next() before calling skip()");
     switch (wire_type()) {
-        case 0: // varint
+        case pbf_wire_type::varint:
             get_uint32();
             break;
-        case 1: // 64 bit
+        case pbf_wire_type::fixed64:
             skip_bytes(8);
             break;
-        case 2: // string/bytes/message
+        case pbf_wire_type::length_delimited:
             skip_bytes(get_uint32());
             break;
-        case 5: // 32 bit
+        case pbf_wire_type::fixed32:
             skip_bytes(4);
             break;
         default:
@@ -814,7 +816,7 @@ T pbf::varint() {
 
 template <typename T>
 T pbf::svarint() {
-    assert((has_wire_type(0) || has_wire_type(2)) && "not a varint");
+    assert((has_wire_type(pbf_wire_type::varint) || has_wire_type(pbf_wire_type::length_delimited)) && "not a varint");
     return static_cast<T>(decode_zigzag64(decode_varint(&m_data, m_end)));
 }
 
@@ -828,43 +830,43 @@ T pbf::fixed() {
 
 uint32_t pbf::get_fixed32() {
     assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(5) && "not a 32-bit fixed");
+    assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
     return fixed<uint32_t>();
 }
 
 int32_t pbf::get_sfixed32() {
     assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(5) && "not a 32-bit fixed");
+    assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
     return fixed<int32_t>();
 }
 
 uint64_t pbf::get_fixed64() {
     assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(1) && "not a 64-bit fixed");
+    assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
     return fixed<uint64_t>();
 }
 
 int64_t pbf::get_sfixed64() {
     assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(1) && "not a 64-bit fixed");
+    assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
     return fixed<int64_t>();
 }
 
 float pbf::get_float() {
     assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(5) && "not a 32-bit fixed");
+    assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
     return fixed<float>();
 }
 
 double pbf::get_double() {
     assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(1) && "not a 64-bit fixed");
+    assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
     return fixed<double>();
 }
 
 bool pbf::get_bool() {
     assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(0) && "not a varint");
+    assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
     assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
     skip_bytes(1);
     return *reinterpret_cast<const bool *>(m_data - 1);
@@ -872,7 +874,7 @@ bool pbf::get_bool() {
 
 std::pair<const char*, uint32_t> pbf::get_data() {
     assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(2) && "not of type string, bytes or message");
+    assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
     auto len = get_len_and_skip();
     return std::make_pair(m_data-len, len);
 }
@@ -959,4 +961,4 @@ std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> pbf::packed_si
 
 }} // end namespace mapbox::util
 
-#endif // MAPBOX_UTIL_PBF_HPP
+#endif // MAPBOX_UTIL_PBF_READER_HPP

@@ -23,12 +23,14 @@ endif
 UNIT_TESTS := $(wildcard test/t/*/runtest.cpp)
 UNIT_TESTS_O := $(subst .cpp,.o,$(UNIT_TESTS))
 
+HPP_FILES := pbf_reader.hpp pbf_writer.hpp pbf_common.hpp
+
 all: ./test/run_all_tests
 
-./test/t/%/runtest.o: test/t/%/runtest.cpp pbf_reader.hpp pbf_writer.hpp
+./test/t/%/runtest.o: test/t/%/runtest.cpp $(HPP_FILES)
 	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
-./test/run_all_tests.o: test/run_all_tests.cpp pbf_reader.hpp pbf_writer.hpp
+./test/run_all_tests.o: test/run_all_tests.cpp $(HPP_FILES)
 	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/run_all_tests: test/run_all_tests.o $(UNIT_TESTS_O)
@@ -37,15 +39,16 @@ all: ./test/run_all_tests
 test: ./test/run_all_tests
 	./test/run_all_tests
 
-iwyu: pbf_reader.hpp pbf_writer.hpp test/run_all_tests.cpp $(UNIT_TESTS)
+iwyu: $(HPP_FILES) test/run_all_tests.cpp $(UNIT_TESTS)
+	iwyu -Xiwyu -- -std=c++11 -I. pbf_common.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -I. pbf_reader.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -I. pbf_writer.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -I. -Itest/include test/run_all_tests.cpp || true
 
-check: pbf_reader.hpp pbf_writer.hpp test/run_all_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(UNIT_TESTS)
+check: $(HPP_FILES) test/run_all_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(UNIT_TESTS)
 	cppcheck --std=c++11 --enable=all --suppress=incorrectStringBooleanError $^
 
-doc: doc/Doxyfile pbf_reader.hpp pbf_writer.hpp
+doc: doc/Doxyfile README.md tutorial.md $(HPP_FILES)
 	doxygen doc/Doxyfile
 
 clean:
