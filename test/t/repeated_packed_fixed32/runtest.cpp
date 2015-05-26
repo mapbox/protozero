@@ -94,3 +94,40 @@ TEST_CASE("write repeated_packed_fixed32") {
 
 }
 
+TEST_CASE("write from different types of iterators") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
+
+    SECTION("from uint16_t") {
+        uint16_t data[] = { 1, 4, 9, 16, 25 };
+
+        pw.add_packed_fixed32(1, std::begin(data), std::end(data));
+    }
+
+    SECTION("from string") {
+        std::string data = "1 4 9 16 25";
+        std::stringstream sdata(data);
+
+        std::istream_iterator<uint32_t> eod;
+        std::istream_iterator<uint32_t> it(sdata);
+
+        pw.add_packed_fixed32(1, it, eod);
+    }
+
+    mapbox::util::pbf item(buffer.data(), buffer.size());
+
+    REQUIRE(item.next());
+    auto it_pair = item.packed_fixed32();
+    REQUIRE(!item.next());
+    REQUIRE(std::distance(it_pair.first, it_pair.second) == 5);
+
+    auto i = it_pair.first;
+    REQUIRE(*i++ ==  1);
+    REQUIRE(*i++ ==  4);
+    REQUIRE(*i++ ==  9);
+    REQUIRE(*i++ == 16);
+    REQUIRE(*i++ == 25);
+
+}
+

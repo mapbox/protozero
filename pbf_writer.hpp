@@ -73,52 +73,17 @@ class pbf_writer {
         m_data.append(reinterpret_cast<const char*>(&value), sizeof(T));
     }
 
-    template <typename T>
-    inline void add_packed_fixed(pbf_tag_type tag, const T* begin, const T* end) {
-        if (end == begin) {
-            return;
-        }
-        add_field(tag, pbf_wire_type::length_delimited);
-        add_varint(sizeof(T) * uint32_t(std::distance(begin, end)));
+    template <typename T, typename It>
+    inline void add_packed_fixed(pbf_tag_type tag, It it, It end, std::input_iterator_tag);
 
-        for (; begin != end; ++begin) {
-            m_data.append(reinterpret_cast<const char*>(begin), sizeof(T));
-        }
-    }
+    template <typename T, typename It>
+    inline void add_packed_fixed(pbf_tag_type tag, It it, It end, std::forward_iterator_tag);
 
-    template <typename T>
-    inline void add_packed_varint(pbf_tag_type tag, const T* begin, const T* end) {
-        if (end == begin) {
-            return;
-        }
+    template <typename It>
+    inline void add_packed_varint(pbf_tag_type tag, It begin, It end);
 
-        std::string data;
-        pbf_writer w(data);
-        for (; begin != end; ++begin) {
-            w.add_varint(uint64_t(*begin));
-        }
-
-        add_field(tag, pbf_wire_type::length_delimited);
-        add_varint(data.size());
-        m_data.append(data);
-    }
-
-    template <typename T>
-    inline void add_packed_svarint(pbf_tag_type tag, const T* begin, const T* end) {
-        if (end == begin) {
-            return;
-        }
-
-        std::string data;
-        pbf_writer w(data);
-        for (; begin != end; ++begin) {
-            w.add_varint(encode_zigzag64(int64_t(*begin)));
-        }
-
-        add_field(tag, pbf_wire_type::length_delimited);
-        add_varint(data.size());
-        m_data.append(data);
-    }
+    template <typename It>
+    inline void add_packed_svarint(pbf_tag_type tag, It begin, It end);
 
     static const int reserve_bytes = 10;
 
@@ -265,44 +230,54 @@ public:
      * @name Repeated packed field writer functions
      */
 
-    inline void add_packed_fixed32(pbf_tag_type tag, const uint32_t* begin, const uint32_t* end) {
-        add_packed_fixed<uint32_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_fixed32(pbf_tag_type tag, It begin, It end) {
+        add_packed_fixed<uint32_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
     }
 
-    inline void add_packed_fixed64(pbf_tag_type tag, const uint64_t* begin, const uint64_t* end) {
-        add_packed_fixed<uint64_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_fixed64(pbf_tag_type tag, It begin, It end) {
+        add_packed_fixed<uint64_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
     }
 
-    inline void add_packed_sfixed32(pbf_tag_type tag, const int32_t* begin, const int32_t* end) {
-        add_packed_fixed<int32_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_sfixed32(pbf_tag_type tag, It begin, It end) {
+        add_packed_fixed<int32_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
     }
 
-    inline void add_packed_sfixed64(pbf_tag_type tag, const int64_t* begin, const int64_t* end) {
-        add_packed_fixed<int64_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_sfixed64(pbf_tag_type tag, It begin, It end) {
+        add_packed_fixed<int64_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
     }
 
-    inline void add_packed_int32(pbf_tag_type tag, const int32_t* begin, const int32_t* end) {
-        add_packed_varint<int32_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_int32(pbf_tag_type tag, It begin, It end) {
+        add_packed_varint(tag, begin, end);
     }
 
-    inline void add_packed_uint32(pbf_tag_type tag, const uint32_t* begin, const uint32_t* end) {
-        add_packed_varint<uint32_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_uint32(pbf_tag_type tag, It begin, It end) {
+        add_packed_varint(tag, begin, end);
     }
 
-    inline void add_packed_sint32(pbf_tag_type tag, const int32_t* begin, const int32_t* end) {
-        add_packed_svarint<int32_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_sint32(pbf_tag_type tag, It begin, It end) {
+        add_packed_svarint(tag, begin, end);
     }
 
-    inline void add_packed_int64(pbf_tag_type tag, const int64_t* begin, const int64_t* end) {
-        add_packed_varint<int64_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_int64(pbf_tag_type tag, It begin, It end) {
+        add_packed_varint(tag, begin, end);
     }
 
-    inline void add_packed_uint64(pbf_tag_type tag, const uint64_t* begin, const uint64_t* end) {
-        add_packed_varint<uint64_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_uint64(pbf_tag_type tag, It begin, It end) {
+        add_packed_varint(tag, begin, end);
     }
 
-    inline void add_packed_sint64(pbf_tag_type tag, const int64_t* begin, const int64_t* end) {
-        add_packed_svarint<int64_t>(tag, begin, end);
+    template <typename It>
+    inline void add_packed_sint64(pbf_tag_type tag, It begin, It end) {
+        add_packed_svarint(tag, begin, end);
     }
 
     ///@}
@@ -371,6 +346,61 @@ inline uint32_t pbf_writer::encode_zigzag32(int32_t n) noexcept {
 
 inline uint64_t pbf_writer::encode_zigzag64(int64_t n) noexcept {
     return static_cast<uint64_t>(n << 1) ^ static_cast<uint64_t>(n >> 63);
+}
+
+template <typename T, typename It>
+inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::forward_iterator_tag) {
+    if (it == end) {
+        return;
+    }
+
+    add_field(tag, pbf_wire_type::length_delimited);
+    add_varint(sizeof(T) * uint32_t(std::distance(it, end)));
+
+    while (it != end) {
+        const T v = *it++;
+        m_data.append(reinterpret_cast<const char*>(&v), sizeof(T));
+    }
+}
+
+template <typename T, typename It>
+inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::input_iterator_tag) {
+    if (it == end) {
+        return;
+    }
+
+    pbf_subwriter sw(*this, tag);
+
+    while (it != end) {
+        const T v = *it++;
+        m_data.append(reinterpret_cast<const char*>(&v), sizeof(T));
+    }
+}
+
+template <typename It>
+inline void pbf_writer::add_packed_varint(pbf_tag_type tag, It it, It end) {
+    if (it == end) {
+        return;
+    }
+
+    pbf_subwriter sw(*this, tag);
+
+    while (it != end) {
+        add_varint(uint64_t(*it++));
+    }
+}
+
+template <typename It>
+inline void pbf_writer::add_packed_svarint(pbf_tag_type tag, It it, It end) {
+    if (it == end) {
+        return;
+    }
+
+    pbf_subwriter sw(*this, tag);
+
+    while (it != end) {
+        add_varint(encode_zigzag64(*it++));
+    }
 }
 
 }} // end namespace mapbox::util
