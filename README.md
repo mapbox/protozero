@@ -73,6 +73,13 @@ With Clang you can get a test coverage report with
 
     CXXFLAGS="--coverage" LDFLAGS="--coverage" make test
 
+You can also use `gyp` to build the tests:
+
+    gyp --depth=. --build=Release
+    ./out/Release/tests
+
+This will clobber the `Makefile` from the repository! Instead of `Release` you
+can use `Debug` for a debug build.
 
 ## Cppcheck
 

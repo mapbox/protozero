@@ -48,7 +48,8 @@
         "SUPPORTED_PLATFORMS":["macosx"]
       },
       "include_dirs": [
-          "./"
+          "./",
+          "./test/include/"
       ]
     }
   ]
