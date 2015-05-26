@@ -60,7 +60,7 @@ TEST_CASE("fixed32") {
         REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
         REQUIRE(item.next());
         REQUIRE(item.get_fixed32() == 0UL);
-        REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
+        REQUIRE_THROWS(item.get_fixed32());
         REQUIRE(!item.next());
     }
 
@@ -72,7 +72,7 @@ TEST_CASE("fixed32") {
         REQUIRE_THROWS_AS(item.skip(), assert_error);
         REQUIRE(item.next());
         item.skip();
-        REQUIRE_THROWS_AS(item.skip(), assert_error);
+        REQUIRE_THROWS(item.skip());
         REQUIRE(!item.next());
     }
 
