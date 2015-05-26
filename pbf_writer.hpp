@@ -74,7 +74,7 @@ class pbf_writer {
     }
 
     template <typename T>
-    inline void add_packed_fixed(pbf_tag_type tag, T* begin, T* end) {
+    inline void add_packed_fixed(pbf_tag_type tag, const T* begin, const T* end) {
         if (end == begin) {
             return;
         }
@@ -87,7 +87,7 @@ class pbf_writer {
     }
 
     template <typename T>
-    inline void add_packed_varint(pbf_tag_type tag, T* begin, T* end) {
+    inline void add_packed_varint(pbf_tag_type tag, const T* begin, const T* end) {
         if (end == begin) {
             return;
         }
@@ -104,7 +104,7 @@ class pbf_writer {
     }
 
     template <typename T>
-    inline void add_packed_svarint(pbf_tag_type tag, T* begin, T* end) {
+    inline void add_packed_svarint(pbf_tag_type tag, const T* begin, const T* end) {
         if (end == begin) {
             return;
         }
@@ -265,43 +265,43 @@ public:
      * @name Repeated packed field writer functions
      */
 
-    inline void add_packed_fixed32(pbf_tag_type tag, uint32_t* begin, uint32_t* end) {
+    inline void add_packed_fixed32(pbf_tag_type tag, const uint32_t* begin, const uint32_t* end) {
         add_packed_fixed<uint32_t>(tag, begin, end);
     }
 
-    inline void add_packed_fixed64(pbf_tag_type tag, uint64_t* begin, uint64_t* end) {
+    inline void add_packed_fixed64(pbf_tag_type tag, const uint64_t* begin, const uint64_t* end) {
         add_packed_fixed<uint64_t>(tag, begin, end);
     }
 
-    inline void add_packed_sfixed32(pbf_tag_type tag, int32_t* begin, int32_t* end) {
+    inline void add_packed_sfixed32(pbf_tag_type tag, const int32_t* begin, const int32_t* end) {
         add_packed_fixed<int32_t>(tag, begin, end);
     }
 
-    inline void add_packed_sfixed64(pbf_tag_type tag, int64_t* begin, int64_t* end) {
+    inline void add_packed_sfixed64(pbf_tag_type tag, const int64_t* begin, const int64_t* end) {
         add_packed_fixed<int64_t>(tag, begin, end);
     }
 
-    inline void add_packed_int32(pbf_tag_type tag, int32_t* begin, int32_t* end) {
+    inline void add_packed_int32(pbf_tag_type tag, const int32_t* begin, const int32_t* end) {
         add_packed_varint<int32_t>(tag, begin, end);
     }
 
-    inline void add_packed_uint32(pbf_tag_type tag, uint32_t* begin, uint32_t* end) {
+    inline void add_packed_uint32(pbf_tag_type tag, const uint32_t* begin, const uint32_t* end) {
         add_packed_varint<uint32_t>(tag, begin, end);
     }
 
-    inline void add_packed_sint32(pbf_tag_type tag, int32_t* begin, int32_t* end) {
+    inline void add_packed_sint32(pbf_tag_type tag, const int32_t* begin, const int32_t* end) {
         add_packed_svarint<int32_t>(tag, begin, end);
     }
 
-    inline void add_packed_int64(pbf_tag_type tag, int64_t* begin, int64_t* end) {
+    inline void add_packed_int64(pbf_tag_type tag, const int64_t* begin, const int64_t* end) {
         add_packed_varint<int64_t>(tag, begin, end);
     }
 
-    inline void add_packed_uint64(pbf_tag_type tag, uint64_t* begin, uint64_t* end) {
+    inline void add_packed_uint64(pbf_tag_type tag, const uint64_t* begin, const uint64_t* end) {
         add_packed_varint<uint64_t>(tag, begin, end);
     }
 
-    inline void add_packed_sint64(pbf_tag_type tag, int64_t* begin, int64_t* end) {
+    inline void add_packed_sint64(pbf_tag_type tag, const int64_t* begin, const int64_t* end) {
         add_packed_svarint<int64_t>(tag, begin, end);
     }
 

@@ -64,7 +64,8 @@ TEST_CASE("write repeated_packed_int32") {
 
         std::string wbuffer;
         mapbox::util::pbf_writer pw(wbuffer);
-        pw.add_packed_int32(1, nullptr, nullptr);
+        const int32_t* dummy = 0;
+        pw.add_packed_int32(1, dummy, dummy);
 
         REQUIRE(buffer == wbuffer);
     }
