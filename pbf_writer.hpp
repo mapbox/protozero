@@ -13,10 +13,7 @@ documentation.
 
 *****************************************************************************/
 
-#ifndef assert
-# include <cassert>
-#endif
-
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -24,6 +21,10 @@ documentation.
 #include <string>
 
 #include "pbf_common.hpp"
+
+#ifndef pbf_assert
+# define pbf_assert(x) assert(x)
+#endif
 
 namespace mapbox { namespace util {
 
@@ -58,7 +59,7 @@ class pbf_writer {
     }
 
     inline void add_field(pbf_tag_type tag, pbf_wire_type type) {
-        assert(((tag > 0 && tag < 19000) || (tag > 19999 && tag <= ((1 << 29) - 1))) && "tag out of range");
+        pbf_assert(((tag > 0 && tag < 19000) || (tag > 19999 && tag <= ((1 << 29) - 1))) && "tag out of range");
         uint32_t b = (tag << 3) | uint32_t(type);
         add_varint(b);
     }
@@ -311,7 +312,7 @@ public:
     inline void close_sub(size_t pos) {
         auto length = uint32_t(m_data.size() - pos);
 
-        assert(m_data.size() >= pos - reserve_bytes);
+        pbf_assert(m_data.size() >= pos - reserve_bytes);
         int n = write_varint(&m_data[pos - reserve_bytes], length);
 
         m_data.erase(m_data.begin() + long(pos) - reserve_bytes + n, m_data.begin() + long(pos));

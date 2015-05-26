@@ -20,10 +20,7 @@ documentation.
  * Author: Josh Haberman <jhaberman@gmail.com>
  */
 
-#ifndef assert
-# include <cassert>
-#endif
-
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -33,6 +30,10 @@ documentation.
 #include <utility>
 
 #include "pbf_common.hpp"
+
+#ifndef pbf_assert
+# define pbf_assert(x) assert(x)
+#endif
 
 namespace mapbox { namespace util {
 
@@ -729,11 +730,11 @@ bool pbf::next() {
 
         // tags 0 and 19000 to 19999 are not allowed as per
         // https://developers.google.com/protocol-buffers/docs/proto
-        assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999 && m_tag <= ((1 << 29) - 1))) && "tag out of range");
+        pbf_assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999 && m_tag <= ((1 << 29) - 1))) && "tag out of range");
 
         m_wire_type = pbf_wire_type(value & 0x07);
 // XXX do we want this check? or should it throw an exception?
-//        assert((m_wire_type <=2 || m_wire_type == 5) && "illegal wire type");
+//        pbf_assert((m_wire_type <=2 || m_wire_type == 5) && "illegal wire type");
         return true;
     }
     return false;
@@ -776,7 +777,7 @@ void pbf::skip_bytes(uint32_t len) {
 }
 
 void pbf::skip() {
-    assert(tag() != 0 && "call next() before calling skip()");
+    pbf_assert(tag() != 0 && "call next() before calling skip()");
     switch (wire_type()) {
         case pbf_wire_type::varint:
             get_uint32();
@@ -816,7 +817,7 @@ T pbf::varint() {
 
 template <typename T>
 T pbf::svarint() {
-    assert((has_wire_type(pbf_wire_type::varint) || has_wire_type(pbf_wire_type::length_delimited)) && "not a varint");
+    pbf_assert((has_wire_type(pbf_wire_type::varint) || has_wire_type(pbf_wire_type::length_delimited)) && "not a varint");
     return static_cast<T>(decode_zigzag64(decode_varint(&m_data, m_end)));
 }
 
@@ -829,52 +830,52 @@ T pbf::fixed() {
 }
 
 uint32_t pbf::get_fixed32() {
-    assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
     return fixed<uint32_t>();
 }
 
 int32_t pbf::get_sfixed32() {
-    assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
     return fixed<int32_t>();
 }
 
 uint64_t pbf::get_fixed64() {
-    assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
     return fixed<uint64_t>();
 }
 
 int64_t pbf::get_sfixed64() {
-    assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
     return fixed<int64_t>();
 }
 
 float pbf::get_float() {
-    assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
     return fixed<float>();
 }
 
 double pbf::get_double() {
-    assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
     return fixed<double>();
 }
 
 bool pbf::get_bool() {
-    assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
-    assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
+    pbf_assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
     skip_bytes(1);
     return *reinterpret_cast<const bool *>(m_data - 1);
 }
 
 std::pair<const char*, uint32_t> pbf::get_data() {
-    assert(tag() != 0 && "call next() before accessing field value");
-    assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
     auto len = get_len_and_skip();
     return std::make_pair(m_data-len, len);
 }
@@ -895,9 +896,9 @@ pbf pbf::get_message() {
 
 template <typename T>
 std::pair<const T*, const T*> pbf::packed_fixed() {
-    assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
-    assert(len % sizeof(T) == 0);
+    pbf_assert(len % sizeof(T) == 0);
     return std::make_pair(reinterpret_cast<const T*>(m_data-len), reinterpret_cast<const T*>(m_data));
 }
 
@@ -918,42 +919,42 @@ std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
 }
 
 std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> pbf::packed_int32() {
-    assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_int32_iterator(m_data-len, m_data),
                           pbf::const_int32_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> pbf::packed_uint32() {
-    assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_uint32_iterator(m_data-len, m_data),
                           pbf::const_uint32_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> pbf::packed_sint32() {
-    assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_sint32_iterator(m_data-len, m_data),
                           pbf::const_sint32_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_int64_iterator, pbf::const_int64_iterator> pbf::packed_int64() {
-    assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_int64_iterator(m_data-len, m_data),
                           pbf::const_int64_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> pbf::packed_uint64() {
-    assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_uint64_iterator(m_data-len, m_data),
                           pbf::const_uint64_iterator(m_data, m_data));
 }
 
 std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> pbf::packed_sint64() {
-    assert(tag() != 0 && "call next() before accessing field value");
+    pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_sint64_iterator(m_data-len, m_data),
                           pbf::const_sint64_iterator(m_data, m_data));
