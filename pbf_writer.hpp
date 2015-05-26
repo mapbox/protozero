@@ -13,6 +13,10 @@ documentation.
 
 *****************************************************************************/
 
+#if __BYTE_ORDER != __LITTLE_ENDIAN
+# error "This code only works on little endian machines."
+#endif
+
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
