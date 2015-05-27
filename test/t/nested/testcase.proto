@@ -1,0 +1,20 @@
+
+option optimize_for = LITE_RUNTIME;
+
+package TestNested;
+
+message SubSub {
+    required string s = 1;
+    required int32 i = 2;
+}
+
+message Sub {
+    required SubSub subsub = 1;
+    required int32 i = 2;
+}
+
+message Test {
+    required Sub sub = 1;
+    required int32 i = 2;
+}
+
