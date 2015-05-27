@@ -125,6 +125,15 @@ public:
 
     inline ~pbf_writer() = default;
 
+    inline void add_length_varint(pbf_tag_type tag, uint32_t value) {
+        add_field(tag, pbf_wire_type::length_delimited);
+        add_varint(value);
+    }
+
+    inline void append(const char* value, size_t size) {
+        m_data.append(value, size);
+    }
+
     ///@{
     /**
      * @name Scalar field writer functions
@@ -339,6 +348,40 @@ public:
     }
 
 }; // class pbf_subwriter
+
+template <typename T>
+class pbf_appender : public std::iterator<std::output_iterator_tag, T> {
+
+    pbf_writer* m_writer;
+
+public:
+
+    pbf_appender(pbf_writer& writer, pbf_tag_type tag, uint32_t size) :
+        m_writer(&writer) {
+        writer.add_length_varint(tag, size * sizeof(T));
+    }
+
+    pbf_appender& operator=(const T value) {
+        m_writer->append(reinterpret_cast<const char*>(&value), sizeof(T));
+        return *this;
+    }
+
+    pbf_appender& operator*() {
+        // do nothing
+        return *this;
+    }
+
+    pbf_appender& operator++() {
+        // do nothing
+        return *this;
+    }
+
+    pbf_appender& operator++(int) {
+        // do nothing
+        return *this;
+    }
+
+}; // class pbf_appender
 
 inline uint32_t pbf_writer::encode_zigzag32(int32_t n) noexcept {
     return static_cast<uint32_t>(n << 1) ^ static_cast<uint32_t>(n >> 31);
