@@ -24,6 +24,11 @@ namespace mapbox { namespace util {
         unknown          = 99 // used for default setting in this library
     };
 
+    /**
+     * The type used for length values, such as the length of a field.
+     */
+    typedef uint32_t pbf_length_type;
+
 }} // end namespace mapbox::util
 
 #endif // MAPBOX_UTIL_PBF_COMMON_HPP

@@ -120,9 +120,9 @@ class pbf {
     template <typename T> inline T svarint();
     template <typename T> inline std::pair<const T*, const T*> packed_fixed();
 
-    inline void skip_bytes(uint32_t len);
+    inline void skip_bytes(pbf_length_type len);
 
-    inline uint32_t get_len_and_skip();
+    inline pbf_length_type get_len_and_skip();
 
 public:
 
@@ -447,7 +447,7 @@ public:
      * @pre The current field must be of type "bytes" or "string".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const char*, uint32_t> get_data();
+    inline std::pair<const char*, pbf_length_type> get_data();
 
     /**
      * Consume and return value of current "bytes" field.
@@ -767,7 +767,7 @@ bool pbf::has_wire_type(pbf_wire_type type) const noexcept {
     return wire_type() == type;
 }
 
-void pbf::skip_bytes(uint32_t len) {
+void pbf::skip_bytes(pbf_length_type len) {
     if (m_data + len > m_end) {
         throw end_of_buffer_exception();
     }
@@ -800,8 +800,8 @@ void pbf::skip() {
     }
 }
 
-uint32_t pbf::get_len_and_skip() {
-    uint32_t len = get_uint32();
+pbf_length_type pbf::get_len_and_skip() {
+    pbf_length_type len = get_uint32();
     skip_bytes(len);
     return len;
 }
@@ -877,7 +877,7 @@ bool pbf::get_bool() {
     return *reinterpret_cast<const bool *>(m_data - 1);
 }
 
-std::pair<const char*, uint32_t> pbf::get_data() {
+std::pair<const char*, pbf_length_type> pbf::get_data() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     pbf_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
     auto len = get_len_and_skip();

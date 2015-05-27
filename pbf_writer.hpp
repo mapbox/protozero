@@ -128,7 +128,7 @@ public:
 
     inline ~pbf_writer() = default;
 
-    inline void add_length_varint(pbf_tag_type tag, uint32_t value) {
+    inline void add_length_varint(pbf_tag_type tag, pbf_length_type value) {
         add_field(tag, pbf_wire_type::length_delimited);
         add_varint(value);
     }
@@ -527,7 +527,7 @@ public:
      * @param pos The position in the data returned by open_sub().
      */
     inline void close_sub(size_t pos) {
-        auto length = uint32_t(m_data.size() - pos);
+        auto length = pbf_length_type(m_data.size() - pos);
 
         pbf_assert(m_data.size() >= pos - reserve_bytes);
         int n = write_varint(&m_data[pos - reserve_bytes], length);
@@ -612,7 +612,7 @@ class pbf_appender : public std::iterator<std::output_iterator_tag, T> {
 
 public:
 
-    pbf_appender(pbf_writer& writer, pbf_tag_type tag, uint32_t size) :
+    pbf_appender(pbf_writer& writer, pbf_tag_type tag, pbf_length_type size) :
         m_writer(&writer) {
         writer.add_length_varint(tag, size * sizeof(T));
     }
@@ -654,7 +654,7 @@ inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::f
     }
 
     add_field(tag, pbf_wire_type::length_delimited);
-    add_varint(sizeof(T) * uint32_t(std::distance(it, end)));
+    add_varint(sizeof(T) * pbf_length_type(std::distance(it, end)));
 
     while (it != end) {
         const T v = *it++;
