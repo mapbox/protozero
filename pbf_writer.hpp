@@ -117,7 +117,10 @@ public:
         m_data(data) {
     }
 
+    /// A pbf_writer object can not be copied (because of the reference inside)
     pbf_writer(const pbf_writer&) = delete;
+
+    /// A pbf_writer object can not be copied (because of the reference inside)
     pbf_writer& operator=(const pbf_writer&) = delete;
 
     inline pbf_writer(pbf_writer&&) = default;
@@ -139,95 +142,218 @@ public:
      * @name Scalar field writer functions
      */
 
+    /**
+     * Add "bool" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_bool(pbf_tag_type tag, bool value) {
         add_field(tag, pbf_wire_type::varint);
         m_data.append(1, char(value));
     }
 
+    /**
+     * Add "enum" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_enum(pbf_tag_type tag, int32_t value) {
         add_tagged_varint(tag, uint64_t(value));
     }
 
+    /**
+     * Add "int32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_int32(pbf_tag_type tag, int32_t value) {
         add_tagged_varint(tag, uint64_t(value));
     }
 
+    /**
+     * Add "sint32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_sint32(pbf_tag_type tag, int32_t value) {
         add_tagged_varint(tag, encode_zigzag32(value));
     }
 
+    /**
+     * Add "uint32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_uint32(pbf_tag_type tag, uint32_t value) {
         add_tagged_varint(tag, value);
     }
 
+    /**
+     * Add "int64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_int64(pbf_tag_type tag, int64_t value) {
         add_tagged_varint(tag, uint64_t(value));
     }
 
+    /**
+     * Add "sint64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_sint64(pbf_tag_type tag, int64_t value) {
         add_tagged_varint(tag, encode_zigzag64(value));
     }
 
+    /**
+     * Add "uint64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_uint64(pbf_tag_type tag, uint64_t value) {
         add_tagged_varint(tag, value);
     }
 
+    /**
+     * Add "fixed32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_fixed32(pbf_tag_type tag, uint32_t value) {
         add_field(tag, pbf_wire_type::fixed32);
         add_data<uint32_t>(value);
     }
 
+    /**
+     * Add "sfixed32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_sfixed32(pbf_tag_type tag, int32_t value) {
         add_field(tag, pbf_wire_type::fixed32);
         add_data<int32_t>(value);
     }
 
+    /**
+     * Add "fixed64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_fixed64(pbf_tag_type tag, uint64_t value) {
         add_field(tag, pbf_wire_type::fixed64);
         add_data<uint64_t>(value);
     }
 
+    /**
+     * Add "sfixed64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_sfixed64(pbf_tag_type tag, int64_t value) {
         add_field(tag, pbf_wire_type::fixed64);
         add_data<int64_t>(value);
     }
 
+    /**
+     * Add "float" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_float(pbf_tag_type tag, float value) {
         add_field(tag, pbf_wire_type::fixed32);
         add_data<float>(value);
     }
 
+    /**
+     * Add "double" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_double(pbf_tag_type tag, double value) {
         add_field(tag, pbf_wire_type::fixed64);
         add_data<double>(value);
     }
 
+    /**
+     * Add "bytes" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_bytes(pbf_tag_type tag, const std::string& value) {
         add_field(tag, pbf_wire_type::length_delimited);
         add_varint(value.size());
         m_data.append(value);
     }
 
+    /**
+     * Add "bytes" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Pointer to value to be written
+     * @param size Number of bytes to be written
+     */
     inline void add_bytes(pbf_tag_type tag, const char* value, size_t size) {
         add_field(tag, pbf_wire_type::length_delimited);
         add_varint(size);
         m_data.append(value, size);
     }
 
+    /**
+     * Add "string" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     inline void add_string(pbf_tag_type tag, const std::string& value) {
         add_bytes(tag, value);
     }
 
+    /**
+     * Add "string" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Pointer to value to be written
+     * @param size Number of bytes to be written
+     */
     inline void add_string(pbf_tag_type tag, const char* value, size_t size) {
         add_bytes(tag, value, size);
     }
 
+    /**
+     * Add "string" field to data. Bytes from the value are written until
+     * a null byte is encountered. The null byte is not added.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Pointer to value to be written
+     */
     inline void add_string(pbf_tag_type tag, const char* value) {
         add_field(tag, pbf_wire_type::length_delimited);
         add_varint(std::strlen(value));
         m_data.append(value);
     }
 
+    /**
+     * Add "message" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written. The value must be a complete message.
+     */
     inline void add_message(pbf_tag_type tag, const std::string& value) {
         add_bytes(tag, value);
     }
@@ -239,51 +365,121 @@ public:
      * @name Repeated packed field writer functions
      */
 
+    /**
+     * Add "repeated packed fixed32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_fixed32(pbf_tag_type tag, It begin, It end) {
         add_packed_fixed<uint32_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
     }
 
+    /**
+     * Add "repeated packed fixed64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_fixed64(pbf_tag_type tag, It begin, It end) {
         add_packed_fixed<uint64_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
     }
 
+    /**
+     * Add "repeated packed sfixed32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_sfixed32(pbf_tag_type tag, It begin, It end) {
         add_packed_fixed<int32_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
     }
 
+    /**
+     * Add "repeated packed sfixed64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_sfixed64(pbf_tag_type tag, It begin, It end) {
         add_packed_fixed<int64_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
     }
 
+    /**
+     * Add "repeated packed int32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_int32(pbf_tag_type tag, It begin, It end) {
         add_packed_varint(tag, begin, end);
     }
 
+    /**
+     * Add "repeated packed uint32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_uint32(pbf_tag_type tag, It begin, It end) {
         add_packed_varint(tag, begin, end);
     }
 
+    /**
+     * Add "repeated packed sint32" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_sint32(pbf_tag_type tag, It begin, It end) {
         add_packed_svarint(tag, begin, end);
     }
 
+    /**
+     * Add "repeated packed int64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_int64(pbf_tag_type tag, It begin, It end) {
         add_packed_varint(tag, begin, end);
     }
 
+    /**
+     * Add "repeated packed uint64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_uint64(pbf_tag_type tag, It begin, It end) {
         add_packed_varint(tag, begin, end);
     }
 
+    /**
+     * Add "repeated packed sint64" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
     template <typename It>
     inline void add_packed_sint64(pbf_tag_type tag, It begin, It end) {
         add_packed_svarint(tag, begin, end);
@@ -291,12 +487,45 @@ public:
 
     ///@}
 
+    ///@{
+    /**
+     * @name Functions for adding length-delimited fields.
+     */
+
+    /**
+     * Open a length-delimited field. Can be used together with close_sub()
+     * and append_sub() to fill a length-delimited field without knowing
+     * beforehand how large it is going to be.
+     *
+     * You can use these functions like this:
+     *
+     * @code
+     * std::string data;
+     * pbf_writer w(data);
+     * auto pos = w.open_sub(23);
+     * w.append_sub("foo");
+     * w.append_sub("bar");
+     * w.close_sub(pos);
+     * @endcode
+     *
+     * Instead of using open_sub(), close_sub(), and append_sub() it is
+     * recommended to use the pbf_subwriter class which encapsulates this
+     * functionality in a nice wrapper.
+     *
+     * @param tag Tag (field number) of the field
+     * @returns The position in the data.
+     */
     inline size_t open_sub(pbf_tag_type tag) {
         add_field(tag, pbf_wire_type::length_delimited);
         reserve_space();
         return m_data.size();
     }
 
+    /**
+     * Close length-delimited field previously opened with open_sub().
+     *
+     * @param pos The position in the data returned by open_sub().
+     */
     inline void close_sub(size_t pos) {
         auto length = uint32_t(m_data.size() - pos);
 
@@ -306,17 +535,44 @@ public:
         m_data.erase(m_data.begin() + long(pos) - reserve_bytes + n, m_data.begin() + long(pos));
     }
 
+    /**
+     * Append some data to a length-delimited field opened with open_sub().
+     *
+     * @param value The data to be added
+     */
     void append_sub(const std::string& value) {
         m_data.append(value);
     }
 
+    /**
+     * Append some data to a length-delimited field opened with open_sub().
+     *
+     * @param value Pointer to the data to be added
+     * @param size The length of the data
+     */
     void append_sub(const char* value, size_t size) {
         m_data.append(value, size);
     }
 
+    ///@}
+
 }; // class pbf_writer
 
-
+/**
+ * Wrapper class for the pbf_writer open_sub(), close_sub(), and append_sub()
+ * functions.
+ *
+ * Usage:
+ * @code
+ * std::string data;
+ * pbf_writer w(data);
+ * {
+ *     pbf_subwriter s(w, 23);
+ *     s.append("foo");
+ *     s.append("bar");
+ * } // field is automatically closed
+ * @endcode
+ */
 class pbf_subwriter {
 
     pbf_writer& m_writer;
