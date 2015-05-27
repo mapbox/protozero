@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("string") {
+TEST_CASE("read string field") {
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/string/data-empty.pbf");
+        std::string buffer = load_data("string/data-empty");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("string") {
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/string/data-one.pbf");
+        std::string buffer = load_data("string/data-one");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("string") {
     }
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/string/data-string.pbf");
+        std::string buffer = load_data("string/data-string");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("string") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/string/data-string.pbf");
+        std::string buffer = load_data("string/data-string");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
@@ -44,7 +44,7 @@ TEST_CASE("string") {
     }
 
     SECTION("check assert on fixed int access") {
-        std::string buffer = get_file_data("test/t/string/data-string.pbf");
+        std::string buffer = load_data("string/data-string");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -54,47 +54,34 @@ TEST_CASE("string") {
 
 }
 
-TEST_CASE("write string") {
+TEST_CASE("write string field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/string/data-empty.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_string(1, "");
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("string/data-empty"));
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/string/data-one.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_string(1, "x");
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("string/data-one"));
     }
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/string/data-string.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_string(1, "foobar");
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("string/data-string"));
     }
 
 }
 
-TEST_CASE("write string with subwriter") {
+TEST_CASE("write string field with subwriter") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/string/data-string.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
 
         {
             mapbox::util::pbf_subwriter sw(pw, 1);
@@ -102,7 +89,7 @@ TEST_CASE("write string with subwriter") {
             sw.append("bar");
         }
 
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("string/data-string"));
     }
 
 }

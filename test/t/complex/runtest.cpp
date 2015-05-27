@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("complex") {
+TEST_CASE("read complex data") {
 
     SECTION("minimal") {
-        std::string buffer = get_file_data("test/t/complex/data-minimal.pbf");
+        std::string buffer = load_data("complex/data-minimal");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -30,7 +30,7 @@ TEST_CASE("complex") {
     }
 
     SECTION("some") {
-        std::string buffer = get_file_data("test/t/complex/data-some.pbf");
+        std::string buffer = load_data("complex/data-some");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -67,7 +67,7 @@ TEST_CASE("complex") {
     }
 
     SECTION("all") {
-        std::string buffer = get_file_data("test/t/complex/data-all.pbf");
+        std::string buffer = load_data("complex/data-all");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -122,7 +122,7 @@ TEST_CASE("complex") {
     }
 
     SECTION("skip everything") {
-        std::string buffer = get_file_data("test/t/complex/data-all.pbf");
+        std::string buffer = load_data("complex/data-all");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -147,7 +147,7 @@ TEST_CASE("complex") {
 
 }
 
-TEST_CASE("write complex") {
+TEST_CASE("write complex data") {
 
     SECTION("minimal") {
         std::string buffer;

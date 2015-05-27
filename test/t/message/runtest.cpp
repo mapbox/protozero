@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("message") {
+TEST_CASE("read message field") {
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/message/data-message.pbf");
+        std::string buffer = load_data("message/data-message");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -18,7 +18,7 @@ TEST_CASE("message") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/message/data-message.pbf");
+        std::string buffer = load_data("message/data-message");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
@@ -29,37 +29,25 @@ TEST_CASE("message") {
 
 }
 
-TEST_CASE("write message") {
+TEST_CASE("write message field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/message/data-message.pbf");
-
         std::string sbuffer;
         mapbox::util::pbf_writer pws(sbuffer);
         pws.add_string(1, "foobar");
 
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_message(1, sbuffer);
-
-        REQUIRE(buffer == wbuffer);
     }
-}
 
-TEST_CASE("write message with subwriter") {
-
-    SECTION("string") {
-        std::string buffer = get_file_data("test/t/message/data-message.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
-
-        {
-            mapbox::util::pbf_subwriter sw(pw, 1);
-            pw.add_string(1, "foobar");
-        }
-
-        REQUIRE(buffer == wbuffer);
+    SECTION("string with subwriter") {
+        mapbox::util::pbf_subwriter sw(pw, 1);
+        pw.add_string(1, "foobar");
     }
+
+    REQUIRE(buffer == load_data("message/data-message"));
+
 }
 

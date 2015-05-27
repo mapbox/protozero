@@ -61,7 +61,7 @@ TEST_CASE("skip") {
         };
 
         for (const auto& filename : filenames) {
-            std::string buffer = get_file_data(std::string("test/t/") + filename + ".pbf");
+            std::string buffer = load_data(filename);
 
             mapbox::util::pbf item(buffer.data(), buffer.size());
 

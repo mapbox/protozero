@@ -13,5 +13,5 @@ struct assert_error : public std::runtime_error {
 #include <pbf_reader.hpp>
 #include <pbf_writer.hpp>
 
-extern std::string get_file_data(const std::string& filename);
+extern std::string load_data(const std::string& filename);
 

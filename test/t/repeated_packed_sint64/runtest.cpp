@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("repeated_packed_sint64") {
+TEST_CASE("read repeated packed sint64 field") {
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-empty.pbf");
+        std::string buffer = load_data("repeated_packed_sint64/data-empty");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -12,7 +12,7 @@ TEST_CASE("repeated_packed_sint64") {
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-one.pbf");
+        std::string buffer = load_data("repeated_packed_sint64/data-one");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -25,7 +25,7 @@ TEST_CASE("repeated_packed_sint64") {
     }
 
     SECTION("many") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-many.pbf");
+        std::string buffer = load_data("repeated_packed_sint64/data-many");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -44,7 +44,7 @@ TEST_CASE("repeated_packed_sint64") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-many.pbf");
+        std::string buffer = load_data("repeated_packed_sint64/data-many");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
@@ -55,45 +55,30 @@ TEST_CASE("repeated_packed_sint64") {
 
 }
 
-TEST_CASE("write repeated_packed_sint64") {
+TEST_CASE("write repeated packed sint64 field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-empty.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         const int64_t* dummy = 0;
         pw.add_packed_sint64(1, dummy, dummy);
 
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("repeated_packed_sint64/data-empty"));
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-one.pbf");
-
-        mapbox::util::pbf item(buffer.data(), buffer.size());
-
         int64_t data[] = { 17L };
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_packed_sint64(1, std::begin(data), std::end(data));
 
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("repeated_packed_sint64/data-one"));
     }
 
     SECTION("many") {
-        std::string buffer = get_file_data("test/t/repeated_packed_sint64/data-many.pbf");
-
-        mapbox::util::pbf item(buffer.data(), buffer.size());
-
         int64_t data[] = { 17L, 0L, 1L, -1L, std::numeric_limits<int64_t>::max(), std::numeric_limits<int64_t>::min() };
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_packed_sint64(1, std::begin(data), std::end(data));
 
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("repeated_packed_sint64/data-many"));
     }
 
 }

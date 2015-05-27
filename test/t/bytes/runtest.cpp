@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("bytes") {
+TEST_CASE("read bytes field") {
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/bytes/data-empty.pbf");
+        std::string buffer = load_data("bytes/data-empty");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("bytes") {
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/bytes/data-one.pbf");
+        std::string buffer = load_data("bytes/data-one");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("bytes") {
     }
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/bytes/data-string.pbf");
+        std::string buffer = load_data("bytes/data-string");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("bytes") {
     }
 
     SECTION("binary") {
-        std::string buffer = get_file_data("test/t/bytes/data-binary.pbf");
+        std::string buffer = load_data("bytes/data-binary");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -48,7 +48,7 @@ TEST_CASE("bytes") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/bytes/data-binary.pbf");
+        std::string buffer = load_data("bytes/data-binary");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
@@ -59,51 +59,35 @@ TEST_CASE("bytes") {
 
 }
 
-TEST_CASE("write bytes") {
+TEST_CASE("write bytes field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/bytes/data-empty.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_string(1, "");
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("bytes/data-empty"));
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/bytes/data-one.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_string(1, "x");
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("bytes/data-one"));
     }
 
     SECTION("string") {
-        std::string buffer = get_file_data("test/t/bytes/data-string.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_string(1, "foobar");
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("bytes/data-string"));
     }
 
     SECTION("binary") {
-        std::string buffer = get_file_data("test/t/bytes/data-binary.pbf");
-
         std::string data;
         data.append(1, char(1));
         data.append(1, char(2));
         data.append(1, char(3));
 
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_string(1, data);
 
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("bytes/data-binary"));
     }
 
 }

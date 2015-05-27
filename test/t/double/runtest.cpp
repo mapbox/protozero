@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("double") {
+TEST_CASE("read double field") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/double/data-zero.pbf");
+        std::string buffer = load_data("double/data-zero");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("double") {
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/double/data-pos.pbf");
+        std::string buffer = load_data("double/data-pos");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("double") {
     }
 
     SECTION("negative") {
-        std::string buffer = get_file_data("test/t/double/data-neg.pbf");
+        std::string buffer = load_data("double/data-neg");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("double") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/double/data-neg.pbf");
+        std::string buffer = load_data("double/data-neg");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
@@ -45,36 +45,24 @@ TEST_CASE("double") {
 
 }
 
-TEST_CASE("write double") {
+TEST_CASE("write double field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/double/data-zero.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_double(1, 0.0);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("double/data-zero"));
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/double/data-pos.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_double(1, 4.893);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("double/data-pos"));
     }
 
     SECTION("negative") {
-        std::string buffer = get_file_data("test/t/double/data-neg.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_double(1, -9232.33);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("double/data-neg"));
     }
 
 }

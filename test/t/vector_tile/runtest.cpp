@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-// Input data.vector.pbf is encoded according to
+// Input data.vector is encoded according to
 // https://github.com/mapbox/mapnik-vector-tile/blob/master/proto/vector_tile.proto
 
 static std::vector<std::string> expected_layer_names = {
@@ -29,7 +29,7 @@ std::string get_name(mapbox::util::pbf layer) { // copy!
 TEST_CASE("reading vector tiles") {
 
     SECTION("iterate over message using next()") {
-        std::string buffer = get_file_data("./test/t/vector_tile/data.vector.pbf");
+        std::string buffer = load_data("vector_tile/data.vector");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -55,7 +55,7 @@ TEST_CASE("reading vector tiles") {
     }
 
     SECTION("iterate over message using next(type)") {
-        std::string buffer = get_file_data("./test/t/vector_tile/data.vector.pbf");
+        std::string buffer = load_data("vector_tile/data.vector");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -71,7 +71,7 @@ TEST_CASE("reading vector tiles") {
     }
 
     SECTION("iterate over features in road layer") {
-        std::string buffer = get_file_data("./test/t/vector_tile/data.vector.pbf");
+        std::string buffer = load_data("vector_tile/data.vector");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 

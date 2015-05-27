@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("float") {
+TEST_CASE("read float field") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/float/data-zero.pbf");
+        std::string buffer = load_data("float/data-zero");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("float") {
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/float/data-pos.pbf");
+        std::string buffer = load_data("float/data-pos");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("float") {
     }
 
     SECTION("negative") {
-        std::string buffer = get_file_data("test/t/float/data-neg.pbf");
+        std::string buffer = load_data("float/data-neg");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("float") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/float/data-neg.pbf");
+        std::string buffer = load_data("float/data-neg");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
@@ -45,36 +45,24 @@ TEST_CASE("float") {
 
 }
 
-TEST_CASE("write float") {
+TEST_CASE("write float field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/float/data-zero.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_float(1, 0.0f);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("float/data-zero"));
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/float/data-pos.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_float(1, 5.34f);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("float/data-pos"));
     }
 
     SECTION("negative") {
-        std::string buffer = get_file_data("test/t/float/data-neg.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_float(1, -1.71f);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("float/data-neg"));
     }
 
 }

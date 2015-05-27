@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("bool") {
+TEST_CASE("read bool field") {
 
     SECTION("false") {
-        std::string buffer = get_file_data("test/t/bool/data-false.pbf");
+        std::string buffer = load_data("bool/data-false");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("bool") {
     }
 
     SECTION("true") {
-        std::string buffer = get_file_data("test/t/bool/data-true.pbf");
+        std::string buffer = load_data("bool/data-true");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("bool") {
     }
 
     SECTION("also true") {
-        std::string buffer = get_file_data("test/t/bool/data-also-true.pbf");
+        std::string buffer = load_data("bool/data-also-true");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("bool") {
     }
 
     SECTION("still true") {
-        std::string buffer = get_file_data("test/t/bool/data-still-true.pbf");
+        std::string buffer = load_data("bool/data-still-true");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -45,26 +45,19 @@ TEST_CASE("bool") {
 
 }
 
-TEST_CASE("write bool") {
+TEST_CASE("write bool field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("false") {
-        std::string buffer = get_file_data("test/t/bool/data-false.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_bool(1, false);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("bool/data-false"));
     }
 
     SECTION("true") {
-        std::string buffer = get_file_data("test/t/bool/data-true.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_bool(1, true);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("bool/data-true"));
     }
 
 }

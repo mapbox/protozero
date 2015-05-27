@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("sint64") {
+TEST_CASE("read sint64 field") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/sint64/data-zero.pbf");
+        std::string buffer = load_data("sint64/data-zero");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("sint64") {
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/sint64/data-pos.pbf");
+        std::string buffer = load_data("sint64/data-pos");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("sint64") {
     }
 
     SECTION("negative") {
-        std::string buffer = get_file_data("test/t/sint64/data-neg.pbf");
+        std::string buffer = load_data("sint64/data-neg");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("sint64") {
     }
 
     SECTION("max") {
-        std::string buffer = get_file_data("test/t/sint64/data-max.pbf");
+        std::string buffer = load_data("sint64/data-max");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -44,7 +44,7 @@ TEST_CASE("sint64") {
     }
 
     SECTION("min") {
-        std::string buffer = get_file_data("test/t/sint64/data-min.pbf");
+        std::string buffer = load_data("sint64/data-min");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -54,7 +54,7 @@ TEST_CASE("sint64") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/sint64/data-min.pbf");
+        std::string buffer = load_data("sint64/data-min");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
@@ -65,56 +65,34 @@ TEST_CASE("sint64") {
 
 }
 
-TEST_CASE("write sint64") {
+TEST_CASE("write sint64 field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/sint64/data-zero.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_sint64(1, 0L);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("sint64/data-zero"));
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/sint64/data-pos.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_sint64(1, 1L);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("sint64/data-pos"));
     }
 
     SECTION("negative") {
-        std::string buffer = get_file_data("test/t/sint64/data-neg.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_sint64(1, -1L);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("sint64/data-neg"));
     }
 
     SECTION("max") {
-        std::string buffer = get_file_data("test/t/sint64/data-max.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_sint64(1, std::numeric_limits<int64_t>::max());
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("sint64/data-max"));
     }
 
     SECTION("min") {
-        std::string buffer = get_file_data("test/t/sint64/data-min.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_sint64(1, std::numeric_limits<int64_t>::min());
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("sint64/data-min"));
     }
 
 }

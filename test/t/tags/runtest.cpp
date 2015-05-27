@@ -10,22 +10,22 @@ inline void check_tag(const std::string& buffer, mapbox::util::pbf_tag_type tag)
     REQUIRE(!item.next());
 }
 
-TEST_CASE("tags") {
+TEST_CASE("read tags") {
 
     SECTION("tag 1") {
-        check_tag(get_file_data("test/t/tags/data-tag-1.pbf"), 1L);
+        check_tag(load_data("tags/data-tag-1"), 1L);
     }
 
     SECTION("tag 200") {
-        check_tag(get_file_data("test/t/tags/data-tag-200.pbf"), 200L);
+        check_tag(load_data("tags/data-tag-200"), 200L);
     }
 
     SECTION("tag 200000") {
-        check_tag(get_file_data("test/t/tags/data-tag-200000.pbf"), 200000L);
+        check_tag(load_data("tags/data-tag-200000"), 200000L);
     }
 
     SECTION("tag max") {
-        check_tag(get_file_data("test/t/tags/data-tag-max.pbf"), (1L << 29) - 1);
+        check_tag(load_data("tags/data-tag-max"), (1L << 29) - 1);
     }
 
 }
@@ -33,30 +33,27 @@ TEST_CASE("tags") {
 TEST_CASE("write tags") {
 
     std::string buffer;
-    std::string wbuffer;
-    mapbox::util::pbf_writer pw(wbuffer);
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("tag 1") {
-        buffer = get_file_data("test/t/tags/data-tag-1.pbf");
         pw.add_int32(1L, 333L);
+        REQUIRE(buffer == load_data("tags/data-tag-1"));
     }
 
     SECTION("tag 200") {
-        buffer = get_file_data("test/t/tags/data-tag-200.pbf");
         pw.add_int32(200L, 333L);
+        REQUIRE(buffer == load_data("tags/data-tag-200"));
     }
 
     SECTION("tag 200000") {
-        buffer = get_file_data("test/t/tags/data-tag-200000.pbf");
         pw.add_int32(200000L, 333L);
+        REQUIRE(buffer == load_data("tags/data-tag-200000"));
     }
 
     SECTION("tag max") {
-        buffer = get_file_data("test/t/tags/data-tag-max.pbf");
         pw.add_int32((1L << 29) - 1, 333L);
+        REQUIRE(buffer == load_data("tags/data-tag-max"));
     }
-
-    REQUIRE(buffer == wbuffer);
 
 }
 

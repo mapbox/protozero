@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("repeated") {
+TEST_CASE("read repeated fields") {
 
     SECTION("empty") {
-        std::string buffer = get_file_data("test/t/repeated/data-empty.pbf");
+        std::string buffer = load_data("repeated/data-empty");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -12,7 +12,7 @@ TEST_CASE("repeated") {
     }
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/repeated/data-one.pbf");
+        std::string buffer = load_data("repeated/data-one");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -22,7 +22,7 @@ TEST_CASE("repeated") {
     }
 
     SECTION("many") {
-        std::string buffer = get_file_data("test/t/repeated/data-many.pbf");
+        std::string buffer = load_data("repeated/data-many");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -45,7 +45,7 @@ TEST_CASE("repeated") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/repeated/data-one.pbf");
+        std::string buffer = load_data("repeated/data-one");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
@@ -56,30 +56,24 @@ TEST_CASE("repeated") {
 
 }
 
-TEST_CASE("write repeated") {
+TEST_CASE("write repeated fields") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("one") {
-        std::string buffer = get_file_data("test/t/repeated/data-one.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_int32(1, 0L);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("repeated/data-one"));
     }
 
     SECTION("many") {
-        std::string buffer = get_file_data("test/t/repeated/data-many.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_int32(1, 0L);
         pw.add_int32(1, 1L);
         pw.add_int32(1, -1L);
         pw.add_int32(1, std::numeric_limits<int32_t>::max());
         pw.add_int32(1, std::numeric_limits<int32_t>::min());
 
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("repeated/data-many"));
     }
 
 }

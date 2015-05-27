@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("enum") {
+TEST_CASE("read enum field") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/enum/data-black.pbf");
+        std::string buffer = load_data("enum/data-black");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("enum") {
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/enum/data-blue.pbf");
+        std::string buffer = load_data("enum/data-blue");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -25,26 +25,19 @@ TEST_CASE("enum") {
 
 }
 
-TEST_CASE("write enum") {
+TEST_CASE("write enum field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/enum/data-black.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_enum(1, 0L);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("enum/data-black"));
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/enum/data-blue.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_enum(1, 3L);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("enum/data-blue"));
     }
 
 }

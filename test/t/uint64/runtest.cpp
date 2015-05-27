@@ -1,10 +1,10 @@
 
 #include <test.hpp>
 
-TEST_CASE("uint64") {
+TEST_CASE("read uint64 field") {
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/uint64/data-zero.pbf");
+        std::string buffer = load_data("uint64/data-zero");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -14,7 +14,7 @@ TEST_CASE("uint64") {
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/uint64/data-pos.pbf");
+        std::string buffer = load_data("uint64/data-pos");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -24,7 +24,7 @@ TEST_CASE("uint64") {
     }
 
     SECTION("max") {
-        std::string buffer = get_file_data("test/t/uint64/data-max.pbf");
+        std::string buffer = load_data("uint64/data-max");
 
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
@@ -34,7 +34,7 @@ TEST_CASE("uint64") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = get_file_data("test/t/uint64/data-max.pbf");
+        std::string buffer = load_data("uint64/data-max");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
@@ -45,36 +45,24 @@ TEST_CASE("uint64") {
 
 }
 
-TEST_CASE("write uint64") {
+TEST_CASE("write uint64 field") {
+
+    std::string buffer;
+    mapbox::util::pbf_writer pw(buffer);
 
     SECTION("zero") {
-        std::string buffer = get_file_data("test/t/uint64/data-zero.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_uint64(1, 0UL);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("uint64/data-zero"));
     }
 
     SECTION("positive") {
-        std::string buffer = get_file_data("test/t/uint64/data-pos.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_uint64(1, 1UL);
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("uint64/data-pos"));
     }
 
     SECTION("max") {
-        std::string buffer = get_file_data("test/t/uint64/data-max.pbf");
-
-        std::string wbuffer;
-        mapbox::util::pbf_writer pw(wbuffer);
         pw.add_uint64(1, std::numeric_limits<uint64_t>::max());
-
-        REQUIRE(buffer == wbuffer);
+        REQUIRE(buffer == load_data("uint64/data-max"));
     }
 
 }
