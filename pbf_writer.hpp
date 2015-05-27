@@ -34,6 +34,10 @@ namespace mapbox { namespace util {
 
 /**
  * The pbf_writer is used to write PBF formatted messages into a buffer.
+ *
+ * All methods in this class can throw an exception if the std::string used
+ * as a buffer throws an exception. This can only happen if we are out of
+ * memory and the string wants to resize.
  */
 class pbf_writer {
 
@@ -126,7 +130,10 @@ public:
     /// A pbf_writer object can not be copied (because of the reference inside)
     pbf_writer& operator=(const pbf_writer&) = delete;
 
+    /// A pbf_writer object can be moved
     inline pbf_writer(pbf_writer&&) = default;
+
+    /// A pbf_writer object can be moved
     inline pbf_writer& operator=(pbf_writer&&) = default;
 
     inline ~pbf_writer() = default;
@@ -583,25 +590,53 @@ class pbf_subwriter {
 
 public:
 
+    /**
+     * Construct a pbf_subwriter from a pbf_writer.
+     *
+     * @param writer The pbf_writer
+     * @param tag Tag (field number) of the field that will be written
+     */
     inline pbf_subwriter(pbf_writer& writer, pbf_tag_type tag) :
         m_writer(writer),
         m_pos(writer.open_sub(tag)) {
     }
 
+    /// A pbf_subwriter can not be copied.
     pbf_subwriter(const pbf_subwriter&) = delete;
+
+    /// A pbf_subwriter can not be copied.
     pbf_subwriter& operator=(const pbf_subwriter&) = delete;
 
-    inline pbf_subwriter(pbf_subwriter&&) = default;
-    inline pbf_subwriter& operator=(pbf_subwriter&&) = default;
+    /// A pbf_subwriter can not be moved.
+    pbf_subwriter(pbf_subwriter&&) = delete;
 
+    /// A pbf_subwriter can not be moved.
+    pbf_subwriter& operator=(pbf_subwriter&&) = delete;
+
+    /**
+     * Destroying a pbf_subwriter will update the pbf_writer it was constructed
+     * with. It is important the destructor is called before any other
+     * operations are done on the pbf_writer.
+     */
     inline ~pbf_subwriter() {
         m_writer.close_sub(m_pos);
     }
 
+    /**
+     * Append data to the pbf message.
+     *
+     * @param value Value to be written
+     */
     inline void append(const std::string& value) {
         m_writer.append_sub(value);
     }
 
+    /**
+     * Append data to the pbf message.
+     *
+     * @param value Pointer to value to be written
+     * @param size Number of bytes to be written
+     */
     inline void append(const char* value, size_t size) {
         m_writer.append_sub(value, size);
     }
