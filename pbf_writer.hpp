@@ -99,7 +99,7 @@ public:
      * This is a helper function used inside the pbf_writer class, but could be
      * useful in other contexts.
      */
-    static inline uint32_t encode_zigzag32(int32_t n) noexcept;
+    static inline uint32_t encode_zigzag32(int32_t value) noexcept;
 
     /**
      * ZigZag encodes a 64 bit integer.
@@ -107,7 +107,7 @@ public:
      * This is a helper function used inside the pbf_writer class, but could be
      * useful in other contexts.
      */
-    static inline uint64_t encode_zigzag64(int64_t n) noexcept;
+    static inline uint64_t encode_zigzag64(int64_t value) noexcept;
 
     /**
      * Create a writer using the given string as a data store. The pbf_writer
@@ -639,12 +639,12 @@ public:
 
 }; // class pbf_appender
 
-inline uint32_t pbf_writer::encode_zigzag32(int32_t n) noexcept {
-    return static_cast<uint32_t>(n << 1) ^ static_cast<uint32_t>(n >> 31);
+inline uint32_t pbf_writer::encode_zigzag32(int32_t value) noexcept {
+    return uint32_t(value << 1) ^ uint32_t(value >> 31);
 }
 
-inline uint64_t pbf_writer::encode_zigzag64(int64_t n) noexcept {
-    return static_cast<uint64_t>(n << 1) ^ static_cast<uint64_t>(n >> 63);
+inline uint64_t pbf_writer::encode_zigzag64(int64_t value) noexcept {
+    return uint64_t(value << 1) ^ uint64_t(value >> 63);
 }
 
 template <typename T, typename It>

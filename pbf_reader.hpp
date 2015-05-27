@@ -132,7 +132,7 @@ public:
      * This is a helper function used inside the pbf class, but could be
      * useful in other contexts.
      */
-    static inline int32_t decode_zigzag32(uint32_t n) noexcept;
+    static inline int32_t decode_zigzag32(uint32_t value) noexcept;
 
     /**
      * Decodes a 64 bit ZigZag-encoded integer.
@@ -140,7 +140,7 @@ public:
      * This is a helper function used inside the pbf class, but could be
      * useful in other contexts.
      */
-    static inline int64_t decode_zigzag64(uint64_t n) noexcept;
+    static inline int64_t decode_zigzag64(uint64_t value) noexcept;
 
     /**
      * All exceptions thrown by the functions of the pbf class derive from
@@ -806,12 +806,12 @@ pbf_length_type pbf::get_len_and_skip() {
     return len;
 }
 
-inline int32_t pbf::decode_zigzag32(uint32_t n) noexcept {
-    return static_cast<int32_t>(n >> 1) ^ -static_cast<int32_t>((n & 1));
+inline int32_t pbf::decode_zigzag32(uint32_t value) noexcept {
+    return int32_t(value >> 1) ^ -int32_t(value & 1);
 }
 
-inline int64_t pbf::decode_zigzag64(uint64_t n) noexcept {
-    return static_cast<int64_t>(n >> 1) ^ -static_cast<int64_t>((n & 1));
+inline int64_t pbf::decode_zigzag64(uint64_t value) noexcept {
+    return int64_t(value >> 1) ^ -int64_t(value & 1);
 }
 
 template <typename T>
