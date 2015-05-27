@@ -115,9 +115,9 @@ class pbf {
     // The tag of the current field.
     pbf_tag_type m_tag = 0;
 
-    template <typename T> inline T fixed();
-    template <typename T> inline T varint();
-    template <typename T> inline T svarint();
+    template <typename T> inline T get_fixed();
+    template <typename T> inline T get_varint();
+    template <typename T> inline T get_svarint();
     template <typename T> inline std::pair<const T*, const T*> packed_fixed();
 
     inline void skip_bytes(pbf_length_type len);
@@ -329,7 +329,7 @@ public:
      * @pre The current field must be of type "enum".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int32_t get_enum() { return varint<int32_t>(); }
+    inline int32_t get_enum() { return get_varint<int32_t>(); }
 
     /**
      * Consume and return value of current "int32" varint field.
@@ -338,7 +338,7 @@ public:
      * @pre The current field must be of type "int32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int32_t get_int32() { return varint<int32_t>(); }
+    inline int32_t get_int32() { return get_varint<int32_t>(); }
 
     /**
      * Consume and return value of current "sint32" varint field.
@@ -347,7 +347,7 @@ public:
      * @pre The current field must be of type "sint32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int32_t get_sint32() { return svarint<int32_t>(); }
+    inline int32_t get_sint32() { return get_svarint<int32_t>(); }
 
     /**
      * Consume and return value of current "uint32" varint field.
@@ -356,7 +356,7 @@ public:
      * @pre The current field must be of type "uint32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline uint32_t get_uint32() { return varint<uint32_t>(); }
+    inline uint32_t get_uint32() { return get_varint<uint32_t>(); }
 
     /**
      * Consume and return value of current "int64" varint field.
@@ -365,7 +365,7 @@ public:
      * @pre The current field must be of type "int64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int64_t get_int64() { return varint<int64_t>(); }
+    inline int64_t get_int64() { return get_varint<int64_t>(); }
 
     /**
      * Consume and return value of current "sint64" varint field.
@@ -374,7 +374,7 @@ public:
      * @pre The current field must be of type "sint64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int64_t get_sint64() { return svarint<int64_t>(); }
+    inline int64_t get_sint64() { return get_svarint<int64_t>(); }
 
     /**
      * Consume and return value of current "uint64" varint field.
@@ -383,7 +383,7 @@ public:
      * @pre The current field must be of type "uint64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline uint64_t get_uint64() { return varint<uint64_t>(); }
+    inline uint64_t get_uint64() { return get_varint<uint64_t>(); }
 
     /**
      * Consume and return value of current "fixed32" field.
@@ -815,18 +815,18 @@ inline int64_t pbf::decode_zigzag64(uint64_t value) noexcept {
 }
 
 template <typename T>
-T pbf::varint() {
+T pbf::get_varint() {
     return static_cast<T>(decode_varint(&m_data, m_end));
 }
 
 template <typename T>
-T pbf::svarint() {
+T pbf::get_svarint() {
     pbf_assert((has_wire_type(pbf_wire_type::varint) || has_wire_type(pbf_wire_type::length_delimited)) && "not a varint");
     return static_cast<T>(decode_zigzag64(decode_varint(&m_data, m_end)));
 }
 
 template <typename T>
-T pbf::fixed() {
+T pbf::get_fixed() {
     skip_bytes(sizeof(T));
     T result;
     memcpy(&result, m_data - sizeof(T), sizeof(T));
@@ -836,37 +836,37 @@ T pbf::fixed() {
 uint32_t pbf::get_fixed32() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     pbf_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
-    return fixed<uint32_t>();
+    return get_fixed<uint32_t>();
 }
 
 int32_t pbf::get_sfixed32() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     pbf_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
-    return fixed<int32_t>();
+    return get_fixed<int32_t>();
 }
 
 uint64_t pbf::get_fixed64() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     pbf_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
-    return fixed<uint64_t>();
+    return get_fixed<uint64_t>();
 }
 
 int64_t pbf::get_sfixed64() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     pbf_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
-    return fixed<int64_t>();
+    return get_fixed<int64_t>();
 }
 
 float pbf::get_float() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     pbf_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
-    return fixed<float>();
+    return get_fixed<float>();
 }
 
 double pbf::get_double() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     pbf_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
-    return fixed<double>();
+    return get_fixed<double>();
 }
 
 bool pbf::get_bool() {
