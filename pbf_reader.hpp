@@ -898,7 +898,7 @@ bool pbf::get_bool() {
     pbf_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
     pbf_assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
     skip_bytes(1);
-    return *reinterpret_cast<const bool *>(m_data - 1);
+    return m_data[-1] != 0; // -1 okay because we incremented m_data the line before
 }
 
 std::pair<const char*, pbf_length_type> pbf::get_data() {
