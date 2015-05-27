@@ -85,7 +85,10 @@ class pbf_writer {
     template <typename It>
     inline void add_packed_svarint(pbf_tag_type tag, It begin, It end);
 
-    static const int reserve_bytes = 10;
+    // The number of bytes to reserve for the varint holding the length of
+    // a length-delimited field. The length has to fit into pbf_length_type,
+    // and a varint needs 8 bit for every 7 bit.
+    static const int reserve_bytes = sizeof(pbf_length_type) * 8 / 7 + 1;
 
     inline void reserve_space() {
         m_data.append(size_t(reserve_bytes), '\0');

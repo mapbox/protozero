@@ -63,16 +63,17 @@ namespace mapbox { namespace util {
  */
 class pbf {
 
-    // from https://github.com/facebook/folly/blob/master/folly/Varint.h
-    static const int8_t kMaxVarintLength64 = 10;
+    // The maximum length of a 64bit varint.
+    static const int8_t max_varint_length = sizeof(uint64_t) * 8 / 7 + 1;
 
+    // from https://github.com/facebook/folly/blob/master/folly/Varint.h
     static uint64_t decode_varint(const char** data, const char* end) {
         const int8_t* begin = reinterpret_cast<const int8_t*>(*data);
         const int8_t* iend = reinterpret_cast<const int8_t*>(end);
         const int8_t* p = begin;
         uint64_t val = 0;
 
-        if (iend - begin >= kMaxVarintLength64) {  // fast path
+        if (iend - begin >= max_varint_length) {  // fast path
             do {
                 int64_t b;
                 b = *p++; val  = static_cast<uint64_t>((b & 0x7f)      ); if (b >= 0) break;
