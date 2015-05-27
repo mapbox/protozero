@@ -530,7 +530,7 @@ public:
         auto length = pbf_length_type(m_data.size() - pos);
 
         pbf_assert(m_data.size() >= pos - reserve_bytes);
-        int n = write_varint(&m_data[pos - reserve_bytes], length);
+        auto n = write_varint(&m_data[pos - reserve_bytes], length);
 
         m_data.erase(m_data.begin() + long(pos) - reserve_bytes + n, m_data.begin() + long(pos));
     }
