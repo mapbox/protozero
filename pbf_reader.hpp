@@ -76,28 +76,28 @@ class pbf {
         if (iend - begin >= max_varint_length) {  // fast path
             do {
                 int64_t b;
-                b = *p++; val  = static_cast<uint64_t>((b & 0x7f)      ); if (b >= 0) break;
-                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) <<  7); if (b >= 0) break;
-                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 14); if (b >= 0) break;
-                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 21); if (b >= 0) break;
-                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 28); if (b >= 0) break;
-                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 35); if (b >= 0) break;
-                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 42); if (b >= 0) break;
-                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 49); if (b >= 0) break;
-                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 56); if (b >= 0) break;
-                b = *p++; val |= static_cast<uint64_t>((b & 0x7f) << 63); if (b >= 0) break;
+                b = *p++; val  = uint64_t((b & 0x7f)      ); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) <<  7); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 14); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 21); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 28); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 35); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 42); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 49); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 56); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 63); if (b >= 0) break;
                 throw varint_too_long_exception();
             } while (false);
         } else {
             int shift = 0;
             while (p != iend && *p < 0) {
-                val |= static_cast<uint64_t>(*p++ & 0x7f) << shift;
+                val |= uint64_t(*p++ & 0x7f) << shift;
                 shift += 7;
             }
             if (p == iend) {
                 throw end_of_buffer_exception();
             }
-            val |= static_cast<uint64_t>(*p++) << shift;
+            val |= uint64_t(*p++) << shift;
         }
 
         *data = reinterpret_cast<const char*>(p);
