@@ -1,3 +1,5 @@
+coverage
+*.gcov
 out
 pbf.Makefile
 tests.target.mk

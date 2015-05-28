@@ -61,7 +61,8 @@ clean:
 	rm -f ./test/t/*/testcase
 	rm -f ./test/t/*/runtest.o
 	rm -f ./test/t/*/runtest.gc*
-	rm -fr doc/doxygen_sqlite3.db doc/html
+	rm -f ./*.gcov
+	rm -fr doc/doxygen_sqlite3.db doc/html coverage
 
 .PHONY: test doc
 

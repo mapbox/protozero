@@ -20,6 +20,7 @@ matrix:
         - os: linux
           compiler: clang
           env: INSTALL_CXX=clang++-3.6
+          #env: INSTALL_CXX=clang++-3.6 COVERAGE=llvm-cov-3.6
           addons:
             apt:
                 sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6']
@@ -33,7 +34,7 @@ matrix:
                 packages: ['g++-4.8']
         - os: linux
           compiler: gcc
-          env: INSTALL_CXX=g++-4.9
+          env: INSTALL_CXX=g++-4.9 COVERAGE=gcov-4.9
           addons:
             apt:
                 sources: ['ubuntu-toolchain-r-test']
@@ -46,5 +47,11 @@ before_script:
     - make test
 
 script:
-    - ./scripts/${TRAVIS_OS_NAME}.sh
+    - if [ -n "${COVERAGE}" ]; then
+        make clean;
+        CXXFLAGS="--coverage" LDFLAGS="--coverage" make test;
+        ${COVERAGE} -lp test/run_all_tests.o test/t/*/runtest.o;
+        pip install --user cpp-coveralls;
+        ~/.local/bin/coveralls --no-gcov -i pbf_common.hpp -i pbf_reader.hpp -i pbf_writer.hpp;
+      fi
 

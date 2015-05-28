@@ -69,10 +69,6 @@ Extensive tests are included. Call
 
 to build all tests and run them.
 
-With Clang you can get a test coverage report with
-
-    CXXFLAGS="--coverage" LDFLAGS="--coverage" make test
-
 You can also use `gyp` to build the tests:
 
     gyp --depth=. --build=Release
@@ -80,6 +76,28 @@ You can also use `gyp` to build the tests:
 
 This will clobber the `Makefile` from the repository! Instead of `Release` you
 can use `Debug` for a debug build.
+
+## Coverage report
+
+To get a coverage report compile and link with `--coverage`:
+
+    CXXFLAGS="--coverage" LDFLAGS="--coverage" make test
+
+If you are using `g++` use `gcov` to generate a report (results are in `*.gcov`
+files):
+
+    gcov -lp test/run_all_tests.o test/t/*/runtest.o
+
+If you are using `clang++` use `llvm-cov` instead:
+
+    llvm-cov gcov -lp test/run_all_tests.o test/t/*/runtest.o
+
+If you are using `g++` you can use `gcovr` to generate nice HTML output:
+
+    mkdir -p coverage
+    gcovr -r . --html --html-details -o coverage/index.html
+
+Open `coverage/index.html` in your browser to see the report.
 
 ## Cppcheck
 
