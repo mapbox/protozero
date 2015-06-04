@@ -678,11 +678,11 @@ public:
 }; // class pbf_appender
 
 inline uint32_t pbf_writer::encode_zigzag32(int32_t value) noexcept {
-    return uint32_t(value << 1) ^ uint32_t(value >> 31);
+    return (static_cast<uint32_t>(value) << 1) ^ (static_cast<uint32_t>(value >> 31));
 }
 
 inline uint64_t pbf_writer::encode_zigzag64(int64_t value) noexcept {
-    return uint64_t(value << 1) ^ uint64_t(value >> 63);
+    return (static_cast<uint64_t>(value) << 1) ^ (static_cast<uint64_t>(value >> 63));
 }
 
 template <typename T, typename It>
