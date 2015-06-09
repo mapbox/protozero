@@ -3,3 +3,9 @@ coverage
 out
 pbf.Makefile
 tests.target.mk
+
+Release
+Debug
+deps
+*.sln
+*.vcxproj*
