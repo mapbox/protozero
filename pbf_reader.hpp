@@ -13,13 +13,6 @@ documentation.
 
 *****************************************************************************/
 
-/*
- * Some parts are from upb - a minimalist implementation of protocol buffers.
- *
- * Copyright (c) 2008-2011 Google Inc.  See LICENSE for details.
- * Author: Josh Haberman <jhaberman@gmail.com>
- */
-
 #if __BYTE_ORDER != __LITTLE_ENDIAN
 # error "This code only works on little endian machines."
 #endif
