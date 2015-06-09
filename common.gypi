@@ -50,9 +50,9 @@
                     "OmitFramePointers": "true",
                     "EnableFunctionLevelLinking": "true",
                     "EnableIntrinsicFunctions": "true",
-                    "AdditionalOptions": [
-                      "/MP", # compile across multiple CPUs
-                    ],
+                    #"AdditionalOptions": [
+                    #  "/MP", # compile across multiple CPUs
+                    #],
                     "DebugInformationFormat": "0"
                   },
                   "VCLibrarianTool": {
@@ -82,9 +82,9 @@
                     "OmitFramePointers": "true",
                     "EnableFunctionLevelLinking": "true",
                     "EnableIntrinsicFunctions": "true",
-                    "AdditionalOptions": [
-                      "/MP", # compile across multiple CPUs
-                    ],
+                    #"AdditionalOptions": [
+                    #  "/MP", # compile across multiple CPUs
+                    #],
                     "DebugInformationFormat": "0"
                   },
                   "VCLibrarianTool": {
