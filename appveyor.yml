@@ -19,10 +19,6 @@ install:
   - msbuild pbf.sln /nologo /p:Configuration=%configuration%;Platform=%MSBUILD_PLATFORM%
   - .\%configuration%\tests.exe
 
-build: OFF
-
-test: OFF
-
-test_script: OFF
-
-deploy: OFF
+build: off
+test: off
+deploy: off
