@@ -59,6 +59,9 @@ Call `make doc` to build the Doxygen documentation. (You'll need
   return the value of the last version of that field in this case.
   `pbf_reader.hpp` does not enforce this. If this feature is needed in your
   case, you have to do this yourself.
+* There is no specific support for maps but they can be used as described in
+  the "Backwards compatibility" section of
+  https://developers.google.com/protocol-buffers/docs/proto3#maps.
 
 
 ## Tests
