@@ -13,6 +13,7 @@ C++ API that can be generated via the Google Protobufs `protoc` program.
 
 [![Build Status](https://travis-ci.org/mapbox/pbf.hpp.svg?branch=master)](https://travis-ci.org/mapbox/pbf.hpp)
 [![Coverage Status](https://coveralls.io/repos/mapbox/pbf.hpp/badge.svg?branch=master)](https://coveralls.io/r/mapbox/pbf.hpp?branch=master)
+[![Build status](https://ci.appveyor.com/api/projects/status/32vn39dprae9cjw0/branch/master?svg=true)](https://ci.appveyor.com/project/Mapbox/pbf-hpp/branch/master)
 
 
 ## Depends
