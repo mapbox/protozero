@@ -131,12 +131,12 @@ public:
     pbf_writer& operator=(const pbf_writer&) = delete;
 
     /// A pbf_writer object can be moved
-    inline pbf_writer(pbf_writer&&) = default;
+    inline pbf_writer(pbf_writer&&) noexcept = default;
 
     /// A pbf_writer object can be moved
-    inline pbf_writer& operator=(pbf_writer&&) = default;
+    inline pbf_writer& operator=(pbf_writer&&) noexcept = default;
 
-    inline ~pbf_writer() = default;
+    inline ~pbf_writer() noexcept = default;
 
     inline void add_length_varint(pbf_tag_type tag, pbf_length_type value) {
         add_field(tag, pbf_wire_type::length_delimited);

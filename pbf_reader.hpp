@@ -517,13 +517,13 @@ private:
             m_end(end) {
         }
 
-        const_varint_iterator(const const_varint_iterator&) = default;
-        const_varint_iterator(const_varint_iterator&&) = default;
+        const_varint_iterator(const const_varint_iterator&) noexcept = default;
+        const_varint_iterator(const_varint_iterator&&) noexcept = default;
 
-        const_varint_iterator& operator=(const const_varint_iterator&) = default;
-        const_varint_iterator& operator=(const_varint_iterator&&) = default;
+        const_varint_iterator& operator=(const const_varint_iterator&) noexcept = default;
+        const_varint_iterator& operator=(const_varint_iterator&&) noexcept = default;
 
-        ~const_varint_iterator() = default;
+        ~const_varint_iterator() noexcept = default;
 
         T operator*() {
             const char* d = m_data; // will be thrown away
