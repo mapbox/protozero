@@ -59,8 +59,8 @@ TEST_CASE("write repeated packed uint32 field") {
     mapbox::util::pbf_writer pw(buffer);
 
     SECTION("empty") {
-        const uint32_t* dummy = 0;
-        pw.add_packed_uint32(1, dummy, dummy);
+        uint32_t data[] = { 17UL };
+        pw.add_packed_uint32(1, std::begin(data), std::begin(data) /* !!!! */);
 
         REQUIRE(buffer == load_data("repeated_packed_uint32/data-empty"));
     }

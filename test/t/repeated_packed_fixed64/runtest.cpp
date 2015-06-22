@@ -59,8 +59,8 @@ TEST_CASE("write repeated packed fixed64 field") {
     mapbox::util::pbf_writer pw(buffer);
 
     SECTION("empty") {
-        const uint64_t* dummy = 0;
-        pw.add_packed_fixed64(1, dummy, dummy);
+        uint64_t data[] = { 17ULL };
+        pw.add_packed_fixed64(1, std::begin(data), std::begin(data) /* !!!! */);
 
         REQUIRE(buffer == load_data("repeated_packed_fixed64/data-empty"));
     }

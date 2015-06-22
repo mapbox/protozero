@@ -61,8 +61,8 @@ TEST_CASE("write repeated packed sint32 field") {
     mapbox::util::pbf_writer pw(buffer);
 
     SECTION("empty") {
-        const int32_t* dummy = 0;
-        pw.add_packed_sint32(1, dummy, dummy);
+        int32_t data[] = { 17L };
+        pw.add_packed_sint32(1, std::begin(data), std::begin(data) /* !!!! */);
 
         REQUIRE(buffer == load_data("repeated_packed_sint32/data-empty"));
     }

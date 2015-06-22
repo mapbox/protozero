@@ -61,8 +61,8 @@ TEST_CASE("write repeated packed int64 field") {
     mapbox::util::pbf_writer pw(buffer);
 
     SECTION("empty") {
-        const int64_t* dummy = 0;
-        pw.add_packed_int64(1, dummy, dummy);
+        int64_t data[] = { 17LL };
+        pw.add_packed_int64(1, std::begin(data), std::begin(data) /* !!!! */);
 
         REQUIRE(buffer == load_data("repeated_packed_int64/data-empty"));
     }
