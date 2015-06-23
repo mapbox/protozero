@@ -537,7 +537,7 @@ private:
             return *this;
         }
 
-        const_varint_iterator operator++(int) noexcept {
+        const_varint_iterator operator++(int) {
             const const_varint_iterator tmp(*this);
             ++(*this);
             return tmp;
@@ -586,7 +586,7 @@ private:
             return *this;
         }
 
-        const_svarint_iterator operator++(int) noexcept {
+        const_svarint_iterator operator++(int) {
             const const_svarint_iterator tmp(*this);
             ++(*this);
             return tmp;
