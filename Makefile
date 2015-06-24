@@ -34,7 +34,7 @@ all: ./test/run_all_tests
 	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/run_all_tests: test/run_all_tests.o $(UNIT_TESTS_O)
-	$(CXX) $(LDFLAGS) -lz $^ -o $@
+	$(CXX) $(LDFLAGS) $^ -o $@
 
 test: ./test/run_all_tests
 	./test/run_all_tests
