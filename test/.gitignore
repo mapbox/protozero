@@ -1,4 +1,6 @@
 run_all_tests.o
 run_all_tests
+wtests.o
+wtests
 *.gcda
 *.gcno

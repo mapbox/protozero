@@ -1,4 +1,6 @@
 testcase
 testcase.pb.cc
 testcase.pb.h
+testcase.pb.o
 runtest.o
+write_tests.o
