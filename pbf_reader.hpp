@@ -664,6 +664,17 @@ public:
     inline std::pair<const int64_t*, const int64_t*> packed_sfixed64();
 
     /**
+     * Consume current "repeated packed enum" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed enum".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<pbf::const_int32_iterator,  pbf::const_int32_iterator>  packed_enum();
+
+    /**
      * Consume current "repeated packed int32" field.
      *
      * @returns a pair of iterators to the beginning and one past the end of
@@ -937,6 +948,10 @@ std::pair<const int32_t*, const int32_t*> pbf::packed_sfixed32() {
 
 std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
     return packed_fixed<int64_t>();
+}
+
+std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> pbf::packed_enum() {
+    return packed_int32();
 }
 
 std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> pbf::packed_int32() {
