@@ -100,7 +100,7 @@ TEST_CASE("read complex data") {
                     break;
                 }
                 case 7: {
-                    auto pi = item.packed_sint32();
+                    auto pi = item.get_packed_sint32();
                     int32_t sum = 0;
                     for (auto it = pi.first; it != pi.second; ++it) {
                         sum += *it;
@@ -284,7 +284,7 @@ TEST_CASE("write complex data") {
                     break;
                 }
                 case 7: {
-                    auto pi = item.packed_sint32();
+                    auto pi = item.get_packed_sint32();
                     int32_t sum = 0;
                     for (auto it = pi.first; it != pi.second; ++it) {
                         sum += *it;

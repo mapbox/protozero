@@ -134,8 +134,8 @@ the length of the data.
 ### Handling Repeated Packed Fields
 
 Fields that are marked as `[packed=true]` in the `.proto` file are handled
-somewhat differently. Instead of the `get_...()` functions you use one of the
-`packed_...()` functions returning an iterator pair.
+somewhat differently. `get_packed_...()` functions returning an iterator pair
+are used to access the data.
 
 So, for example, if you have a protocol description in a `.proto` file like
 this:
@@ -152,7 +152,7 @@ You can get to the data like this:
     item.next();
 
     // get an iterator pair
-    auto pi = item.packed_sint32();
+    auto pi = item.get_packed_sint32();
 
     // iterate to get to all values
     for (auto it = pi.first; it != pi.second; ++it) {

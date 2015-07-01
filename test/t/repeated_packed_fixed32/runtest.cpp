@@ -17,7 +17,7 @@ TEST_CASE("read repeated packed fixed32 field") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        auto it_pair = item.packed_fixed32();
+        auto it_pair = item.get_packed_fixed32();
         REQUIRE(!item.next());
 
         REQUIRE(*it_pair.first == 17UL);
@@ -30,7 +30,7 @@ TEST_CASE("read repeated packed fixed32 field") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        auto it_pair = item.packed_fixed32();
+        auto it_pair = item.get_packed_fixed32();
         REQUIRE(!item.next());
 
         auto it = it_pair.first;
@@ -47,7 +47,7 @@ TEST_CASE("read repeated packed fixed32 field") {
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.packed_fixed32(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_packed_fixed32(), mapbox::util::pbf::end_of_buffer_exception);
         }
     }
 
@@ -112,7 +112,7 @@ TEST_CASE("write from different types of iterators") {
     mapbox::util::pbf item(buffer.data(), buffer.size());
 
     REQUIRE(item.next());
-    auto it_pair = item.packed_fixed32();
+    auto it_pair = item.get_packed_fixed32();
     REQUIRE(!item.next());
     REQUIRE(std::distance(it_pair.first, it_pair.second) == 5);
 

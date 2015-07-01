@@ -17,7 +17,7 @@ TEST_CASE("read repeated packed uint64 field") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        auto it_pair = item.packed_uint64();
+        auto it_pair = item.get_packed_uint64();
         REQUIRE(!item.next());
 
         REQUIRE(*it_pair.first == 17ULL);
@@ -30,7 +30,7 @@ TEST_CASE("read repeated packed uint64 field") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        auto it_pair = item.packed_uint64();
+        auto it_pair = item.get_packed_uint64();
         REQUIRE(!item.next());
 
         auto it = it_pair.first;
@@ -47,7 +47,7 @@ TEST_CASE("read repeated packed uint64 field") {
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.packed_uint64(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_packed_uint64(), mapbox::util::pbf::end_of_buffer_exception);
         }
     }
 

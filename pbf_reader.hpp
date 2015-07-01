@@ -636,7 +636,7 @@ public:
      * @pre The current field must be of type "repeated packed fixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const uint32_t*, const uint32_t*> packed_fixed32();
+    inline std::pair<const uint32_t*, const uint32_t*> get_packed_fixed32();
 
     /**
      * Consume current "repeated packed fixed64" field.
@@ -647,7 +647,7 @@ public:
      * @pre The current field must be of type "repeated packed fixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const uint64_t*, const uint64_t*> packed_fixed64();
+    inline std::pair<const uint64_t*, const uint64_t*> get_packed_fixed64();
 
     /**
      * Consume current "repeated packed sfixed32" field.
@@ -658,7 +658,7 @@ public:
      * @pre The current field must be of type "repeated packed sfixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const int32_t*, const int32_t*> packed_sfixed32();
+    inline std::pair<const int32_t*, const int32_t*> get_packed_sfixed32();
 
     /**
      * Consume current "repeated packed sfixed64" field.
@@ -669,7 +669,7 @@ public:
      * @pre The current field must be of type "repeated packed sfixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const int64_t*, const int64_t*> packed_sfixed64();
+    inline std::pair<const int64_t*, const int64_t*> get_packed_sfixed64();
 
     /**
      * Consume current "repeated packed bool" field.
@@ -680,7 +680,7 @@ public:
      * @pre The current field must be of type "repeated packed bool".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_bool_iterator, pbf::const_bool_iterator> packed_bool();
+    inline std::pair<pbf::const_bool_iterator, pbf::const_bool_iterator> get_packed_bool();
 
     /**
      * Consume current "repeated packed enum" field.
@@ -691,7 +691,7 @@ public:
      * @pre The current field must be of type "repeated packed enum".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_enum_iterator, pbf::const_enum_iterator> packed_enum();
+    inline std::pair<pbf::const_enum_iterator, pbf::const_enum_iterator> get_packed_enum();
 
     /**
      * Consume current "repeated packed int32" field.
@@ -702,7 +702,7 @@ public:
      * @pre The current field must be of type "repeated packed int32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> packed_int32();
+    inline std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> get_packed_int32();
 
     /**
      * Consume current "repeated packed uint32" field.
@@ -713,7 +713,7 @@ public:
      * @pre The current field must be of type "repeated packed uint32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> packed_uint32();
+    inline std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> get_packed_uint32();
 
     /**
      * Consume current "repeated packed sint32" field.
@@ -724,7 +724,7 @@ public:
      * @pre The current field must be of type "repeated packed sint32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> packed_sint32();
+    inline std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> get_packed_sint32();
 
     /**
      * Consume current "repeated packed int64" field.
@@ -735,7 +735,7 @@ public:
      * @pre The current field must be of type "repeated packed int64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_int64_iterator, pbf::const_int64_iterator> packed_int64();
+    inline std::pair<pbf::const_int64_iterator, pbf::const_int64_iterator> get_packed_int64();
 
     /**
      * Consume current "repeated packed uint64" field.
@@ -746,7 +746,7 @@ public:
      * @pre The current field must be of type "repeated packed uint64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> packed_uint64();
+    inline std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> get_packed_uint64();
 
     /**
      * Consume current "repeated packed sint64" field.
@@ -757,7 +757,7 @@ public:
      * @pre The current field must be of type "repeated packed sint64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> packed_sint64();
+    inline std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> get_packed_sint64();
 
     ///@}
 
@@ -960,66 +960,66 @@ std::pair<const T*, const T*> pbf::packed_fixed() {
     return std::make_pair(reinterpret_cast<const T*>(m_data-len), reinterpret_cast<const T*>(m_data));
 }
 
-std::pair<const uint32_t*, const uint32_t*> pbf::packed_fixed32() {
+std::pair<const uint32_t*, const uint32_t*> pbf::get_packed_fixed32() {
     return packed_fixed<uint32_t>();
 }
 
-std::pair<const uint64_t*, const uint64_t*> pbf::packed_fixed64() {
+std::pair<const uint64_t*, const uint64_t*> pbf::get_packed_fixed64() {
     return packed_fixed<uint64_t>();
 }
 
-std::pair<const int32_t*, const int32_t*> pbf::packed_sfixed32() {
+std::pair<const int32_t*, const int32_t*> pbf::get_packed_sfixed32() {
     return packed_fixed<int32_t>();
 }
 
-std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
+std::pair<const int64_t*, const int64_t*> pbf::get_packed_sfixed64() {
     return packed_fixed<int64_t>();
 }
 
-std::pair<pbf::const_bool_iterator, pbf::const_bool_iterator> pbf::packed_bool() {
-    return packed_int32();
+std::pair<pbf::const_bool_iterator, pbf::const_bool_iterator> pbf::get_packed_bool() {
+    return get_packed_int32();
 }
 
-std::pair<pbf::const_enum_iterator, pbf::const_enum_iterator> pbf::packed_enum() {
-    return packed_int32();
+std::pair<pbf::const_enum_iterator, pbf::const_enum_iterator> pbf::get_packed_enum() {
+    return get_packed_int32();
 }
 
-std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> pbf::packed_int32() {
+std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> pbf::get_packed_int32() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_int32_iterator(m_data-len, m_data),
                           pbf::const_int32_iterator(m_data, m_data));
 }
 
-std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> pbf::packed_uint32() {
+std::pair<pbf::const_uint32_iterator, pbf::const_uint32_iterator> pbf::get_packed_uint32() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_uint32_iterator(m_data-len, m_data),
                           pbf::const_uint32_iterator(m_data, m_data));
 }
 
-std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> pbf::packed_sint32() {
+std::pair<pbf::const_sint32_iterator, pbf::const_sint32_iterator> pbf::get_packed_sint32() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_sint32_iterator(m_data-len, m_data),
                           pbf::const_sint32_iterator(m_data, m_data));
 }
 
-std::pair<pbf::const_int64_iterator, pbf::const_int64_iterator> pbf::packed_int64() {
+std::pair<pbf::const_int64_iterator, pbf::const_int64_iterator> pbf::get_packed_int64() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_int64_iterator(m_data-len, m_data),
                           pbf::const_int64_iterator(m_data, m_data));
 }
 
-std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> pbf::packed_uint64() {
+std::pair<pbf::const_uint64_iterator, pbf::const_uint64_iterator> pbf::get_packed_uint64() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_uint64_iterator(m_data-len, m_data),
                           pbf::const_uint64_iterator(m_data, m_data));
 }
 
-std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> pbf::packed_sint64() {
+std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> pbf::get_packed_sint64() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     auto len = get_len_and_skip();
     return std::make_pair(pbf::const_sint64_iterator(m_data-len, m_data),

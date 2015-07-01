@@ -17,7 +17,7 @@ TEST_CASE("read repeated packed enum field") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        auto it_pair = item.packed_enum();
+        auto it_pair = item.get_packed_enum();
         REQUIRE(!item.next());
 
         REQUIRE(it_pair.first != it_pair.second);
@@ -31,7 +31,7 @@ TEST_CASE("read repeated packed enum field") {
         mapbox::util::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        auto it_pair = item.packed_enum();
+        auto it_pair = item.get_packed_enum();
         REQUIRE(!item.next());
 
         auto it = it_pair.first;
@@ -48,7 +48,7 @@ TEST_CASE("read repeated packed enum field") {
         for (size_t i=1; i < buffer.size(); ++i) {
             mapbox::util::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.packed_enum(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_packed_enum(), mapbox::util::pbf::end_of_buffer_exception);
         }
     }
 
