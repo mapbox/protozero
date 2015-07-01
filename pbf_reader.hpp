@@ -219,6 +219,19 @@ public:
     inline operator bool() const noexcept;
 
     /**
+     * Return the length in bytes of the current message. If you have
+     * already called next() and/or any of the get_*() functions, this will
+     * return the remaining length.
+     *
+     * This can, for instance, be used to estimate the space needed for a
+     * buffer. Of course you have to know reasonably well what data to expect
+     * and how it is encoded for this number to have any meaning.
+     */
+    size_t length() const noexcept {
+        return size_t(m_end - m_data);
+    }
+
+    /**
      * Set next field in the message as the current field. This is usually
      * called in a while loop:
      *

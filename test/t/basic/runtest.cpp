@@ -6,6 +6,7 @@ TEST_CASE("basic") {
     SECTION("default constructed pbf message is okay") {
         mapbox::util::pbf item;
 
+        REQUIRE(item.length() == 0);
         REQUIRE(!item); // test operator bool()
         REQUIRE(!item.next());
     }
@@ -14,6 +15,7 @@ TEST_CASE("basic") {
         std::string buffer;
         mapbox::util::pbf item(buffer.data(), 0);
 
+        REQUIRE(item.length() == 0);
         REQUIRE(!item); // test operator bool()
         REQUIRE(!item.next());
     }
@@ -24,6 +26,7 @@ TEST_CASE("basic") {
             *buffer = static_cast<char>(i);
             mapbox::util::pbf item(buffer, 1);
 
+            REQUIRE(item.length() == 1);
             REQUIRE(!!item); // test operator bool()
             REQUIRE_THROWS({
                 item.next();
