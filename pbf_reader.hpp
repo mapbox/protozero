@@ -702,7 +702,7 @@ public:
      * @pre The current field must be of type "repeated packed int32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_int32_iterator,  pbf::const_int32_iterator>  packed_int32();
+    inline std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> packed_int32();
 
     /**
      * Consume current "repeated packed uint32" field.
@@ -735,7 +735,7 @@ public:
      * @pre The current field must be of type "repeated packed int64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_int64_iterator,  pbf::const_int64_iterator>  packed_int64();
+    inline std::pair<pbf::const_int64_iterator, pbf::const_int64_iterator> packed_int64();
 
     /**
      * Consume current "repeated packed uint64" field.
