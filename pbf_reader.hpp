@@ -194,6 +194,8 @@ public:
      */
     inline pbf(const char *data, size_t length);
 
+    inline pbf(const std::string& data);
+
     inline pbf() = default;
 
     /// pbf messages can be copied trivially.
@@ -764,6 +766,13 @@ public:
 pbf::pbf(const char *data, size_t length)
     : m_data(data),
       m_end(data + length),
+      m_wire_type(pbf_wire_type::unknown),
+      m_tag(0) {
+}
+
+pbf::pbf(const std::string& data)
+    : m_data(data.data()),
+      m_end(data.data() + data.size()),
       m_wire_type(pbf_wire_type::unknown),
       m_tag(0) {
 }
