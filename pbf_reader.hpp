@@ -596,6 +596,12 @@ private:
 
 public:
 
+    /// Forward iterator for iterating over bool (int32 varint) values.
+    typedef const_varint_iterator< int32_t> const_bool_iterator;
+
+    /// Forward iterator for iterating over enum (int32 varint) values.
+    typedef const_varint_iterator< int32_t> const_enum_iterator;
+
     /// Forward iterator for iterating over int32 (varint) values.
     typedef const_varint_iterator< int32_t> const_int32_iterator;
 
@@ -664,6 +670,17 @@ public:
     inline std::pair<const int64_t*, const int64_t*> packed_sfixed64();
 
     /**
+     * Consume current "repeated packed bool" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed bool".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<pbf::const_bool_iterator, pbf::const_bool_iterator> packed_bool();
+
+    /**
      * Consume current "repeated packed enum" field.
      *
      * @returns a pair of iterators to the beginning and one past the end of
@@ -672,7 +689,7 @@ public:
      * @pre The current field must be of type "repeated packed enum".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf::const_int32_iterator,  pbf::const_int32_iterator>  packed_enum();
+    inline std::pair<pbf::const_enum_iterator, pbf::const_enum_iterator> packed_enum();
 
     /**
      * Consume current "repeated packed int32" field.
@@ -950,7 +967,11 @@ std::pair<const int64_t*, const int64_t*> pbf::packed_sfixed64() {
     return packed_fixed<int64_t>();
 }
 
-std::pair<pbf::const_int32_iterator, pbf::const_int32_iterator> pbf::packed_enum() {
+std::pair<pbf::const_bool_iterator, pbf::const_bool_iterator> pbf::packed_bool() {
+    return packed_int32();
+}
+
+std::pair<pbf::const_enum_iterator, pbf::const_enum_iterator> pbf::packed_enum() {
     return packed_int32();
 }
 

@@ -424,6 +424,30 @@ public:
     }
 
     /**
+     * Add "repeated packed bool" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
+    template <typename It>
+    inline void add_packed_bool(pbf_tag_type tag, It begin, It end) {
+        add_packed_varint(tag, begin, end);
+    }
+
+    /**
+     * Add "repeated packed enum" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param begin Iterator pointing to the beginning of the data
+     * @param end Iterator pointing one past the end of data
+     */
+    template <typename It>
+    inline void add_packed_enum(pbf_tag_type tag, It begin, It end) {
+        add_packed_varint(tag, begin, end);
+    }
+
+    /**
      * Add "repeated packed int32" field to data.
      *
      * @param tag Tag (field number) of the field
