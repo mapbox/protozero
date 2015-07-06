@@ -57,7 +57,7 @@ all: ./test/run_all_tests
 	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/wtests: test/wtests.o $(PROTO_FILES_O) $(WRITE_TESTS_O)
-	$(CXX) $(LDFLAGS) -lprotobuf-lite -pthreads $^ -o $@
+	$(CXX) $(LDFLAGS) -lprotobuf-lite -pthread $^ -o $@
 
 test: ./test/run_all_tests test/wtests
 	./test/run_all_tests
