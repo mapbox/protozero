@@ -16,7 +16,7 @@ matrix:
           addons:
             apt:
                 sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.5']
-                packages: ['clang-3.5']
+                packages: ['clang-3.5','libprotobuf-dev','protobuf-compiler']
         - os: linux
           compiler: clang
           env: INSTALL_CXX=clang++-3.6
@@ -24,26 +24,27 @@ matrix:
           addons:
             apt:
                 sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6']
-                packages: ['clang-3.6']
+                packages: ['clang-3.6','libprotobuf-dev','protobuf-compiler']
         - os: linux
           compiler: gcc
           env: INSTALL_CXX=g++-4.8
           addons:
             apt:
                 sources: ['ubuntu-toolchain-r-test']
-                packages: ['g++-4.8']
+                packages: ['g++-4.8','libprotobuf-dev','protobuf-compiler']
         - os: linux
           compiler: gcc
           env: INSTALL_CXX=g++-4.9 COVERAGE=gcov-4.9
           addons:
             apt:
                 sources: ['ubuntu-toolchain-r-test']
-                packages: ['g++-4.9']
+                packages: ['g++-4.9','libprotobuf-dev','protobuf-compiler']
         - os: osx
           compiler: clang
 
 before_script:
     - if [ -n "${INSTALL_CXX}" ]; then CXX=${INSTALL_CXX}; fi
+    - if [[ $(uname -s) == 'Darwin' ]]; then brew install protobuf; fi;
     - make test
 
 script:

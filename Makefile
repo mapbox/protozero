@@ -48,16 +48,16 @@ all: ./test/run_all_tests
 	protoc --cpp_out=. $^
 
 ./test/t/%/testcase.pb.o: ./test/t/%/testcase.pb.cc
-	$(CXX) -c -I. -Itest/include $(CXXFLAGS) -std=c++11 $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -I. -Itest/include $(CXXFLAGS) `pkg-config protobuf --cflags` -std=c++11 $(DEBUG_FLAGS) $< -o $@
 
 ./test/t/%/write_tests.o: ./test/t/%/write_tests.cpp
-	$(CXX) -c -I. -Itest/include $(CXXFLAGS) -std=c++11 $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -I. -Itest/include $(CXXFLAGS) `pkg-config protobuf --cflags` -std=c++11 $(DEBUG_FLAGS) $< -o $@
 
 ./test/wtests.o: test/wtests.cpp $(HPP_FILES) $(PROTO_FILES_CC)
 	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/wtests: test/wtests.o $(PROTO_FILES_O) $(WRITE_TESTS_O)
-	$(CXX) $(LDFLAGS) -lprotobuf-lite -pthread $^ -o $@
+	$(CXX) $(LDFLAGS) `pkg-config protobuf --libs-only-L` -lprotobuf-lite -pthread $^ -o $@
 
 test: ./test/run_all_tests test/wtests
 	./test/run_all_tests
