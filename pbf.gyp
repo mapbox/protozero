@@ -43,10 +43,6 @@
         "test/t/vector_tile/runtest.cpp",
         "test/t/zigzag/runtest.cpp"
       ],
-      "xcode_settings": {
-        "SDKROOT": "macosx",
-        "SUPPORTED_PLATFORMS":["macosx"]
-      },
       "include_dirs": [
           "./",
           "./test/include/"
