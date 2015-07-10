@@ -1,19 +1,18 @@
-# pbf.hpp
+# protozero
 
-Minimalistic fast C++ decoder for a subset of the protocol buffer format.
+Minimalistic protocol buffer decoder and encoder in C++.
 
-This is header-only, meaning there is nothing to build. Just include `pbf.hpp`
-in your C++ application.
+Designed for high performance. Suitable for writing zero copy or streaming parsers.
 
 Low-level: this is designed to be a building block for writing a very
-customized, lazy decoder for a stable protobuf schema. If your protobuf schema
+customized decoder for a stable protobuf schema. If your protobuf schema
 is changing frequently or lazy decoding is not critical for your application
 then this approach offers no value: just use the decoding API available via the
 C++ API that can be generated via the Google Protobufs `protoc` program.
 
-[![Build Status](https://travis-ci.org/mapbox/pbf.hpp.svg?branch=master)](https://travis-ci.org/mapbox/pbf.hpp)
-[![Coverage Status](https://coveralls.io/repos/mapbox/pbf.hpp/badge.svg?branch=master)](https://coveralls.io/r/mapbox/pbf.hpp?branch=master)
-[![Build status](https://ci.appveyor.com/api/projects/status/32vn39dprae9cjw0/branch/master?svg=true)](https://ci.appveyor.com/project/Mapbox/pbf-hpp/branch/master)
+[![Build Status](https://travis-ci.org/mapbox/protozero.svg?branch=master)](https://travis-ci.org/mapbox/protozero)
+[![Coverage Status](https://coveralls.io/repos/mapbox/protozero/badge.svg?branch=master)](https://coveralls.io/r/mapbox/protozero?branch=master)
+[![Build status](https://ci.appveyor.com/api/projects/status/o354pq10y96mnr6d?svg=true)](https://ci.appveyor.com/project/Mapbox/protozero)
 
 
 ## Depends
@@ -25,8 +24,8 @@ C++ API that can be generated via the Google Protobufs `protoc` program.
 
 ## How it works
 
-Pbf.hpp does **not** read `.proto` files used by the usual Protobuf
-implementations. The developer using `pbf.hpp` has to manually "translate" the
+The protozero code does **not** read `.proto` files used by the usual Protobuf
+implementations. The developer using protozero has to manually "translate" the
 `.proto` description into code. This means there is no way to access any of the
 information from the `.proto` description. This results in a few restrictions:
 
