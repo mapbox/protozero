@@ -6,7 +6,7 @@
 TEST_CASE("write string field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestString::Test msg;
 
@@ -39,14 +39,14 @@ TEST_CASE("write string field") {
 TEST_CASE("write string field with subwriter") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestString::Test msg;
 
     SECTION("string") {
 
         {
-            mapbox::util::pbf_subwriter sw(pw, 1);
+            protozero::pbf_subwriter sw(pw, 1);
             sw.append("foo");
             sw.append("bar");
         }

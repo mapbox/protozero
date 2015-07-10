@@ -1,5 +1,5 @@
-#ifndef MAPBOX_UTIL_PBF_WRITER_HPP
-#define MAPBOX_UTIL_PBF_WRITER_HPP
+#ifndef PROTOZERO_PBF_WRITER_HPP
+#define PROTOZERO_PBF_WRITER_HPP
 
 /*****************************************************************************
 
@@ -8,7 +8,7 @@ Minimalistic fast C++ encoder for a subset of the protocol buffer format.
 This is header-only, meaning there is nothing to build. Just include this file
 in your C++ application.
 
-This file is from https://github.com/mapbox/pbf.hpp where you can find more
+This file is from https://github.com/mapbox/protozero where you can find more
 documentation.
 
 *****************************************************************************/
@@ -30,7 +30,7 @@ documentation.
 # define pbf_assert(x) assert(x)
 #endif
 
-namespace mapbox { namespace util {
+namespace protozero {
 
 /**
  * The pbf_writer is used to write PBF formatted messages into a buffer.
@@ -764,6 +764,6 @@ inline void pbf_writer::add_packed_svarint(pbf_tag_type tag, It it, It end) {
     }
 }
 
-}} // end namespace mapbox::util
+} // end namespace protozero
 
-#endif // MAPBOX_UTIL_PBF_WRITER_HPP
+#endif // PROTOZERO_PBF_WRITER_HPP

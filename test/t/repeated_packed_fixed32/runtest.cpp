@@ -6,7 +6,7 @@ TEST_CASE("read repeated packed fixed32 field") {
     SECTION("empty") {
         std::string buffer = load_data("repeated_packed_fixed32/data-empty");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(!item.next());
     }
@@ -14,7 +14,7 @@ TEST_CASE("read repeated packed fixed32 field") {
     SECTION("one") {
         std::string buffer = load_data("repeated_packed_fixed32/data-one");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_fixed32();
@@ -27,7 +27,7 @@ TEST_CASE("read repeated packed fixed32 field") {
     SECTION("many") {
         std::string buffer = load_data("repeated_packed_fixed32/data-many");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_fixed32();
@@ -45,9 +45,9 @@ TEST_CASE("read repeated packed fixed32 field") {
         std::string buffer = load_data("repeated_packed_fixed32/data-many");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            mapbox::util::pbf item(buffer.data(), i);
+            protozero::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_packed_fixed32(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_packed_fixed32(), protozero::pbf::end_of_buffer_exception);
         }
     }
 
@@ -56,7 +56,7 @@ TEST_CASE("read repeated packed fixed32 field") {
 TEST_CASE("write repeated packed fixed32 field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("empty") {
         uint32_t data[] = { 17UL };
@@ -84,7 +84,7 @@ TEST_CASE("write repeated packed fixed32 field") {
 TEST_CASE("write from different types of iterators") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("from uint16_t") {
         uint16_t data[] = { 1, 4, 9, 16, 25 };
@@ -95,7 +95,7 @@ TEST_CASE("write from different types of iterators") {
     SECTION("from uint16_t with std::copy") {
         uint16_t data[] = { 1, 4, 9, 16, 25 };
 
-        mapbox::util::pbf_appender<uint32_t> a(pw, 1, uint32_t(std::distance(std::begin(data), std::end(data))));
+        protozero::pbf_appender<uint32_t> a(pw, 1, uint32_t(std::distance(std::begin(data), std::end(data))));
         std::copy(std::begin(data), std::end(data), a);
     }
 
@@ -109,7 +109,7 @@ TEST_CASE("write from different types of iterators") {
         pw.add_packed_fixed32(1, it, eod);
     }
 
-    mapbox::util::pbf item(buffer.data(), buffer.size());
+    protozero::pbf item(buffer.data(), buffer.size());
 
     REQUIRE(item.next());
     auto it_pair = item.get_packed_fixed32();

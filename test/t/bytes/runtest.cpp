@@ -6,7 +6,7 @@ TEST_CASE("read bytes field") {
     SECTION("empty") {
         std::string buffer = load_data("bytes/data-empty");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "");
@@ -16,7 +16,7 @@ TEST_CASE("read bytes field") {
     SECTION("one") {
         std::string buffer = load_data("bytes/data-one");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "x");
@@ -26,7 +26,7 @@ TEST_CASE("read bytes field") {
     SECTION("string") {
         std::string buffer = load_data("bytes/data-string");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "foobar");
@@ -36,7 +36,7 @@ TEST_CASE("read bytes field") {
     SECTION("binary") {
         std::string buffer = load_data("bytes/data-binary");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         std::string data = item.get_string();
@@ -51,9 +51,9 @@ TEST_CASE("read bytes field") {
         std::string buffer = load_data("bytes/data-binary");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            mapbox::util::pbf item(buffer.data(), i);
+            protozero::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_string(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_string(), protozero::pbf::end_of_buffer_exception);
         }
     }
 
@@ -62,7 +62,7 @@ TEST_CASE("read bytes field") {
 TEST_CASE("write bytes field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("empty") {
         pw.add_string(1, "");

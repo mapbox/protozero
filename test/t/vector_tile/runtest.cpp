@@ -17,7 +17,7 @@ static std::vector<std::string> expected_layer_names = {
 
 namespace {
 
-std::string get_name(mapbox::util::pbf layer) { // copy!
+std::string get_name(protozero::pbf layer) { // copy!
     while (layer.next(1)) { // required string name
         return layer.get_string();
     }
@@ -31,12 +31,12 @@ TEST_CASE("reading vector tiles") {
     SECTION("iterate over message using next()") {
         std::string buffer = load_data("vector_tile/data.vector");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         std::vector<std::string> layer_names;
         while (item.next()) {
             if (item.tag() == 3) { // repeated message Layer
-                mapbox::util::pbf layer { item.get_message() };
+                protozero::pbf layer { item.get_message() };
                 while (layer.next()) {
                     switch (layer.tag()) {
                         case 1: // required string name
@@ -57,11 +57,11 @@ TEST_CASE("reading vector tiles") {
     SECTION("iterate over message using next(type)") {
         std::string buffer = load_data("vector_tile/data.vector");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         std::vector<std::string> layer_names;
         while (item.next(3)) { // repeated message Layer
-            mapbox::util::pbf layermsg { item.get_message() };
+            protozero::pbf layermsg { item.get_message() };
             while (layermsg.next(1)) { // required string name
                 layer_names.push_back(layermsg.get_string());
             }
@@ -73,16 +73,16 @@ TEST_CASE("reading vector tiles") {
     SECTION("iterate over features in road layer") {
         std::string buffer = load_data("vector_tile/data.vector");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         int n=0;
         while (item.next(3)) { // repeated message Layer
-            mapbox::util::pbf layer { item.get_message() };
+            protozero::pbf layer { item.get_message() };
             std::string name = get_name(layer);
             if (name == "road") {
                 while (layer.next(2)) { // repeated Feature
                     ++n;
-                    mapbox::util::pbf feature { layer.get_message() };
+                    protozero::pbf feature { layer.get_message() };
                     while (feature.next()) {
                         switch (feature.tag()) {
                             case 1: { // optional uint64 id

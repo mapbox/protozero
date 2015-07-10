@@ -1,9 +1,9 @@
-#ifndef MAPBOX_UTIL_PBF_COMMON_HPP
-#define MAPBOX_UTIL_PBF_COMMON_HPP
+#ifndef PROTOZERO_PBF_COMMON_HPP
+#define PROTOZERO_PBF_COMMON_HPP
 
 #include <cstdint>
 
-namespace mapbox { namespace util {
+namespace protozero {
 
     /**
      * The type used for field tags (field numbers).
@@ -29,6 +29,6 @@ namespace mapbox { namespace util {
      */
     typedef uint32_t pbf_length_type;
 
-}} // end namespace mapbox::util
+} // end namespace protozero
 
-#endif // MAPBOX_UTIL_PBF_COMMON_HPP
+#endif // PROTOZERO_PBF_COMMON_HPP

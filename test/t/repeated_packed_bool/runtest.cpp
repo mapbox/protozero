@@ -6,7 +6,7 @@ TEST_CASE("read repeated packed bool field") {
     SECTION("empty") {
         std::string buffer = load_data("repeated_packed_bool/data-empty");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(!item.next());
     }
@@ -14,7 +14,7 @@ TEST_CASE("read repeated packed bool field") {
     SECTION("one") {
         std::string buffer = load_data("repeated_packed_bool/data-one");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_bool();
@@ -28,7 +28,7 @@ TEST_CASE("read repeated packed bool field") {
     SECTION("many") {
         std::string buffer = load_data("repeated_packed_bool/data-many");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_bool();
@@ -47,9 +47,9 @@ TEST_CASE("read repeated packed bool field") {
         std::string buffer = load_data("repeated_packed_bool/data-many");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            mapbox::util::pbf item(buffer.data(), i);
+            protozero::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_packed_bool(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_packed_bool(), protozero::pbf::end_of_buffer_exception);
         }
     }
 
@@ -58,7 +58,7 @@ TEST_CASE("read repeated packed bool field") {
 TEST_CASE("write repeated packed bool field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("empty") {
         bool data[] = { true };

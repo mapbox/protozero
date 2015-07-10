@@ -1,8 +1,8 @@
 
 #include <test.hpp>
 
-inline void check_tag(const std::string& buffer, mapbox::util::pbf_tag_type tag) {
-    mapbox::util::pbf item(buffer.data(), buffer.size());
+inline void check_tag(const std::string& buffer, protozero::pbf_tag_type tag) {
+    protozero::pbf item(buffer.data(), buffer.size());
 
     REQUIRE(item.next());
     REQUIRE(item.tag() == tag);
@@ -33,7 +33,7 @@ TEST_CASE("read tags") {
 TEST_CASE("write tags") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("tag 1") {
         pw.add_int32(1L, 333L);

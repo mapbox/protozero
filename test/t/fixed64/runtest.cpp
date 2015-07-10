@@ -6,7 +6,7 @@ TEST_CASE("read fixed64 field") {
     SECTION("zero") {
         std::string buffer = load_data("fixed64/data-zero");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed64() == 0ULL);
@@ -16,7 +16,7 @@ TEST_CASE("read fixed64 field") {
     SECTION("max-uint") {
         std::string buffer = load_data("fixed64/data-max-uint");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed64() == std::numeric_limits<uint64_t>::max());
@@ -26,7 +26,7 @@ TEST_CASE("read fixed64 field") {
     SECTION("min-uint") {
         std::string buffer = load_data("fixed64/data-min-uint");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed64() == std::numeric_limits<uint64_t>::min());
@@ -37,9 +37,9 @@ TEST_CASE("read fixed64 field") {
         std::string buffer = load_data("fixed64/data-min-uint");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            mapbox::util::pbf item(buffer.data(), i);
+            protozero::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_fixed64(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_fixed64(), protozero::pbf::end_of_buffer_exception);
         }
     }
 
@@ -48,7 +48,7 @@ TEST_CASE("read fixed64 field") {
 TEST_CASE("write fixed64 field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("zero") {
         pw.add_fixed64(1, 0ULL);

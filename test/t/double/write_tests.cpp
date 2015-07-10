@@ -6,7 +6,7 @@
 TEST_CASE("write double field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestDouble::Test msg;
 

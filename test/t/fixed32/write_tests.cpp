@@ -6,7 +6,7 @@
 TEST_CASE("write fixed32 field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestFixed32::Test msg;
 

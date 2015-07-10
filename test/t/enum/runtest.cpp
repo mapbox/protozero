@@ -6,7 +6,7 @@ TEST_CASE("read enum field") {
     SECTION("zero") {
         std::string buffer = load_data("enum/data-black");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == 0L);
@@ -16,7 +16,7 @@ TEST_CASE("read enum field") {
     SECTION("positive") {
         std::string buffer = load_data("enum/data-blue");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == 3L);
@@ -28,7 +28,7 @@ TEST_CASE("read enum field") {
 TEST_CASE("write enum field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("zero") {
         pw.add_enum(1, 0L);

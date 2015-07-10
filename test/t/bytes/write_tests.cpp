@@ -6,7 +6,7 @@
 TEST_CASE("write bytes field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestBytes::Test msg;
 

@@ -1,8 +1,8 @@
 
 #include <test.hpp>
 
-using mapbox::util::pbf;
-using mapbox::util::pbf_writer;
+using protozero::pbf;
+using protozero::pbf_writer;
 
 inline int32_t zz32(int32_t val) {
     return pbf::decode_zigzag32(pbf_writer::encode_zigzag32(val));

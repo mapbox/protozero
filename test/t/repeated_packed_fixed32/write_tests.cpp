@@ -6,7 +6,7 @@
 TEST_CASE("write repeated packed fixed32 field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestRepeatedPackedFixed32::Test msg;
 
@@ -47,7 +47,7 @@ TEST_CASE("write repeated packed fixed32 field") {
 TEST_CASE("write from different types of iterators") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestRepeatedPackedFixed32::Test msg;
 
@@ -60,7 +60,7 @@ TEST_CASE("write from different types of iterators") {
     SECTION("from uint16_t with std::copy") {
         uint16_t data[] = { 1, 4, 9, 16, 25 };
 
-        mapbox::util::pbf_appender<uint32_t> a(pw, 1, uint32_t(std::distance(std::begin(data), std::end(data))));
+        protozero::pbf_appender<uint32_t> a(pw, 1, uint32_t(std::distance(std::begin(data), std::end(data))));
         std::copy(std::begin(data), std::end(data), a);
     }
 

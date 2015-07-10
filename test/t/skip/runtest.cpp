@@ -101,7 +101,7 @@ TEST_CASE("skip") {
         for (const auto& filename : filenames) {
             std::string buffer = load_data(filename);
 
-            mapbox::util::pbf item(buffer.data(), buffer.size());
+            protozero::pbf item(buffer.data(), buffer.size());
 
             REQUIRE(item.next());
             item.skip();
@@ -113,28 +113,28 @@ TEST_CASE("skip") {
     SECTION("check that skip() throws on unknown field type") {
         std::string buffer;
 
-        mapbox::util::pbf_writer pw(buffer);
+        protozero::pbf_writer pw(buffer);
         pw.add_fixed32(1, 123);
 
         buffer[0] += 1; // hack to create illegal field type
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.skip(), mapbox::util::pbf::unknown_field_type_exception);
+        REQUIRE_THROWS_AS(item.skip(), protozero::pbf::unknown_field_type_exception);
     }
 
     SECTION("check that skip() throws on short buffer") {
         std::string buffer;
 
-        mapbox::util::pbf_writer pw(buffer);
+        protozero::pbf_writer pw(buffer);
         pw.add_fixed32(1, 123);
 
         buffer.resize(buffer.size() - 1); // "remove" last byte from buffer
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.skip(), mapbox::util::pbf::end_of_buffer_exception);
+        REQUIRE_THROWS_AS(item.skip(), protozero::pbf::end_of_buffer_exception);
     }
 
 }

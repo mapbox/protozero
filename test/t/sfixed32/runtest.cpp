@@ -6,7 +6,7 @@ TEST_CASE("read sfixed32 field") {
     SECTION("zero") {
         std::string buffer = load_data("sfixed32/data-zero");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_sfixed32() == 0L);
@@ -16,7 +16,7 @@ TEST_CASE("read sfixed32 field") {
     SECTION("max-int") {
         std::string buffer = load_data("sfixed32/data-max-int");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_sfixed32() == std::numeric_limits<int32_t>::max());
@@ -26,7 +26,7 @@ TEST_CASE("read sfixed32 field") {
     SECTION("min-int") {
         std::string buffer = load_data("sfixed32/data-min-int");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_sfixed32() == std::numeric_limits<int32_t>::min());
@@ -37,9 +37,9 @@ TEST_CASE("read sfixed32 field") {
         std::string buffer = load_data("sfixed32/data-min-int");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            mapbox::util::pbf item(buffer.data(), i);
+            protozero::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_sfixed32(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_sfixed32(), protozero::pbf::end_of_buffer_exception);
         }
     }
 
@@ -48,7 +48,7 @@ TEST_CASE("read sfixed32 field") {
 TEST_CASE("write sfixed32 field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("zero") {
         pw.add_sfixed32(1, 0);

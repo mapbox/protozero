@@ -6,7 +6,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("zero") {
         std::string buffer = load_data("fixed32/data-zero");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed32() == 0UL);
@@ -16,7 +16,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("max-uint") {
         std::string buffer = load_data("fixed32/data-max-uint");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::max());
@@ -26,7 +26,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("min-uint") {
         std::string buffer = load_data("fixed32/data-min-uint");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::min());
@@ -37,16 +37,16 @@ TEST_CASE("read fixed32 field") {
         std::string buffer = load_data("fixed32/data-min-uint");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            mapbox::util::pbf item(buffer.data(), i);
+            protozero::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_fixed32(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_fixed32(), protozero::pbf::end_of_buffer_exception);
         }
     }
 
     SECTION("check assert on varint/string access") {
         std::string buffer = load_data("fixed32/data-zero");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE_THROWS_AS(item.get_string(), assert_error);
@@ -55,7 +55,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("assert detecting tag==0") {
         std::string buffer = load_data("fixed32/data-zero");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
         REQUIRE(item.next());
@@ -67,7 +67,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("skip") {
         std::string buffer = load_data("fixed32/data-zero");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE_THROWS_AS(item.skip(), assert_error);
         REQUIRE(item.next());
@@ -81,7 +81,7 @@ TEST_CASE("read fixed32 field") {
 TEST_CASE("write fixed32 field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("zero") {
         pw.add_fixed32(1, 0);

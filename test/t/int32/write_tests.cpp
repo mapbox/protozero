@@ -6,7 +6,7 @@
 TEST_CASE("write int32 field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestInt32::Test msg;
 

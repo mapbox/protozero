@@ -6,7 +6,7 @@ TEST_CASE("read repeated packed uint64 field") {
     SECTION("empty") {
         std::string buffer = load_data("repeated_packed_uint64/data-empty");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(!item.next());
     }
@@ -14,7 +14,7 @@ TEST_CASE("read repeated packed uint64 field") {
     SECTION("one") {
         std::string buffer = load_data("repeated_packed_uint64/data-one");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_uint64();
@@ -27,7 +27,7 @@ TEST_CASE("read repeated packed uint64 field") {
     SECTION("many") {
         std::string buffer = load_data("repeated_packed_uint64/data-many");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_uint64();
@@ -45,9 +45,9 @@ TEST_CASE("read repeated packed uint64 field") {
         std::string buffer = load_data("repeated_packed_uint64/data-many");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            mapbox::util::pbf item(buffer.data(), i);
+            protozero::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_packed_uint64(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_packed_uint64(), protozero::pbf::end_of_buffer_exception);
         }
     }
 
@@ -56,7 +56,7 @@ TEST_CASE("read repeated packed uint64 field") {
 TEST_CASE("write repeated packed uint64 field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("empty") {
         uint64_t data[] = { 17UL };

@@ -6,7 +6,7 @@
 TEST_CASE("write repeated fields") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestRepeated::Test msg;
 

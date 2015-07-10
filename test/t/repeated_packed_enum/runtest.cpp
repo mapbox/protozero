@@ -6,7 +6,7 @@ TEST_CASE("read repeated packed enum field") {
     SECTION("empty") {
         std::string buffer = load_data("repeated_packed_enum/data-empty");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(!item.next());
     }
@@ -14,7 +14,7 @@ TEST_CASE("read repeated packed enum field") {
     SECTION("one") {
         std::string buffer = load_data("repeated_packed_enum/data-one");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_enum();
@@ -28,7 +28,7 @@ TEST_CASE("read repeated packed enum field") {
     SECTION("many") {
         std::string buffer = load_data("repeated_packed_enum/data-many");
 
-        mapbox::util::pbf item(buffer.data(), buffer.size());
+        protozero::pbf item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_enum();
@@ -46,9 +46,9 @@ TEST_CASE("read repeated packed enum field") {
         std::string buffer = load_data("repeated_packed_enum/data-many");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            mapbox::util::pbf item(buffer.data(), i);
+            protozero::pbf item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_packed_enum(), mapbox::util::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_packed_enum(), protozero::pbf::end_of_buffer_exception);
         }
     }
 
@@ -57,7 +57,7 @@ TEST_CASE("read repeated packed enum field") {
 TEST_CASE("write repeated packed enum field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     SECTION("empty") {
         int32_t data[] = { 0 /* BLACK */ };

@@ -6,18 +6,18 @@
 TEST_CASE("write nested message fields") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestNested::Test msg;
 
     SECTION("string") {
         std::string ssbuffer;
-        mapbox::util::pbf_writer pwss(ssbuffer);
+        protozero::pbf_writer pwss(ssbuffer);
         pwss.add_string(1, "foobar");
         pwss.add_int32(2, 99);
 
         std::string sbuffer;
-        mapbox::util::pbf_writer pws(sbuffer);
+        protozero::pbf_writer pws(sbuffer);
         pws.add_string(1, ssbuffer);
         pws.add_int32(2, 88);
 
@@ -25,9 +25,9 @@ TEST_CASE("write nested message fields") {
     }
 
     SECTION("string with subwriter") {
-        mapbox::util::pbf_subwriter sw(pw, 1);
+        protozero::pbf_subwriter sw(pw, 1);
         {
-            mapbox::util::pbf_subwriter ssw(pw, 1);
+            protozero::pbf_subwriter ssw(pw, 1);
             pw.add_string(1, "foobar");
             pw.add_int32(2, 99);
         }

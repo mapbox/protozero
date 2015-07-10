@@ -8,7 +8,7 @@
 TEST_CASE("write bool field") {
 
     std::string buffer;
-    mapbox::util::pbf_writer pw(buffer);
+    protozero::pbf_writer pw(buffer);
 
     TestBoolean::Test msg;
 

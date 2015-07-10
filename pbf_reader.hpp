@@ -1,5 +1,5 @@
-#ifndef MAPBOX_UTIL_PBF_READER_HPP
-#define MAPBOX_UTIL_PBF_READER_HPP
+#ifndef PROTOZERO_PBF_READER_HPP
+#define PROTOZERO_PBF_READER_HPP
 
 /*****************************************************************************
 
@@ -32,7 +32,7 @@ documentation.
 # define pbf_assert(x) assert(x)
 #endif
 
-namespace mapbox { namespace util {
+namespace protozero {
 
 /**
  * This class represents a protobuf message. Either a top-level message or
@@ -1048,6 +1048,6 @@ std::pair<pbf::const_sint64_iterator, pbf::const_sint64_iterator> pbf::get_packe
                           pbf::const_sint64_iterator(m_data, m_data));
 }
 
-}} // end namespace mapbox::util
+} // end namespace protozero
 
-#endif // MAPBOX_UTIL_PBF_READER_HPP
+#endif // PROTOZERO_PBF_READER_HPP
