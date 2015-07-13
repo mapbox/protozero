@@ -73,13 +73,16 @@ Extensive tests are included. Call
 
 to build all tests and run them.
 
-You can also use `gyp` to build the tests:
+See `test/README.md` for more details about the test.
+
+You can also use `gyp` to build the reader tests:
 
     gyp --depth=. --build=Release
     ./out/Release/tests
 
 This will clobber the `Makefile` from the repository! Instead of `Release` you
 can use `Debug` for a debug build.
+
 
 ## Coverage report
 
@@ -102,6 +105,7 @@ If you are using `g++` you can use `gcovr` to generate nice HTML output:
     gcovr -r . --html --html-details -o coverage/index.html
 
 Open `coverage/index.html` in your browser to see the report.
+
 
 ## Cppcheck
 
