@@ -1,6 +1,6 @@
-run_all_tests.o
-run_all_tests
-wtests.o
-wtests
+reader_tests.o
+reader_tests
+writer_tests.o
+writer_tests
 *.gcda
 *.gcno

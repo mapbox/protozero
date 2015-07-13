@@ -2,5 +2,5 @@ testcase
 testcase.pb.cc
 testcase.pb.h
 testcase.pb.o
-runtest.o
-write_tests.o
+reader_test_cases.o
+writer_test_cases.o
