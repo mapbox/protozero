@@ -2,7 +2,8 @@
 
 Minimalistic protocol buffer decoder and encoder in C++.
 
-Designed for high performance. Suitable for writing zero copy or streaming parsers.
+Designed for high performance. Suitable for writing zero copy parsers and
+encoders with minimal need for run-time allocation of memory.
 
 Low-level: this is designed to be a building block for writing a very
 customized decoder for a stable protobuf schema. If your protobuf schema
