@@ -10,9 +10,9 @@ is changing frequently or lazy decoding is not critical for your application
 then this approach offers no value: just use the decoding API available via the
 C++ API that can be generated via the Google Protobufs `protoc` program.
 
-[![Build Status](https://travis-ci.org/mapbox/protozero.svg?branch=master)](https://travis-ci.org/mapbox/protozero)
-[![Coverage Status](https://coveralls.io/repos/mapbox/protozero/badge.svg?branch=master)](https://coveralls.io/r/mapbox/protozero?branch=master)
-[![Build status](https://ci.appveyor.com/api/projects/status/o354pq10y96mnr6d?svg=true)](https://ci.appveyor.com/project/Mapbox/protozero)
+[![Travis Build Status](https://travis-ci.org/mapbox/protozero.svg?branch=master)](https://travis-ci.org/mapbox/protozero)
+[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/o354pq10y96mnr6d?svg=true)](https://ci.appveyor.com/project/Mapbox/protozero)
+[![Coverage Status](https://coveralls.io/repos/mapbox/protozero/badge.svg?branch=master&service=github)](https://coveralls.io/github/mapbox/protozero?branch=master)
 
 
 ## Depends
