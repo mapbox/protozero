@@ -68,11 +68,12 @@ test: all
 	./test/reader_tests
 	./test/writer_tests
 
-iwyu: $(HPP_FILES) test/reader_tests.cpp $(READER_TEST_CASES)
-	iwyu -Xiwyu -- -std=c++11 -Iinclude protozero/pbf_common.hpp || true
-	iwyu -Xiwyu -- -std=c++11 -Iinclude protozero/pbf_reader.hpp || true
-	iwyu -Xiwyu -- -std=c++11 -Iinclude protozero/pbf_writer.hpp || true
+iwyu: $(HPP_FILES) test/reader_tests.cpp test/writer_tests.cpp
+	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_common.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_reader.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_writer.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude -Itest/include test/reader_tests.cpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude -Itest/include test/writer_tests.cpp || true
 
 check: $(HPP_FILES) test/reader_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(READER_TEST_CASES)
 	cppcheck -Uassert --std=c++11 --enable=all --suppress=incorrectStringBooleanError $^
