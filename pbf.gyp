@@ -7,7 +7,7 @@
       "target_name": "tests",
       "type": "executable",
       "sources": [
-        "test/run_all_tests.cpp",
+        "test/reader_tests.cpp",
         "test/t/basic/runtest.cpp",
         "test/t/bool/runtest.cpp",
         "test/t/bytes/runtest.cpp",

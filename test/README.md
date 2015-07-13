@@ -8,7 +8,6 @@ Call `make test` to compile and run all tests.
 
 ## Organization of the test cases
 
-
 Each test case is in its own directory under the `t` directory. Each directory
 contains (some of) the following files:
 
@@ -21,14 +20,16 @@ contains (some of) the following files:
 ### Read tests
 
 The `Makefile` automatically finds all the `runtest.cpp` files and compiles
-them. Together with the `run_all_tests.cpp` file they make up the
-`run_all_tests` executable which can be called to execute all the read tests.
+them. Together with the `reader_tests.cpp` file they make up the
+`reader_tests` executable which can be called to execute all the read tests.
 
 ### Write tests
 
 The `Makefile` automatically finds all the `write_test.cpp` files and compiles
-them. Together with the `wtests.cpp` file they make up the `wtests` executable
-which can be called to execute all the write tests.
+them. Together with the `writer_tests.cpp` file they make up the `writer_tests`
+executable which can be called to execute all the write tests.
+
+The writer tests need the Google protobuf library to work.
 
 
 ## Creating test data from scratch

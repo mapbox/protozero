@@ -38,15 +38,15 @@ HPP_FILES := include/protozero/pbf_common.hpp \
 CFLAGS_PROTOBUF := $(shell pkg-config protobuf --cflags)
 LDFLAGS_PROTOBUF := $(shell pkg-config protobuf --libs-only-L)
 
-all: ./test/run_all_tests test/wtests
+all: ./test/reader_tests test/writer_tests
 
 ./test/t/%/runtest.o: test/t/%/runtest.cpp $(HPP_FILES)
 	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
-./test/run_all_tests.o: test/run_all_tests.cpp $(HPP_FILES)
+./test/reader_tests.o: test/reader_tests.cpp $(HPP_FILES)
 	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
-./test/run_all_tests: test/run_all_tests.o $(UNIT_TESTS_O)
+./test/reader_tests: test/reader_tests.o $(UNIT_TESTS_O)
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 ./test/t/%/testcase.pb.cc: ./test/t/%/testcase.proto
@@ -58,35 +58,35 @@ all: ./test/run_all_tests test/wtests
 ./test/t/%/write_tests.o: ./test/t/%/write_tests.cpp
 	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
 
-./test/wtests.o: test/wtests.cpp $(HPP_FILES) $(PROTO_FILES_CC)
+./test/writer_tests.o: test/writer_tests.cpp $(HPP_FILES) $(PROTO_FILES_CC)
 	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
-./test/wtests: test/wtests.o $(PROTO_FILES_O) $(WRITE_TESTS_O)
+./test/writer_tests: test/writer_tests.o $(PROTO_FILES_O) $(WRITE_TESTS_O)
 	$(CXX) $(LDFLAGS) $(LDFLAGS_PROTOBUF) $^ -lprotobuf-lite -pthread -o $@
 
 test: all
-	./test/run_all_tests
-	./test/wtests
+	./test/reader_tests
+	./test/writer_tests
 
-iwyu: $(HPP_FILES) test/run_all_tests.cpp $(UNIT_TESTS)
+iwyu: $(HPP_FILES) test/reader_tests.cpp $(UNIT_TESTS)
 	iwyu -Xiwyu -- -std=c++11 -Iinclude protozero/pbf_common.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude protozero/pbf_reader.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude protozero/pbf_writer.hpp || true
-	iwyu -Xiwyu -- -std=c++11 -Iinclude -Itest/include test/run_all_tests.cpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude -Itest/include test/reader_tests.cpp || true
 
-check: $(HPP_FILES) test/run_all_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(UNIT_TESTS)
+check: $(HPP_FILES) test/reader_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(UNIT_TESTS)
 	cppcheck -Uassert --std=c++11 --enable=all --suppress=incorrectStringBooleanError $^
 
 doc: doc/Doxyfile README.md tutorial.md $(HPP_FILES)
 	doxygen doc/Doxyfile
 
 clean:
-	rm -f ./test/ptests
-	rm -f ./test/ptests.o
-	rm -f ./test/ptests.gc*
-	rm -f ./test/run_all_tests
-	rm -f ./test/run_all_tests.o
-	rm -f ./test/run_all_tests.gc*
+	rm -f ./test/reader_tests
+	rm -f ./test/reader_tests.o
+	rm -f ./test/reader_tests.gc*
+	rm -f ./test/writer_tests
+	rm -f ./test/writer_tests.o
+	rm -f ./test/writer_tests.gc*
 	rm -f ./test/t/*/testcase.pb.cc
 	rm -f ./test/t/*/testcase.pb.h
 	rm -f ./test/t/*/testcase.pb.o
