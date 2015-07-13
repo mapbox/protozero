@@ -8,7 +8,7 @@ Minimalistic fast C++ decoder for a subset of the protocol buffer format.
 This is header-only, meaning there is nothing to build. Just include this file
 in your C++ application.
 
-This file is from https://github.com/mapbox/pbf.hpp where you can find more
+This file is from https://github.com/mapbox/protozero where you can find more
 documentation.
 
 *****************************************************************************/
@@ -26,7 +26,7 @@ documentation.
 #include <string>
 #include <utility>
 
-#include "pbf_common.hpp"
+#include <protozero/pbf_common.hpp>
 
 #ifndef pbf_assert
 # define pbf_assert(x) assert(x)

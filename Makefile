@@ -31,18 +31,20 @@ PROTO_FILES_CC := $(subst .proto,.pb.cc,$(PROTO_FILES))
 PROTO_FILES_H := $(subst .proto,.pb.h,$(PROTO_FILES))
 PROTO_FILES_O := $(subst .proto,.pb.o,$(PROTO_FILES))
 
-HPP_FILES := pbf_reader.hpp pbf_writer.hpp pbf_common.hpp
+HPP_FILES := include/protozero/pbf_common.hpp \
+             include/protozero/pbf_reader.hpp \
+             include/protozero/pbf_writer.hpp
 
 CFLAGS_PROTOBUF := $(shell pkg-config protobuf --cflags)
 LDFLAGS_PROTOBUF := $(shell pkg-config protobuf --libs-only-L)
 
-all: ./test/run_all_tests
+all: ./test/run_all_tests test/wtests
 
 ./test/t/%/runtest.o: test/t/%/runtest.cpp $(HPP_FILES)
-	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/run_all_tests.o: test/run_all_tests.cpp $(HPP_FILES)
-	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/run_all_tests: test/run_all_tests.o $(UNIT_TESTS_O)
 	$(CXX) $(LDFLAGS) $^ -o $@
@@ -51,26 +53,26 @@ all: ./test/run_all_tests
 	protoc --cpp_out=. $^
 
 ./test/t/%/testcase.pb.o: ./test/t/%/testcase.pb.cc
-	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
 
 ./test/t/%/write_tests.o: ./test/t/%/write_tests.cpp
-	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
 
 ./test/wtests.o: test/wtests.cpp $(HPP_FILES) $(PROTO_FILES_CC)
-	$(CXX) -c -I. -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/wtests: test/wtests.o $(PROTO_FILES_O) $(WRITE_TESTS_O)
 	$(CXX) $(LDFLAGS) $(LDFLAGS_PROTOBUF) $^ -lprotobuf-lite -pthread -o $@
 
-test: ./test/run_all_tests test/wtests
+test: all
 	./test/run_all_tests
 	./test/wtests
 
 iwyu: $(HPP_FILES) test/run_all_tests.cpp $(UNIT_TESTS)
-	iwyu -Xiwyu -- -std=c++11 -I. pbf_common.hpp || true
-	iwyu -Xiwyu -- -std=c++11 -I. pbf_reader.hpp || true
-	iwyu -Xiwyu -- -std=c++11 -I. pbf_writer.hpp || true
-	iwyu -Xiwyu -- -std=c++11 -I. -Itest/include test/run_all_tests.cpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude protozero/pbf_common.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude protozero/pbf_reader.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude protozero/pbf_writer.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude -Itest/include test/run_all_tests.cpp || true
 
 check: $(HPP_FILES) test/run_all_tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(UNIT_TESTS)
 	cppcheck -Uassert --std=c++11 --enable=all --suppress=incorrectStringBooleanError $^
@@ -87,6 +89,7 @@ clean:
 	rm -f ./test/run_all_tests.gc*
 	rm -f ./test/t/*/testcase.pb.cc
 	rm -f ./test/t/*/testcase.pb.h
+	rm -f ./test/t/*/testcase.pb.o
 	rm -f ./test/t/*/testcase.o
 	rm -f ./test/t/*/testcase
 	rm -f ./test/t/*/runtest.o
@@ -96,5 +99,5 @@ clean:
 	rm -f ./*.gcov
 	rm -fr doc/doxygen_sqlite3.db doc/html coverage
 
-.PHONY: test doc
+.PHONY: all test iwyu check doc
 

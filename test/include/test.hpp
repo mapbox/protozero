@@ -10,8 +10,8 @@ struct assert_error : public std::runtime_error {
 };
 #define pbf_assert(x) if (!(x)) { throw(assert_error(#x)); }
 
-#include <pbf_reader.hpp>
-#include <pbf_writer.hpp>
+#include <protozero/pbf_reader.hpp>
+#include <protozero/pbf_writer.hpp>
 
 extern std::string load_data(const std::string& filename);
 

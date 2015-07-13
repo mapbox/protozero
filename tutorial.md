@@ -1,9 +1,9 @@
 
-# Pbf.hpp Tutorial
+# Protozero Tutorial
 
 ## Getting to Know Protocol Buffers
 
-`pbf.hpp` is a very low level library. You really have to know some of the
+Protozero is a very low level library. You really have to know some of the
 insides of Protocol Buffers to work with it!
 
 So before reading any further in this document, read the following from the
@@ -21,10 +21,10 @@ if you are getting lost.
 
 ## Prerequisites
 
-You need a C++11-capable compiler for `pbf.hpp` to work. Copy the `pbf_*.hpp`
-files somewhere where your build system can find them. You always need
-`pbf_common.hpp`, for reading and writing support you need `pbf_reader.hpp`
-and `pbf_writer.hpp`, respectively.
+You need a C++11-capable compiler for protozero to work. Copy the files in the
+`include` directory somewhere where your build system can find them. You always
+need `protozero/pbf_common.hpp`, for reading and writing support you need
+`protozero/pbf_reader.hpp` and `protozero/pbf_writer.hpp`, respectively.
 
 
 ## Parsing protobuf-encoded messages
@@ -34,7 +34,7 @@ and `pbf_writer.hpp`, respectively.
 All you have to do to use `pbf_reader.hpp` is to include it in your C++
 program:
 
-    #include <pbf_reader.hpp>
+    #include <protozero/pbf_reader.hpp>
 
 `pbf_reader.hpp` contains asserts that will detect some programming errors. We
 encourage you to compile with asserts enabled in your debug builds.
@@ -53,13 +53,13 @@ Lets say you have a protocol description in a `.proto` file like this:
 To read messages created according to that description, you will have code that
 looks somewhat like this:
 
-    #include <pbf_reader.hpp>
+    #include <protozero/pbf_reader.hpp>
 
     // get data from somewhere into the input string
     std::string input = get_input_data();
 
     // initialize pbf message with this data
-    mapbox::util::pbf message(input.data(), input.size());
+    protozero::pbf message(input.data(), input.size());
 
     // iterate over fields in the message
     while (message.next()) {
@@ -146,7 +146,7 @@ this:
 
 You can get to the data like this:
 
-    mapbox::util::pbf message(input.data(), input.size());
+    protozero::pbf message(input.data(), input.size());
 
     // set current field
     item.next();
@@ -182,10 +182,10 @@ embedded message use the `get_message()` function. So for this description:
 
 you can parse with this code:
 
-    mapbox::util::pbf message(input.data(), input.size());
+    protozero::pbf message(input.data(), input.size());
 
     while (message.next(10)) {
-        mapbox::util::pbf point = message.get_message();
+        protozero::pbf point = message.get_message();
         double x, y;
         while (point.next()) {
             switch (point.tag()) {
@@ -213,7 +213,7 @@ this into the symbolic name yourself. See the `enum` test case for an example.
 ### Exceptions
 
 All exceptions thrown by `pbf_reader.hpp` functions derive from
-`mapbox::util::pbf::exception`.
+`protozero::pbf::exception`.
 
 Note that all exceptions can also happen if you are expecting a data field of
 a certain type in your code but the field actually has a different type. In

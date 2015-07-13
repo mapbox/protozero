@@ -24,7 +24,7 @@ documentation.
 #include <iterator>
 #include <string>
 
-#include "pbf_common.hpp"
+#include <protozero/pbf_common.hpp>
 
 #ifndef pbf_assert
 # define pbf_assert(x) assert(x)
