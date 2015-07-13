@@ -6,10 +6,10 @@ TEST_CASE("read message field") {
     SECTION("string") {
         std::string buffer = load_data("message/data-message");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        protozero::pbf subitem { item.get_message() };
+        protozero::pbf_reader subitem { item.get_message() };
         REQUIRE(!item.next());
 
         REQUIRE(subitem.next());
@@ -21,9 +21,9 @@ TEST_CASE("read message field") {
         std::string buffer = load_data("message/data-message");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            protozero::pbf item(buffer.data(), i);
+            protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_string(), protozero::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_string(), protozero::end_of_buffer_exception);
         }
     }
 

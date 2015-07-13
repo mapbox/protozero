@@ -6,7 +6,7 @@ TEST_CASE("read repeated packed fixed32 field") {
     SECTION("empty") {
         std::string buffer = load_data("repeated_packed_fixed32/data-empty");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(!item.next());
     }
@@ -14,7 +14,7 @@ TEST_CASE("read repeated packed fixed32 field") {
     SECTION("one") {
         std::string buffer = load_data("repeated_packed_fixed32/data-one");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_fixed32();
@@ -27,7 +27,7 @@ TEST_CASE("read repeated packed fixed32 field") {
     SECTION("many") {
         std::string buffer = load_data("repeated_packed_fixed32/data-many");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         auto it_pair = item.get_packed_fixed32();
@@ -45,9 +45,9 @@ TEST_CASE("read repeated packed fixed32 field") {
         std::string buffer = load_data("repeated_packed_fixed32/data-many");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            protozero::pbf item(buffer.data(), i);
+            protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_packed_fixed32(), protozero::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_packed_fixed32(), protozero::end_of_buffer_exception);
         }
     }
 
@@ -109,7 +109,7 @@ TEST_CASE("write from different types of iterators") {
         pw.add_packed_fixed32(1, it, eod);
     }
 
-    protozero::pbf item(buffer.data(), buffer.size());
+    protozero::pbf_reader item(buffer.data(), buffer.size());
 
     REQUIRE(item.next());
     auto it_pair = item.get_packed_fixed32();

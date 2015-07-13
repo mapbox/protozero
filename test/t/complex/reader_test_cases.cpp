@@ -6,7 +6,7 @@ TEST_CASE("read complex data") {
     SECTION("minimal") {
         std::string buffer = load_data("complex/data-minimal");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         while (item.next()) {
             switch (item.tag()) {
@@ -15,7 +15,7 @@ TEST_CASE("read complex data") {
                     break;
                 }
                 case 5: {
-                    protozero::pbf subitem = item.get_message();
+                    protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
                     REQUIRE(!subitem.next());
@@ -32,7 +32,7 @@ TEST_CASE("read complex data") {
     SECTION("some") {
         std::string buffer = load_data("complex/data-some");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         uint32_t sum_of_u = 0;
         while (item.next()) {
@@ -51,7 +51,7 @@ TEST_CASE("read complex data") {
                     break;
                 }
                 case 5: {
-                    protozero::pbf subitem = item.get_message();
+                    protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
                     REQUIRE(!subitem.next());
@@ -69,7 +69,7 @@ TEST_CASE("read complex data") {
     SECTION("all") {
         std::string buffer = load_data("complex/data-all");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         int number_of_u = 0;
         while (item.next()) {
@@ -93,7 +93,7 @@ TEST_CASE("read complex data") {
                     break;
                 }
                 case 5: {
-                    protozero::pbf subitem = item.get_message();
+                    protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
                     REQUIRE(!subitem.next());
@@ -124,7 +124,7 @@ TEST_CASE("read complex data") {
     SECTION("skip everything") {
         std::string buffer = load_data("complex/data-all");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         while (item.next()) {
             switch (item.tag()) {
@@ -160,7 +160,7 @@ TEST_CASE("write complex data") {
 
         pw.add_message(5, submessage);
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         while (item.next()) {
             switch (item.tag()) {
@@ -169,7 +169,7 @@ TEST_CASE("write complex data") {
                     break;
                 }
                 case 5: {
-                    protozero::pbf subitem = item.get_message();
+                    protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
                     REQUIRE(!subitem.next());
@@ -197,7 +197,7 @@ TEST_CASE("write complex data") {
         pw.add_int64(2, -9876543);
         pw.add_message(5, submessage);
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         uint32_t sum_of_u = 0;
         while (item.next()) {
@@ -216,7 +216,7 @@ TEST_CASE("write complex data") {
                     break;
                 }
                 case 5: {
-                    protozero::pbf subitem = item.get_message();
+                    protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
                     REQUIRE(!subitem.next());
@@ -253,7 +253,7 @@ TEST_CASE("write complex data") {
 
         pw.add_int64(3, 555555555);
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         int number_of_u = 0;
         while (item.next()) {
@@ -277,7 +277,7 @@ TEST_CASE("write complex data") {
                     break;
                 }
                 case 5: {
-                    protozero::pbf subitem = item.get_message();
+                    protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
                     REQUIRE(!subitem.next());
@@ -307,7 +307,7 @@ TEST_CASE("write complex data") {
 }
 
 static void check_message(const std::string& buffer) {
-    protozero::pbf item(buffer.data(), buffer.size());
+    protozero::pbf_reader item(buffer.data(), buffer.size());
 
     while (item.next()) {
         switch (item.tag()) {
@@ -316,7 +316,7 @@ static void check_message(const std::string& buffer) {
                 break;
             }
             case 5: {
-                protozero::pbf subitem = item.get_message();
+                protozero::pbf_reader subitem = item.get_message();
                 REQUIRE(subitem.next());
                 REQUIRE(subitem.get_string() == "foobar");
                 REQUIRE(!subitem.next());

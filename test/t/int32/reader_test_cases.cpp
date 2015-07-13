@@ -6,7 +6,7 @@ TEST_CASE("read int32 field") {
     SECTION("zero") {
         std::string buffer = load_data("int32/data-zero");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_int32() == 0L);
@@ -16,7 +16,7 @@ TEST_CASE("read int32 field") {
     SECTION("positive") {
         std::string buffer = load_data("int32/data-pos");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_int32() == 1L);
@@ -26,7 +26,7 @@ TEST_CASE("read int32 field") {
     SECTION("negative") {
         std::string buffer = load_data("int32/data-neg");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_int32() == -1L);
@@ -36,7 +36,7 @@ TEST_CASE("read int32 field") {
     SECTION("max") {
         std::string buffer = load_data("int32/data-max");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_int32() == std::numeric_limits<int32_t>::max());
@@ -46,7 +46,7 @@ TEST_CASE("read int32 field") {
     SECTION("min64") {
         std::string buffer = load_data("int32/data-min");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(static_cast<int32_t>(item.get_int64()) == std::numeric_limits<int32_t>::min());
@@ -56,7 +56,7 @@ TEST_CASE("read int32 field") {
     SECTION("min") {
         std::string buffer = load_data("int32/data-min");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_int32() == std::numeric_limits<int32_t>::min());
@@ -67,16 +67,16 @@ TEST_CASE("read int32 field") {
         std::string buffer = load_data("int32/data-min");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            protozero::pbf item(buffer.data(), i);
+            protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_int32(), protozero::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_int32(), protozero::end_of_buffer_exception);
         }
     }
 
     SECTION("check assert on string/fixed int access") {
         std::string buffer = load_data("int32/data-zero");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);

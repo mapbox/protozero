@@ -6,7 +6,7 @@ TEST_CASE("read bool field") {
     SECTION("false") {
         std::string buffer = load_data("bool/data-false");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(!item.get_bool());
@@ -16,7 +16,7 @@ TEST_CASE("read bool field") {
     SECTION("true") {
         std::string buffer = load_data("bool/data-true");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_bool());
@@ -26,7 +26,7 @@ TEST_CASE("read bool field") {
     SECTION("also true") {
         std::string buffer = load_data("bool/data-also-true");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_bool());
@@ -36,7 +36,7 @@ TEST_CASE("read bool field") {
     SECTION("still true") {
         std::string buffer = load_data("bool/data-still-true");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_bool());

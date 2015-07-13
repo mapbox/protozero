@@ -59,7 +59,7 @@ looks somewhat like this:
     std::string input = get_input_data();
 
     // initialize pbf message with this data
-    protozero::pbf message(input.data(), input.size());
+    protozero::pbf_reader message(input);
 
     // iterate over fields in the message
     while (message.next()) {
@@ -90,11 +90,11 @@ You always have to call `next()` and then either one of the accessor functions
 ignore this field. Then call `next()` again, and so forth. Never call `next()`
 twice in a row or any if the accessor or skip functions twice in a row.
 
-Because the `pbf` class doesn't know the `.proto` file it doesn't know which
-field names or tags there are and it doesn't known the types of the fields.
-You have to make sure to call the right `get_...()` function for each tag. Some
-`assert()s` are done to check you are calling the right functions, but not all
-errors can be detected.
+Because the `pbf_reader` class doesn't know the `.proto` file it doesn't know
+which field names or tags there are and it doesn't known the types of the
+fields. You have to make sure to call the right `get_...()` function for each
+tag. Some `assert()s` are done to check you are calling the right functions,
+but not all errors can be detected.
 
 Note that it doesn't matter whether a field is defined as `required`,
 `optional`, or `repeated`. You always have to be prepared to get zero, one, or
@@ -146,10 +146,10 @@ this:
 
 You can get to the data like this:
 
-    protozero::pbf message(input.data(), input.size());
+    protozero::pbf_reader message(input.data(), input.size());
 
     // set current field
-    item.next();
+    item.next(1);
 
     // get an iterator pair
     auto pi = item.get_packed_sint32();
@@ -160,7 +160,7 @@ You can get to the data like this:
     }
 
 So you are getting a pair of normal forward iterators that can be used with any
-STL algorithm etc.
+STL algorithms etc.
 
 Note that the previous only applies to repeated **packed** fields, normal
 repeated fields are handled in the usual way for scalar fields.
@@ -182,10 +182,10 @@ embedded message use the `get_message()` function. So for this description:
 
 you can parse with this code:
 
-    protozero::pbf message(input.data(), input.size());
+    protozero::pbf_reader message(input);
 
     while (message.next(10)) {
-        protozero::pbf point = message.get_message();
+        protozero::pbf_reader point = message.get_message();
         double x, y;
         while (point.next()) {
             switch (point.tag()) {
@@ -213,12 +213,12 @@ this into the symbolic name yourself. See the `enum` test case for an example.
 ### Exceptions
 
 All exceptions thrown by `pbf_reader.hpp` functions derive from
-`protozero::pbf::exception`.
+`protozero::exception`.
 
 Note that all exceptions can also happen if you are expecting a data field of
 a certain type in your code but the field actually has a different type. In
-that case the `pbf` class might interpret the bytes in the buffer in the wrong
-way and anything can happen.
+that case the `pbf_reader` class might interpret the bytes in the buffer in
+the wrong way and anything can happen.
 
 #### `end_of_buffer_exception`
 
@@ -226,7 +226,7 @@ This will be thrown whenever any of the functions "runs out of input data".
 It means you either have an incomplete message in your input or some other
 data corruption has taken place.
 
-#### `unknown_field_type_exception`
+#### `unknown_pbf_field_type_exception`
 
 This will be thrown if an unsupported field type is encountered. Either your
 input data is corrupted or it was written with an unsupported version of a
@@ -238,15 +238,17 @@ This exception indicates an illegal encoding of a varint. It means your input
 data is corrupted in some way.
 
 
-### The `pbf` Class
+### The `pbf_reader` Class
 
-The `pbf` class behaves like a value type. Objects are reasonably small (two
-pointers and two `uint32_t`, so 24 bytes on a 64bit system) and they can be
-copied and moved around trivially.
+The `pbf_reader` class behaves like a value type. Objects are reasonably small
+(two pointers and two `uint32_t`, so 24 bytes on a 64bit system) and they can
+be copied and moved around trivially.
 
-Objects of the `pbf` class store a pointer into the input data that was given
-to the constructor. You have to make sure this pointer stays valid for the
-duration of the objects lifetime.
+`pbf_reader` objects can be constructed from a `std::string` or a `const char*`
+and a length field (either supplied as separate arguments or as a `std::pair`).
+In all cases objects of the `pbf_reader` class store a pointer into the input
+data that was given to the constructor. You have to make sure this pointer
+stays valid for the duration of the objects lifetime.
 
 
 ## Writing Protobuf-Encoded Messages
@@ -260,6 +262,7 @@ program:
 
 `pbf_writer.hpp` contains asserts that will detect some programming errors. We
 encourage you to compile with asserts enabled in your debug builds.
+
 
 ### An Introductory Example
 

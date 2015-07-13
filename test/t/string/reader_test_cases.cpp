@@ -6,7 +6,7 @@ TEST_CASE("read string field") {
     SECTION("empty") {
         std::string buffer = load_data("string/data-empty");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "");
@@ -16,7 +16,7 @@ TEST_CASE("read string field") {
     SECTION("one") {
         std::string buffer = load_data("string/data-one");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "x");
@@ -26,7 +26,7 @@ TEST_CASE("read string field") {
     SECTION("string") {
         std::string buffer = load_data("string/data-string");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "foobar");
@@ -37,16 +37,16 @@ TEST_CASE("read string field") {
         std::string buffer = load_data("string/data-string");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            protozero::pbf item(buffer.data(), i);
+            protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_string(), protozero::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_string(), protozero::end_of_buffer_exception);
         }
     }
 
     SECTION("check assert on fixed int access") {
         std::string buffer = load_data("string/data-string");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);

@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-inline void check_subsub(protozero::pbf message) {
+inline void check_subsub(protozero::pbf_reader message) {
     while (message.next()) {
         switch (message.tag()) {
             case 1: {
@@ -20,7 +20,7 @@ inline void check_subsub(protozero::pbf message) {
     }
 }
 
-inline void check_sub(protozero::pbf message) {
+inline void check_sub(protozero::pbf_reader message) {
     while (message.next()) {
         switch (message.tag()) {
             case 1: {
@@ -39,7 +39,7 @@ inline void check_sub(protozero::pbf message) {
     }
 }
 
-inline void check(protozero::pbf message) {
+inline void check(protozero::pbf_reader message) {
     while (message.next()) {
         switch (message.tag()) {
             case 1: {
@@ -63,7 +63,7 @@ TEST_CASE("read nested message fields") {
     SECTION("string") {
         std::string buffer = load_data("nested/data-message");
 
-        protozero::pbf message(buffer.data(), buffer.size());
+        protozero::pbf_reader message(buffer.data(), buffer.size());
         check(message);
     }
 
@@ -100,7 +100,7 @@ TEST_CASE("write nested message fields") {
 
     pw.add_int32(2, 77);
 
-    protozero::pbf message(buffer.data(), buffer.size());
+    protozero::pbf_reader message(buffer.data(), buffer.size());
     check(message);
 }
 

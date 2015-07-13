@@ -1,15 +1,15 @@
 
 #include <test.hpp>
 
-using protozero::pbf;
+using protozero::pbf_reader;
 using protozero::pbf_writer;
 
 inline int32_t zz32(int32_t val) {
-    return pbf::decode_zigzag32(pbf_writer::encode_zigzag32(val));
+    return pbf_reader::decode_zigzag32(pbf_writer::encode_zigzag32(val));
 }
 
 inline int64_t zz64(int64_t val) {
-    return pbf::decode_zigzag64(pbf_writer::encode_zigzag64(val));
+    return pbf_reader::decode_zigzag64(pbf_writer::encode_zigzag64(val));
 }
 
 TEST_CASE("zigzag") {

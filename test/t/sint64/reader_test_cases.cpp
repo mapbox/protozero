@@ -6,7 +6,7 @@ TEST_CASE("read sint64 field") {
     SECTION("zero") {
         std::string buffer = load_data("sint64/data-zero");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint64() == 0LL);
@@ -16,7 +16,7 @@ TEST_CASE("read sint64 field") {
     SECTION("positive") {
         std::string buffer = load_data("sint64/data-pos");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint64() == 1LL);
@@ -26,7 +26,7 @@ TEST_CASE("read sint64 field") {
     SECTION("negative") {
         std::string buffer = load_data("sint64/data-neg");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint64() == -1LL);
@@ -36,7 +36,7 @@ TEST_CASE("read sint64 field") {
     SECTION("max") {
         std::string buffer = load_data("sint64/data-max");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint64() == std::numeric_limits<int64_t>::max());
@@ -46,7 +46,7 @@ TEST_CASE("read sint64 field") {
     SECTION("min") {
         std::string buffer = load_data("sint64/data-min");
 
-        protozero::pbf item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint64() == std::numeric_limits<int64_t>::min());
@@ -57,9 +57,9 @@ TEST_CASE("read sint64 field") {
         std::string buffer = load_data("sint64/data-min");
 
         for (size_t i=1; i < buffer.size(); ++i) {
-            protozero::pbf item(buffer.data(), i);
+            protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_sint64(), protozero::pbf::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_sint64(), protozero::end_of_buffer_exception);
         }
     }
 
