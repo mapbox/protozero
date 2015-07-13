@@ -93,11 +93,11 @@ To get a coverage report compile and link with `--coverage`:
 If you are using `g++` use `gcov` to generate a report (results are in `*.gcov`
 files):
 
-    gcov -lp test/reader_tests.o test/t/*/runtest.o
+    gcov -lp test/*_tests.o test/t/*/*_test_cases.o
 
 If you are using `clang++` use `llvm-cov` instead:
 
-    llvm-cov gcov -lp test/reader_tests.o test/t/*/runtest.o
+    llvm-cov gcov -lp test/*_tests.o test/t/*/*_test_cases.o
 
 If you are using `g++` you can use `gcovr` to generate nice HTML output:
 
