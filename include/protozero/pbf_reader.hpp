@@ -194,8 +194,27 @@ public:
      */
     inline pbf(const char *data, size_t length);
 
+    /**
+     * Construct a pbf message from a data pointer and a length. The pointer
+     * will be stored inside the pbf object, no data is copied. So you must
+     * make sure the buffer stays valid as long as the pbf object is used.
+     *
+     * The buffer must contain a complete protobuf message.
+     *
+     * @post There is no current field.
+     */
     inline pbf(std::pair<const char *, size_t> data);
 
+    /**
+     * Construct a pbf message from a std::string. A pointer to the string
+     * internals will be stored inside the pbf object, no data is copied.
+     * So you must make sure the string is unchanged as long as the pbf
+     * object is used.
+     *
+     * The string must contain a complete protobuf message.
+     *
+     * @post There is no current field.
+     */
     inline pbf(const std::string& data);
 
     inline pbf() = default;
