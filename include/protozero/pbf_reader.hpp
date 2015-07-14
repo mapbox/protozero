@@ -3,15 +3,18 @@
 
 /*****************************************************************************
 
-Minimalistic fast C++ decoder for a subset of the protocol buffer format.
-
-This is header-only, meaning there is nothing to build. Just include this file
-in your C++ application.
+protozero - Minimalistic protocol buffer decoder and encoder in C++.
 
 This file is from https://github.com/mapbox/protozero where you can find more
 documentation.
 
 *****************************************************************************/
+
+/**
+ * @file pbf_reader.hpp
+ *
+ * @brief Contains the pbf_reader class.
+ */
 
 #if __BYTE_ORDER != __LITTLE_ENDIAN
 # error "This code only works on little endian machines."
@@ -21,63 +24,20 @@ documentation.
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
-#include <exception>
 #include <iterator>
 #include <string>
 #include <utility>
 
-#include <protozero/pbf_common.hpp>
+#include <protozero/pbf_types.hpp>
+#include <protozero/exception.hpp>
+#include <protozero/varint.hpp>
 
+/// Wrapper for assert() used for testing
 #ifndef pbf_assert
 # define pbf_assert(x) assert(x)
 #endif
 
 namespace protozero {
-
-/**
- * All exceptions thrown by the functions of the pbf_reader class derive
- * from this exception.
- */
-struct exception : std::exception {
-    /// Returns the explanatory string.
-    const char *what() const noexcept { return "pbf exception"; }
-};
-
-/**
- * This exception is thrown when parsing a varint thats larger than allowed.
- * This should never happen unless the data is corrupted.
- * After the exception the pbf_reader object is in an unknown
- * state and you cannot recover from that.
- */
-struct varint_too_long_exception : exception {
-    /// Returns the explanatory string.
-    const char *what() const noexcept { return "varint too long exception"; }
-};
-
-/**
- * This exception is thrown when the type of a field is unknown.
- * This should never happen unless the data is corrupted.
- * After the exception the pbf_reader object is in an unknown
- * state and you cannot recover from that.
- */
-struct unknown_pbf_field_type_exception : exception {
-    /// Returns the explanatory string.
-    const char *what() const noexcept { return "unknown pbf field type exception"; }
-};
-
-/**
- * This exception is thrown when we are trying to read a field and there
- * are not enough bytes left in the buffer to read it. Almost all functions
- * can throw this exception.
- * This should never happen unless the data is corrupted or you have
- * initialized the pbf_reader object with incomplete data.
- * After the exception the pbf_reader object is in an unknown
- * state and you cannot recover from that.
- */
-struct end_of_buffer_exception : exception {
-    /// Returns the explanatory string.
-    const char *what() const noexcept { return "end of buffer exception"; }
-};
 
 /**
  * This class represents a protobuf message. Either a top-level message or
@@ -100,47 +60,6 @@ struct end_of_buffer_exception : exception {
  *
  */
 class pbf_reader {
-
-    // The maximum length of a 64bit varint.
-    static const int8_t max_varint_length = sizeof(uint64_t) * 8 / 7 + 1;
-
-    // from https://github.com/facebook/folly/blob/master/folly/Varint.h
-    static uint64_t decode_varint(const char** data, const char* end) {
-        const int8_t* begin = reinterpret_cast<const int8_t*>(*data);
-        const int8_t* iend = reinterpret_cast<const int8_t*>(end);
-        const int8_t* p = begin;
-        uint64_t val = 0;
-
-        if (iend - begin >= max_varint_length) {  // fast path
-            do {
-                int64_t b;
-                b = *p++; val  = uint64_t((b & 0x7f)      ); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) <<  7); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 14); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 21); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 28); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 35); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 42); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 49); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 56); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 63); if (b >= 0) break;
-                throw varint_too_long_exception();
-            } while (false);
-        } else {
-            int shift = 0;
-            while (p != iend && *p < 0) {
-                val |= uint64_t(*p++ & 0x7f) << shift;
-                shift += 7;
-            }
-            if (p == iend) {
-                throw end_of_buffer_exception();
-            }
-            val |= uint64_t(*p++) << shift;
-        }
-
-        *data = reinterpret_cast<const char*>(p);
-        return val;
-    }
 
     // A pointer to the next unread data.
     const char *m_data = nullptr;
@@ -166,22 +85,6 @@ class pbf_reader {
     inline pbf_length_type get_len_and_skip();
 
 public:
-
-    /**
-     * Decodes a 32 bit ZigZag-encoded integer.
-     *
-     * This is a helper function used inside the pbf_reader class, but could be
-     * useful in other contexts.
-     */
-    static inline int32_t decode_zigzag32(uint32_t value) noexcept;
-
-    /**
-     * Decodes a 64 bit ZigZag-encoded integer.
-     *
-     * This is a helper function used inside the pbf_reader class, but could be
-     * useful in other contexts.
-     */
-    static inline int64_t decode_zigzag64(uint64_t value) noexcept;
 
     /**
      * Construct a pbf_reader message from a data pointer and a length. The pointer
@@ -899,14 +802,6 @@ pbf_length_type pbf_reader::get_len_and_skip() {
     auto len = get_length();
     skip_bytes(len);
     return len;
-}
-
-inline int32_t pbf_reader::decode_zigzag32(uint32_t value) noexcept {
-    return int32_t(value >> 1) ^ -int32_t(value & 1);
-}
-
-inline int64_t pbf_reader::decode_zigzag64(uint64_t value) noexcept {
-    return int64_t(value >> 1) ^ -int64_t(value & 1);
 }
 
 template <typename T>

@@ -1,17 +1,20 @@
-#ifndef PROTOZERO_PBF_COMMON_HPP
-#define PROTOZERO_PBF_COMMON_HPP
+#ifndef PROTOZERO_PBF_TYPES_HPP
+#define PROTOZERO_PBF_TYPES_HPP
 
 /*****************************************************************************
 
-Minimalistic fast C++ decoder for a subset of the protocol buffer format.
-
-This is header-only, meaning there is nothing to build. Just include this file
-in your C++ application.
+protozero - Minimalistic protocol buffer decoder and encoder in C++.
 
 This file is from https://github.com/mapbox/protozero where you can find more
 documentation.
 
 *****************************************************************************/
+
+/**
+ * @file pbf_types.hpp
+ *
+ * @brief Contains the declaration of low-level types used in the pbf format.
+ */
 
 #include <cstdint>
 
@@ -43,4 +46,4 @@ namespace protozero {
 
 } // end namespace protozero
 
-#endif // PROTOZERO_PBF_COMMON_HPP
+#endif // PROTOZERO_PBF_TYPES_HPP

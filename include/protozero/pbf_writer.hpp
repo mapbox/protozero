@@ -3,15 +3,18 @@
 
 /*****************************************************************************
 
-Minimalistic fast C++ encoder for a subset of the protocol buffer format.
-
-This is header-only, meaning there is nothing to build. Just include this file
-in your C++ application.
+protozero - Minimalistic protocol buffer decoder and encoder in C++.
 
 This file is from https://github.com/mapbox/protozero where you can find more
 documentation.
 
 *****************************************************************************/
+
+/**
+ * @file pbf_writer.hpp
+ *
+ * @brief Contains the pbf_writer class.
+ */
 
 #if __BYTE_ORDER != __LITTLE_ENDIAN
 # error "This code only works on little endian machines."
@@ -24,8 +27,10 @@ documentation.
 #include <iterator>
 #include <string>
 
-#include <protozero/pbf_common.hpp>
+#include <protozero/pbf_types.hpp>
+#include <protozero/varint.hpp>
 
+/// Wrapper for assert() used for testing
 #ifndef pbf_assert
 # define pbf_assert(x) assert(x)
 #endif
@@ -42,20 +47,6 @@ namespace protozero {
 class pbf_writer {
 
     std::string& m_data;
-
-    template <typename T>
-    static inline int write_varint(T data, uint64_t value) {
-        int n=1;
-
-        while (value >= 0x80) {
-            *data++ = char((value & 0x7f) | 0x80);
-            value >>= 7;
-            ++n;
-        }
-        *data++ = char(value);
-
-        return n;
-    }
 
     inline int add_varint(uint64_t value) {
         return write_varint(std::back_inserter(m_data), value);
@@ -99,22 +90,6 @@ class pbf_writer {
     }
 
 public:
-
-    /**
-     * ZigZag encodes a 32 bit integer.
-     *
-     * This is a helper function used inside the pbf_writer class, but could be
-     * useful in other contexts.
-     */
-    static inline uint32_t encode_zigzag32(int32_t value) noexcept;
-
-    /**
-     * ZigZag encodes a 64 bit integer.
-     *
-     * This is a helper function used inside the pbf_writer class, but could be
-     * useful in other contexts.
-     */
-    static inline uint64_t encode_zigzag64(int64_t value) noexcept;
 
     /**
      * Create a writer using the given string as a data store. The pbf_writer
@@ -700,14 +675,6 @@ public:
     }
 
 }; // class pbf_appender
-
-inline uint32_t pbf_writer::encode_zigzag32(int32_t value) noexcept {
-    return (static_cast<uint32_t>(value) << 1) ^ (static_cast<uint32_t>(value >> 31));
-}
-
-inline uint64_t pbf_writer::encode_zigzag64(int64_t value) noexcept {
-    return (static_cast<uint64_t>(value) << 1) ^ (static_cast<uint64_t>(value >> 63));
-}
 
 template <typename T, typename It>
 inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::forward_iterator_tag) {

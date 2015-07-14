@@ -22,22 +22,23 @@ if you are getting lost.
 ## Prerequisites
 
 You need a C++11-capable compiler for protozero to work. Copy the files in the
-`include` directory somewhere where your build system can find them. You always
-need `protozero/pbf_common.hpp`, for reading and writing support you need
+`include` directory somewhere where your build system can find them.
+
+You always need `protozero/pbf_types.hpp`, `protozero/varint.hpp`, and
+`protozero/exception.hpp`. For reading and writing support you need
 `protozero/pbf_reader.hpp` and `protozero/pbf_writer.hpp`, respectively.
 
 
 ## Parsing protobuf-encoded messages
 
-### Using `pbf_reader.hpp`
+### Using `pbf_reader`
 
-All you have to do to use `pbf_reader.hpp` is to include it in your C++
-program:
+To use the `pbf_reader` class, add this include to your C++ program:
 
     #include <protozero/pbf_reader.hpp>
 
-`pbf_reader.hpp` contains asserts that will detect some programming errors. We
-encourage you to compile with asserts enabled in your debug builds.
+The `pbf_reader` class contains asserts that will detect some programming
+errors. We encourage you to compile with asserts enabled in your debug builds.
 
 
 ### An Introductory Example
@@ -253,15 +254,14 @@ stays valid for the duration of the objects lifetime.
 
 ## Writing Protobuf-Encoded Messages
 
-### Using `pbf_writer.hpp`
+### Using `pbf_writer`
 
-All you have to do to use `pbf_writer.hpp` is to include it in your C++
-program:
+To use the `pbf_writer` class, add this include to your C++ program:
 
-    #include <pbf_writer.hpp>
+    #include <protozero/pbf_writer.hpp>
 
-`pbf_writer.hpp` contains asserts that will detect some programming errors. We
-encourage you to compile with asserts enabled in your debug builds.
+The `pbf_writer` class contains asserts that will detect some programming
+errors. We encourage you to compile with asserts enabled in your debug builds.
 
 
 ### An Introductory Example
@@ -321,4 +321,30 @@ Repeated packed fields can easily be set from a pair of iterators:
 
 
 ### Handling Sub-Messages
+
+
+## Using the low-level varint and zigzag encoding and decoding functions
+
+Protozero gives you access to the low-level functions for encoding and
+decoding varint and zigzag integer encodings, because these functions can
+sometimes be useful outside the Protocol Buffer context.
+
+### Using low-level functions
+
+To use the low-level, add this include to your C++ program:
+
+    #include <protozero/varint.hpp>
+
+### Functions
+
+The following functions are then available:
+
+    decode_varint()
+    write_varint()
+    encode_zigzag32()
+    encode_zigzag64()
+    decode_zigzag32()
+    decode_zigzag64()
+
+See the reference documentation created by `make doc` for details.
 

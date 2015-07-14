@@ -31,7 +31,9 @@ PROTO_FILES_CC := $(subst .proto,.pb.cc,$(PROTO_FILES))
 PROTO_FILES_H := $(subst .proto,.pb.h,$(PROTO_FILES))
 PROTO_FILES_O := $(subst .proto,.pb.o,$(PROTO_FILES))
 
-HPP_FILES := include/protozero/pbf_common.hpp \
+HPP_FILES := include/protozero/exception.hpp \
+             include/protozero/varint.hpp \
+             include/protozero/pbf_types.hpp \
              include/protozero/pbf_reader.hpp \
              include/protozero/pbf_writer.hpp
 
@@ -69,7 +71,9 @@ test: all
 	./test/writer_tests
 
 iwyu: $(HPP_FILES) test/reader_tests.cpp test/writer_tests.cpp
-	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_common.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/exception.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/varint.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_types.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_reader.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_writer.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude -Itest/include test/reader_tests.cpp || true
