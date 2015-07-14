@@ -95,7 +95,7 @@ public:
      *
      * @post There is no current field.
      */
-    inline pbf_reader(const char *data, size_t length);
+    inline pbf_reader(const char *data, size_t length) noexcept;
 
     /**
      * Construct a pbf_reader message from a data pointer and a length. The pointer
@@ -106,7 +106,7 @@ public:
      *
      * @post There is no current field.
      */
-    inline pbf_reader(std::pair<const char *, size_t> data);
+    inline pbf_reader(std::pair<const char *, size_t> data) noexcept;
 
     /**
      * Construct a pbf_reader message from a std::string. A pointer to the string
@@ -118,21 +118,25 @@ public:
      *
      * @post There is no current field.
      */
-    inline pbf_reader(const std::string& data);
+    inline pbf_reader(const std::string& data) noexcept;
 
-    inline pbf_reader() = default;
-
-    /// pbf_reader messages can be copied trivially.
-    inline pbf_reader(const pbf_reader&) = default;
-
-    /// pbf_reader messages can be moved trivially.
-    inline pbf_reader(pbf_reader&&) = default;
+    /**
+     * pbf_reader can be default constructed and behaves like it has an empty
+     * buffer.
+     */
+    inline pbf_reader() noexcept = default;
 
     /// pbf_reader messages can be copied trivially.
-    inline pbf_reader& operator=(const pbf_reader& other) = default;
+    inline pbf_reader(const pbf_reader&) noexcept = default;
 
     /// pbf_reader messages can be moved trivially.
-    inline pbf_reader& operator=(pbf_reader&& other) = default;
+    inline pbf_reader(pbf_reader&&) noexcept = default;
+
+    /// pbf_reader messages can be copied trivially.
+    inline pbf_reader& operator=(const pbf_reader& other) noexcept = default;
+
+    /// pbf_reader messages can be moved trivially.
+    inline pbf_reader& operator=(pbf_reader&& other) noexcept = default;
 
     inline ~pbf_reader() = default;
 
@@ -700,21 +704,21 @@ public:
 
 }; // class pbf_reader
 
-pbf_reader::pbf_reader(const char *data, size_t length)
+pbf_reader::pbf_reader(const char *data, size_t length) noexcept
     : m_data(data),
       m_end(data + length),
       m_wire_type(pbf_wire_type::unknown),
       m_tag(0) {
 }
 
-pbf_reader::pbf_reader(std::pair<const char *, size_t> data)
+pbf_reader::pbf_reader(std::pair<const char *, size_t> data) noexcept
     : m_data(data.first),
       m_end(data.first + data.second),
       m_wire_type(pbf_wire_type::unknown),
       m_tag(0) {
 }
 
-pbf_reader::pbf_reader(const std::string& data)
+pbf_reader::pbf_reader(const std::string& data) noexcept
     : m_data(data.data()),
       m_end(data.data() + data.size()),
       m_wire_type(pbf_wire_type::unknown),
