@@ -58,6 +58,10 @@ namespace protozero {
  *    pbf_reader submessage = message.get_message();
  * @endcode
  *
+ * All methods of the pbf_reader class except get_bytes() and get_string()
+ * provide the strong exception guarantee, ie they either succeed or do not
+ * change the pbf_reader object they are called on. Use the get_data() method
+ * instead of get_bytes() or get_string(), if you need this guarantee.
  */
 class pbf_reader {
 
@@ -475,7 +479,7 @@ private:
 
         const_varint_iterator& operator++() {
             // Ignore the result, we call decode_varint() just for the
-            // side-effect of updating data.
+            // side-effect of updating m_data.
             decode_varint(&m_data, m_end);
             return *this;
         }
@@ -524,7 +528,7 @@ private:
 
         const_svarint_iterator& operator++() {
             // Ignore the result, we call decode_varint() just for the
-            // side-effect of updating data.
+            // side-effect of updating m_data.
             decode_varint(&this->m_data, this->m_end);
             return *this;
         }
@@ -730,20 +734,21 @@ pbf_reader::operator bool() const noexcept {
 }
 
 bool pbf_reader::next() {
-    if (m_data < m_end) {
-        auto value = get_varint<uint32_t>();
-        m_tag = value >> 3;
+    if (m_data == m_end) {
+        return false;
+    }
 
-        // tags 0 and 19000 to 19999 are not allowed as per
-        // https://developers.google.com/protocol-buffers/docs/proto
-        pbf_assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999 && m_tag <= ((1 << 29) - 1))) && "tag out of range");
+    auto value = get_varint<uint32_t>();
+    m_tag = value >> 3;
 
-        m_wire_type = pbf_wire_type(value & 0x07);
+    // tags 0 and 19000 to 19999 are not allowed as per
+    // https://developers.google.com/protocol-buffers/docs/proto
+    pbf_assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999 && m_tag <= ((1 << 29) - 1))) && "tag out of range");
+
+    m_wire_type = pbf_wire_type(value & 0x07);
 // XXX do we want this check? or should it throw an exception?
 //        pbf_assert((m_wire_type <=2 || m_wire_type == 5) && "illegal wire type");
-        return true;
-    }
-    return false;
+    return true;
 }
 
 bool pbf_reader::next(pbf_tag_type requested_tag) {
@@ -821,8 +826,8 @@ T pbf_reader::get_svarint() {
 
 template <typename T>
 T pbf_reader::get_fixed() {
-    skip_bytes(sizeof(T));
     T result;
+    skip_bytes(sizeof(T));
     memcpy(&result, m_data - sizeof(T), sizeof(T));
     return result;
 }
