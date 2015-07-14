@@ -13,10 +13,10 @@ install:
   - SET PATH=C:\Program Files (x86)\MSBuild\14.0\bin\;%PATH%
   - git clone --quiet --depth 1 https://chromium.googlesource.com/external/gyp.git deps/gyp
   # note windows requires --generator-output to be absolute
-  - python deps/gyp/gyp_main.py pbf.gyp --depth=. -f msvs -G msvs_version=2015
+  - python deps/gyp/gyp_main.py protozero.gyp --depth=. -f msvs -G msvs_version=2015
   - set MSBUILD_PLATFORM=%platform%
   - if "%MSBUILD_PLATFORM%" == "x86" set MSBUILD_PLATFORM=Win32
-  - msbuild pbf.sln /nologo /p:Configuration=%configuration%;Platform=%MSBUILD_PLATFORM%
+  - msbuild protozero.sln /nologo /p:Configuration=%configuration%;Platform=%MSBUILD_PLATFORM%
   - .\%configuration%\tests.exe
 
 build: off
