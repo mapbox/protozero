@@ -55,13 +55,13 @@ all: ./test/reader_tests test/writer_tests
 	protoc --cpp_out=. $^
 
 ./test/t/%/testcase.pb.o: ./test/t/%/testcase.pb.cc
-	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -I. -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
 
 ./test/t/%/writer_test_cases.o: ./test/t/%/writer_test_cases.cpp
-	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -I. -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/writer_tests.o: test/writer_tests.cpp $(HPP_FILES) $(PROTO_FILES_CC)
-	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -I. -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/writer_tests: test/writer_tests.o $(PROTO_FILES_O) $(WRITER_TEST_CASES_O)
 	$(CXX) $(LDFLAGS) $(LDFLAGS_PROTOBUF) $^ -lprotobuf-lite -pthread -o $@
@@ -95,6 +95,7 @@ clean:
 	rm -f ./test/t/*/testcase.pb.cc
 	rm -f ./test/t/*/testcase.pb.h
 	rm -f ./test/t/*/testcase.pb.o
+	rm -f ./test/t/*/testcase.pb.gc*
 	rm -f ./test/t/*/testcase.o
 	rm -f ./test/t/*/testcase
 	rm -f ./test/t/*/reader_test_cases.o
