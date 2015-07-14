@@ -40,7 +40,7 @@ TEST_CASE("basic") {
 
         protozero::pbf_reader item(buffer, 1);
         REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.skip(), protozero::unknown_pbf_field_type_exception);
+        REQUIRE_THROWS_AS(item.skip(), protozero::unknown_pbf_wire_type_exception);
     }
 
 }

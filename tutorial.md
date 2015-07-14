@@ -227,9 +227,9 @@ This will be thrown whenever any of the functions "runs out of input data".
 It means you either have an incomplete message in your input or some other
 data corruption has taken place.
 
-#### `unknown_pbf_field_type_exception`
+#### `unknown_pbf_wire_type_exception`
 
-This will be thrown if an unsupported field type is encountered. Either your
+This will be thrown if an unsupported wire type is encountered. Either your
 input data is corrupted or it was written with an unsupported version of a
 Protocol Buffers implementation.
 

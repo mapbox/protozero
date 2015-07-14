@@ -14,7 +14,7 @@ TEST_CASE("exceptions messages") {
     }
 
     SECTION("unknown pbf field type") {
-        protozero::unknown_pbf_field_type_exception e;
+        protozero::unknown_pbf_wire_type_exception e;
         REQUIRE(std::string(e.what()) == std::string("unknown pbf field type exception"));
     }
 

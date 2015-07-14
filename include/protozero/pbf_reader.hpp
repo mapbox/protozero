@@ -798,7 +798,7 @@ void pbf_reader::skip() {
             skip_bytes(4);
             break;
         default:
-            throw unknown_pbf_field_type_exception();
+            throw unknown_pbf_wire_type_exception();
     }
 }
 

@@ -121,7 +121,7 @@ TEST_CASE("skip") {
         protozero::pbf_reader item(buffer.data(), buffer.size());
 
         REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.skip(), protozero::unknown_pbf_field_type_exception);
+        REQUIRE_THROWS_AS(item.skip(), protozero::unknown_pbf_wire_type_exception);
     }
 
     SECTION("check that skip() throws on short buffer") {

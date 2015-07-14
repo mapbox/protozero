@@ -45,13 +45,13 @@ struct varint_too_long_exception : exception {
 };
 
 /**
- * This exception is thrown when the type of a pdf field is unknown.
+ * This exception is thrown when the wire type of a pdf field is unknown.
  * This should never happen unless the data is corrupted.
  *
  * If thrown from a pbf_reader function, the pbf_reader object is in an unknown
  * state and you cannot recover from that.
  */
-struct unknown_pbf_field_type_exception : exception {
+struct unknown_pbf_wire_type_exception : exception {
     /// Returns the explanatory string.
     const char *what() const noexcept { return "unknown pbf field type exception"; }
 };
