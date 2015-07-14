@@ -17,7 +17,7 @@ install:
   - set MSBUILD_PLATFORM=%platform%
   - if "%MSBUILD_PLATFORM%" == "x86" set MSBUILD_PLATFORM=Win32
   - msbuild protozero.sln /nologo /p:Configuration=%configuration%;Platform=%MSBUILD_PLATFORM%
-  - .\%configuration%\tests.exe
+  - .\%configuration%\reader_tests.exe
 
 build: off
 test: off
