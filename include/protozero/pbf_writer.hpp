@@ -40,9 +40,8 @@ namespace protozero {
 /**
  * The pbf_writer is used to write PBF formatted messages into a buffer.
  *
- * All methods in this class can throw an exception if the std::string used
- * as a buffer throws an exception. This can only happen if we are out of
- * memory and the string wants to resize.
+ * Almost all methods in this class can throw an std::bad_alloc exception if
+ * the std::string used as a buffer wants to resize.
  */
 class pbf_writer {
 
@@ -52,15 +51,15 @@ class pbf_writer {
         write_varint(std::back_inserter(m_data), value);
     }
 
-    inline void add_tagged_varint(pbf_tag_type tag, uint64_t value) {
-        add_field(tag, pbf_wire_type::varint);
-        add_varint(value);
-    }
-
     inline void add_field(pbf_tag_type tag, pbf_wire_type type) {
         pbf_assert(((tag > 0 && tag < 19000) || (tag > 19999 && tag <= ((1 << 29) - 1))) && "tag out of range");
         uint32_t b = (tag << 3) | uint32_t(type);
         add_varint(b);
+    }
+
+    inline void add_tagged_varint(pbf_tag_type tag, uint64_t value) {
+        add_field(tag, pbf_wire_type::varint);
+        add_varint(value);
     }
 
     template <typename T>
@@ -95,7 +94,7 @@ public:
      * Create a writer using the given string as a data store. The pbf_writer
      * stores a reference to that string and adds all data to it.
      */
-    inline pbf_writer(std::string& data) :
+    inline explicit pbf_writer(std::string& data) noexcept :
         m_data(data) {
     }
 
@@ -353,144 +352,168 @@ public:
     /**
      * Add "repeated packed fixed32" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to uint32_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_fixed32(pbf_tag_type tag, It begin, It end) {
-        add_packed_fixed<uint32_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
+    template <typename InputIterator>
+    inline void add_packed_fixed32(pbf_tag_type tag, InputIterator begin, InputIterator end) {
+        add_packed_fixed<uint32_t>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
      * Add "repeated packed fixed64" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to uint64_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_fixed64(pbf_tag_type tag, It begin, It end) {
-        add_packed_fixed<uint64_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
+    template <typename InputIterator>
+    inline void add_packed_fixed64(pbf_tag_type tag, InputIterator begin, InputIterator end) {
+        add_packed_fixed<uint64_t>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
      * Add "repeated packed sfixed32" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to int32_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_sfixed32(pbf_tag_type tag, It begin, It end) {
-        add_packed_fixed<int32_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
+    template <typename InputIterator>
+    inline void add_packed_sfixed32(pbf_tag_type tag, InputIterator begin, InputIterator end) {
+        add_packed_fixed<int32_t>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
      * Add "repeated packed sfixed64" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to int64_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_sfixed64(pbf_tag_type tag, It begin, It end) {
-        add_packed_fixed<int64_t>(tag, begin, end, typename std::iterator_traits<It>::iterator_category());
+    template <typename InputIterator>
+    inline void add_packed_sfixed64(pbf_tag_type tag, InputIterator begin, InputIterator end) {
+        add_packed_fixed<int64_t>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
      * Add "repeated packed bool" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to bool.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_bool(pbf_tag_type tag, It begin, It end) {
+    template <typename InputIterator>
+    inline void add_packed_bool(pbf_tag_type tag, InputIterator begin, InputIterator end) {
         add_packed_varint(tag, begin, end);
     }
 
     /**
      * Add "repeated packed enum" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to int32_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_enum(pbf_tag_type tag, It begin, It end) {
+    template <typename InputIterator>
+    inline void add_packed_enum(pbf_tag_type tag, InputIterator begin, InputIterator end) {
         add_packed_varint(tag, begin, end);
     }
 
     /**
      * Add "repeated packed int32" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to int32_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_int32(pbf_tag_type tag, It begin, It end) {
+    template <typename InputIterator>
+    inline void add_packed_int32(pbf_tag_type tag, InputIterator begin, InputIterator end) {
         add_packed_varint(tag, begin, end);
     }
 
     /**
      * Add "repeated packed uint32" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to uint32_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_uint32(pbf_tag_type tag, It begin, It end) {
+    template <typename InputIterator>
+    inline void add_packed_uint32(pbf_tag_type tag, InputIterator begin, InputIterator end) {
         add_packed_varint(tag, begin, end);
     }
 
     /**
      * Add "repeated packed sint32" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to int32_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_sint32(pbf_tag_type tag, It begin, It end) {
+    template <typename InputIterator>
+    inline void add_packed_sint32(pbf_tag_type tag, InputIterator begin, InputIterator end) {
         add_packed_svarint(tag, begin, end);
     }
 
     /**
      * Add "repeated packed int64" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to int64_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_int64(pbf_tag_type tag, It begin, It end) {
+    template <typename InputIterator>
+    inline void add_packed_int64(pbf_tag_type tag, InputIterator begin, InputIterator end) {
         add_packed_varint(tag, begin, end);
     }
 
     /**
      * Add "repeated packed uint64" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to uint64_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_uint64(pbf_tag_type tag, It begin, It end) {
+    template <typename InputIterator>
+    inline void add_packed_uint64(pbf_tag_type tag, InputIterator begin, InputIterator end) {
         add_packed_varint(tag, begin, end);
     }
 
     /**
      * Add "repeated packed sint64" field to data.
      *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to int64_t.
      * @param tag Tag (field number) of the field
      * @param begin Iterator pointing to the beginning of the data
      * @param end Iterator pointing one past the end of data
      */
-    template <typename It>
-    inline void add_packed_sint64(pbf_tag_type tag, It begin, It end) {
+    template <typename InputIterator>
+    inline void add_packed_sint64(pbf_tag_type tag, InputIterator begin, InputIterator end) {
         add_packed_svarint(tag, begin, end);
     }
 
