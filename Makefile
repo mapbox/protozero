@@ -6,12 +6,12 @@ LDFLAGS := $(LDFLAGS)
 WARNING_FLAGS := -Wall -Wextra -pedantic -Wsign-compare -Wsign-conversion -Wunused-parameter
 
 ifneq ($(findstring clang,$(CXX)),)
-    WARNING_FLAGS += -Wno-reserved-id-macro -Weverything -Wno-weak-vtables -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-exit-time-destructors -Wno-switch-enum
+    WARNING_FLAGS += -Wno-reserved-id-macro -Weverything -Wno-weak-vtables -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-exit-time-destructors -Wno-switch-enum -Wno-padded
 endif
 
 COMMON_FLAGS := -fvisibility-inlines-hidden -std=c++11 $(WARNING_FLAGS)
 
-RELEASE_FLAGS := -O3 -DNDEBUG -march=native -Wpadded
+RELEASE_FLAGS := -O3 -DNDEBUG -march=native
 DEBUG_FLAGS := -O0 -g -fno-inline-functions
 
 OS:=$(shell uname -s)
@@ -58,7 +58,7 @@ all: ./test/reader_tests test/writer_tests
 	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
 
 ./test/t/%/writer_test_cases.o: ./test/t/%/writer_test_cases.cpp
-	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/writer_tests.o: test/writer_tests.cpp $(HPP_FILES) $(PROTO_FILES_CC)
 	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
