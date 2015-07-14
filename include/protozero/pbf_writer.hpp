@@ -48,8 +48,8 @@ class pbf_writer {
 
     std::string& m_data;
 
-    inline int add_varint(uint64_t value) {
-        return write_varint(std::back_inserter(m_data), value);
+    inline void add_varint(uint64_t value) {
+        write_varint(std::back_inserter(m_data), value);
     }
 
     inline void add_tagged_varint(pbf_tag_type tag, uint64_t value) {
