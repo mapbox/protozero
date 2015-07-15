@@ -169,12 +169,6 @@ public:
         }
     }
 
-    inline void append(const char* value, size_t size) {
-        pbf_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
-        pbf_assert(m_data);
-        m_data->append(value, size);
-    }
-
     ///@{
     /**
      * @name Scalar field writer functions
@@ -335,9 +329,11 @@ public:
      * @param size Number of bytes to be written
      */
     inline void add_bytes(pbf_tag_type tag, const char* value, size_t size) {
+        pbf_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
+        pbf_assert(m_data);
         assert(size <= std::numeric_limits<pbf_length_type>::max());
         add_length_varint(tag, pbf_length_type(size));
-        append(value, size);
+        m_data->append(value, size);
     }
 
     /**
