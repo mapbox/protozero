@@ -360,7 +360,7 @@ public:
      */
     template <typename InputIterator>
     inline void add_packed_fixed32(pbf_tag_type tag, InputIterator begin, InputIterator end) {
-        add_packed_fixed<uint32_t>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
+        add_packed_fixed<uint32_t, InputIterator>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
@@ -374,7 +374,7 @@ public:
      */
     template <typename InputIterator>
     inline void add_packed_fixed64(pbf_tag_type tag, InputIterator begin, InputIterator end) {
-        add_packed_fixed<uint64_t>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
+        add_packed_fixed<uint64_t, InputIterator>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
@@ -388,7 +388,7 @@ public:
      */
     template <typename InputIterator>
     inline void add_packed_sfixed32(pbf_tag_type tag, InputIterator begin, InputIterator end) {
-        add_packed_fixed<int32_t>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
+        add_packed_fixed<int32_t, InputIterator>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
@@ -402,7 +402,7 @@ public:
      */
     template <typename InputIterator>
     inline void add_packed_sfixed64(pbf_tag_type tag, InputIterator begin, InputIterator end) {
-        add_packed_fixed<int64_t>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
+        add_packed_fixed<int64_t, InputIterator>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
