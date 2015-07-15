@@ -76,21 +76,3 @@ TEST_CASE("write string field") {
 
 }
 
-TEST_CASE("write string field with subwriter") {
-
-    std::string buffer_test;
-    protozero::pbf_writer pbf_test(buffer_test);
-
-    SECTION("string") {
-
-        {
-            protozero::pbf_writer pbf_s(pbf_test, 1);
-            pbf_s.append_sub("foo");
-            pbf_s.append_sub("bar");
-        }
-
-        REQUIRE(buffer_test == load_data("string/data-string"));
-    }
-
-}
-

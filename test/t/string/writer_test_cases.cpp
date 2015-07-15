@@ -36,25 +36,3 @@ TEST_CASE("write string field and check with libprotobuf") {
 
 }
 
-TEST_CASE("write string field with subwriter and check with libprotobuf") {
-
-    std::string buffer;
-    protozero::pbf_writer pw(buffer);
-
-    TestString::Test msg;
-
-    SECTION("string") {
-
-        {
-            protozero::pbf_writer sw(pw, 1);
-            sw.append_sub("foo");
-            sw.append_sub("bar");
-        }
-
-        msg.ParseFromString(buffer);
-
-        REQUIRE(msg.s() == "foobar");
-    }
-
-}
-

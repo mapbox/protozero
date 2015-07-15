@@ -340,16 +340,6 @@ TEST_CASE("write complex with subwriter") {
         pbf_submessage.add_string(1, "foobar");
     }
 
-    SECTION("string in message in message") {
-        protozero::pbf_writer pbf_submessage(pbf_test, 5);
-        {
-            protozero::pbf_writer pbf_submessage_s(pbf_submessage, 1);
-
-            pbf_submessage_s.append_sub("foo");
-            pbf_submessage_s.append_sub("bar");
-        }
-    }
-
     check_message(buffer_test);
 }
 

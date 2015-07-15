@@ -22,7 +22,7 @@ TEST_CASE("write nested message fields and check with libprotobuf") {
         pbf_test.add_message(1, buffer_sub);
     }
 
-    SECTION("string with subwriter") {
+    SECTION("with subwriter") {
         protozero::pbf_writer pbf_sub(pbf_test, 1);
         {
             protozero::pbf_writer pbf_subsub(pbf_sub, 1);
