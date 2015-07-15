@@ -3,7 +3,7 @@
 
 #include "test/t/nested/testcase.pb.h"
 
-TEST_CASE("write nested message fields") {
+TEST_CASE("write nested message fields and check with libprotobuf") {
 
     std::string buffer_test;
     protozero::pbf_writer pbf_test(buffer_test);

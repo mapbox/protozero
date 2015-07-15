@@ -5,7 +5,7 @@
 
 #include "test/t/bool/testcase.pb.h"
 
-TEST_CASE("write bool field") {
+TEST_CASE("write bool field and check with libprotobuf") {
 
     std::string buffer;
     protozero::pbf_writer pw(buffer);

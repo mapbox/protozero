@@ -3,7 +3,7 @@
 
 #include "test/t/fixed32/testcase.pb.h"
 
-TEST_CASE("write fixed32 field") {
+TEST_CASE("write fixed32 field and check with libprotobuf") {
 
     std::string buffer;
     protozero::pbf_writer pw(buffer);

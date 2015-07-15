@@ -3,7 +3,7 @@
 
 #include "test/t/double/testcase.pb.h"
 
-TEST_CASE("write double field") {
+TEST_CASE("write double field and check with libprotobuf") {
 
     std::string buffer;
     protozero::pbf_writer pw(buffer);

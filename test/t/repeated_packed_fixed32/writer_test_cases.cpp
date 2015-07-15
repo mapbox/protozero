@@ -3,7 +3,7 @@
 
 #include "test/t/repeated_packed_fixed32/testcase.pb.h"
 
-TEST_CASE("write repeated packed fixed32 field") {
+TEST_CASE("write repeated packed fixed32 field and check with libprotobuf") {
 
     std::string buffer;
     protozero::pbf_writer pw(buffer);
@@ -44,7 +44,7 @@ TEST_CASE("write repeated packed fixed32 field") {
 
 }
 
-TEST_CASE("write from different types of iterators") {
+TEST_CASE("write from different types of iterators and check with libprotobuf") {
 
     std::string buffer;
     protozero::pbf_writer pw(buffer);

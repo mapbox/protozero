@@ -3,7 +3,7 @@
 
 #include "test/t/enum/testcase.pb.h"
 
-TEST_CASE("write enum field") {
+TEST_CASE("write enum field and check with libprotobuf") {
 
     std::string buffer;
     protozero::pbf_writer pw(buffer);

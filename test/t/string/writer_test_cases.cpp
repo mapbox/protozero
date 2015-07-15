@@ -3,7 +3,7 @@
 
 #include "test/t/string/testcase.pb.h"
 
-TEST_CASE("write string field") {
+TEST_CASE("write string field and check with libprotobuf") {
 
     std::string buffer;
     protozero::pbf_writer pw(buffer);
@@ -36,7 +36,7 @@ TEST_CASE("write string field") {
 
 }
 
-TEST_CASE("write string field with subwriter") {
+TEST_CASE("write string field with subwriter and check with libprotobuf") {
 
     std::string buffer;
     protozero::pbf_writer pw(buffer);

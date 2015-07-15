@@ -3,7 +3,7 @@
 
 #include "test/t/message/testcase.pb.h"
 
-TEST_CASE("write message field") {
+TEST_CASE("write message field and check with libprotobuf") {
 
     std::string buffer_test;
     protozero::pbf_writer pbf_test(buffer_test);

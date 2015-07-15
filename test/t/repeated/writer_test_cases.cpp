@@ -3,7 +3,7 @@
 
 #include "test/t/repeated/testcase.pb.h"
 
-TEST_CASE("write repeated fields") {
+TEST_CASE("write repeated fields and check with libprotobuf") {
 
     std::string buffer;
     protozero::pbf_writer pw(buffer);
