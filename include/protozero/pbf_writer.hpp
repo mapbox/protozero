@@ -607,6 +607,36 @@ public:
             typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
+    /**
+     * Add "repeated packed float" field to data.
+     *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to float.
+     * @param tag Tag (field number) of the field
+     * @param first Iterator pointing to the beginning of the data
+     * @param last Iterator pointing one past the end of data
+     */
+    template <typename InputIterator>
+    inline void add_packed_float(pbf_tag_type tag, InputIterator first, InputIterator last) {
+        add_packed_fixed<float, InputIterator>(tag, first, last,
+            typename std::iterator_traits<InputIterator>::iterator_category());
+    }
+
+    /**
+     * Add "repeated packed double" field to data.
+     *
+     * @tparam InputIterator An type satisfying the InputIterator concept.
+     *         Dereferencing the iterator must yield a type assignable to double.
+     * @param tag Tag (field number) of the field
+     * @param first Iterator pointing to the beginning of the data
+     * @param last Iterator pointing one past the end of data
+     */
+    template <typename InputIterator>
+    inline void add_packed_double(pbf_tag_type tag, InputIterator first, InputIterator last) {
+        add_packed_fixed<double, InputIterator>(tag, first, last,
+            typename std::iterator_traits<InputIterator>::iterator_category());
+    }
+
     ///@}
 
 }; // class pbf_writer

@@ -704,6 +704,28 @@ public:
      */
     inline std::pair<const int64_t*, const int64_t*> get_packed_sfixed64();
 
+    /**
+     * Consume current "repeated packed float" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed float".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const float*, const float*> get_packed_float();
+
+    /**
+     * Consume current "repeated packed double" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed double".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const double*, const double*> get_packed_double();
+
     ///@}
 
 }; // class pbf_reader
@@ -919,6 +941,14 @@ std::pair<const int32_t*, const int32_t*> pbf_reader::get_packed_sfixed32() {
 
 std::pair<const int64_t*, const int64_t*> pbf_reader::get_packed_sfixed64() {
     return packed_fixed<int64_t>();
+}
+
+std::pair<const float*, const float*> pbf_reader::get_packed_float() {
+    return packed_fixed<float>();
+}
+
+std::pair<const double*, const double*> pbf_reader::get_packed_double() {
+    return packed_fixed<double>();
 }
 
 std::pair<pbf_reader::const_bool_iterator, pbf_reader::const_bool_iterator> pbf_reader::get_packed_bool() {

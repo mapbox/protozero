@@ -3,7 +3,7 @@ CXX := $(CXX)
 CXXFLAGS := $(CXXFLAGS)
 LDFLAGS := $(LDFLAGS)
 
-WARNING_FLAGS := -Wall -Wextra -pedantic -Wsign-compare -Wsign-conversion -Wunused-parameter
+WARNING_FLAGS := -Wall -Wextra -pedantic -Wsign-compare -Wsign-conversion -Wunused-parameter -Wno-float-equal
 
 ifneq ($(findstring clang,$(CXX)),)
     WARNING_FLAGS += -Wno-reserved-id-macro -Weverything -Wno-weak-vtables -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-exit-time-destructors -Wno-switch-enum -Wno-padded
