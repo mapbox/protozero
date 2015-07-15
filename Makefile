@@ -57,7 +57,7 @@ all: ./test/reader_tests test/writer_tests
 ./test/t/%/testcase.pb.o: ./test/t/%/testcase.pb.cc
 	$(CXX) -c -I. -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
 
-./test/t/%/writer_test_cases.o: ./test/t/%/writer_test_cases.cpp
+./test/t/%/writer_test_cases.o: ./test/t/%/writer_test_cases.cpp $(HPP_FILES)
 	$(CXX) -c -I. -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/writer_tests.o: test/writer_tests.cpp $(HPP_FILES) $(PROTO_FILES_CC)
