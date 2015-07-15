@@ -552,69 +552,25 @@ public:
     /// Forward iterator for iterating over int32 (varint) values.
     typedef const_varint_iterator< int32_t> const_int32_iterator;
 
-    /// Forward iterator for iterating over uint32 (varint) values.
-    typedef const_varint_iterator<uint32_t> const_uint32_iterator;
-
     /// Forward iterator for iterating over sint32 (varint) values.
     typedef const_svarint_iterator<int32_t> const_sint32_iterator;
+
+    /// Forward iterator for iterating over uint32 (varint) values.
+    typedef const_varint_iterator<uint32_t> const_uint32_iterator;
 
     /// Forward iterator for iterating over int64 (varint) values.
     typedef const_varint_iterator< int64_t> const_int64_iterator;
 
-    /// Forward iterator for iterating over uint64 (varint) values.
-    typedef const_varint_iterator<uint64_t> const_uint64_iterator;
-
     /// Forward iterator for iterating over sint64 (varint) values.
     typedef const_svarint_iterator<int64_t> const_sint64_iterator;
+
+    /// Forward iterator for iterating over uint64 (varint) values.
+    typedef const_varint_iterator<uint64_t> const_uint64_iterator;
 
     ///@{
     /**
      * @name Repeated packed field accessor functions
      */
-
-    /**
-     * Consume current "repeated packed fixed32" field.
-     *
-     * @returns a pair of iterators to the beginning and one past the end of
-     *          the data.
-     * @pre There must be a current field (ie. next() must have returned `true`).
-     * @pre The current field must be of type "repeated packed fixed32".
-     * @post The current field was consumed and there is no current field now.
-     */
-    inline std::pair<const uint32_t*, const uint32_t*> get_packed_fixed32();
-
-    /**
-     * Consume current "repeated packed fixed64" field.
-     *
-     * @returns a pair of iterators to the beginning and one past the end of
-     *          the data.
-     * @pre There must be a current field (ie. next() must have returned `true`).
-     * @pre The current field must be of type "repeated packed fixed64".
-     * @post The current field was consumed and there is no current field now.
-     */
-    inline std::pair<const uint64_t*, const uint64_t*> get_packed_fixed64();
-
-    /**
-     * Consume current "repeated packed sfixed32" field.
-     *
-     * @returns a pair of iterators to the beginning and one past the end of
-     *          the data.
-     * @pre There must be a current field (ie. next() must have returned `true`).
-     * @pre The current field must be of type "repeated packed sfixed32".
-     * @post The current field was consumed and there is no current field now.
-     */
-    inline std::pair<const int32_t*, const int32_t*> get_packed_sfixed32();
-
-    /**
-     * Consume current "repeated packed sfixed64" field.
-     *
-     * @returns a pair of iterators to the beginning and one past the end of
-     *          the data.
-     * @pre There must be a current field (ie. next() must have returned `true`).
-     * @pre The current field must be of type "repeated packed sfixed64".
-     * @post The current field was consumed and there is no current field now.
-     */
-    inline std::pair<const int64_t*, const int64_t*> get_packed_sfixed64();
 
     /**
      * Consume current "repeated packed bool" field.
@@ -650,17 +606,6 @@ public:
     inline std::pair<pbf_reader::const_int32_iterator, pbf_reader::const_int32_iterator> get_packed_int32();
 
     /**
-     * Consume current "repeated packed uint32" field.
-     *
-     * @returns a pair of iterators to the beginning and one past the end of
-     *          the data.
-     * @pre There must be a current field (ie. next() must have returned `true`).
-     * @pre The current field must be of type "repeated packed uint32".
-     * @post The current field was consumed and there is no current field now.
-     */
-    inline std::pair<pbf_reader::const_uint32_iterator, pbf_reader::const_uint32_iterator> get_packed_uint32();
-
-    /**
      * Consume current "repeated packed sint32" field.
      *
      * @returns a pair of iterators to the beginning and one past the end of
@@ -670,6 +615,17 @@ public:
      * @post The current field was consumed and there is no current field now.
      */
     inline std::pair<pbf_reader::const_sint32_iterator, pbf_reader::const_sint32_iterator> get_packed_sint32();
+
+    /**
+     * Consume current "repeated packed uint32" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed uint32".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<pbf_reader::const_uint32_iterator, pbf_reader::const_uint32_iterator> get_packed_uint32();
 
     /**
      * Consume current "repeated packed int64" field.
@@ -683,6 +639,17 @@ public:
     inline std::pair<pbf_reader::const_int64_iterator, pbf_reader::const_int64_iterator> get_packed_int64();
 
     /**
+     * Consume current "repeated packed sint64" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed sint64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<pbf_reader::const_sint64_iterator, pbf_reader::const_sint64_iterator> get_packed_sint64();
+
+    /**
      * Consume current "repeated packed uint64" field.
      *
      * @returns a pair of iterators to the beginning and one past the end of
@@ -694,15 +661,48 @@ public:
     inline std::pair<pbf_reader::const_uint64_iterator, pbf_reader::const_uint64_iterator> get_packed_uint64();
 
     /**
-     * Consume current "repeated packed sint64" field.
+     * Consume current "repeated packed fixed32" field.
      *
      * @returns a pair of iterators to the beginning and one past the end of
      *          the data.
      * @pre There must be a current field (ie. next() must have returned `true`).
-     * @pre The current field must be of type "repeated packed sint64".
+     * @pre The current field must be of type "repeated packed fixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf_reader::const_sint64_iterator, pbf_reader::const_sint64_iterator> get_packed_sint64();
+    inline std::pair<const uint32_t*, const uint32_t*> get_packed_fixed32();
+
+    /**
+     * Consume current "repeated packed sfixed32" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed sfixed32".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const int32_t*, const int32_t*> get_packed_sfixed32();
+
+    /**
+     * Consume current "repeated packed fixed64" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed fixed64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const uint64_t*, const uint64_t*> get_packed_fixed64();
+
+    /**
+     * Consume current "repeated packed sfixed64" field.
+     *
+     * @returns a pair of iterators to the beginning and one past the end of
+     *          the data.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "repeated packed sfixed64".
+     * @post The current field was consumed and there is no current field now.
+     */
+    inline std::pair<const int64_t*, const int64_t*> get_packed_sfixed64();
 
     ///@}
 
