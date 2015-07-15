@@ -331,25 +331,25 @@ static void check_message(const std::string& buffer) {
 }
 
 TEST_CASE("write complex with subwriter") {
-    std::string buffer;
-    protozero::pbf_writer pw(buffer);
-    pw.add_fixed32(1, 42L);
+    std::string buffer_test;
+    protozero::pbf_writer pbf_test(buffer_test);
+    pbf_test.add_fixed32(1, 42L);
 
     SECTION("message in message") {
-        protozero::pbf_subwriter sw_submessage(pw, 5);
-        pw.add_string(1, "foobar");
+        protozero::pbf_writer pbf_submessage(pbf_test, 5);
+        pbf_submessage.add_string(1, "foobar");
     }
 
     SECTION("string in message in message") {
-        protozero::pbf_subwriter sw_submessage(pw, 5);
+        protozero::pbf_writer pbf_submessage(pbf_test, 5);
         {
-            protozero::pbf_subwriter sw_submessage_s(pw, 1);
+            protozero::pbf_writer pbf_submessage_s(pbf_submessage, 1);
 
-            sw_submessage_s.append("foo");
-            sw_submessage_s.append("bar");
+            pbf_submessage_s.append_sub("foo");
+            pbf_submessage_s.append_sub("bar");
         }
     }
 
-    check_message(buffer);
+    check_message(buffer_test);
 }
 

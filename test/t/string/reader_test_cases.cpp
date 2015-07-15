@@ -56,40 +56,40 @@ TEST_CASE("read string field") {
 
 TEST_CASE("write string field") {
 
-    std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    std::string buffer_test;
+    protozero::pbf_writer pbf_test(buffer_test);
 
     SECTION("empty") {
-        pw.add_string(1, "");
-        REQUIRE(buffer == load_data("string/data-empty"));
+        pbf_test.add_string(1, "");
+        REQUIRE(buffer_test == load_data("string/data-empty"));
     }
 
     SECTION("one") {
-        pw.add_string(1, "x");
-        REQUIRE(buffer == load_data("string/data-one"));
+        pbf_test.add_string(1, "x");
+        REQUIRE(buffer_test == load_data("string/data-one"));
     }
 
     SECTION("string") {
-        pw.add_string(1, "foobar");
-        REQUIRE(buffer == load_data("string/data-string"));
+        pbf_test.add_string(1, "foobar");
+        REQUIRE(buffer_test == load_data("string/data-string"));
     }
 
 }
 
 TEST_CASE("write string field with subwriter") {
 
-    std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    std::string buffer_test;
+    protozero::pbf_writer pbf_test(buffer_test);
 
     SECTION("string") {
 
         {
-            protozero::pbf_subwriter sw(pw, 1);
-            sw.append("foo");
-            sw.append("bar");
+            protozero::pbf_writer pbf_s(pbf_test, 1);
+            pbf_s.append_sub("foo");
+            pbf_s.append_sub("bar");
         }
 
-        REQUIRE(buffer == load_data("string/data-string"));
+        REQUIRE(buffer_test == load_data("string/data-string"));
     }
 
 }

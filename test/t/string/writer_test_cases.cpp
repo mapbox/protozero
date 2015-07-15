@@ -46,9 +46,9 @@ TEST_CASE("write string field with subwriter") {
     SECTION("string") {
 
         {
-            protozero::pbf_subwriter sw(pw, 1);
-            sw.append("foo");
-            sw.append("bar");
+            protozero::pbf_writer sw(pw, 1);
+            sw.append_sub("foo");
+            sw.append_sub("bar");
         }
 
         msg.ParseFromString(buffer);

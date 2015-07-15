@@ -5,26 +5,24 @@
 
 TEST_CASE("write message field") {
 
-    std::string buffer;
-    protozero::pbf_writer pw(buffer);
-
-    TestMessage::Test msg;
+    std::string buffer_test;
+    protozero::pbf_writer pbf_test(buffer_test);
 
     SECTION("string") {
-        std::string sbuffer;
-        protozero::pbf_writer pws(sbuffer);
-        pws.add_string(1, "foobar");
+        std::string buffer_submessage;
+        protozero::pbf_writer pbf_submessage(buffer_submessage);
+        pbf_submessage.add_string(1, "foobar");
 
-        pw.add_message(1, sbuffer);
+        pbf_test.add_message(1, buffer_submessage);
     }
 
     SECTION("string with subwriter") {
-        protozero::pbf_subwriter sw(pw, 1);
-        pw.add_string(1, "foobar");
-
+        protozero::pbf_writer pbf_submessage(pbf_test, 1);
+        pbf_submessage.add_string(1, "foobar");
     }
 
-    msg.ParseFromString(buffer);
+    TestMessage::Test msg;
+    msg.ParseFromString(buffer_test);
     REQUIRE(msg.submessage().s() == "foobar");
 
 }

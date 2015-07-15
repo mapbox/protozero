@@ -46,6 +46,8 @@ namespace protozero {
 class pbf_writer {
 
     std::string* m_data;
+    pbf_writer* m_writer;
+    size_t m_pos = 0;
 
     inline void add_varint(uint64_t value) {
         pbf_assert(m_data);
@@ -98,15 +100,32 @@ public:
      * stores a reference to that string and adds all data to it.
      */
     inline explicit pbf_writer(std::string& data) noexcept :
-        m_data(&data) {
+        m_data(&data),
+        m_writer(nullptr),
+        m_pos(0) {
     }
 
     /**
      * Create a writer without a data store. In this form the writer can not
      * be used!
      */
-    pbf_writer() :
-        m_data(nullptr) {
+    inline pbf_writer() noexcept :
+        m_data(nullptr),
+        m_writer(nullptr),
+        m_pos(0) {
+    }
+
+    /**
+     * Construct a pbf_writer for a submessage from the pbf_writer of the
+     * parent message.
+     *
+     * @param writer The pbf_writer
+     * @param tag Tag (field number) of the field that will be written
+     */
+    inline pbf_writer(pbf_writer& parent, pbf_tag_type tag) :
+        m_data(parent.m_data),
+        m_writer(&parent),
+        m_pos(parent.open_sub(tag)) {
     }
 
     /// A pbf_writer object can be copied
@@ -121,7 +140,11 @@ public:
     /// A pbf_writer object can be moved
     inline pbf_writer& operator=(pbf_writer&&) noexcept = default;
 
-    inline ~pbf_writer() noexcept = default;
+    inline ~pbf_writer() {
+        if (m_writer) {
+            m_writer->close_sub(m_pos);
+        }
+    }
 
     inline void add_length_varint(pbf_tag_type tag, pbf_length_type value) {
         add_field(tag, pbf_wire_type::length_delimited);
@@ -548,10 +571,6 @@ public:
      * w.close_sub(pos);
      * @endcode
      *
-     * Instead of using open_sub(), close_sub(), and append_sub() it is
-     * recommended to use the pbf_subwriter class which encapsulates this
-     * functionality in a nice wrapper.
-     *
      * @param tag Tag (field number) of the field
      * @returns The position in the data.
      */
@@ -599,81 +618,6 @@ public:
     ///@}
 
 }; // class pbf_writer
-
-/**
- * Wrapper class for the pbf_writer open_sub(), close_sub(), and append_sub()
- * functions.
- *
- * Usage:
- * @code
- * std::string data;
- * pbf_writer w(data);
- * {
- *     pbf_subwriter s(w, 23);
- *     s.append("foo");
- *     s.append("bar");
- * } // field is automatically closed
- * @endcode
- */
-class pbf_subwriter {
-
-    pbf_writer& m_writer;
-    size_t m_pos = 0;
-
-public:
-
-    /**
-     * Construct a pbf_subwriter from a pbf_writer.
-     *
-     * @param writer The pbf_writer
-     * @param tag Tag (field number) of the field that will be written
-     */
-    inline pbf_subwriter(pbf_writer& writer, pbf_tag_type tag) :
-        m_writer(writer),
-        m_pos(writer.open_sub(tag)) {
-    }
-
-    /// A pbf_subwriter can not be copied.
-    pbf_subwriter(const pbf_subwriter&) = delete;
-
-    /// A pbf_subwriter can not be copied.
-    pbf_subwriter& operator=(const pbf_subwriter&) = delete;
-
-    /// A pbf_subwriter can not be moved.
-    pbf_subwriter(pbf_subwriter&&) = delete;
-
-    /// A pbf_subwriter can not be moved.
-    pbf_subwriter& operator=(pbf_subwriter&&) = delete;
-
-    /**
-     * Destroying a pbf_subwriter will update the pbf_writer it was constructed
-     * with. It is important the destructor is called before any other
-     * operations are done on the pbf_writer.
-     */
-    inline ~pbf_subwriter() {
-        m_writer.close_sub(m_pos);
-    }
-
-    /**
-     * Append data to the pbf message.
-     *
-     * @param value Value to be written
-     */
-    inline void append(const std::string& value) {
-        m_writer.append_sub(value);
-    }
-
-    /**
-     * Append data to the pbf message.
-     *
-     * @param value Pointer to value to be written
-     * @param size Number of bytes to be written
-     */
-    inline void append(const char* value, size_t size) {
-        m_writer.append_sub(value, size);
-    }
-
-}; // class pbf_subwriter
 
 template <typename T>
 class pbf_appender : public std::iterator<std::output_iterator_tag, T> {
@@ -729,7 +673,7 @@ inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::i
         return;
     }
 
-    pbf_subwriter sw(*this, tag);
+    pbf_writer sw(*this, tag);
 
     while (it != end) {
         add_fixed<T>(*it++);
@@ -742,7 +686,7 @@ inline void pbf_writer::add_packed_varint(pbf_tag_type tag, It it, It end) {
         return;
     }
 
-    pbf_subwriter sw(*this, tag);
+    pbf_writer sw(*this, tag);
 
     while (it != end) {
         add_varint(uint64_t(*it++));
@@ -755,7 +699,7 @@ inline void pbf_writer::add_packed_svarint(pbf_tag_type tag, It it, It end) {
         return;
     }
 
-    pbf_subwriter sw(*this, tag);
+    pbf_writer sw(*this, tag);
 
     while (it != end) {
         add_varint(encode_zigzag64(*it++));
