@@ -268,7 +268,7 @@ errors. We encourage you to compile with asserts enabled in your debug builds.
 
 Lets say you have a protocol description in a `.proto` file like this:
 
-    message Example1 {
+    message Example {
         required uint32 x = 1;
         optional string s = 2;
         repeated fixed64 r = 17;
@@ -277,16 +277,16 @@ Lets say you have a protocol description in a `.proto` file like this:
 To write messages created according to that description, you will have code
 that looks somewhat like this:
 
-    #include <pbf_writer.hpp>
+    #include <protozero/pbf_writer.hpp>
 
     std::string data;
-    osmium::util::pbf_writer pw(data);
+    osmium::util::pbf_writer pbf_example(data);
 
-    pw.add_uint32(1, 27);       // uint32_t x
-    pw.add_fixed64(17, 1);      // fixed64 r
-    pw.add_fixed64(17, 2);
-    pw.add_fixed64(17, 3);
-    pw.add_string(2, "foobar"); // string s
+    pbf_example.add_uint32(1, 27);       // uint32_t x
+    pbf_example.add_fixed64(17, 1);      // fixed64 r
+    pbf_example.add_fixed64(17, 2);
+    pbf_example.add_fixed64(17, 3);
+    pbf_example.add_string(2, "foobar"); // string s
 
 First you create an empty string which will be used as buffer to assemble the
 protobuf-formatted message. The `pbf_writer` object contains a reference to
@@ -303,7 +303,8 @@ on the pbf writer object.
 The first parameter of these methods is always the *tag* of the field (the
 field number) from the `.proto` file. The second parameter is the value you
 want to set. For the `bytes` and `string` types several versions of the add
-method are available taking a `std::string` or a `const char*` and a length.
+method are available taking a `const std::string&` or a `const char*` and a
+length.
 
 For `enum` types you have to use the numeric value as the symbolic names from
 the `.proto` file are not available.
@@ -321,6 +322,55 @@ Repeated packed fields can easily be set from a pair of iterators:
 
 
 ### Handling Sub-Messages
+
+Nested sub-messages can be handled by first creating the submessage and then
+adding to the parent message:
+
+    std::string buffer_sub;
+    osmium::util::pbf_writer pbf_sub(buffer_sub);
+
+    // add fields to sub-message
+    pbf_sub.add_...(...);
+    // ...
+
+    // sub-message is finished here
+
+    std::string buffer_parent;
+    osmium::util::pbf_writer pbf_parent(buffer_parent);
+    pbf_parent.add_message(buffer_sub);
+
+This is easy to do but it has the drawback of needing a separate `std::string`
+buffer. If this concerns you (and why would use use protozero and not the
+Google protobuf library if it doesn't) there is another way:
+
+    std::string buffer;
+    osmium::util::pbf_writer pbf_parent(buffer);
+
+    // optionally add fields to parent here
+    pbf_parent.add_...(...);
+
+    // open a new scope
+    {
+        // create new pbf_writer with parent and the tag (field number)
+        // as parameters
+        osmium::util::pbf_writer pbf_sub(pbf_parent, 1);
+
+        // add fields to sub here...
+        pbf_sub.add_...(...);
+
+    } // closing the scope will close the sub-message
+
+    // optionally add more fields to parent here
+    pbf_parent.add_...(...);
+
+This can be nested arbitrarily deep.
+
+Internally the sub-message writer re-uses the buffer from the parent. It
+reserves enough space in the buffer to later write the length of the submessage
+into it. It then adds the contents of the submessage to the buffer. When the
+`pbf_sub` writer is destructed the length of the submessage is calculated and
+written in the reserved space. If less space was needed for the length field
+than was available, the rest of the buffer is moved over a few bytes.
 
 
 ## Using the low-level varint and zigzag encoding and decoding functions

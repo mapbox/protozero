@@ -50,6 +50,7 @@ class pbf_writer {
     size_t m_pos = 0;
 
     inline void add_varint(uint64_t value) {
+        pbf_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
         pbf_assert(m_data);
         write_varint(std::back_inserter(*m_data), value);
     }
@@ -67,6 +68,7 @@ class pbf_writer {
 
     template <typename T>
     inline void add_fixed(T value) {
+        pbf_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
         pbf_assert(m_data);
         m_data->append(reinterpret_cast<const char*>(&value), sizeof(T));
     }
@@ -88,9 +90,24 @@ class pbf_writer {
     // and a varint needs 8 bit for every 7 bit.
     static const int reserve_bytes = sizeof(pbf_length_type) * 8 / 7 + 1;
 
-    inline void reserve_space() {
+    inline void open_submessage(pbf_tag_type tag) {
+        pbf_assert(m_pos == 0);
         pbf_assert(m_data);
+        add_field(tag, pbf_wire_type::length_delimited);
         m_data->append(size_t(reserve_bytes), '\0');
+        m_pos = m_data->size();
+    }
+
+    inline void close_submessage() {
+        pbf_assert(m_pos != 0);
+        pbf_assert(m_data);
+        auto length = pbf_length_type(m_data->size() - m_pos);
+
+        pbf_assert(m_data->size() >= m_pos - reserve_bytes);
+        auto n = write_varint(m_data->begin() + long(m_pos) - reserve_bytes, length);
+
+        m_data->erase(m_data->begin() + long(m_pos) - reserve_bytes + n, m_data->begin() + long(m_pos));
+        m_pos = 0;
     }
 
 public:
@@ -125,7 +142,8 @@ public:
     inline pbf_writer(pbf_writer& parent_writer, pbf_tag_type tag) :
         m_data(parent_writer.m_data),
         m_parent_writer(&parent_writer),
-        m_pos(parent_writer.open_sub(tag)) {
+        m_pos(0) {
+        m_parent_writer->open_submessage(tag);
     }
 
     /// A pbf_writer object can be copied
@@ -142,7 +160,7 @@ public:
 
     inline ~pbf_writer() {
         if (m_parent_writer) {
-            m_parent_writer->close_sub(m_pos);
+            m_parent_writer->close_submessage();
         }
     }
 
@@ -152,6 +170,7 @@ public:
     }
 
     inline void append(const char* value, size_t size) {
+        pbf_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
         pbf_assert(m_data);
         m_data->append(value, size);
     }
@@ -550,73 +569,6 @@ public:
 
     ///@}
 
-    ///@{
-    /**
-     * @name Functions for adding length-delimited fields.
-     */
-
-    /**
-     * Open a length-delimited field. Can be used together with close_sub()
-     * and append_sub() to fill a length-delimited field without knowing
-     * beforehand how large it is going to be.
-     *
-     * You can use these functions like this:
-     *
-     * @code
-     * std::string data;
-     * pbf_writer w(data);
-     * auto pos = w.open_sub(23);
-     * w.append_sub("foo");
-     * w.append_sub("bar");
-     * w.close_sub(pos);
-     * @endcode
-     *
-     * @param tag Tag (field number) of the field
-     * @returns The position in the data.
-     */
-    inline size_t open_sub(pbf_tag_type tag) {
-        pbf_assert(m_data);
-        add_field(tag, pbf_wire_type::length_delimited);
-        reserve_space();
-        return m_data->size();
-    }
-
-    /**
-     * Close length-delimited field previously opened with open_sub().
-     *
-     * @param pos The position in the data returned by open_sub().
-     */
-    inline void close_sub(size_t pos) {
-        pbf_assert(m_data);
-        auto length = pbf_length_type(m_data->size() - pos);
-
-        pbf_assert(m_data->size() >= pos - reserve_bytes);
-        auto n = write_varint(m_data->begin() + long(pos) - reserve_bytes, length);
-
-        m_data->erase(m_data->begin() + long(pos) - reserve_bytes + n, m_data->begin() + long(pos));
-    }
-
-    /**
-     * Append some data to a length-delimited field opened with open_sub().
-     *
-     * @param value The data to be added
-     */
-    void append_sub(const std::string& value) {
-        append(value.data(), value.size());
-    }
-
-    /**
-     * Append some data to a length-delimited field opened with open_sub().
-     *
-     * @param value Pointer to the data to be added
-     * @param size The length of the data
-     */
-    void append_sub(const char* value, size_t size) {
-        append(value, size);
-    }
-
-    ///@}
-
 }; // class pbf_writer
 
 template <typename T, typename It>
@@ -642,7 +594,7 @@ inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::i
     pbf_writer sw(*this, tag);
 
     while (it != end) {
-        add_fixed<T>(*it++);
+        sw.add_fixed<T>(*it++);
     }
 }
 
@@ -655,7 +607,7 @@ inline void pbf_writer::add_packed_varint(pbf_tag_type tag, It it, It end) {
     pbf_writer sw(*this, tag);
 
     while (it != end) {
-        add_varint(uint64_t(*it++));
+        sw.add_varint(uint64_t(*it++));
     }
 }
 
@@ -668,7 +620,7 @@ inline void pbf_writer::add_packed_svarint(pbf_tag_type tag, It it, It end) {
     pbf_writer sw(*this, tag);
 
     while (it != end) {
-        add_varint(encode_zigzag64(*it++));
+        sw.add_varint(encode_zigzag64(*it++));
     }
 }
 
