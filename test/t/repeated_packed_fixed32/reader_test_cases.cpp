@@ -92,13 +92,6 @@ TEST_CASE("write from different types of iterators") {
         pw.add_packed_fixed32(1, std::begin(data), std::end(data));
     }
 
-    SECTION("from uint16_t with std::copy") {
-        uint16_t data[] = { 1, 4, 9, 16, 25 };
-
-        protozero::pbf_appender<uint32_t> a(pw, 1, uint32_t(std::distance(std::begin(data), std::end(data))));
-        std::copy(std::begin(data), std::end(data), a);
-    }
-
     SECTION("from string") {
         std::string data = "1 4 9 16 25";
         std::stringstream sdata(data);

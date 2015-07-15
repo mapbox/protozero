@@ -619,40 +619,6 @@ public:
 
 }; // class pbf_writer
 
-template <typename T>
-class pbf_appender : public std::iterator<std::output_iterator_tag, T> {
-
-    pbf_writer* m_writer;
-
-public:
-
-    pbf_appender(pbf_writer& writer, pbf_tag_type tag, pbf_length_type size) :
-        m_writer(&writer) {
-        writer.add_length_varint(tag, size * sizeof(T));
-    }
-
-    pbf_appender& operator=(const T value) {
-        m_writer->append(reinterpret_cast<const char*>(&value), sizeof(T));
-        return *this;
-    }
-
-    pbf_appender& operator*() {
-        // do nothing
-        return *this;
-    }
-
-    pbf_appender& operator++() {
-        // do nothing
-        return *this;
-    }
-
-    pbf_appender& operator++(int) {
-        // do nothing
-        return *this;
-    }
-
-}; // class pbf_appender
-
 template <typename T, typename It>
 inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::forward_iterator_tag) {
     if (it == end) {
