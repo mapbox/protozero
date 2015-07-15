@@ -46,7 +46,7 @@ namespace protozero {
 class pbf_writer {
 
     std::string* m_data;
-    pbf_writer* m_writer;
+    pbf_writer* m_parent_writer;
     size_t m_pos = 0;
 
     inline void add_varint(uint64_t value) {
@@ -101,7 +101,7 @@ public:
      */
     inline explicit pbf_writer(std::string& data) noexcept :
         m_data(&data),
-        m_writer(nullptr),
+        m_parent_writer(nullptr),
         m_pos(0) {
     }
 
@@ -111,7 +111,7 @@ public:
      */
     inline pbf_writer() noexcept :
         m_data(nullptr),
-        m_writer(nullptr),
+        m_parent_writer(nullptr),
         m_pos(0) {
     }
 
@@ -119,13 +119,13 @@ public:
      * Construct a pbf_writer for a submessage from the pbf_writer of the
      * parent message.
      *
-     * @param writer The pbf_writer
+     * @param parent_writer The pbf_writer
      * @param tag Tag (field number) of the field that will be written
      */
-    inline pbf_writer(pbf_writer& parent, pbf_tag_type tag) :
-        m_data(parent.m_data),
-        m_writer(&parent),
-        m_pos(parent.open_sub(tag)) {
+    inline pbf_writer(pbf_writer& parent_writer, pbf_tag_type tag) :
+        m_data(parent_writer.m_data),
+        m_parent_writer(&parent_writer),
+        m_pos(parent_writer.open_sub(tag)) {
     }
 
     /// A pbf_writer object can be copied
@@ -141,8 +141,8 @@ public:
     inline pbf_writer& operator=(pbf_writer&&) noexcept = default;
 
     inline ~pbf_writer() {
-        if (m_writer) {
-            m_writer->close_sub(m_pos);
+        if (m_parent_writer) {
+            m_parent_writer->close_sub(m_pos);
         }
     }
 
