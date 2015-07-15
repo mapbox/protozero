@@ -11,25 +11,25 @@ Call `make test` to compile and run all tests.
 Each test case is in its own directory under the `t` directory. Each directory
 contains (some of) the following files:
 
-* `reader_test_cases.cpp`: The C++ source code that runs the read tests.
-* `writer_test_cases.cpp`: The C++ source code that runs the write tests.
+* `test_cases.cpp`: The C++ source code that runs the tests.
+* `writer_test_cases.cpp`: The C++ source code that runs extra writer tests.
 * `data-*.pbf`: PBF data files used by the tests.
 * `testcase.proto`: Protobuf file describing the format of the data files.
 * `testcase.cpp`: C++ file for creating the data files.
 
-### Read tests
+### Read/write tests
 
-The `Makefile` automatically finds all the `reader_test_cases.cpp` files and
-compiles them. Together with the `reader_tests.cpp` file they make up the
-`reader_tests` executable which can be called to execute all the read tests.
+The `Makefile` automatically finds all the `test_cases.cpp` files and
+compiles them. Together with the `tests.cpp` file they make up the
+`tests` executable which can be called to execute all the read tests.
 
-### Write tests
+### Extra writer tests
 
 The `Makefile` automatically finds all the `writer_test_cases.cpp` files and
 compiles them. Together with the `writer_tests.cpp` file they make up the
 `writer_tests` executable which can be called to execute all the write tests.
 
-The writer tests need the Google protobuf library to work.
+The extra writer tests need the Google protobuf library to work.
 
 
 ## Creating test data from scratch

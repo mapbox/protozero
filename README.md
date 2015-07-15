@@ -78,7 +78,7 @@ See `test/README.md` for more details about the test.
 You can also use `gyp` to build the reader tests:
 
     gyp --depth=. --build=Release
-    ./out/Release/reader_tests
+    ./out/Release/tests
 
 This will clobber the `Makefile` from the repository! Instead of `Release` you
 can use `Debug` for a debug build.
@@ -93,11 +93,11 @@ To get a coverage report compile and link with `--coverage`:
 If you are using `g++` use `gcov` to generate a report (results are in `*.gcov`
 files):
 
-    gcov -lp test/*_tests.o test/t/*/*_test_cases.o
+    gcov -lp test/*tests.o test/t/*/*test_cases.o
 
 If you are using `clang++` use `llvm-cov` instead:
 
-    llvm-cov gcov -lp test/*_tests.o test/t/*/*_test_cases.o
+    llvm-cov gcov -lp test/*tests.o test/t/*/*test_cases.o
 
 If you are using `g++` you can use `gcovr` to generate nice HTML output:
 

@@ -2,7 +2,7 @@ coverage
 *.gcov
 out
 protozero.Makefile
-reader_tests.target.mk
+tests.target.mk
 
 #Visual Studio files and folders
 Release

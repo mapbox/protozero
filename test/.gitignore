@@ -1,5 +1,5 @@
-reader_tests.o
-reader_tests
+tests.o
+tests
 writer_tests.o
 writer_tests
 *.gcda
