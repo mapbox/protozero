@@ -63,7 +63,7 @@ class pbf_writer {
     }
 
     template <typename T>
-    inline void add_data(T value) {
+    inline void add_fixed(T value) {
         m_data.append(reinterpret_cast<const char*>(&value), sizeof(T));
     }
 
@@ -134,7 +134,7 @@ public:
      */
     inline void add_bool(pbf_tag_type tag, bool value) {
         add_field(tag, pbf_wire_type::varint);
-        m_data.append(1, char(value));
+        add_fixed<char>(value);
     }
 
     /**
@@ -215,7 +215,7 @@ public:
      */
     inline void add_fixed32(pbf_tag_type tag, uint32_t value) {
         add_field(tag, pbf_wire_type::fixed32);
-        add_data<uint32_t>(value);
+        add_fixed<uint32_t>(value);
     }
 
     /**
@@ -226,7 +226,7 @@ public:
      */
     inline void add_sfixed32(pbf_tag_type tag, int32_t value) {
         add_field(tag, pbf_wire_type::fixed32);
-        add_data<int32_t>(value);
+        add_fixed<int32_t>(value);
     }
 
     /**
@@ -237,7 +237,7 @@ public:
      */
     inline void add_fixed64(pbf_tag_type tag, uint64_t value) {
         add_field(tag, pbf_wire_type::fixed64);
-        add_data<uint64_t>(value);
+        add_fixed<uint64_t>(value);
     }
 
     /**
@@ -248,7 +248,7 @@ public:
      */
     inline void add_sfixed64(pbf_tag_type tag, int64_t value) {
         add_field(tag, pbf_wire_type::fixed64);
-        add_data<int64_t>(value);
+        add_fixed<int64_t>(value);
     }
 
     /**
@@ -259,7 +259,7 @@ public:
      */
     inline void add_float(pbf_tag_type tag, float value) {
         add_field(tag, pbf_wire_type::fixed32);
-        add_data<float>(value);
+        add_fixed<float>(value);
     }
 
     /**
@@ -270,7 +270,7 @@ public:
      */
     inline void add_double(pbf_tag_type tag, double value) {
         add_field(tag, pbf_wire_type::fixed64);
-        add_data<double>(value);
+        add_fixed<double>(value);
     }
 
     /**
@@ -709,8 +709,7 @@ inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::f
     add_varint(sizeof(T) * pbf_length_type(std::distance(it, end)));
 
     while (it != end) {
-        const T v = *it++;
-        m_data.append(reinterpret_cast<const char*>(&v), sizeof(T));
+        add_fixed<T>(*it++);
     }
 }
 
@@ -723,8 +722,7 @@ inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::i
     pbf_subwriter sw(*this, tag);
 
     while (it != end) {
-        const T v = *it++;
-        m_data.append(reinterpret_cast<const char*>(&v), sizeof(T));
+        add_fixed<T>(*it++);
     }
 }
 
