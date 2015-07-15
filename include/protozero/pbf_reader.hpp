@@ -438,7 +438,9 @@ public:
      * @pre The current field must be of type "message".
      * @post The current field was consumed and there is no current field now.
      */
-    inline pbf_reader get_message();
+    inline pbf_reader get_message() {
+        return pbf_reader(get_data());
+    }
 
     ///@}
 
@@ -912,11 +914,6 @@ std::string pbf_reader::get_bytes() {
 
 std::string pbf_reader::get_string() {
     return get_bytes();
-}
-
-pbf_reader pbf_reader::get_message() {
-    auto d = get_data();
-    return pbf_reader(d.first, d.second);
 }
 
 template <typename T>
