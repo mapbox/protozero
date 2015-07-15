@@ -74,16 +74,56 @@ class pbf_writer {
     }
 
     template <typename T, typename It>
-    inline void add_packed_fixed(pbf_tag_type tag, It it, It end, std::input_iterator_tag);
+    inline void add_packed_fixed(pbf_tag_type tag, It first, It last, std::input_iterator_tag) {
+        if (first == last) {
+            return;
+        }
+
+        pbf_writer sw(*this, tag);
+
+        while (first != last) {
+            sw.add_fixed<T>(*first++);
+        }
+    }
 
     template <typename T, typename It>
-    inline void add_packed_fixed(pbf_tag_type tag, It it, It end, std::forward_iterator_tag);
+    inline void add_packed_fixed(pbf_tag_type tag, It first, It last, std::forward_iterator_tag) {
+        if (first == last) {
+            return;
+        }
+
+        add_length_varint(tag, sizeof(T) * pbf_length_type(std::distance(first, last)));
+
+        while (first != last) {
+            add_fixed<T>(*first++);
+        }
+    }
 
     template <typename It>
-    inline void add_packed_varint(pbf_tag_type tag, It begin, It end);
+    inline void add_packed_varint(pbf_tag_type tag, It first, It last) {
+        if (first == last) {
+            return;
+        }
+
+        pbf_writer sw(*this, tag);
+
+        while (first != last) {
+            sw.add_varint(uint64_t(*first++));
+        }
+    }
 
     template <typename It>
-    inline void add_packed_svarint(pbf_tag_type tag, It begin, It end);
+    inline void add_packed_svarint(pbf_tag_type tag, It first, It last) {
+        if (first == last) {
+            return;
+        }
+
+        pbf_writer sw(*this, tag);
+
+        while (first != last) {
+            sw.add_varint(encode_zigzag64(*first++));
+        }
+    }
 
     // The number of bytes to reserve for the varint holding the length of
     // a length-delimited field. The length has to fit into pbf_length_type,
@@ -406,7 +446,8 @@ public:
      */
     template <typename InputIterator>
     inline void add_packed_fixed32(pbf_tag_type tag, InputIterator begin, InputIterator end) {
-        add_packed_fixed<uint32_t, InputIterator>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
+        add_packed_fixed<uint32_t, InputIterator>(tag, begin, end,
+            typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
@@ -420,7 +461,8 @@ public:
      */
     template <typename InputIterator>
     inline void add_packed_fixed64(pbf_tag_type tag, InputIterator begin, InputIterator end) {
-        add_packed_fixed<uint64_t, InputIterator>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
+        add_packed_fixed<uint64_t, InputIterator>(tag, begin, end,
+            typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
@@ -434,7 +476,8 @@ public:
      */
     template <typename InputIterator>
     inline void add_packed_sfixed32(pbf_tag_type tag, InputIterator begin, InputIterator end) {
-        add_packed_fixed<int32_t, InputIterator>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
+        add_packed_fixed<int32_t, InputIterator>(tag, begin, end,
+            typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
@@ -448,7 +491,8 @@ public:
      */
     template <typename InputIterator>
     inline void add_packed_sfixed64(pbf_tag_type tag, InputIterator begin, InputIterator end) {
-        add_packed_fixed<int64_t, InputIterator>(tag, begin, end, typename std::iterator_traits<InputIterator>::iterator_category());
+        add_packed_fixed<int64_t, InputIterator>(tag, begin, end,
+            typename std::iterator_traits<InputIterator>::iterator_category());
     }
 
     /**
@@ -566,58 +610,6 @@ public:
     ///@}
 
 }; // class pbf_writer
-
-template <typename T, typename It>
-inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::forward_iterator_tag) {
-    if (it == end) {
-        return;
-    }
-
-    add_length_varint(tag, sizeof(T) * pbf_length_type(std::distance(it, end)));
-
-    while (it != end) {
-        add_fixed<T>(*it++);
-    }
-}
-
-template <typename T, typename It>
-inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::input_iterator_tag) {
-    if (it == end) {
-        return;
-    }
-
-    pbf_writer sw(*this, tag);
-
-    while (it != end) {
-        sw.add_fixed<T>(*it++);
-    }
-}
-
-template <typename It>
-inline void pbf_writer::add_packed_varint(pbf_tag_type tag, It it, It end) {
-    if (it == end) {
-        return;
-    }
-
-    pbf_writer sw(*this, tag);
-
-    while (it != end) {
-        sw.add_varint(uint64_t(*it++));
-    }
-}
-
-template <typename It>
-inline void pbf_writer::add_packed_svarint(pbf_tag_type tag, It it, It end) {
-    if (it == end) {
-        return;
-    }
-
-    pbf_writer sw(*this, tag);
-
-    while (it != end) {
-        sw.add_varint(encode_zigzag64(*it++));
-    }
-}
 
 } // end namespace protozero
 
