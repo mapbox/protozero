@@ -110,6 +110,11 @@ class pbf_writer {
         m_pos = 0;
     }
 
+    inline void add_length_varint(pbf_tag_type tag, pbf_length_type length) {
+        add_field(tag, pbf_wire_type::length_delimited);
+        add_varint(length);
+    }
+
 public:
 
     /**
@@ -162,11 +167,6 @@ public:
         if (m_parent_writer) {
             m_parent_writer->close_submessage();
         }
-    }
-
-    inline void add_length_varint(pbf_tag_type tag, pbf_length_type value) {
-        add_field(tag, pbf_wire_type::length_delimited);
-        add_varint(value);
     }
 
     inline void append(const char* value, size_t size) {
@@ -335,8 +335,8 @@ public:
      * @param size Number of bytes to be written
      */
     inline void add_bytes(pbf_tag_type tag, const char* value, size_t size) {
-        add_field(tag, pbf_wire_type::length_delimited);
-        add_varint(size);
+        assert(size <= std::numeric_limits<pbf_length_type>::max());
+        add_length_varint(tag, pbf_length_type(size));
         append(value, size);
     }
 
@@ -577,8 +577,7 @@ inline void pbf_writer::add_packed_fixed(pbf_tag_type tag, It it, It end, std::f
         return;
     }
 
-    add_field(tag, pbf_wire_type::length_delimited);
-    add_varint(sizeof(T) * pbf_length_type(std::distance(it, end)));
+    add_length_varint(tag, sizeof(T) * pbf_length_type(std::distance(it, end)));
 
     while (it != end) {
         add_fixed<T>(*it++);
