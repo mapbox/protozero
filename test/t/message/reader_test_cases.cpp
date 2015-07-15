@@ -27,6 +27,24 @@ TEST_CASE("read message field") {
         }
     }
 
+    SECTION("optional contents of message - empty") {
+        std::string buffer = load_data("message/data-opt-empty");
+
+        protozero::pbf_reader item(buffer.data(), buffer.size());
+
+        REQUIRE(!item.next());
+    }
+
+    SECTION("string") {
+        std::string buffer = load_data("message/data-opt-element");
+
+        protozero::pbf_reader item(buffer.data(), buffer.size());
+
+        REQUIRE(item.next());
+        REQUIRE(item.get_string() == "optional");
+        REQUIRE(!item.next());
+    }
+
 }
 
 TEST_CASE("write message field") {
@@ -48,6 +66,23 @@ TEST_CASE("write message field") {
     }
 
     REQUIRE(buffer_test == load_data("message/data-message"));
+
+}
+
+TEST_CASE("write optional message field") {
+
+    std::string buffer_opt;
+    protozero::pbf_writer pbf_opt(buffer_opt);
+
+    SECTION("add nothing") {
+        REQUIRE(buffer_opt == load_data("message/data-opt-empty"));
+    }
+
+    SECTION("add string") {
+        pbf_opt.add_string(1, "optional");
+
+        REQUIRE(buffer_opt == load_data("message/data-opt-element"));
+    }
 
 }
 

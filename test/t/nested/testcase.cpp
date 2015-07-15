@@ -7,6 +7,9 @@ int main(int c, char *argv[]) {
     msg.set_i(77);
 
     TestNested::Sub* sub = msg.mutable_sub();
+
+    write_to_file(msg, "data-no-message.pbf");
+
     sub->set_i(88);
 
     TestNested::SubSub* subsub = sub->mutable_subsub();

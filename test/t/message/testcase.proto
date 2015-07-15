@@ -11,3 +11,7 @@ message Test {
     required Sub submessage = 1;
 }
 
+message Opt {
+    optional string s = 1;
+}
+
