@@ -422,6 +422,17 @@ public:
      * Add "message" field to data.
      *
      * @param tag Tag (field number) of the field
+     * @param value Pointer to message to be written
+     * @param size Length of the message
+     */
+    inline void add_message(pbf_tag_type tag, const char* value, size_t size) {
+        add_bytes(tag, value, size);
+    }
+
+    /**
+     * Add "message" field to data.
+     *
+     * @param tag Tag (field number) of the field
      * @param value Value to be written. The value must be a complete message.
      */
     inline void add_message(pbf_tag_type tag, const std::string& value) {
