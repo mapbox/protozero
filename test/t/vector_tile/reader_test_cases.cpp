@@ -31,7 +31,7 @@ TEST_CASE("reading vector tiles") {
     SECTION("iterate over message using next()") {
         std::string buffer = load_data("vector_tile/data.vector");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         std::vector<std::string> layer_names;
         while (item.next()) {
@@ -57,7 +57,7 @@ TEST_CASE("reading vector tiles") {
     SECTION("iterate over message using next(type)") {
         std::string buffer = load_data("vector_tile/data.vector");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         std::vector<std::string> layer_names;
         while (item.next(3)) { // repeated message Layer
@@ -73,7 +73,7 @@ TEST_CASE("reading vector tiles") {
     SECTION("iterate over features in road layer") {
         std::string buffer = load_data("vector_tile/data.vector");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         int n=0;
         while (item.next(3)) { // repeated message Layer

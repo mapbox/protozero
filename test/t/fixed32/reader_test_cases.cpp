@@ -6,7 +6,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("zero") {
         std::string buffer = load_data("fixed32/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed32() == 0UL);
@@ -16,7 +16,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("max-uint") {
         std::string buffer = load_data("fixed32/data-max-uint");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::max());
@@ -26,7 +26,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("min-uint") {
         std::string buffer = load_data("fixed32/data-min-uint");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::min());
@@ -46,7 +46,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("check assert on varint/string access") {
         std::string buffer = load_data("fixed32/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE_THROWS_AS(item.get_string(), assert_error);
@@ -55,7 +55,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("assert detecting tag==0") {
         std::string buffer = load_data("fixed32/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
         REQUIRE(item.next());
@@ -67,7 +67,7 @@ TEST_CASE("read fixed32 field") {
     SECTION("skip") {
         std::string buffer = load_data("fixed32/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE_THROWS_AS(item.skip(), assert_error);
         REQUIRE(item.next());

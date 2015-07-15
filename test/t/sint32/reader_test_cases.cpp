@@ -6,7 +6,7 @@ TEST_CASE("read sint32 field") {
     SECTION("zero") {
         std::string buffer = load_data("sint32/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint32() == 0L);
@@ -16,7 +16,7 @@ TEST_CASE("read sint32 field") {
     SECTION("positive") {
         std::string buffer = load_data("sint32/data-pos");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint32() == 1L);
@@ -26,7 +26,7 @@ TEST_CASE("read sint32 field") {
     SECTION("negative") {
         std::string buffer = load_data("sint32/data-neg");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint32() == -1L);
@@ -36,7 +36,7 @@ TEST_CASE("read sint32 field") {
     SECTION("max") {
         std::string buffer = load_data("sint32/data-max");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint32() == std::numeric_limits<int32_t>::max());
@@ -46,7 +46,7 @@ TEST_CASE("read sint32 field") {
     SECTION("min") {
         std::string buffer = load_data("sint32/data-min");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_sint32() == std::numeric_limits<int32_t>::min());

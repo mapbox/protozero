@@ -2,7 +2,7 @@
 #include <test.hpp>
 
 inline void check_tag(const std::string& buffer, protozero::pbf_tag_type tag) {
-    protozero::pbf_reader item(buffer.data(), buffer.size());
+    protozero::pbf_reader item(buffer);
 
     REQUIRE(item.next());
     REQUIRE(item.tag() == tag);

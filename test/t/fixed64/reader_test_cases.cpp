@@ -6,7 +6,7 @@ TEST_CASE("read fixed64 field") {
     SECTION("zero") {
         std::string buffer = load_data("fixed64/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed64() == 0ULL);
@@ -16,7 +16,7 @@ TEST_CASE("read fixed64 field") {
     SECTION("max-uint") {
         std::string buffer = load_data("fixed64/data-max-uint");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed64() == std::numeric_limits<uint64_t>::max());
@@ -26,7 +26,7 @@ TEST_CASE("read fixed64 field") {
     SECTION("min-uint") {
         std::string buffer = load_data("fixed64/data-min-uint");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_fixed64() == std::numeric_limits<uint64_t>::min());

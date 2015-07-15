@@ -6,7 +6,7 @@ TEST_CASE("read sfixed32 field") {
     SECTION("zero") {
         std::string buffer = load_data("sfixed32/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_sfixed32() == 0L);
@@ -16,7 +16,7 @@ TEST_CASE("read sfixed32 field") {
     SECTION("max-int") {
         std::string buffer = load_data("sfixed32/data-max-int");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_sfixed32() == std::numeric_limits<int32_t>::max());
@@ -26,7 +26,7 @@ TEST_CASE("read sfixed32 field") {
     SECTION("min-int") {
         std::string buffer = load_data("sfixed32/data-min-int");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_sfixed32() == std::numeric_limits<int32_t>::min());

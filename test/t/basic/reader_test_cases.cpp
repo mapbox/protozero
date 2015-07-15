@@ -13,7 +13,7 @@ TEST_CASE("basic") {
 
     SECTION("empty buffer is okay") {
         std::string buffer;
-        protozero::pbf_reader item(buffer.data(), 0);
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.length() == 0);
         REQUIRE(!item); // test operator bool()

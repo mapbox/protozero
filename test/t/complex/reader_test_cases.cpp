@@ -6,7 +6,7 @@ TEST_CASE("read complex data") {
     SECTION("minimal") {
         std::string buffer = load_data("complex/data-minimal");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         while (item.next()) {
             switch (item.tag()) {
@@ -32,7 +32,7 @@ TEST_CASE("read complex data") {
     SECTION("some") {
         std::string buffer = load_data("complex/data-some");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         uint32_t sum_of_u = 0;
         while (item.next()) {
@@ -69,7 +69,7 @@ TEST_CASE("read complex data") {
     SECTION("all") {
         std::string buffer = load_data("complex/data-all");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         int number_of_u = 0;
         while (item.next()) {
@@ -124,7 +124,7 @@ TEST_CASE("read complex data") {
     SECTION("skip everything") {
         std::string buffer = load_data("complex/data-all");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         while (item.next()) {
             switch (item.tag()) {
@@ -160,7 +160,7 @@ TEST_CASE("write complex data") {
 
         pw.add_message(5, submessage);
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         while (item.next()) {
             switch (item.tag()) {
@@ -197,7 +197,7 @@ TEST_CASE("write complex data") {
         pw.add_int64(2, -9876543);
         pw.add_message(5, submessage);
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         uint32_t sum_of_u = 0;
         while (item.next()) {
@@ -253,7 +253,7 @@ TEST_CASE("write complex data") {
 
         pw.add_int64(3, 555555555);
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         int number_of_u = 0;
         while (item.next()) {
@@ -307,7 +307,7 @@ TEST_CASE("write complex data") {
 }
 
 static void check_message(const std::string& buffer) {
-    protozero::pbf_reader item(buffer.data(), buffer.size());
+    protozero::pbf_reader item(buffer);
 
     while (item.next()) {
         switch (item.tag()) {

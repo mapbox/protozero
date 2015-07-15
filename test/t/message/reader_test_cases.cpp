@@ -6,7 +6,7 @@ TEST_CASE("read message field") {
     SECTION("string") {
         std::string buffer = load_data("message/data-message");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         protozero::pbf_reader subitem { item.get_message() };
@@ -30,7 +30,7 @@ TEST_CASE("read message field") {
     SECTION("optional contents of message - empty") {
         std::string buffer = load_data("message/data-opt-empty");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(!item.next());
     }
@@ -38,7 +38,7 @@ TEST_CASE("read message field") {
     SECTION("string") {
         std::string buffer = load_data("message/data-opt-element");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "optional");

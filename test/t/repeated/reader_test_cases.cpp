@@ -6,7 +6,7 @@ TEST_CASE("read repeated fields") {
     SECTION("empty") {
         std::string buffer = load_data("repeated/data-empty");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(!item.next());
     }
@@ -14,7 +14,7 @@ TEST_CASE("read repeated fields") {
     SECTION("one") {
         std::string buffer = load_data("repeated/data-one");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_int32() == 0L);
@@ -24,7 +24,7 @@ TEST_CASE("read repeated fields") {
     SECTION("many") {
         std::string buffer = load_data("repeated/data-many");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_int32() == 0L);

@@ -101,7 +101,7 @@ TEST_CASE("skip") {
         for (const auto& filename : filenames) {
             std::string buffer = load_data(filename);
 
-            protozero::pbf_reader item(buffer.data(), buffer.size());
+            protozero::pbf_reader item(buffer);
 
             REQUIRE(item.next());
             item.skip();
@@ -118,7 +118,7 @@ TEST_CASE("skip") {
 
         buffer[0] += 1; // hack to create illegal field type
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE_THROWS_AS(item.skip(), protozero::unknown_pbf_wire_type_exception);
@@ -131,7 +131,7 @@ TEST_CASE("skip") {
         pw.add_fixed32(1, 123);
 
         buffer.resize(buffer.size() - 1); // "remove" last byte from buffer
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE_THROWS_AS(item.skip(), protozero::end_of_buffer_exception);

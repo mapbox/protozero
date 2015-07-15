@@ -6,7 +6,7 @@ TEST_CASE("read uint64 field") {
     SECTION("zero") {
         std::string buffer = load_data("uint64/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_uint64() == 0ul);
@@ -16,7 +16,7 @@ TEST_CASE("read uint64 field") {
     SECTION("positive") {
         std::string buffer = load_data("uint64/data-pos");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_uint64() == 1ul);
@@ -26,7 +26,7 @@ TEST_CASE("read uint64 field") {
     SECTION("max") {
         std::string buffer = load_data("uint64/data-max");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_uint64() == std::numeric_limits<uint64_t>::max());

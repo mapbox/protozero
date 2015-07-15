@@ -6,7 +6,7 @@ TEST_CASE("read int64 field") {
     SECTION("zero") {
         std::string buffer = load_data("int64/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_int64() == 0LL);
@@ -16,7 +16,7 @@ TEST_CASE("read int64 field") {
     SECTION("positive") {
         std::string buffer = load_data("int64/data-pos");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_int64() == 1LL);
@@ -26,7 +26,7 @@ TEST_CASE("read int64 field") {
     SECTION("negative") {
         std::string buffer = load_data("int64/data-neg");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_int64() == -1LL);
@@ -36,7 +36,7 @@ TEST_CASE("read int64 field") {
     SECTION("max") {
         std::string buffer = load_data("int64/data-max");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_int64() == std::numeric_limits<int64_t>::max());
@@ -46,7 +46,7 @@ TEST_CASE("read int64 field") {
     SECTION("min") {
         std::string buffer = load_data("int64/data-min");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_int64() == std::numeric_limits<int64_t>::min());
@@ -66,7 +66,7 @@ TEST_CASE("read int64 field") {
     SECTION("varint overflow") {
         std::string buffer = load_data("int64/data-overflow");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE_THROWS_AS(item.get_int64(), protozero::varint_too_long_exception);

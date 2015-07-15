@@ -6,7 +6,7 @@ TEST_CASE("read enum field") {
     SECTION("zero") {
         std::string buffer = load_data("enum/data-black");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == 0L);
@@ -16,7 +16,7 @@ TEST_CASE("read enum field") {
     SECTION("positive") {
         std::string buffer = load_data("enum/data-blue");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == 3L);

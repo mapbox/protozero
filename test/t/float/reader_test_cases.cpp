@@ -6,7 +6,7 @@ TEST_CASE("read float field") {
     SECTION("zero") {
         std::string buffer = load_data("float/data-zero");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_float() == Approx(0.0f));
@@ -16,7 +16,7 @@ TEST_CASE("read float field") {
     SECTION("positive") {
         std::string buffer = load_data("float/data-pos");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_float() == Approx(5.34f));
@@ -26,7 +26,7 @@ TEST_CASE("read float field") {
     SECTION("negative") {
         std::string buffer = load_data("float/data-neg");
 
-        protozero::pbf_reader item(buffer.data(), buffer.size());
+        protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
         REQUIRE(item.get_float() == Approx(-1.71f));
