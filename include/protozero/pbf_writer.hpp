@@ -45,10 +45,11 @@ namespace protozero {
  */
 class pbf_writer {
 
-    std::string& m_data;
+    std::string* m_data;
 
     inline void add_varint(uint64_t value) {
-        write_varint(std::back_inserter(m_data), value);
+        pbf_assert(m_data);
+        write_varint(std::back_inserter(*m_data), value);
     }
 
     inline void add_field(pbf_tag_type tag, pbf_wire_type type) {
@@ -64,7 +65,8 @@ class pbf_writer {
 
     template <typename T>
     inline void add_fixed(T value) {
-        m_data.append(reinterpret_cast<const char*>(&value), sizeof(T));
+        pbf_assert(m_data);
+        m_data->append(reinterpret_cast<const char*>(&value), sizeof(T));
     }
 
     template <typename T, typename It>
@@ -85,7 +87,8 @@ class pbf_writer {
     static const int reserve_bytes = sizeof(pbf_length_type) * 8 / 7 + 1;
 
     inline void reserve_space() {
-        m_data.append(size_t(reserve_bytes), '\0');
+        pbf_assert(m_data);
+        m_data->append(size_t(reserve_bytes), '\0');
     }
 
 public:
@@ -95,14 +98,22 @@ public:
      * stores a reference to that string and adds all data to it.
      */
     inline explicit pbf_writer(std::string& data) noexcept :
-        m_data(data) {
+        m_data(&data) {
     }
 
-    /// A pbf_writer object can not be copied (because of the reference inside)
-    pbf_writer(const pbf_writer&) = delete;
+    /**
+     * Create a writer without a data store. In this form the writer can not
+     * be used!
+     */
+    pbf_writer() :
+        m_data(nullptr) {
+    }
 
-    /// A pbf_writer object can not be copied (because of the reference inside)
-    pbf_writer& operator=(const pbf_writer&) = delete;
+    /// A pbf_writer object can be copied
+    pbf_writer(const pbf_writer&) noexcept = default;
+
+    /// A pbf_writer object can be copied
+    pbf_writer& operator=(const pbf_writer&) noexcept = default;
 
     /// A pbf_writer object can be moved
     inline pbf_writer(pbf_writer&&) noexcept = default;
@@ -118,7 +129,8 @@ public:
     }
 
     inline void append(const char* value, size_t size) {
-        m_data.append(value, size);
+        pbf_assert(m_data);
+        m_data->append(value, size);
     }
 
     ///@{
@@ -544,9 +556,10 @@ public:
      * @returns The position in the data.
      */
     inline size_t open_sub(pbf_tag_type tag) {
+        pbf_assert(m_data);
         add_field(tag, pbf_wire_type::length_delimited);
         reserve_space();
-        return m_data.size();
+        return m_data->size();
     }
 
     /**
@@ -555,12 +568,13 @@ public:
      * @param pos The position in the data returned by open_sub().
      */
     inline void close_sub(size_t pos) {
-        auto length = pbf_length_type(m_data.size() - pos);
+        pbf_assert(m_data);
+        auto length = pbf_length_type(m_data->size() - pos);
 
-        pbf_assert(m_data.size() >= pos - reserve_bytes);
-        auto n = write_varint(&m_data[pos - reserve_bytes], length);
+        pbf_assert(m_data->size() >= pos - reserve_bytes);
+        auto n = write_varint(m_data->begin() + long(pos) - reserve_bytes, length);
 
-        m_data.erase(m_data.begin() + long(pos) - reserve_bytes + n, m_data.begin() + long(pos));
+        m_data->erase(m_data->begin() + long(pos) - reserve_bytes + n, m_data->begin() + long(pos));
     }
 
     /**
