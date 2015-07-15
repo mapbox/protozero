@@ -277,35 +277,23 @@ public:
      * Add "bytes" field to data.
      *
      * @param tag Tag (field number) of the field
-     * @param value Value to be written
-     */
-    inline void add_bytes(pbf_tag_type tag, const std::string& value) {
-        add_field(tag, pbf_wire_type::length_delimited);
-        add_varint(value.size());
-        m_data.append(value);
-    }
-
-    /**
-     * Add "bytes" field to data.
-     *
-     * @param tag Tag (field number) of the field
      * @param value Pointer to value to be written
      * @param size Number of bytes to be written
      */
     inline void add_bytes(pbf_tag_type tag, const char* value, size_t size) {
         add_field(tag, pbf_wire_type::length_delimited);
         add_varint(size);
-        m_data.append(value, size);
+        append(value, size);
     }
 
     /**
-     * Add "string" field to data.
+     * Add "bytes" field to data.
      *
      * @param tag Tag (field number) of the field
      * @param value Value to be written
      */
-    inline void add_string(pbf_tag_type tag, const std::string& value) {
-        add_bytes(tag, value);
+    inline void add_bytes(pbf_tag_type tag, const std::string& value) {
+        add_bytes(tag, value.data(), value.size());
     }
 
     /**
@@ -320,6 +308,16 @@ public:
     }
 
     /**
+     * Add "string" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
+    inline void add_string(pbf_tag_type tag, const std::string& value) {
+        add_bytes(tag, value.data(), value.size());
+    }
+
+    /**
      * Add "string" field to data. Bytes from the value are written until
      * a null byte is encountered. The null byte is not added.
      *
@@ -327,9 +325,7 @@ public:
      * @param value Pointer to value to be written
      */
     inline void add_string(pbf_tag_type tag, const char* value) {
-        add_field(tag, pbf_wire_type::length_delimited);
-        add_varint(std::strlen(value));
-        m_data.append(value);
+        add_bytes(tag, value, std::strlen(value));
     }
 
     /**
@@ -339,7 +335,7 @@ public:
      * @param value Value to be written. The value must be a complete message.
      */
     inline void add_message(pbf_tag_type tag, const std::string& value) {
-        add_bytes(tag, value);
+        add_bytes(tag, value.data(), value.size());
     }
 
     ///@}
@@ -573,7 +569,7 @@ public:
      * @param value The data to be added
      */
     void append_sub(const std::string& value) {
-        m_data.append(value);
+        append(value.data(), value.size());
     }
 
     /**
@@ -583,7 +579,7 @@ public:
      * @param size The length of the data
      */
     void append_sub(const char* value, size_t size) {
-        m_data.append(value, size);
+        append(value, size);
     }
 
     ///@}
