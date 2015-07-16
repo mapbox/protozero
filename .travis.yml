@@ -51,7 +51,7 @@ script:
     - if [ -n "${COVERAGE}" ]; then
         make clean;
         CXXFLAGS="--coverage" LDFLAGS="--coverage" make test;
-        ${COVERAGE} -lp test/run_all_tests.o test/t/*/runtest.o;
+        ${COVERAGE} -lp test/*tests.o test/t/*/*test_cases.o;
         pip install --user cpp-coveralls;
         ~/.local/bin/coveralls --no-gcov -i include/protozero;
       fi
