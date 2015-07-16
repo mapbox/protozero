@@ -13,8 +13,14 @@ COMMON_FLAGS := -fvisibility-inlines-hidden -std=c++11 $(WARNING_FLAGS)
 
 RELEASE_FLAGS := -O3 -DNDEBUG -march=native
 DEBUG_FLAGS := -O0 -g -fno-inline-functions
+PTHREAD_FLAGS =
 
 OS:=$(shell uname -s)
+
+ifeq ($(OS),Linux)
+    PTHREAD_FLAGS = -pthread
+endif
+
 ifeq ($(OS),Darwin)
     CXXFLAGS += -stdlib=libc++
     LDFLAGS += -stdlib=libc++
@@ -64,7 +70,7 @@ all: ./test/tests test/writer_tests
 	$(CXX) -c -I. -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/writer_tests: test/writer_tests.o $(PROTO_FILES_O) $(WRITER_TEST_CASES_O)
-	$(CXX) $(LDFLAGS) $(LDFLAGS_PROTOBUF) $^ -lprotobuf-lite -pthread -o $@
+	$(CXX) $(LDFLAGS) $(LDFLAGS_PROTOBUF) $^ -lprotobuf-lite $(PTHREAD_FLAGS) -o $@
 
 test: all
 	./test/tests
