@@ -3,7 +3,9 @@ coverage
 out
 protozero.Makefile
 tests.target.mk
-
+*.o
+*.gcno
+*.gcno
 #Visual Studio files and folders
 Release
 Debug
