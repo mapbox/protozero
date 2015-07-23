@@ -16,10 +16,6 @@ documentation.
  * @brief Contains the pbf_writer class.
  */
 
-#if __BYTE_ORDER != __LITTLE_ENDIAN
-# error "This code only works on little endian machines."
-#endif
-
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -29,6 +25,10 @@ documentation.
 
 #include <protozero/pbf_types.hpp>
 #include <protozero/varint.hpp>
+
+#if __BYTE_ORDER != __LITTLE_ENDIAN
+# include <protozero/byteswap.hpp>
+#endif
 
 /// Wrapper for assert() used for testing
 #ifndef pbf_assert
@@ -70,7 +70,13 @@ class pbf_writer {
     inline void add_fixed(T value) {
         pbf_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
         pbf_assert(m_data);
+#if __BYTE_ORDER == __LITTLE_ENDIAN
         m_data->append(reinterpret_cast<const char*>(&value), sizeof(T));
+#else
+        auto size = m_data->size();
+        m_data->resize(size + sizeof(T));
+        byteswap<sizeof(T)>(reinterpret_cast<const char*>(&value), const_cast<char*>(m_data->data() + size));
+#endif
     }
 
     template <typename T, typename It>

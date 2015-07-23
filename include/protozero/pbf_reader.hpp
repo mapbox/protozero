@@ -16,10 +16,6 @@ documentation.
  * @brief Contains the pbf_reader class.
  */
 
-#if __BYTE_ORDER != __LITTLE_ENDIAN
-# error "This code only works on little endian machines."
-#endif
-
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
@@ -31,6 +27,10 @@ documentation.
 #include <protozero/pbf_types.hpp>
 #include <protozero/exception.hpp>
 #include <protozero/varint.hpp>
+
+#if __BYTE_ORDER != __LITTLE_ENDIAN
+# include <protozero/byteswap.hpp>
+#endif
 
 /// Wrapper for assert() used for testing
 #ifndef pbf_assert
@@ -77,10 +77,94 @@ class pbf_reader {
     // The tag of the current field.
     pbf_tag_type m_tag = 0;
 
-    template <typename T> inline T get_fixed();
+    template <typename T>
+    inline T get_fixed() {
+        T result;
+        skip_bytes(sizeof(T));
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+        memcpy(&result, m_data - sizeof(T), sizeof(T));
+#else
+        byteswap<sizeof(T)>(m_data - sizeof(T), reinterpret_cast<char*>(&result));
+#endif
+        return result;
+    }
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    template <typename T>
+    inline std::pair<const T*, const T*> packed_fixed() {
+        pbf_assert(tag() != 0 && "call next() before accessing field value");
+        auto len = get_len_and_skip();
+        pbf_assert(len % sizeof(T) == 0);
+        return std::make_pair(reinterpret_cast<const T*>(m_data-len), reinterpret_cast<const T*>(m_data));
+    }
+
+#else
+
+    template <typename T>
+    class const_fixed_iterator : public std::iterator<std::forward_iterator_tag, T> {
+
+        const char* m_data;
+        const char* m_end;
+
+    public:
+
+        const_fixed_iterator() noexcept :
+            m_data(nullptr),
+            m_end(nullptr) {
+        }
+
+        const_fixed_iterator(const char *data, const char* end) noexcept :
+            m_data(data),
+            m_end(end) {
+        }
+
+        const_fixed_iterator(const const_fixed_iterator&) noexcept = default;
+        const_fixed_iterator(const_fixed_iterator&&) noexcept = default;
+
+        const_fixed_iterator& operator=(const const_fixed_iterator&) noexcept = default;
+        const_fixed_iterator& operator=(const_fixed_iterator&&) noexcept = default;
+
+        ~const_fixed_iterator() noexcept = default;
+
+        T operator*() {
+            T result;
+            byteswap<sizeof(T)>(m_data, reinterpret_cast<char*>(&result));
+            return result;
+        }
+
+        const_fixed_iterator& operator++() {
+            m_data += sizeof(T);
+            return *this;
+        }
+
+        const_fixed_iterator operator++(int) {
+            const const_fixed_iterator tmp(*this);
+            ++(*this);
+            return tmp;
+        }
+
+        bool operator==(const const_fixed_iterator& rhs) const noexcept {
+            return m_data == rhs.m_data && m_end == rhs.m_end;
+        }
+
+        bool operator!=(const const_fixed_iterator& rhs) const noexcept {
+            return !(*this == rhs);
+        }
+
+    }; // class const_fixed_iterator
+
+    template <typename T>
+    inline std::pair<const_fixed_iterator<T>, const_fixed_iterator<T>> packed_fixed() {
+        pbf_assert(tag() != 0 && "call next() before accessing field value");
+        auto len = get_len_and_skip();
+        pbf_assert(len % sizeof(T) == 0);
+        return std::make_pair(const_fixed_iterator<T>(m_data-len, m_data),
+                              const_fixed_iterator<T>(m_data, m_data));
+    }
+#endif
+
     template <typename T> inline T get_varint();
     template <typename T> inline T get_svarint();
-    template <typename T> inline std::pair<const T*, const T*> packed_fixed();
 
     inline pbf_length_type get_length() { return get_varint<pbf_length_type>(); }
 
@@ -671,7 +755,9 @@ public:
      * @pre The current field must be of type "repeated packed fixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const uint32_t*, const uint32_t*> get_packed_fixed32();
+    inline auto get_packed_fixed32() -> decltype(packed_fixed<uint32_t>()) {
+        return packed_fixed<uint32_t>();
+    }
 
     /**
      * Consume current "repeated packed sfixed32" field.
@@ -682,7 +768,9 @@ public:
      * @pre The current field must be of type "repeated packed sfixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const int32_t*, const int32_t*> get_packed_sfixed32();
+    inline auto get_packed_sfixed32() -> decltype(packed_fixed<int32_t>()) {
+        return packed_fixed<int32_t>();
+    }
 
     /**
      * Consume current "repeated packed fixed64" field.
@@ -693,7 +781,9 @@ public:
      * @pre The current field must be of type "repeated packed fixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const uint64_t*, const uint64_t*> get_packed_fixed64();
+    inline auto get_packed_fixed64() -> decltype(packed_fixed<uint64_t>()) {
+        return packed_fixed<uint64_t>();
+    }
 
     /**
      * Consume current "repeated packed sfixed64" field.
@@ -704,7 +794,9 @@ public:
      * @pre The current field must be of type "repeated packed sfixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const int64_t*, const int64_t*> get_packed_sfixed64();
+    inline auto get_packed_sfixed64() -> decltype(packed_fixed<int64_t>()) {
+        return packed_fixed<int64_t>();
+    }
 
     /**
      * Consume current "repeated packed float" field.
@@ -715,7 +807,9 @@ public:
      * @pre The current field must be of type "repeated packed float".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const float*, const float*> get_packed_float();
+    inline auto get_packed_float() -> decltype(packed_fixed<float>()) {
+        return packed_fixed<float>();
+    }
 
     /**
      * Consume current "repeated packed double" field.
@@ -726,7 +820,9 @@ public:
      * @pre The current field must be of type "repeated packed double".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const double*, const double*> get_packed_double();
+    inline auto get_packed_double() -> decltype(packed_fixed<double>()) {
+        return packed_fixed<double>();
+    }
 
     ///@}
 
@@ -848,14 +944,6 @@ T pbf_reader::get_svarint() {
     return static_cast<T>(decode_zigzag64(decode_varint(&m_data, m_end)));
 }
 
-template <typename T>
-T pbf_reader::get_fixed() {
-    T result;
-    skip_bytes(sizeof(T));
-    memcpy(&result, m_data - sizeof(T), sizeof(T));
-    return result;
-}
-
 uint32_t pbf_reader::get_fixed32() {
     pbf_assert(tag() != 0 && "call next() before accessing field value");
     pbf_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
@@ -914,38 +1002,6 @@ std::string pbf_reader::get_bytes() {
 
 std::string pbf_reader::get_string() {
     return get_bytes();
-}
-
-template <typename T>
-std::pair<const T*, const T*> pbf_reader::packed_fixed() {
-    pbf_assert(tag() != 0 && "call next() before accessing field value");
-    auto len = get_len_and_skip();
-    pbf_assert(len % sizeof(T) == 0);
-    return std::make_pair(reinterpret_cast<const T*>(m_data-len), reinterpret_cast<const T*>(m_data));
-}
-
-std::pair<const uint32_t*, const uint32_t*> pbf_reader::get_packed_fixed32() {
-    return packed_fixed<uint32_t>();
-}
-
-std::pair<const uint64_t*, const uint64_t*> pbf_reader::get_packed_fixed64() {
-    return packed_fixed<uint64_t>();
-}
-
-std::pair<const int32_t*, const int32_t*> pbf_reader::get_packed_sfixed32() {
-    return packed_fixed<int32_t>();
-}
-
-std::pair<const int64_t*, const int64_t*> pbf_reader::get_packed_sfixed64() {
-    return packed_fixed<int64_t>();
-}
-
-std::pair<const float*, const float*> pbf_reader::get_packed_float() {
-    return packed_fixed<float>();
-}
-
-std::pair<const double*, const double*> pbf_reader::get_packed_double() {
-    return packed_fixed<double>();
 }
 
 std::pair<pbf_reader::const_bool_iterator, pbf_reader::const_bool_iterator> pbf_reader::get_packed_bool() {

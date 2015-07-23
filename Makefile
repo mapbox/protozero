@@ -37,7 +37,8 @@ PROTO_FILES_CC := $(subst .proto,.pb.cc,$(PROTO_FILES))
 PROTO_FILES_H := $(subst .proto,.pb.h,$(PROTO_FILES))
 PROTO_FILES_O := $(subst .proto,.pb.o,$(PROTO_FILES))
 
-HPP_FILES := include/protozero/exception.hpp \
+HPP_FILES := include/protozero/byteswap.hpp \
+             include/protozero/exception.hpp \
              include/protozero/varint.hpp \
              include/protozero/pbf_types.hpp \
              include/protozero/pbf_reader.hpp \
