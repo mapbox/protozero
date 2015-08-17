@@ -21,6 +21,7 @@ documentation.
 #include <cstdint>
 #include <cstring>
 #include <iterator>
+#include <limits>
 #include <string>
 
 #include <protozero/pbf_types.hpp>
