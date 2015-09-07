@@ -12,7 +12,18 @@ documentation.
 
 #include <cassert>
 
+// Windows is only available for little endian architectures
+// http://stackoverflow.com/questions/6449468/can-i-safely-assume-that-windows-installations-will-always-be-little-endian
+#if !defined(_WIN32) && !defined(__APPLE__)
+# include <endian.h>
+#else
+# define __LITTLE_ENDIAN 1234
+# define __BYTE_ORDER __LITTLE_ENDIAN
+#endif
+
 namespace protozero {
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
 
 template <int N>
 inline void byteswap(const char* /*data*/, char* /*result*/) {
@@ -43,6 +54,15 @@ inline void byteswap<8>(const char* data, char* result) {
     result[1] = data[6];
     result[0] = data[7];
 }
+
+#else // __BYTE_ORDER == __LITTLE_ENDIAN
+
+template <int N>
+inline void byteswap(const char* data, char* result) {
+    memcpy(result, data, N);
+}
+
+#endif // __BYTE_ORDER == __LITTLE_ENDIAN
 
 } // end namespace protozero
 
