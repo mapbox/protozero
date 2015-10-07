@@ -55,6 +55,8 @@ public:
     PROTOZERO_WRITER_WRAP_ADD_SCALAR(float, float)
     PROTOZERO_WRITER_WRAP_ADD_SCALAR(double, double)
 
+#undef PROTOZERO_WRITER_WRAP_ADD_SCALAR
+
     inline void add_bytes(T tag, const char* value, size_t size) {
         pbf_writer::add_bytes(pbf_tag_type(tag), value, size);
     }
@@ -103,6 +105,8 @@ public:
     PROTOZERO_WRITER_WRAP_ADD_PACKED(sfixed64)
     PROTOZERO_WRITER_WRAP_ADD_PACKED(float)
     PROTOZERO_WRITER_WRAP_ADD_PACKED(double)
+
+#undef PROTOZERO_WRITER_WRAP_ADD_PACKED
 
 };
 
