@@ -24,7 +24,8 @@ if you are getting lost.
 You need a C++11-capable compiler for protozero to work. Copy the files in the
 `include/protozero` directory somewhere where your build system can find them.
 Keep the `protozero` directory and include the files in the form
-`#include <protozero/pbf_writer.hpp>` and so on.
+
+    #include <protozero/FILENAME.hpp>
 
 You always need `byteswap.hpp`, `pbf_types.hpp`, `varint.hpp`, and
 `exception.hpp`. For reading you need `pbf_reader.hpp` and probably

@@ -53,6 +53,7 @@ public:
         pbf_writer(parent_writer, pbf_tag_type(tag)) {
     }
 
+/// @cond INTERNAL
 #define PROTOZERO_WRITER_WRAP_ADD_SCALAR(name, type) \
     inline void add_##name(T tag, type value) { \
         pbf_writer::add_##name(pbf_tag_type(tag), value); \
@@ -74,6 +75,7 @@ public:
     PROTOZERO_WRITER_WRAP_ADD_SCALAR(double, double)
 
 #undef PROTOZERO_WRITER_WRAP_ADD_SCALAR
+/// @endcond
 
     inline void add_bytes(T tag, const char* value, size_t size) {
         pbf_writer::add_bytes(pbf_tag_type(tag), value, size);
@@ -103,6 +105,7 @@ public:
         pbf_writer::add_message(pbf_tag_type(tag), value);
     }
 
+/// @cond INTERNAL
 #define PROTOZERO_WRITER_WRAP_ADD_PACKED(name) \
     template <typename InputIterator> \
     inline void add_packed_##name(T tag, InputIterator first, InputIterator last) { \
@@ -125,6 +128,7 @@ public:
     PROTOZERO_WRITER_WRAP_ADD_PACKED(double)
 
 #undef PROTOZERO_WRITER_WRAP_ADD_PACKED
+/// @endcond
 
 };
 

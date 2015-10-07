@@ -10,21 +10,37 @@ documentation.
 
 *****************************************************************************/
 
+/**
+ * @file byteswap.hpp
+ *
+ * @brief Contains functions to swap bytes in values (for different endianness).
+ */
+
 #include <cstdint>
 #include <cassert>
 
 namespace protozero {
 
+/**
+ * Swap N byte value between endianness formats. This template function must
+ * be specialized to actually work.
+ */
 template <int N>
 inline void byteswap(const char* /*data*/, char* /*result*/) {
     static_assert(N == 1, "Can only swap 1, 4, or 8 byte values");
 }
 
+/**
+ * Swap 1 byte value between endianness formats. (Basically just a copy).
+ */
 template <>
 inline void byteswap<1>(const char* data, char* result) {
     result[0] = data[0];
 }
 
+/**
+ * Swap 4 byte value (int32_t, uint32_t, float) between endianness formats.
+ */
 template <>
 inline void byteswap<4>(const char* data, char* result) {
 # if defined(__GNUC__) || defined(__clang__)
@@ -37,6 +53,9 @@ inline void byteswap<4>(const char* data, char* result) {
 #endif
 }
 
+/**
+ * Swap 8 byte value (int64_t, uint64_t, double) between endianness formats.
+ */
 template <>
 inline void byteswap<8>(const char* data, char* result) {
 # if defined(__GNUC__) || defined(__clang__)
