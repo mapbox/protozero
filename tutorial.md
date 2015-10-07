@@ -211,10 +211,27 @@ the `get_enum()` function to get the value of the enum, you have to translate
 this into the symbolic name yourself. See the `enum` test case for an example.
 
 
-### Exceptions
+### Asserts and exceptions in the protozero library
 
-All exceptions thrown by `pbf_reader.hpp` functions derive from
-`protozero::exception`.
+Protozero uses `assert()` liberally to help you find bugs in your own code when
+compiled in debug mode (ie with `NDEBUG` not set). If such an assert "fires",
+this is a very strong indication that there is a bug in your code somewhere.
+
+(Protozero will disable those asserts and "convert" them into exception in its
+own test code. This is done to make sure the asserts actually work as intended.
+Your test code will not need this!)
+
+Exceptions, on the other hand, are thrown by protozero if some kind of data
+corruption was detected while it is trying to parse the data. This could also
+be an indicator for a bug in the user code, but because it can happen if the
+data was (intentionally or not intentionally) been messed with, it is reported
+to the user code using exceptions.
+
+Most of the functions on the writer side can throw a `std::bad_alloc`
+exception if there is no space to grow a buffer. Other than that no exceptions
+can occur on the writer side.
+
+All exceptions thrown by the reader side derive from `protozero::exception`.
 
 Note that all exceptions can also happen if you are expecting a data field of
 a certain type in your code but the field actually has a different type. In
