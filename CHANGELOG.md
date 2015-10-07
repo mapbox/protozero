@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- pbf_message and pbf_builder template classes wrapping pbf_reader
+  and pbf_writer, respectively. The new classes are the preferred
+  interface now.
+
 ### Changed
 
 - Improved byte swapping operation.

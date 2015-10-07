@@ -11,7 +11,10 @@ struct assert_error : public std::runtime_error {
 #define protozero_assert(x) if (!(x)) { throw(assert_error(#x)); }
 
 #include <protozero/pbf_reader.hpp>
+#include <protozero/pbf_message.hpp>
+
 #include <protozero/pbf_writer.hpp>
+#include <protozero/pbf_builder.hpp>
 
 extern std::string load_data(const std::string& filename);
 

@@ -22,11 +22,15 @@ if you are getting lost.
 ## Prerequisites
 
 You need a C++11-capable compiler for protozero to work. Copy the files in the
-`include` directory somewhere where your build system can find them.
+`include/protozero` directory somewhere where your build system can find them.
+Keep the `protozero` directory and include the files in the form
+`#include <protozero/pbf_writer.hpp>` and so on.
 
-You always need `protozero/pbf_types.hpp`, `protozero/varint.hpp`, and
-`protozero/exception.hpp`. For reading and writing support you need
-`protozero/pbf_reader.hpp` and `protozero/pbf_writer.hpp`, respectively.
+You always need `byteswap.hpp`, `pbf_types.hpp`, `varint.hpp`, and
+`exception.hpp`. For reading you need `pbf_reader.hpp` and probably
+`pbf_message.hpp`, for writing you need `pbf_writer.hpp` and probably
+`pbf_builder.hpp`. You only need `version.hpp` if you want access to the macros
+defining the library version.
 
 
 ## Parsing protobuf-encoded messages
@@ -46,8 +50,8 @@ errors. We encourage you to compile with asserts enabled in your debug builds.
 Lets say you have a protocol description in a `.proto` file like this:
 
     message Example1 {
-        required uint32 x = 1;
-        optional string s = 2;
+        required uint32 x  =  1;
+        optional string s  =  2;
         repeated fixed64 r = 17;
     }
 
@@ -268,6 +272,91 @@ In all cases objects of the `pbf_reader` class store a pointer into the input
 data that was given to the constructor. You have to make sure this pointer
 stays valid for the duration of the objects lifetime.
 
+## Parsing Protobuf-Encoded Messages Using `pbf_message`
+
+One problem in the code above are the "magic numbers" used as tags for the
+different fields that you got from the `.proto` file. Instead of spreading
+these magic numbers around your code you can define them once in an `enum
+class` and then use the `pbf_message` template class instead of the
+`pbf_reader` class.
+
+Here is the first example again, this time using this new technique. So you
+have the following in a `.proto` file:
+
+    message Example1 {
+        required uint32 x  =  1;
+        optional string s  =  2;
+        repeated fixed64 r = 17;
+    }
+
+Add the following declaration in one of your header files:
+
+    enum class Example1 : protozero::pbf_tag_type {
+        required_uint32_x  =  1,
+        optional_string_s  =  2,
+        repeated_fixed64_r = 17
+    };
+
+The message name becomes the name of the `enum class` which is always built
+on top of the `protozero::pbf_tag_type` type. Each field in the message
+becomes one value of the enum. In this case the name is created from the
+type (including the modifiers like `required` or `optional`) and the name of
+the field. You can use any name you want, but this convention makes it easier
+later, to get everything right.
+
+To read messages created according to that description, you will have code that
+looks somewhat like this, this time using `pbf_message` instead of
+`pbf_reader`:
+
+    #include <protozero/pbf_message.hpp>
+
+    // get data from somewhere into the input string
+    std::string input = get_input_data();
+
+    // initialize pbf message with this data
+    protozero::pbf_message<Example1> message(input);
+
+    // iterate over fields in the message
+    while (message.next()) {
+
+        // switch depending on the field tag (the field name is not available)
+        switch (message.tag()) {
+            case Example1::required_uint32_x:
+                auto x = message.get_uint32();
+                break;
+            case Example1::optional_string_s:
+                std::string s = message.get_string();
+                break;
+            case Example1::repeated_fixed64_r:
+                message.skip();
+                break;
+            default:
+                // ignore data for unknown tags to allow for future extensions
+                message.skip();
+        }
+
+    }
+
+Note the correspondance between the enum value (for instance
+`required_uint32_x`) and the name of the getter function (for instance
+`get_uint32()`). This makes it easier to get the correct types. Also the
+naming makes it easier to keep different message types apart if you have
+multiple (or embedded) messages.
+
+See the `test/t/complex` test case for a complete example using this interface.
+
+Using `pbf_message` in favour of `pbf_reader` is recommended for all code.
+Note that `pbf_message` derives from `pbf_reader`, so you can always fall
+back to the more generic interface if necessary.
+
+One problem you might run into is the following: The enum class lists all
+possible values you know about and you'll have lots of `switch` statements
+checking those values. Some compilers will know that your `switch` covers
+all possible cases and warn you if you have a `default` case that looks
+unneccessary to the compiler. But you still want that `default` case to allow
+for future extension of those messages (and maybe also to detect corrupted
+data). You can switch of this warning with `-Wno-covered-switch-default`).
+
 
 ## Writing Protobuf-Encoded Messages
 
@@ -389,14 +478,24 @@ into it. It then adds the contents of the submessage to the buffer. When the
 written in the reserved space. If less space was needed for the length field
 than was available, the rest of the buffer is moved over a few bytes.
 
+## Writing Protobuf-Encoded Messages Using `pbf_builder`
 
-## Using the low-level varint and zigzag encoding and decoding functions
+Just like the `pbf_message` template class wraps the `pbf_reader` class, there
+is a `pbf_builder` template class wrapping the `pbf_writer` class. It is
+instantiated using the same `enum class` described above and used exactly
+like the `pbf_writer` class but using the values of the enum instead of bare
+integers.
+
+See the `test/t/complex` test case for a complete example using this interface.
+
+
+## Using the Low-Level Varint and Zigzag Encoding and Decoding Functions
 
 Protozero gives you access to the low-level functions for encoding and
 decoding varint and zigzag integer encodings, because these functions can
 sometimes be useful outside the Protocol Buffer context.
 
-### Using low-level functions
+### Using Low-Level Functions
 
 To use the low-level, add this include to your C++ program:
 
