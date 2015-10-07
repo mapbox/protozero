@@ -50,8 +50,6 @@ Call `make doc` to build the Doxygen documentation. (You'll need
 
 ## Limitations
 
-* The current implementation does not support big-endian machines. Fixed sized
-  integers and floats/doubles will not decode properly.
 * A protobuf message has to fit into memory completely, otherwise it can not
   be parsed with this library. There is no streaming support.
 * The length of a string, bytes, or submessage can't be more than 2^31-1.
