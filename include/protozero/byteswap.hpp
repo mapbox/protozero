@@ -16,7 +16,7 @@ namespace protozero {
 
 template <int N>
 inline void byteswap(const char* /*data*/, char* /*result*/) {
-    assert(false);
+    static_assert(N == 1, "Can only swap 1, 4, or 8 byte values");
 }
 
 template <>
