@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Improved byte swapping operation.
+- Detect some types of data corruption earlier and throw.
 
 ### Fixed
 

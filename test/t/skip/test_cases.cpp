@@ -110,7 +110,7 @@ TEST_CASE("skip") {
 
     }
 
-    SECTION("check that skip() throws on unknown field type") {
+    SECTION("check that next() throws on unknown field type") {
         std::string buffer;
 
         protozero::pbf_writer pw(buffer);
@@ -120,8 +120,7 @@ TEST_CASE("skip") {
 
         protozero::pbf_reader item(buffer);
 
-        REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.skip(), protozero::unknown_pbf_wire_type_exception);
+        REQUIRE_THROWS_AS(item.next(), protozero::unknown_pbf_wire_type_exception);
     }
 
     SECTION("check that skip() throws on short buffer") {

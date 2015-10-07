@@ -39,8 +39,7 @@ TEST_CASE("basic") {
         char buffer[1] = { 1 << 3 | 7 };
 
         protozero::pbf_reader item(buffer, 1);
-        REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.skip(), protozero::unknown_pbf_wire_type_exception);
+        REQUIRE_THROWS_AS(item.next(), protozero::unknown_pbf_wire_type_exception);
     }
 
 }
