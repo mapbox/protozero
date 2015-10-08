@@ -8,6 +8,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.2.0] - 2015-10-08
+
+### Added
+
 - pbf_message and pbf_builder template classes wrapping pbf_reader
   and pbf_writer, respectively. The new classes are the preferred
   interface now.
@@ -17,8 +26,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Improved byte swapping operation.
 - Detect some types of data corruption earlier and throw.
 
-### Fixed
-
 
 ## [1.1.0] - 2015-08-22
 
@@ -27,6 +34,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/osmcode/libosmium/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/osmcode/libosmium/compare/v1.0.0...v1.1.0
 
