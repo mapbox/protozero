@@ -12,7 +12,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- Removed unneeded code (1-byte "swap")
+
+## [1.2.1] - 2015-10-12
+
+### Fixed
+
+- Removed unneeded code (1-byte "swap") which lead to test failures.
 
 
 ## [1.2.0] - 2015-10-08
@@ -36,7 +41,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.2.0...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/osmcode/libosmium/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/osmcode/libosmium/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/osmcode/libosmium/compare/v1.0.0...v1.1.0
 
