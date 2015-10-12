@@ -7,16 +7,6 @@
 
 namespace {
 
-    char check_swap_1(char data) {
-        char swapped;
-        char back;
-
-        protozero::byteswap<1>(&data, &swapped);
-        protozero::byteswap<1>(&swapped, &back);
-
-        return back;
-    }
-
     int32_t check_swap_4(int32_t data) {
         int32_t swapped;
         int32_t back;
@@ -40,11 +30,6 @@ namespace {
 }
 
 TEST_CASE("byte swapping") {
-    REQUIRE(0 == check_swap_1(0));
-    REQUIRE(1 == check_swap_1(1));
-    REQUIRE(-1 == check_swap_1(-1));
-    REQUIRE(127 == check_swap_1(127));
-
     REQUIRE(0 == check_swap_4(0));
     REQUIRE(1 == check_swap_4(1));
     REQUIRE(-1 == check_swap_4(-1));

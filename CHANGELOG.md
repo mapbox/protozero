@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+- Removed unneeded code (1-byte "swap")
+
 
 ## [1.2.0] - 2015-10-08
 
