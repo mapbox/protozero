@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+- Fix the recently broken writing of bools on big-endian architectures.
+
 
 ## [1.2.1] - 2015-10-12
 
