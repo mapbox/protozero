@@ -36,7 +36,7 @@ TEST_CASE("read uint64 field") {
     SECTION("end_of_buffer") {
         const std::string buffer = load_data("uint64/data-max");
 
-        for (size_t i=1; i < buffer.size(); ++i) {
+        for (std::string::size_type i = 1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
             REQUIRE_THROWS_AS(item.get_uint64(), protozero::end_of_buffer_exception);

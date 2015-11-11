@@ -36,7 +36,7 @@ TEST_CASE("read sfixed64 field") {
     SECTION("end_of_buffer") {
         const std::string buffer = load_data("sfixed64/data-min-int");
 
-        for (size_t i=1; i < buffer.size(); ++i) {
+        for (std::string::size_type i = 1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
             REQUIRE_THROWS_AS(item.get_sfixed64(), protozero::end_of_buffer_exception);

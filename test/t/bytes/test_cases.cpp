@@ -50,7 +50,7 @@ TEST_CASE("read bytes field") {
     SECTION("end_of_buffer") {
         const std::string buffer = load_data("bytes/data-binary");
 
-        for (size_t i=1; i < buffer.size(); ++i) {
+        for (std::string::size_type i = 1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
             REQUIRE_THROWS_AS(item.get_string(), protozero::end_of_buffer_exception);
