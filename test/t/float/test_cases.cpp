@@ -3,44 +3,63 @@
 
 TEST_CASE("read float field") {
 
-    SECTION("zero") {
-        std::string buffer = load_data("float/data-zero");
+    // Run these tests twice, the second time we basically move the data
+    // one byte down in the buffer. It doesn't matter how the data or buffer
+    // is aligned before that, in at least one of these cases the float will
+    // not be aligned properly. So we test that even in that case the float
+    // will be extracted properly.
 
-        protozero::pbf_reader item(buffer);
+    for (std::string::size_type n = 0; n < 2; ++n) {
 
-        REQUIRE(item.next());
-        REQUIRE(item.get_float() == Approx(0.0f));
-        REQUIRE(!item.next());
-    }
+        std::string abuffer;
+        abuffer.reserve(1000);
+        abuffer.append(n, '\0');
 
-    SECTION("positive") {
-        std::string buffer = load_data("float/data-pos");
+        SECTION("zero") {
+            std::string buffer = load_data("float/data-zero");
 
-        protozero::pbf_reader item(buffer);
+            abuffer.append(buffer);
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
-        REQUIRE(item.next());
-        REQUIRE(item.get_float() == Approx(5.34f));
-        REQUIRE(!item.next());
-    }
-
-    SECTION("negative") {
-        std::string buffer = load_data("float/data-neg");
-
-        protozero::pbf_reader item(buffer);
-
-        REQUIRE(item.next());
-        REQUIRE(item.get_float() == Approx(-1.71f));
-        REQUIRE(!item.next());
-    }
-
-    SECTION("end_of_buffer") {
-        std::string buffer = load_data("float/data-neg");
-
-        for (size_t i=1; i < buffer.size(); ++i) {
-            protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_float(), protozero::end_of_buffer_exception);
+            REQUIRE(item.get_float() == Approx(0.0f));
+            REQUIRE(!item.next());
         }
+
+        SECTION("positive") {
+            std::string buffer = load_data("float/data-pos");
+
+            abuffer.append(buffer);
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+
+            REQUIRE(item.next());
+            REQUIRE(item.get_float() == Approx(5.34f));
+            REQUIRE(!item.next());
+        }
+
+        SECTION("negative") {
+            std::string buffer = load_data("float/data-neg");
+
+            abuffer.append(buffer);
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+
+            REQUIRE(item.next());
+            REQUIRE(item.get_float() == Approx(-1.71f));
+            REQUIRE(!item.next());
+        }
+
+        SECTION("end_of_buffer") {
+            std::string buffer = load_data("float/data-neg");
+
+            abuffer.append(buffer);
+
+            for (std::string::size_type i = 1; i < buffer.size() - n; ++i) {
+                protozero::pbf_reader item(abuffer.data() + n, i);
+                REQUIRE(item.next());
+                REQUIRE_THROWS_AS(item.get_float(), protozero::end_of_buffer_exception);
+            }
+        }
+
     }
 
 }
