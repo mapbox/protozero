@@ -32,6 +32,17 @@ documentation.
 # include <protozero/byteswap.hpp>
 #endif
 
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+
+// On some ARM machines and depending on compiler settings access to unaligned
+// floating point values will result in a SIGBUS. Do not use the bare pointers
+// in this case.
+# ifndef __arm__
+#  define PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
+# endif
+
+#endif
+
 /// Wrapper for assert() used for testing
 #ifndef protozero_assert
 # define protozero_assert(x) assert(x)
@@ -95,10 +106,6 @@ class pbf_reader {
         copy_or_byteswap<sizeof(T)>(m_data - sizeof(T), &result);
         return result;
     }
-
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
-#endif
 
 #ifdef PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
 
