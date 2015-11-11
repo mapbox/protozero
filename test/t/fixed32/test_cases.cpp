@@ -3,77 +3,85 @@
 
 TEST_CASE("read fixed32 field") {
 
-    SECTION("zero") {
-        std::string buffer = load_data("fixed32/data-zero");
+    // Run these tests twice, the second time we basically move the data
+    // one byte down in the buffer. It doesn't matter how the data or buffer
+    // is aligned before that, in at least one of these cases the int32 will
+    // not be aligned properly. So we test that even in that case the int32
+    // will be extracted properly.
 
-        protozero::pbf_reader item(buffer);
+    for (std::string::size_type n = 0; n < 2; ++n) {
 
-        REQUIRE(item.next());
-        REQUIRE(item.get_fixed32() == 0UL);
-        REQUIRE(!item.next());
-    }
+        std::string abuffer;
+        abuffer.reserve(1000);
+        abuffer.append(n, '\0');
 
-    SECTION("max-uint") {
-        std::string buffer = load_data("fixed32/data-max-uint");
+        SECTION("zero") {
+            abuffer.append(load_data("fixed32/data-zero"));
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
-        protozero::pbf_reader item(buffer);
-
-        REQUIRE(item.next());
-        REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::max());
-        REQUIRE(!item.next());
-    }
-
-    SECTION("min-uint") {
-        std::string buffer = load_data("fixed32/data-min-uint");
-
-        protozero::pbf_reader item(buffer);
-
-        REQUIRE(item.next());
-        REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::min());
-        REQUIRE(!item.next());
-    }
-
-    SECTION("end_of_buffer") {
-        std::string buffer = load_data("fixed32/data-min-uint");
-
-        for (size_t i=1; i < buffer.size(); ++i) {
-            protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_fixed32(), protozero::end_of_buffer_exception);
+            REQUIRE(item.get_fixed32() == 0UL);
+            REQUIRE(!item.next());
         }
-    }
 
-    SECTION("check assert on varint/string access") {
-        std::string buffer = load_data("fixed32/data-zero");
+        SECTION("max-uint") {
+            abuffer.append(load_data("fixed32/data-max-uint"));
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
-        protozero::pbf_reader item(buffer);
+            REQUIRE(item.next());
+            REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::max());
+            REQUIRE(!item.next());
+        }
 
-        REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.get_string(), assert_error);
-    }
+        SECTION("min-uint") {
+            abuffer.append(load_data("fixed32/data-min-uint"));
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
-    SECTION("assert detecting tag==0") {
-        std::string buffer = load_data("fixed32/data-zero");
+            REQUIRE(item.next());
+            REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::min());
+            REQUIRE(!item.next());
+        }
 
-        protozero::pbf_reader item(buffer);
+        SECTION("end_of_buffer") {
+            abuffer.append(load_data("fixed32/data-min-uint"));
 
-        REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
-        REQUIRE(item.next());
-        REQUIRE(item.get_fixed32() == 0UL);
-        REQUIRE_THROWS(item.get_fixed32());
-        REQUIRE(!item.next());
-    }
+            for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
+                protozero::pbf_reader item(abuffer.data() + n, i);
+                REQUIRE(item.next());
+                REQUIRE_THROWS_AS(item.get_fixed32(), protozero::end_of_buffer_exception);
+            }
+        }
 
-    SECTION("skip") {
-        std::string buffer = load_data("fixed32/data-zero");
+        SECTION("check assert on varint/string access") {
+            abuffer.append(load_data("fixed32/data-zero"));
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
-        protozero::pbf_reader item(buffer);
+            REQUIRE(item.next());
+            REQUIRE_THROWS_AS(item.get_string(), assert_error);
+        }
 
-        REQUIRE_THROWS_AS(item.skip(), assert_error);
-        REQUIRE(item.next());
-        item.skip();
-        REQUIRE_THROWS(item.skip());
-        REQUIRE(!item.next());
+        SECTION("assert detecting tag==0") {
+            abuffer.append(load_data("fixed32/data-zero"));
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+
+            REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
+            REQUIRE(item.next());
+            REQUIRE(item.get_fixed32() == 0UL);
+            REQUIRE_THROWS(item.get_fixed32());
+            REQUIRE(!item.next());
+        }
+
+        SECTION("skip") {
+            abuffer.append(load_data("fixed32/data-zero"));
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+
+            REQUIRE_THROWS_AS(item.skip(), assert_error);
+            REQUIRE(item.next());
+            item.skip();
+            REQUIRE_THROWS(item.skip());
+            REQUIRE(!item.next());
+        }
+
     }
 
 }

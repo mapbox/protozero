@@ -16,18 +16,14 @@ TEST_CASE("read repeated packed float field") {
         abuffer.append(n, '\0');
 
         SECTION("empty") {
-            std::string buffer = load_data("repeated_packed_float/data-empty");
-
-            abuffer.append(buffer);
+            abuffer.append(load_data("repeated_packed_float/data-empty"));
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(!item.next());
         }
 
         SECTION("one") {
-            std::string buffer = load_data("repeated_packed_float/data-one");
-
-            abuffer.append(buffer);
+            abuffer.append(load_data("repeated_packed_float/data-one"));
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(item.next());
@@ -39,9 +35,7 @@ TEST_CASE("read repeated packed float field") {
         }
 
         SECTION("many") {
-            std::string buffer = load_data("repeated_packed_float/data-many");
-
-            abuffer.append(buffer);
+            abuffer.append(load_data("repeated_packed_float/data-many"));
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(item.next());
@@ -58,12 +52,10 @@ TEST_CASE("read repeated packed float field") {
         }
 
         SECTION("end_of_buffer") {
-            std::string buffer = load_data("repeated_packed_float/data-many");
+            abuffer.append(load_data("repeated_packed_float/data-many"));
 
-            abuffer.append(buffer);
-
-            for (std::string::size_type i = 1; i < buffer.size() - n; ++i) {
-                protozero::pbf_reader item(buffer.data() + n, i);
+            for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
+                protozero::pbf_reader item(abuffer.data() + n, i);
                 REQUIRE(item.next());
                 REQUIRE_THROWS_AS(item.get_packed_float(), protozero::end_of_buffer_exception);
             }
