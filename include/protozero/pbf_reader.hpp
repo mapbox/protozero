@@ -97,6 +97,11 @@ class pbf_reader {
     }
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
+# define PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
+#endif
+
+#ifdef PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
+
     template <typename T>
     inline std::pair<const T*, const T*> packed_fixed() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
@@ -168,6 +173,7 @@ class pbf_reader {
         return std::make_pair(const_fixed_iterator<T>(m_data-len, m_data),
                               const_fixed_iterator<T>(m_data, m_data));
     }
+
 #endif
 
     template <typename T> inline T get_varint();
