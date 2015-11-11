@@ -12,7 +12,7 @@ TEST_CASE("skip") {
         //   find . -name data\*pbf -not -empty | sed -e 's/^.\/\(.*\).pbf/"\1",/'
         // and then remove everything manually that contains more than one
         // field.
-        std::vector<std::string> filenames = {
+        const std::vector<std::string> filenames = {
             "bool/data-also-true",
             "bool/data-false",
             "bool/data-still-true",
@@ -99,7 +99,7 @@ TEST_CASE("skip") {
         };
 
         for (const auto& filename : filenames) {
-            std::string buffer = load_data(filename);
+            const std::string buffer = load_data(filename);
 
             protozero::pbf_reader item(buffer);
 

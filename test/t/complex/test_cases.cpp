@@ -22,7 +22,7 @@ enum class Sub : protozero::pbf_tag_type {
 TEST_CASE("read complex data using pbf_reader") {
 
     SECTION("minimal") {
-        std::string buffer = load_data("complex/data-minimal");
+        const std::string buffer = load_data("complex/data-minimal");
 
         protozero::pbf_reader item(buffer);
 
@@ -48,7 +48,7 @@ TEST_CASE("read complex data using pbf_reader") {
     }
 
     SECTION("some") {
-        std::string buffer = load_data("complex/data-some");
+        const std::string buffer = load_data("complex/data-some");
 
         protozero::pbf_reader item(buffer);
 
@@ -85,7 +85,7 @@ TEST_CASE("read complex data using pbf_reader") {
     }
 
     SECTION("all") {
-        std::string buffer = load_data("complex/data-all");
+        const std::string buffer = load_data("complex/data-all");
 
         protozero::pbf_reader item(buffer);
 
@@ -140,7 +140,7 @@ TEST_CASE("read complex data using pbf_reader") {
     }
 
     SECTION("skip everything") {
-        std::string buffer = load_data("complex/data-all");
+        const std::string buffer = load_data("complex/data-all");
 
         protozero::pbf_reader item(buffer);
 
@@ -168,7 +168,7 @@ TEST_CASE("read complex data using pbf_reader") {
 TEST_CASE("read complex data using pbf_message") {
 
     SECTION("minimal") {
-        std::string buffer = load_data("complex/data-minimal");
+        const std::string buffer = load_data("complex/data-minimal");
 
         protozero::pbf_message<TestComplex::Test> item(buffer);
 
@@ -194,7 +194,7 @@ TEST_CASE("read complex data using pbf_message") {
     }
 
     SECTION("some") {
-        std::string buffer = load_data("complex/data-some");
+        const std::string buffer = load_data("complex/data-some");
 
         protozero::pbf_message<TestComplex::Test> item(buffer);
 
@@ -231,7 +231,7 @@ TEST_CASE("read complex data using pbf_message") {
     }
 
     SECTION("all") {
-        std::string buffer = load_data("complex/data-all");
+        const std::string buffer = load_data("complex/data-all");
 
         protozero::pbf_message<TestComplex::Test> item(buffer);
 
@@ -286,7 +286,7 @@ TEST_CASE("read complex data using pbf_message") {
     }
 
     SECTION("skip everything") {
-        std::string buffer = load_data("complex/data-all");
+        const std::string buffer = load_data("complex/data-all");
 
         protozero::pbf_message<TestComplex::Test> item(buffer);
 

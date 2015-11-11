@@ -80,14 +80,14 @@ inline void check_empty(protozero::pbf_reader message) {
 TEST_CASE("read nested message fields") {
 
     SECTION("string") {
-        std::string buffer = load_data("nested/data-message");
+        const std::string buffer = load_data("nested/data-message");
 
         protozero::pbf_reader message(buffer);
         check(message);
     }
 
     SECTION("no submessage") {
-        std::string buffer = load_data("nested/data-no-message");
+        const std::string buffer = load_data("nested/data-no-message");
 
         protozero::pbf_reader message(buffer);
         check_empty(message);

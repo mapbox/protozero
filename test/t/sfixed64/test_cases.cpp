@@ -4,7 +4,7 @@
 TEST_CASE("read sfixed64 field") {
 
     SECTION("zero") {
-        std::string buffer = load_data("sfixed64/data-zero");
+        const std::string buffer = load_data("sfixed64/data-zero");
 
         protozero::pbf_reader item(buffer);
 
@@ -14,7 +14,7 @@ TEST_CASE("read sfixed64 field") {
     }
 
     SECTION("max-int") {
-        std::string buffer = load_data("sfixed64/data-max-int");
+        const std::string buffer = load_data("sfixed64/data-max-int");
 
         protozero::pbf_reader item(buffer);
 
@@ -24,7 +24,7 @@ TEST_CASE("read sfixed64 field") {
     }
 
     SECTION("min-int") {
-        std::string buffer = load_data("sfixed64/data-min-int");
+        const std::string buffer = load_data("sfixed64/data-min-int");
 
         protozero::pbf_reader item(buffer);
 
@@ -34,7 +34,7 @@ TEST_CASE("read sfixed64 field") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = load_data("sfixed64/data-min-int");
+        const std::string buffer = load_data("sfixed64/data-min-int");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);

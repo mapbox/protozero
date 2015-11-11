@@ -4,7 +4,7 @@
 TEST_CASE("read int32 field") {
 
     SECTION("zero") {
-        std::string buffer = load_data("int32/data-zero");
+        const std::string buffer = load_data("int32/data-zero");
 
         protozero::pbf_reader item(buffer);
 
@@ -14,7 +14,7 @@ TEST_CASE("read int32 field") {
     }
 
     SECTION("positive") {
-        std::string buffer = load_data("int32/data-pos");
+        const std::string buffer = load_data("int32/data-pos");
 
         protozero::pbf_reader item(buffer);
 
@@ -24,7 +24,7 @@ TEST_CASE("read int32 field") {
     }
 
     SECTION("negative") {
-        std::string buffer = load_data("int32/data-neg");
+        const std::string buffer = load_data("int32/data-neg");
 
         protozero::pbf_reader item(buffer);
 
@@ -34,7 +34,7 @@ TEST_CASE("read int32 field") {
     }
 
     SECTION("max") {
-        std::string buffer = load_data("int32/data-max");
+        const std::string buffer = load_data("int32/data-max");
 
         protozero::pbf_reader item(buffer);
 
@@ -44,7 +44,7 @@ TEST_CASE("read int32 field") {
     }
 
     SECTION("min64") {
-        std::string buffer = load_data("int32/data-min");
+        const std::string buffer = load_data("int32/data-min");
 
         protozero::pbf_reader item(buffer);
 
@@ -54,7 +54,7 @@ TEST_CASE("read int32 field") {
     }
 
     SECTION("min") {
-        std::string buffer = load_data("int32/data-min");
+        const std::string buffer = load_data("int32/data-min");
 
         protozero::pbf_reader item(buffer);
 
@@ -64,7 +64,7 @@ TEST_CASE("read int32 field") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = load_data("int32/data-min");
+        const std::string buffer = load_data("int32/data-min");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
@@ -74,7 +74,7 @@ TEST_CASE("read int32 field") {
     }
 
     SECTION("check assert on string/fixed int access") {
-        std::string buffer = load_data("int32/data-zero");
+        const std::string buffer = load_data("int32/data-zero");
 
         protozero::pbf_reader item(buffer);
 

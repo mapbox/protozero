@@ -7,7 +7,7 @@
 // Input data.vector is encoded according to
 // https://github.com/mapbox/mapnik-vector-tile/blob/master/proto/vector_tile.proto
 
-static std::vector<std::string> expected_layer_names = {
+static const std::vector<std::string> expected_layer_names = {
     "landuse", "waterway", "water", "aeroway", "barrier_line", "building",
     "landuse_overlay", "tunnel", "road", "bridge", "admin",
     "country_label_line", "country_label", "marine_label", "state_label",
@@ -29,7 +29,7 @@ std::string get_name(protozero::pbf_reader layer) { // copy!
 TEST_CASE("reading vector tiles") {
 
     SECTION("iterate over message using next()") {
-        std::string buffer = load_data("vector_tile/data.vector");
+        const std::string buffer = load_data("vector_tile/data.vector");
 
         protozero::pbf_reader item(buffer);
 
@@ -55,7 +55,7 @@ TEST_CASE("reading vector tiles") {
     }
 
     SECTION("iterate over message using next(type)") {
-        std::string buffer = load_data("vector_tile/data.vector");
+        const std::string buffer = load_data("vector_tile/data.vector");
 
         protozero::pbf_reader item(buffer);
 
@@ -71,7 +71,7 @@ TEST_CASE("reading vector tiles") {
     }
 
     SECTION("iterate over features in road layer") {
-        std::string buffer = load_data("vector_tile/data.vector");
+        const std::string buffer = load_data("vector_tile/data.vector");
 
         protozero::pbf_reader item(buffer);
 

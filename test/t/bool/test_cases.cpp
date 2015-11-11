@@ -12,7 +12,7 @@ enum class Test : protozero::pbf_tag_type {
 TEST_CASE("read bool field using pbf_reader") {
 
     SECTION("false") {
-        std::string buffer = load_data("bool/data-false");
+        const std::string buffer = load_data("bool/data-false");
 
         protozero::pbf_reader item(buffer);
 
@@ -22,7 +22,7 @@ TEST_CASE("read bool field using pbf_reader") {
     }
 
     SECTION("true") {
-        std::string buffer = load_data("bool/data-true");
+        const std::string buffer = load_data("bool/data-true");
 
         protozero::pbf_reader item(buffer);
 
@@ -32,7 +32,7 @@ TEST_CASE("read bool field using pbf_reader") {
     }
 
     SECTION("also true") {
-        std::string buffer = load_data("bool/data-also-true");
+        const std::string buffer = load_data("bool/data-also-true");
 
         protozero::pbf_reader item(buffer);
 
@@ -42,7 +42,7 @@ TEST_CASE("read bool field using pbf_reader") {
     }
 
     SECTION("still true") {
-        std::string buffer = load_data("bool/data-still-true");
+        const std::string buffer = load_data("bool/data-still-true");
 
         protozero::pbf_reader item(buffer);
 
@@ -56,7 +56,7 @@ TEST_CASE("read bool field using pbf_reader") {
 TEST_CASE("read bool field using pbf_message") {
 
     SECTION("false") {
-        std::string buffer = load_data("bool/data-false");
+        const std::string buffer = load_data("bool/data-false");
 
         protozero::pbf_message<TestBoolean::Test> item(buffer);
 
@@ -66,7 +66,7 @@ TEST_CASE("read bool field using pbf_message") {
     }
 
     SECTION("true") {
-        std::string buffer = load_data("bool/data-true");
+        const std::string buffer = load_data("bool/data-true");
 
         protozero::pbf_message<TestBoolean::Test> item(buffer);
 
@@ -76,7 +76,7 @@ TEST_CASE("read bool field using pbf_message") {
     }
 
     SECTION("also true") {
-        std::string buffer = load_data("bool/data-also-true");
+        const std::string buffer = load_data("bool/data-also-true");
 
         protozero::pbf_message<TestBoolean::Test> item(buffer);
 
@@ -86,7 +86,7 @@ TEST_CASE("read bool field using pbf_message") {
     }
 
     SECTION("still true") {
-        std::string buffer = load_data("bool/data-still-true");
+        const std::string buffer = load_data("bool/data-still-true");
 
         protozero::pbf_message<TestBoolean::Test> item(buffer);
 

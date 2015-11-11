@@ -4,7 +4,7 @@
 TEST_CASE("read repeated packed sfixed32 field") {
 
     SECTION("empty") {
-        std::string buffer = load_data("repeated_packed_sfixed32/data-empty");
+        const std::string buffer = load_data("repeated_packed_sfixed32/data-empty");
 
         protozero::pbf_reader item(buffer);
 
@@ -12,7 +12,7 @@ TEST_CASE("read repeated packed sfixed32 field") {
     }
 
     SECTION("one") {
-        std::string buffer = load_data("repeated_packed_sfixed32/data-one");
+        const std::string buffer = load_data("repeated_packed_sfixed32/data-one");
 
         protozero::pbf_reader item(buffer);
 
@@ -25,7 +25,7 @@ TEST_CASE("read repeated packed sfixed32 field") {
     }
 
     SECTION("many") {
-        std::string buffer = load_data("repeated_packed_sfixed32/data-many");
+        const std::string buffer = load_data("repeated_packed_sfixed32/data-many");
 
         protozero::pbf_reader item(buffer);
 
@@ -44,7 +44,7 @@ TEST_CASE("read repeated packed sfixed32 field") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = load_data("repeated_packed_sfixed32/data-many");
+        const std::string buffer = load_data("repeated_packed_sfixed32/data-many");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);

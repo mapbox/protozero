@@ -4,7 +4,7 @@
 TEST_CASE("read repeated packed bool field") {
 
     SECTION("empty") {
-        std::string buffer = load_data("repeated_packed_bool/data-empty");
+        const std::string buffer = load_data("repeated_packed_bool/data-empty");
 
         protozero::pbf_reader item(buffer);
 
@@ -12,7 +12,7 @@ TEST_CASE("read repeated packed bool field") {
     }
 
     SECTION("one") {
-        std::string buffer = load_data("repeated_packed_bool/data-one");
+        const std::string buffer = load_data("repeated_packed_bool/data-one");
 
         protozero::pbf_reader item(buffer);
 
@@ -26,7 +26,7 @@ TEST_CASE("read repeated packed bool field") {
     }
 
     SECTION("many") {
-        std::string buffer = load_data("repeated_packed_bool/data-many");
+        const std::string buffer = load_data("repeated_packed_bool/data-many");
 
         protozero::pbf_reader item(buffer);
 
@@ -44,7 +44,7 @@ TEST_CASE("read repeated packed bool field") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = load_data("repeated_packed_bool/data-many");
+        const std::string buffer = load_data("repeated_packed_bool/data-many");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);

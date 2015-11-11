@@ -4,7 +4,7 @@
 TEST_CASE("read string field") {
 
     SECTION("empty") {
-        std::string buffer = load_data("string/data-empty");
+        const std::string buffer = load_data("string/data-empty");
 
         protozero::pbf_reader item(buffer);
 
@@ -14,7 +14,7 @@ TEST_CASE("read string field") {
     }
 
     SECTION("one") {
-        std::string buffer = load_data("string/data-one");
+        const std::string buffer = load_data("string/data-one");
 
         protozero::pbf_reader item(buffer);
 
@@ -24,7 +24,7 @@ TEST_CASE("read string field") {
     }
 
     SECTION("string") {
-        std::string buffer = load_data("string/data-string");
+        const std::string buffer = load_data("string/data-string");
 
         protozero::pbf_reader item(buffer);
 
@@ -34,7 +34,7 @@ TEST_CASE("read string field") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = load_data("string/data-string");
+        const std::string buffer = load_data("string/data-string");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
@@ -44,7 +44,7 @@ TEST_CASE("read string field") {
     }
 
     SECTION("check assert on fixed int access") {
-        std::string buffer = load_data("string/data-string");
+        const std::string buffer = load_data("string/data-string");
 
         protozero::pbf_reader item(buffer);
 

@@ -7,7 +7,7 @@
 
 namespace {
 
-    int32_t check_swap_4(int32_t data) {
+    int32_t check_swap_4(const int32_t data) {
         int32_t swapped;
         int32_t back;
 
@@ -17,7 +17,7 @@ namespace {
         return back;
     }
 
-    int64_t check_swap_8(int64_t data) {
+    int64_t check_swap_8(const int64_t data) {
         int64_t swapped;
         int64_t back;
 

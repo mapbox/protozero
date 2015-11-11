@@ -4,7 +4,7 @@
 TEST_CASE("read message field") {
 
     SECTION("string") {
-        std::string buffer = load_data("message/data-message");
+        const std::string buffer = load_data("message/data-message");
 
         protozero::pbf_reader item(buffer);
 
@@ -18,7 +18,7 @@ TEST_CASE("read message field") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = load_data("message/data-message");
+        const std::string buffer = load_data("message/data-message");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
@@ -28,7 +28,7 @@ TEST_CASE("read message field") {
     }
 
     SECTION("optional contents of message - empty") {
-        std::string buffer = load_data("message/data-opt-empty");
+        const std::string buffer = load_data("message/data-opt-empty");
 
         protozero::pbf_reader item(buffer);
 
@@ -36,7 +36,7 @@ TEST_CASE("read message field") {
     }
 
     SECTION("string") {
-        std::string buffer = load_data("message/data-opt-element");
+        const std::string buffer = load_data("message/data-opt-element");
 
         protozero::pbf_reader item(buffer);
 

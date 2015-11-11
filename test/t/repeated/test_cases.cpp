@@ -4,7 +4,7 @@
 TEST_CASE("read repeated fields") {
 
     SECTION("empty") {
-        std::string buffer = load_data("repeated/data-empty");
+        const std::string buffer = load_data("repeated/data-empty");
 
         protozero::pbf_reader item(buffer);
 
@@ -12,7 +12,7 @@ TEST_CASE("read repeated fields") {
     }
 
     SECTION("one") {
-        std::string buffer = load_data("repeated/data-one");
+        const std::string buffer = load_data("repeated/data-one");
 
         protozero::pbf_reader item(buffer);
 
@@ -22,7 +22,7 @@ TEST_CASE("read repeated fields") {
     }
 
     SECTION("many") {
-        std::string buffer = load_data("repeated/data-many");
+        const std::string buffer = load_data("repeated/data-many");
 
         protozero::pbf_reader item(buffer);
 
@@ -45,7 +45,7 @@ TEST_CASE("read repeated fields") {
     }
 
     SECTION("end_of_buffer") {
-        std::string buffer = load_data("repeated/data-one");
+        const std::string buffer = load_data("repeated/data-one");
 
         for (size_t i=1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
