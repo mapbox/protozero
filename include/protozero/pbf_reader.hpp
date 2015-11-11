@@ -77,15 +77,22 @@ class pbf_reader {
     // The tag of the current field.
     pbf_tag_type m_tag = 0;
 
+    // Copy N bytes from src to dest on little endian machines, on big endian
+    // swap the bytes in the process.
+    template <int N>
+    static void copy_or_byteswap(const char* src, void* dest) noexcept {
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+        memcpy(dest, src, N);
+#else
+        byteswap<N>(src, reinterpret_cast<char*>(dest));
+#endif
+    }
+
     template <typename T>
     inline T get_fixed() {
         T result;
         skip_bytes(sizeof(T));
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-        memcpy(&result, m_data - sizeof(T), sizeof(T));
-#else
-        byteswap<sizeof(T)>(m_data - sizeof(T), reinterpret_cast<char*>(&result));
-#endif
+        copy_or_byteswap<sizeof(T)>(m_data - sizeof(T), &result);
         return result;
     }
 
@@ -128,7 +135,7 @@ class pbf_reader {
 
         T operator*() {
             T result;
-            byteswap<sizeof(T)>(m_data, reinterpret_cast<char*>(&result));
+            copy_or_byteswap<sizeof(T)>(m_data , &result);
             return result;
         }
 
