@@ -8,9 +8,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Added `config.hpp` header which now includes all the macro magic to
+  configure the library for different architectures etc.
+
 ### Changed
 
 ### Fixed
+
+- Unaligned access to floats/doubles on some ARM architectures.
 
 
 ## [1.2.2] - 2015-10-13

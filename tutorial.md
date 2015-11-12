@@ -27,8 +27,8 @@ Keep the `protozero` directory and include the files in the form
 
     #include <protozero/FILENAME.hpp>
 
-You always need `byteswap.hpp`, `pbf_types.hpp`, `varint.hpp`, and
-`exception.hpp`. For reading you need `pbf_reader.hpp` and probably
+You always need `byteswap.hpp`, `config.hpp`, `pbf_types.hpp`, `varint.hpp`,
+and `exception.hpp`. For reading you need `pbf_reader.hpp` and probably
 `pbf_message.hpp`, for writing you need `pbf_writer.hpp` and probably
 `pbf_builder.hpp`. You only need `version.hpp` if you want access to the macros
 defining the library version.

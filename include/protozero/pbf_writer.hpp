@@ -24,16 +24,12 @@ documentation.
 #include <limits>
 #include <string>
 
+#include <protozero/config.hpp>
 #include <protozero/pbf_types.hpp>
 #include <protozero/varint.hpp>
 
-#if __BYTE_ORDER != __LITTLE_ENDIAN
+#if PROTOZERO_BYTE_ORDER != LITTLE_ENDIAN
 # include <protozero/byteswap.hpp>
-#endif
-
-/// Wrapper for assert() used for testing
-#ifndef protozero_assert
-# define protozero_assert(x) assert(x)
 #endif
 
 namespace protozero {
@@ -71,7 +67,7 @@ class pbf_writer {
     inline void add_fixed(T value) {
         protozero_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
         protozero_assert(m_data);
-#if __BYTE_ORDER == __LITTLE_ENDIAN
+#if PROTOZERO_BYTE_ORDER == LITTLE_ENDIAN
         m_data->append(reinterpret_cast<const char*>(&value), sizeof(T));
 #else
         auto size = m_data->size();

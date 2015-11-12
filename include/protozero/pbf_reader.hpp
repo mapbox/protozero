@@ -24,28 +24,13 @@ documentation.
 #include <string>
 #include <utility>
 
-#include <protozero/pbf_types.hpp>
+#include <protozero/config.hpp>
 #include <protozero/exception.hpp>
+#include <protozero/pbf_types.hpp>
 #include <protozero/varint.hpp>
 
-#if __BYTE_ORDER != __LITTLE_ENDIAN
+#if PROTOZERO_BYTE_ORDER != LITTLE_ENDIAN
 # include <protozero/byteswap.hpp>
-#endif
-
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-
-// On some ARM machines and depending on compiler settings access to unaligned
-// floating point values will result in a SIGBUS. Do not use the bare pointers
-// in this case.
-# ifndef __arm__
-#  define PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
-# endif
-
-#endif
-
-/// Wrapper for assert() used for testing
-#ifndef protozero_assert
-# define protozero_assert(x) assert(x)
 #endif
 
 namespace protozero {
@@ -92,7 +77,7 @@ class pbf_reader {
     // swap the bytes in the process.
     template <int N>
     static void copy_or_byteswap(const char* src, void* dest) noexcept {
-#if __BYTE_ORDER == __LITTLE_ENDIAN
+#if PROTOZERO_BYTE_ORDER == LITTLE_ENDIAN
         memcpy(dest, src, N);
 #else
         byteswap<N>(src, reinterpret_cast<char*>(dest));
