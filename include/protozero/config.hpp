@@ -24,6 +24,10 @@ documentation.
 # if (__BYTE_ORDER == __BIG_ENDIAN)
 #  define PROTOZERO_BYTE_ORDER BIG_ENDIAN
 # endif
+#else
+// This probably isn't a very good default, but might do until we figure
+// out something better.
+# define PROTOZERO_BYTE_ORDER LITTLE_ENDIAN
 #endif
 
 // On some ARM machines and depending on compiler settings access to unaligned
