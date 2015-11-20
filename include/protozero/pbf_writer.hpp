@@ -16,7 +16,6 @@ documentation.
  * @brief Contains the pbf_writer class.
  */
 
-#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -376,7 +375,7 @@ public:
     inline void add_bytes(pbf_tag_type tag, const char* value, size_t size) {
         protozero_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
         protozero_assert(m_data);
-        assert(size <= std::numeric_limits<pbf_length_type>::max());
+        protozero_assert(size <= std::numeric_limits<pbf_length_type>::max());
         add_length_varint(tag, pbf_length_type(size));
         m_data->append(value, size);
     }

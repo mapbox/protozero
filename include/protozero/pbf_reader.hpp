@@ -16,7 +16,6 @@ documentation.
  * @brief Contains the pbf_reader class.
  */
 
-#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
