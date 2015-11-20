@@ -44,7 +44,7 @@ HPP_FILES := include/protozero/byteswap.hpp \
              include/protozero/pbf_reader.hpp \
              include/protozero/pbf_writer.hpp
 
-CFLAGS_PROTOBUF := $(subst(-I,-isystem ,$(shell pkg-config protobuf --cflags))
+CFLAGS_PROTOBUF := $(subst -I,-isystem ,$(shell pkg-config protobuf --cflags))
 LDFLAGS_PROTOBUF := $(shell pkg-config protobuf --libs-only-L)
 
 all: ./test/tests test/writer_tests
