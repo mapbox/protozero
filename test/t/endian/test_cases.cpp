@@ -1,9 +1,9 @@
 
 #include <cstdint>
 
-#include <protozero/byteswap.hpp>
-
 #include <test.hpp>
+
+#include <protozero/byteswap.hpp>
 
 namespace {
 
