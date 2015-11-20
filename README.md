@@ -82,6 +82,8 @@ non-aligned data is not perfect. If tests fail for you, this might be a problem
 in your setup. Please open an issue on Github in this case and tell us about
 your system.
 
+See also the discussion on https://github.com/mapbox/protozero/issues/33 .
+
 
 ## Tests
 
