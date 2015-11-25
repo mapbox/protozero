@@ -28,7 +28,7 @@ documentation.
 #include <protozero/pbf_types.hpp>
 #include <protozero/varint.hpp>
 
-#if PROTOZERO_BYTE_ORDER != LITTLE_ENDIAN
+#if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
 # include <protozero/byteswap.hpp>
 #endif
 
@@ -76,7 +76,7 @@ class pbf_reader {
     // swap the bytes in the process.
     template <int N>
     static void copy_or_byteswap(const char* src, void* dest) noexcept {
-#if PROTOZERO_BYTE_ORDER == LITTLE_ENDIAN
+#if PROTOZERO_BYTE_ORDER == PROTOZERO_LITTLE_ENDIAN
         memcpy(dest, src, N);
 #else
         byteswap<N>(src, reinterpret_cast<char*>(dest));
