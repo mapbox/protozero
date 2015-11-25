@@ -10,6 +10,11 @@
                 "RuntimeTypeInfo": "true" # /GR
               }
             },
+            "msbuild_settings": {
+              "ClCompile": {
+                "ObjectFileName": "$(IntDir)%(RelativeDir)",
+              }
+            },
             "configurations": {
               "Debug_Win32": {
                 "msvs_configuration_platform": "Win32",
