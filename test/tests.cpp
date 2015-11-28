@@ -11,7 +11,7 @@ std::string load_data(const std::string& filename) {
     fullname += filename;
     fullname += ".pbf";
 
-    std::ifstream stream(fullname.c_str(), std::ios_base::in|std::ios_base::binary);
+    std::ifstream stream(fullname, std::ios_base::in|std::ios_base::binary);
     if (!stream.is_open())
     {
         throw std::runtime_error("could not open: '" + filename + "'");
