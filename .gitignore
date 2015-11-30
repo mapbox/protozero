@@ -14,3 +14,4 @@ deps
 *.sln
 *.suo
 *.vcxproj*
+*.7z

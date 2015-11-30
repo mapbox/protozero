@@ -3,11 +3,14 @@
     ["OS=='win'", {
           "target_defaults": {
             "default_configuration": "Release_x64",
+            "msvs_configuration_attributes": {
+                "OutputDirectory": "$(SolutionDir)$(Configuration)\\$(PlatformTarget)\\",
+                },
             "msvs_settings": {
               "VCCLCompilerTool": {
                 "ExceptionHandling": 1, # /EHsc
                 "RuntimeTypeInfo": "true", # /GR
-                "ObjectFile": "$(IntDir)%(RelativeDir)",
+                "ObjectFile": "$(SolutionDir)$(Configuration)\\$(PlatformTarget)\\%(RelativeDir)",
               }
             },
             "configurations": {
@@ -16,7 +19,7 @@
                 "defines": [ "DEBUG","_DEBUG"],
                 "msvs_settings": {
                   "VCCLCompilerTool": {
-                    "RuntimeLibrary": "1", # static debug /MTd
+                    "RuntimeLibrary": "3", #0:static release /MT, 1:static debug /MTd, 2:shared /MD, 3:shared debug /MDd
                     "Optimization": 0, # /Od, no optimization
                     "MinimalRebuild": "false",
                     "OmitFramePointers": "false",
@@ -33,7 +36,7 @@
                 "defines": [ "NDEBUG"],
                 "msvs_settings": {
                   "VCCLCompilerTool": {
-                    "RuntimeLibrary": 0, # static release
+                    "RuntimeLibrary": "2", #0:static release /MT, 1:static debug /MTd, 2:shared /MD, 3:shared debug /MDd
                     "Optimization": 3, # /Ox, full optimization
                     "FavorSizeOrSpeed": 1, # /Ot, favour speed over size
                     "InlineFunctionExpansion": 2, # /Ob2, inline anything eligible
