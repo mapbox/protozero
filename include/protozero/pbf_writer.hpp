@@ -33,6 +33,14 @@ documentation.
 
 namespace protozero {
 
+namespace detail {
+
+    template <typename T> class packed_field_varint;
+    template <typename T> class packed_field_svarint;
+    template <typename T> class packed_field_fixed;
+
+} // end namespace detail
+
 /**
  * The pbf_writer is used to write PBF formatted messages into a buffer.
  *
@@ -43,6 +51,7 @@ class pbf_writer {
 
     std::string* m_data;
     pbf_writer* m_parent_writer;
+    size_t m_rollback_pos = 0;
     size_t m_pos = 0;
 
     inline void add_varint(uint64_t value) {
@@ -135,12 +144,20 @@ class pbf_writer {
     inline void open_submessage(pbf_tag_type tag) {
         protozero_assert(m_pos == 0);
         protozero_assert(m_data);
+        m_rollback_pos = m_data->size();
         add_field(tag, pbf_wire_type::length_delimited);
         m_data->append(size_t(reserve_bytes), '\0');
         m_pos = m_data->size();
     }
 
-    inline void close_submessage() {
+    inline void rollback_submessage() {
+        protozero_assert(m_pos != 0);
+        protozero_assert(m_data);
+        m_data->resize(m_rollback_pos);
+        m_pos = 0;
+    }
+
+    inline void commit_submessage() {
         protozero_assert(m_pos != 0);
         protozero_assert(m_data);
         auto length = pbf_length_type(m_data->size() - m_pos);
@@ -150,6 +167,16 @@ class pbf_writer {
 
         m_data->erase(m_data->begin() + long(m_pos) - reserve_bytes + n, m_data->begin() + long(m_pos));
         m_pos = 0;
+    }
+
+    inline void close_submessage() {
+        protozero_assert(m_pos != 0);
+        protozero_assert(m_data);
+        if (m_data->size() - m_pos == 0) {
+            rollback_submessage();
+        } else {
+            commit_submessage();
+        }
     }
 
     inline void add_length_varint(pbf_tag_type tag, pbf_length_type length) {
@@ -209,6 +236,19 @@ public:
         if (m_parent_writer) {
             m_parent_writer->close_submessage();
         }
+    }
+
+    /**
+     * Reserve size bytes in the underlying message store in addition to
+     * whatever the message store already holds. So unlike
+     * the `std::string::reserve()` method this is not an absolute size,
+     * but additional memory that should be reserved.
+     *
+     * @param size Number of bytes to reserve in underlying message store.
+     */
+    void reserve(size_t size) {
+        protozero_assert(m_data);
+        m_data->reserve(m_data->size() + size);
     }
 
     ///@{
@@ -654,7 +694,81 @@ public:
 
     ///@}
 
+    template <typename T> friend class detail::packed_field_varint;
+    template <typename T> friend class detail::packed_field_svarint;
+    template <typename T> friend class detail::packed_field_fixed;
+
 }; // class pbf_writer
+
+namespace detail {
+
+    template <typename T>
+    class packed_field_fixed {
+
+        pbf_writer m_writer;
+
+    public:
+
+        packed_field_fixed(pbf_writer& parent_writer, pbf_tag_type tag) :
+            m_writer(parent_writer, tag) {
+        }
+
+        void add_element(T value) {
+            m_writer.add_fixed<T>(value);
+        }
+
+    }; // class packed_field_fixed
+
+    template <typename T>
+    class packed_field_varint {
+
+        pbf_writer m_writer;
+
+    public:
+
+        packed_field_varint(pbf_writer& parent_writer, pbf_tag_type tag) :
+            m_writer(parent_writer, tag) {
+        }
+
+        void add_element(T value) {
+            m_writer.add_varint(uint64_t(value));
+        }
+
+    }; // class packed_field_varint
+
+    template <typename T>
+    class packed_field_svarint {
+
+        pbf_writer m_writer;
+
+    public:
+
+        packed_field_svarint(pbf_writer& parent_writer, pbf_tag_type tag) :
+            m_writer(parent_writer, tag) {
+        }
+
+        void add_element(T value) {
+            m_writer.add_varint(encode_zigzag64(value));
+        }
+
+    }; // class packed_field_svarint
+
+} // end namespace detail
+
+using packed_field_bool     = detail::packed_field_varint<bool>;
+using packed_field_enum     = detail::packed_field_varint<int32_t>;
+using packed_field_int32    = detail::packed_field_varint<int32_t>;
+using packed_field_sint32   = detail::packed_field_svarint<int32_t>;
+using packed_field_uint32   = detail::packed_field_varint<uint32_t>;
+using packed_field_int64    = detail::packed_field_varint<int64_t>;
+using packed_field_sint64   = detail::packed_field_svarint<int64_t>;
+using packed_field_uint64   = detail::packed_field_varint<uint64_t>;
+using packed_field_fixed32  = detail::packed_field_fixed<uint32_t>;
+using packed_field_sfixed32 = detail::packed_field_fixed<int32_t>;
+using packed_field_fixed64  = detail::packed_field_fixed<uint64_t>;
+using packed_field_sfixed64 = detail::packed_field_fixed<int64_t>;
+using packed_field_float    = detail::packed_field_fixed<float>;
+using packed_field_double   = detail::packed_field_fixed<double>;
 
 } // end namespace protozero
 
