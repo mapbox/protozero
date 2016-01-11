@@ -387,7 +387,7 @@ that looks somewhat like this:
     #include <protozero/pbf_writer.hpp>
 
     std::string data;
-    osmium::util::pbf_writer pbf_example(data);
+    protozero::pbf_writer pbf_example(data);
 
     pbf_example.add_uint32(1, 27);       // uint32_t x
     pbf_example.add_fixed64(17, 1);      // fixed64 r
@@ -422,7 +422,7 @@ the `.proto` file are not available.
 Repeated packed fields can easily be set from a pair of iterators:
 
     std::string data;
-    osmium::util::pbf_writer pw(data);
+    protozero::pbf_writer pw(data);
 
     std::vector<int> v = { 1, 4, 9, 16, 25, 36 };
     pw.add_packed_int32(1, std::begin(v), std::end(v));
@@ -434,7 +434,7 @@ Nested sub-messages can be handled by first creating the submessage and then
 adding to the parent message:
 
     std::string buffer_sub;
-    osmium::util::pbf_writer pbf_sub(buffer_sub);
+    protozero::pbf_writer pbf_sub(buffer_sub);
 
     // add fields to sub-message
     pbf_sub.add_...(...);
@@ -443,7 +443,7 @@ adding to the parent message:
     // sub-message is finished here
 
     std::string buffer_parent;
-    osmium::util::pbf_writer pbf_parent(buffer_parent);
+    protozero::pbf_writer pbf_parent(buffer_parent);
     pbf_parent.add_message(buffer_sub);
 
 This is easy to do but it has the drawback of needing a separate `std::string`
@@ -451,7 +451,7 @@ buffer. If this concerns you (and why would use use protozero and not the
 Google protobuf library if it doesn't) there is another way:
 
     std::string buffer;
-    osmium::util::pbf_writer pbf_parent(buffer);
+    protozero::pbf_writer pbf_parent(buffer);
 
     // optionally add fields to parent here
     pbf_parent.add_...(...);
@@ -460,7 +460,7 @@ Google protobuf library if it doesn't) there is another way:
     {
         // create new pbf_writer with parent and the tag (field number)
         // as parameters
-        osmium::util::pbf_writer pbf_sub(pbf_parent, 1);
+        protozero::pbf_writer pbf_sub(pbf_parent, 1);
 
         // add fields to sub here...
         pbf_sub.add_...(...);
