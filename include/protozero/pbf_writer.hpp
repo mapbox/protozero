@@ -103,7 +103,9 @@ class pbf_writer {
             return;
         }
 
-        add_length_varint(tag, sizeof(T) * pbf_length_type(std::distance(first, last)));
+        auto length = std::distance(first, last);
+        add_length_varint(tag, sizeof(T) * pbf_length_type(length));
+        reserve(sizeof(T) * size_t(length));
 
         while (first != last) {
             add_fixed<T>(*first++);
@@ -149,13 +151,14 @@ class pbf_writer {
     inline void open_submessage(pbf_tag_type tag, size_t size) {
         protozero_assert(m_pos == 0);
         protozero_assert(m_data);
-        m_rollback_pos = m_data->size();
-        add_field(tag, pbf_wire_type::length_delimited);
         if (size == 0) {
+            m_rollback_pos = m_data->size();
+            add_field(tag, pbf_wire_type::length_delimited);
             m_data->append(size_t(reserve_bytes), '\0');
         } else {
             m_rollback_pos = size_is_known;
-            add_varint(size);
+            add_length_varint(tag, pbf_length_type(size));
+            reserve(size);
         }
         m_pos = m_data->size();
     }
