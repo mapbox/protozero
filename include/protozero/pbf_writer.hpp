@@ -51,8 +51,8 @@ class pbf_writer {
 
     std::string* m_data;
     pbf_writer* m_parent_writer;
-    size_t m_rollback_pos = 0;
-    size_t m_pos = 0;
+    std::size_t m_rollback_pos = 0;
+    std::size_t m_pos = 0;
 
     inline void add_varint(uint64_t value) {
         protozero_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
@@ -105,7 +105,7 @@ class pbf_writer {
 
         auto length = std::distance(first, last);
         add_length_varint(tag, sizeof(T) * pbf_length_type(length));
-        reserve(sizeof(T) * size_t(length));
+        reserve(sizeof(T) * std::size_t(length));
 
         while (first != last) {
             add_fixed<T>(*first++);
@@ -146,15 +146,15 @@ class pbf_writer {
     // If m_rollpack_pos is set to this special value, it means that when
     // the submessage is closed, nothing needs to be done, because the length
     // of the submessage has already been written correctly.
-    static const size_t size_is_known = std::numeric_limits<size_t>::max();
+    static const std::size_t size_is_known = std::numeric_limits<std::size_t>::max();
 
-    inline void open_submessage(pbf_tag_type tag, size_t size) {
+    inline void open_submessage(pbf_tag_type tag, std::size_t size) {
         protozero_assert(m_pos == 0);
         protozero_assert(m_data);
         if (size == 0) {
             m_rollback_pos = m_data->size();
             add_field(tag, pbf_wire_type::length_delimited);
-            m_data->append(size_t(reserve_bytes), '\0');
+            m_data->append(std::size_t(reserve_bytes), '\0');
         } else {
             m_rollback_pos = size_is_known;
             add_length_varint(tag, pbf_length_type(size));
@@ -233,7 +233,7 @@ public:
      *        Setting this allows some optimizations but is only possible in
      *        a few very specific cases.
      */
-    inline pbf_writer(pbf_writer& parent_writer, pbf_tag_type tag, size_t size=0) :
+    inline pbf_writer(pbf_writer& parent_writer, pbf_tag_type tag, std::size_t size=0) :
         m_data(parent_writer.m_data),
         m_parent_writer(&parent_writer),
         m_pos(0) {
@@ -266,7 +266,7 @@ public:
      *
      * @param size Number of bytes to reserve in underlying message store.
      */
-    void reserve(size_t size) {
+    void reserve(std::size_t size) {
         protozero_assert(m_data);
         m_data->reserve(m_data->size() + size);
     }
@@ -432,7 +432,7 @@ public:
      * @param value Pointer to value to be written
      * @param size Number of bytes to be written
      */
-    inline void add_bytes(pbf_tag_type tag, const char* value, size_t size) {
+    inline void add_bytes(pbf_tag_type tag, const char* value, std::size_t size) {
         protozero_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
         protozero_assert(m_data);
         protozero_assert(size <= std::numeric_limits<pbf_length_type>::max());
@@ -457,7 +457,7 @@ public:
      * @param value Pointer to value to be written
      * @param size Number of bytes to be written
      */
-    inline void add_string(pbf_tag_type tag, const char* value, size_t size) {
+    inline void add_string(pbf_tag_type tag, const char* value, std::size_t size) {
         add_bytes(tag, value, size);
     }
 
@@ -489,7 +489,7 @@ public:
      * @param value Pointer to message to be written
      * @param size Length of the message
      */
-    inline void add_message(pbf_tag_type tag, const char* value, size_t size) {
+    inline void add_message(pbf_tag_type tag, const char* value, std::size_t size) {
         add_bytes(tag, value, size);
     }
 
@@ -733,7 +733,7 @@ namespace detail {
             m_writer(parent_writer, tag) {
         }
 
-        packed_field_fixed(pbf_writer& parent_writer, pbf_tag_type tag, size_t size) :
+        packed_field_fixed(pbf_writer& parent_writer, pbf_tag_type tag, std::size_t size) :
             m_writer(parent_writer, tag, size * sizeof(T)) {
         }
 
