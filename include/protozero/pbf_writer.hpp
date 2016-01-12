@@ -141,17 +141,28 @@ class pbf_writer {
     // and a varint needs 8 bit for every 7 bit.
     static const int reserve_bytes = sizeof(pbf_length_type) * 8 / 7 + 1;
 
-    inline void open_submessage(pbf_tag_type tag) {
+    // If m_rollpack_pos is set to this special value, it means that when
+    // the submessage is closed, nothing needs to be done, because the length
+    // of the submessage has already been written correctly.
+    static const size_t size_is_known = std::numeric_limits<size_t>::max();
+
+    inline void open_submessage(pbf_tag_type tag, size_t size) {
         protozero_assert(m_pos == 0);
         protozero_assert(m_data);
         m_rollback_pos = m_data->size();
         add_field(tag, pbf_wire_type::length_delimited);
-        m_data->append(size_t(reserve_bytes), '\0');
+        if (size == 0) {
+            m_data->append(size_t(reserve_bytes), '\0');
+        } else {
+            m_rollback_pos = size_is_known;
+            add_varint(size);
+        }
         m_pos = m_data->size();
     }
 
     inline void rollback_submessage() {
         protozero_assert(m_pos != 0);
+        protozero_assert(m_rollback_pos != size_is_known);
         protozero_assert(m_data);
         m_data->resize(m_rollback_pos);
         m_pos = 0;
@@ -159,6 +170,7 @@ class pbf_writer {
 
     inline void commit_submessage() {
         protozero_assert(m_pos != 0);
+        protozero_assert(m_rollback_pos != size_is_known);
         protozero_assert(m_data);
         auto length = pbf_length_type(m_data->size() - m_pos);
 
@@ -172,10 +184,12 @@ class pbf_writer {
     inline void close_submessage() {
         protozero_assert(m_pos != 0);
         protozero_assert(m_data);
-        if (m_data->size() - m_pos == 0) {
-            rollback_submessage();
-        } else {
-            commit_submessage();
+        if (m_rollback_pos != size_is_known) {
+            if (m_data->size() - m_pos == 0) {
+                rollback_submessage();
+            } else {
+                commit_submessage();
+            }
         }
     }
 
@@ -212,12 +226,15 @@ public:
      *
      * @param parent_writer The pbf_writer
      * @param tag Tag (field number) of the field that will be written
+     * @param size Optional size of the submessage in bytes (use 0 for unknown).
+     *        Setting this allows some optimizations but is only possible in
+     *        a few very specific cases.
      */
-    inline pbf_writer(pbf_writer& parent_writer, pbf_tag_type tag) :
+    inline pbf_writer(pbf_writer& parent_writer, pbf_tag_type tag, size_t size=0) :
         m_data(parent_writer.m_data),
         m_parent_writer(&parent_writer),
         m_pos(0) {
-        m_parent_writer->open_submessage(tag);
+        m_parent_writer->open_submessage(tag, size);
     }
 
     /// A pbf_writer object can be copied
@@ -711,6 +728,10 @@ namespace detail {
 
         packed_field_fixed(pbf_writer& parent_writer, pbf_tag_type tag) :
             m_writer(parent_writer, tag) {
+        }
+
+        packed_field_fixed(pbf_writer& parent_writer, pbf_tag_type tag, size_t size) :
+            m_writer(parent_writer, tag, size * sizeof(T)) {
         }
 
         void add_element(T value) {

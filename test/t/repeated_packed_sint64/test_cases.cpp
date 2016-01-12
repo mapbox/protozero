@@ -83,3 +83,41 @@ TEST_CASE("write repeated packed sint64 field") {
 
 }
 
+TEST_CASE("write repeated packed sint64 field using packed_field_sint64") {
+
+    std::string buffer;
+    protozero::pbf_writer pw(buffer);
+
+    SECTION("empty") {
+        {
+            protozero::packed_field_sint64 field{pw, 1};
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_sint64/data-empty"));
+    }
+
+    SECTION("one") {
+        {
+            protozero::packed_field_sint64 field{pw, 1};
+            field.add_element(17L);
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_sint64/data-one"));
+    }
+
+    SECTION("many") {
+        {
+            protozero::packed_field_sint64 field{pw, 1};
+            field.add_element(17L);
+            field.add_element( 0L);
+            field.add_element( 1L);
+            field.add_element(-1L);
+            field.add_element(std::numeric_limits<int64_t>::max());
+            field.add_element(std::numeric_limits<int64_t>::min());
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_sint64/data-many"));
+    }
+
+}
+
