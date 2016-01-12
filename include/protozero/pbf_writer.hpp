@@ -205,7 +205,8 @@ public:
 
     /**
      * Create a writer using the given string as a data store. The pbf_writer
-     * stores a reference to that string and adds all data to it.
+     * stores a reference to that string and adds all data to it. The string
+     * doesn't have to be empty. The pbf_writer will just append data.
      */
     inline explicit pbf_writer(std::string& data) noexcept :
         m_data(&data),

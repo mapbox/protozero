@@ -69,6 +69,28 @@ TEST_CASE("write message field") {
 
 }
 
+TEST_CASE("write message field into non-empty buffer") {
+
+    std::string buffer_test{"some data already in here"};
+    protozero::pbf_writer pbf_test(buffer_test);
+
+    SECTION("string") {
+        std::string buffer_submessage;
+        protozero::pbf_writer pbf_submessage(buffer_submessage);
+        pbf_submessage.add_string(1, "foobar");
+
+        pbf_test.add_message(1, buffer_submessage);
+    }
+
+    SECTION("string with subwriter") {
+        protozero::pbf_writer pbf_submessage(pbf_test, 1);
+        pbf_submessage.add_string(1, "foobar");
+    }
+
+    REQUIRE(buffer_test == std::string{"some data already in here"} + load_data("message/data-message"));
+
+}
+
 TEST_CASE("write message field reserving memory beforehand") {
 
     std::string buffer_test;
