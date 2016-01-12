@@ -77,7 +77,7 @@ public:
 #undef PROTOZERO_WRITER_WRAP_ADD_SCALAR
 /// @endcond
 
-    inline void add_bytes(T tag, const char* value, size_t size) {
+    inline void add_bytes(T tag, const char* value, std::size_t size) {
         pbf_writer::add_bytes(pbf_tag_type(tag), value, size);
     }
 
@@ -85,7 +85,7 @@ public:
         pbf_writer::add_bytes(pbf_tag_type(tag), value);
     }
 
-    inline void add_string(T tag, const char* value, size_t size) {
+    inline void add_string(T tag, const char* value, std::size_t size) {
         pbf_writer::add_string(pbf_tag_type(tag), value, size);
     }
 
@@ -97,7 +97,7 @@ public:
         pbf_writer::add_string(pbf_tag_type(tag), value);
     }
 
-    inline void add_message(T tag, const char* value, size_t size) {
+    inline void add_message(T tag, const char* value, std::size_t size) {
         pbf_writer::add_message(pbf_tag_type(tag), value, size);
     }
 
