@@ -395,9 +395,11 @@ that looks somewhat like this:
     pbf_example.add_fixed64(17, 3);
     pbf_example.add_string(2, "foobar"); // string s
 
-First you create an empty string which will be used as buffer to assemble the
+First you need a string which will be used as buffer to assemble the
 protobuf-formatted message. The `pbf_writer` object contains a reference to
 this string buffer and through it you add data to that buffer piece by piece.
+The buffer doesn't have to be empty, the `pbf_writer` will simply append its
+data to whatever is there already.
 
 
 ### Handling Scalar Fields
