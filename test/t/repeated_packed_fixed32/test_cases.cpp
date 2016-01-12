@@ -92,6 +92,78 @@ TEST_CASE("write repeated packed fixed32 field") {
 
 }
 
+TEST_CASE("write repeated packed fixed32 field using packed_field_fixed32") {
+
+    std::string buffer;
+    protozero::pbf_writer pw(buffer);
+
+    SECTION("empty") {
+        {
+            protozero::packed_field_fixed32 field{pw, 1};
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_fixed32/data-empty"));
+    }
+
+    SECTION("one") {
+        {
+            protozero::packed_field_fixed32 field{pw, 1};
+            field.add_element(17UL);
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_fixed32/data-one"));
+    }
+
+    SECTION("one with predefined size") {
+        {
+            protozero::packed_field_fixed32 field{pw, 1, 1};
+            field.add_element(17UL);
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_fixed32/data-one"));
+    }
+
+    SECTION("many") {
+        {
+            protozero::packed_field_fixed32 field{pw, 1};
+            field.add_element(17UL);
+            field.add_element(0UL);
+            field.add_element(1UL);
+            field.add_element(std::numeric_limits<uint32_t>::max());
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_fixed32/data-many"));
+    }
+
+    SECTION("many with predefined size") {
+        {
+            protozero::packed_field_fixed32 field{pw, 1, 4};
+            field.add_element(17UL);
+            field.add_element(0UL);
+            field.add_element(1UL);
+            field.add_element(std::numeric_limits<uint32_t>::max());
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_fixed32/data-many"));
+    }
+
+    SECTION("failure when not closing properly after zero elements") {
+        protozero::packed_field_fixed32 field{pw, 1};
+        REQUIRE_THROWS_AS({
+            pw.add_fixed32(2, 1234); // dummy values
+        }, assert_error);
+    }
+
+    SECTION("failure when not closing properly after one element") {
+        protozero::packed_field_fixed32 field{pw, 1};
+        field.add_element(17UL);
+        REQUIRE_THROWS_AS({
+            pw.add_fixed32(2, 1234); // dummy values
+        }, assert_error);
+    }
+
+}
+
 TEST_CASE("write from different types of iterators") {
 
     std::string buffer;
