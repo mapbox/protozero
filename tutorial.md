@@ -427,6 +427,44 @@ Repeated packed fields can easily be set from a pair of iterators:
     std::vector<int> v = { 1, 4, 9, 16, 25, 36 };
     pw.add_packed_int32(1, std::begin(v), std::end(v));
 
+If you don't have an iterator you can use the alternative form:
+
+    std::string data;
+    protozero::pbf_writer pw(data);
+    {
+        protozero::packed_field_int32 field{pw, 1};
+        field.add_element(1);
+        field.add_element(10);
+        field.add_element(100);
+    }
+
+Of course you can add as many elements as you want. If you add no elements
+at all, this code will still work, protozero detects this special case and
+pretends you never even initialized this field.
+
+The nested scope is important in this case, because the destructor of the
+`field` object will make sure the length stored inside the field is set to
+the right value. You must close that scope before adding other fields to the
+`pw` pbf writer.
+
+If you know how many elements you will add to the field and your field contains
+fixed length elements, you can tell Protozero and it can optimize this case:
+
+    std::string data;
+    protozero::pbf_writer pw(data);
+    {
+        protozero::packed_field_fixed32 field{pw, 1, 2}; // exactly two elements
+        field.add_element(42);
+        field.add_element(13);
+    }
+
+In this case you have to supply exactly as many elements as you promised,
+otherwise you will get a broken protobuf message.
+
+This works for `packed_field_fixed32`, `packed_field_sfixed32`,
+`packed_field_fixed64`, `packed_field_sfixed64`, `packed_field_float`, and
+`packed_field_double`.
+
 
 ### Handling Sub-Messages
 
@@ -489,6 +527,20 @@ integers.
 
 See the `test/t/complex` test case for a complete example using this interface.
 
+## Reserving memory
+
+If you know beforehand how large a message will become or can take an educated
+guess, you can call the usual `std::string::reserve()` on the underlying string
+before you give it to an `pbf_writer` or `pbf_builder` object.
+
+Or you can (at any time) call `reserve()` on the `pbf_writer` or `pbf_builder`.
+This will reserve the given amount of bytes in addition to whatever is already
+in that message.
+
+In the general case it is not easy to figure out how much memory you will need
+because of the varint packing of integers. But sometimes you can make at least
+a rough estimate. Still, you should probably only use this facility if you have
+benchmarks proving that it actually makes your program faster.
 
 ## Using the Low-Level Varint and Zigzag Encoding and Decoding Functions
 
