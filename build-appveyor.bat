@@ -58,12 +58,12 @@ msbuild gyp/protozero.sln ^
 /consoleloggerparameters:Summary
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-ECHO running %configuration%\%platform%\tests.exe ...
-%configuration%\%platform%\tests.exe
+ECHO running gyp\%configuration%\%platform%\tests.exe ...
+gyp\%configuration%\%platform%\tests.exe
 :: IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-ECHO running %configuration%\%platform%\writer_tests.exe ...
-%configuration%\%platform%\writer_tests.exe
+ECHO running gyp\%configuration%\%platform%\writer_tests.exe ...
+gyp\%configuration%\%platform%\writer_tests.exe
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 GOTO DONE
