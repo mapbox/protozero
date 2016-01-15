@@ -49,7 +49,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 SET MSBUILD_PLATFORM=%platform%
 IF /I "%MSBUILD_PLATFORM%" == "x86" set MSBUILD_PLATFORM=Win32
 
-msbuild protozero.sln ^
+msbuild gyp/protozero.sln ^
 /nologo ^
 /maxcpucount:%NUMBER_OF_PROCESSORS% ^
 /p:BuildInParellel=true ^
