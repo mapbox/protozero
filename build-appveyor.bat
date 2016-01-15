@@ -43,7 +43,7 @@ FOR /F %%x in ('find test/ -name "testcase.proto"') DO "deps\protobuf\%platform%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 REM note windows requires --generator-output to be absolute
-python deps/gyp/gyp_main.py protozero.gyp --depth=. -f msvs -G msvs_version=2015
+python deps/gyp/gyp_main.py gyp/protozero.gyp --depth=. -f msvs -G msvs_version=2015
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 SET MSBUILD_PLATFORM=%platform%

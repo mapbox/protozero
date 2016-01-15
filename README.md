@@ -97,7 +97,7 @@ See `test/README.md` for more details about the test.
 
 You can also use `gyp` to build the reader tests:
 
-    gyp --depth=. --build=Release
+    gyp gyp/protozero.gyp --depth=. --build=Release
     ./out/Release/tests
 
 This will clobber the `Makefile` from the repository! Instead of `Release` you
