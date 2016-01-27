@@ -83,7 +83,7 @@ before_install:
      brew install protobuf;
      export PYTHONPATH=$(pwd)/.local/lib/python/site-packages;
    fi
- - if [[ ${COVERAGE:-0} == 'True' ]]; then
+ - if [ -n "${COVERAGE}" ]; then
      PYTHONUSERBASE=$(pwd)/.local pip install --user cpp-coveralls;
    fi
 
@@ -91,7 +91,7 @@ install:
  - make test
 
 script:
- - if [[ ${COVERAGE:-0} == 'True' ]]; then
+ - if [ -n "${COVERAGE}" ]; then
     make clean;
     CXXFLAGS="--coverage ${CXXFLAGS}" LDFLAGS="--coverage ${LDFLAGS}" make test;
     ${COVERAGE} -lp test/*tests.o test/t/*/*test_cases.o;
