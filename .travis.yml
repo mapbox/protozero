@@ -89,17 +89,6 @@ before_install:
 
 install:
  - make test
- - make bench
- - if [[ $(uname -s) == 'Linux' ]]; then
-     make sizes /usr/include/boost/variant.hpp;
-   else
-     make sizes `brew --prefix`/include/boost/variant.hpp;
-   fi
- - scripts/run_compilation_failure_tests.sh
- - if [[ ${TEST_GYP_BUILD:-0} == 'True' ]]; then
-     make clean;
-     make gyp;
-   fi
 
 script:
  - if [[ ${COVERAGE:-0} == 'True' ]]; then
