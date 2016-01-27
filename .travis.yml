@@ -40,7 +40,7 @@ matrix:
       compiler: clang
     - os: linux
       compiler: "clang35"
-      env: CXX=clang++-3.5 COVERAGE=gcov-4.9
+      env: CXX=clang++-3.5
       addons: *clang35
     - os: linux
       compiler: "clang38"
@@ -60,7 +60,7 @@ matrix:
       addons: *gcc48
     - os: linux
       compiler: "gcc49"
-      env: CXX=g++-4.9
+      env: CXX=g++-4.9 COVERAGE=gcov-4.9
       addons: *gcc49
     - os: linux
       compiler: "gcc49"
@@ -95,6 +95,5 @@ script:
     make clean;
     CXXFLAGS="--coverage ${CXXFLAGS}" LDFLAGS="--coverage ${LDFLAGS}" make test;
     ${COVERAGE} -lp test/*tests.o test/t/*/*test_cases.o;
-    pip install --user cpp-coveralls;
     ~/.local/bin/coveralls --no-gcov -i include/protozero;
    fi
