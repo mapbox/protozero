@@ -95,5 +95,5 @@ script:
     make clean;
     CXXFLAGS="--coverage ${CXXFLAGS}" LDFLAGS="--coverage ${LDFLAGS}" make test;
     ${COVERAGE} -lp test/*tests.o test/t/*/*test_cases.o;
-    ~/.local/bin/coveralls --no-gcov -i include/protozero;
+    ~/.local/bin/cpp-coveralls --no-gcov -i include/protozero;
    fi
