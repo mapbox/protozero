@@ -88,7 +88,7 @@ TEST_CASE("write repeated packed bool field using packed_field_bool") {
     std::string buffer;
     protozero::pbf_writer pw(buffer);
 
-    SECTION("empty") {
+    SECTION("empty - should do rollback") {
         {
             protozero::packed_field_bool field{pw, 1};
         }
@@ -116,5 +116,6 @@ TEST_CASE("write repeated packed bool field using packed_field_bool") {
 
         REQUIRE(buffer == load_data("repeated_packed_bool/data-many"));
     }
+
 }
 
