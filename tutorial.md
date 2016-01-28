@@ -467,6 +467,21 @@ This works for `packed_field_fixed32`, `packed_field_sfixed32`,
 `packed_field_fixed64`, `packed_field_sfixed64`, `packed_field_float`, and
 `packed_field_double`.
 
+You can abandon writing of the packed field if this becomes necessary by
+calling `rollback()`:
+
+    std::string data;
+    protozero::pbf_writer pw(data);
+    {
+        protozero::packed_field_int32 field{pw, 1};
+        field.add_element(42);
+        // some error occurs, you don't want to have this field at all
+        field.rollback();
+    }
+
+The result is the same as if the lines inside the nested brackets had never
+been called. Do not try to call `add_element()` after a rollback.
+
 
 ### Handling Sub-Messages
 
@@ -490,8 +505,8 @@ This is easy to do but it has the drawback of needing a separate `std::string`
 buffer. If this concerns you (and why would use use protozero and not the
 Google protobuf library if it doesn't) there is another way:
 
-    std::string buffer;
-    protozero::pbf_writer pbf_parent(buffer);
+    std::string data;
+    protozero::pbf_writer pbf_parent(data);
 
     // optionally add fields to parent here
     pbf_parent.add_...(...);
@@ -518,6 +533,32 @@ into it. It then adds the contents of the submessage to the buffer. When the
 `pbf_sub` writer is destructed the length of the submessage is calculated and
 written in the reserved space. If less space was needed for the length field
 than was available, the rest of the buffer is moved over a few bytes.
+
+You can abandon writing of submessage if this becomes necessary by
+calling `rollback()`:
+
+    std::string data;
+    protozero::pbf_writer pbf_parent(data);
+
+    // open a new scope
+    {
+        // create new pbf_writer with parent and the tag (field number)
+        // as parameters
+        protozero::pbf_writer pbf_sub(pbf_parent, 1);
+
+        // add fields to sub here...
+        pbf_sub.add_...(...);
+
+        // some problem occurs and you want to abandon the submessage:
+        pbf_sub.rollback();
+    }
+
+    // optionally add more fields to parent here
+    pbf_parent.add_...(...);
+
+The result is the same as if the lines inside the nested brackets had never
+been called. Do not try to call any of the `add_*` functions on the submessage
+after a rollback.
 
 ## Writing Protobuf-Encoded Messages Using `pbf_builder`
 
