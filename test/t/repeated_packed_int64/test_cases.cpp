@@ -88,7 +88,7 @@ TEST_CASE("write repeated packed int64 field using packed_field_int64") {
     std::string buffer;
     protozero::pbf_writer pw(buffer);
 
-    SECTION("empty") {
+    SECTION("empty - should do rollback") {
         {
             protozero::packed_field_int64 field{pw, 1};
         }

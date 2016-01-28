@@ -97,7 +97,7 @@ TEST_CASE("write repeated packed fixed32 field using packed_field_fixed32") {
     std::string buffer;
     protozero::pbf_writer pw(buffer);
 
-    SECTION("empty") {
+    SECTION("empty - should do rollback") {
         {
             protozero::packed_field_fixed32 field{pw, 1};
         }
