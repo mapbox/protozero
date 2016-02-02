@@ -18,7 +18,7 @@ TEST_CASE("write fixed32 field and check with libprotobuf") {
         REQUIRE(msg.i() == 0);
     }
 
-    SECTION("max-uint") {
+    SECTION("max") {
         pw.add_fixed32(1, std::numeric_limits<uint32_t>::max());
 
         msg.ParseFromString(buffer);
@@ -26,7 +26,7 @@ TEST_CASE("write fixed32 field and check with libprotobuf") {
         REQUIRE(msg.i() == std::numeric_limits<uint32_t>::max());
     }
 
-    SECTION("min-uint") {
+    SECTION("min") {
         pw.add_fixed32(1, std::numeric_limits<uint32_t>::min());
 
         msg.ParseFromString(buffer);

@@ -13,8 +13,8 @@ TEST_CASE("read sfixed32 field") {
         REQUIRE(!item.next());
     }
 
-    SECTION("max-int") {
-        const std::string buffer = load_data("sfixed32/data-max-int");
+    SECTION("max") {
+        const std::string buffer = load_data("sfixed32/data-max");
 
         protozero::pbf_reader item(buffer);
 
@@ -23,8 +23,8 @@ TEST_CASE("read sfixed32 field") {
         REQUIRE(!item.next());
     }
 
-    SECTION("min-int") {
-        const std::string buffer = load_data("sfixed32/data-min-int");
+    SECTION("min") {
+        const std::string buffer = load_data("sfixed32/data-min");
 
         protozero::pbf_reader item(buffer);
 
@@ -34,7 +34,7 @@ TEST_CASE("read sfixed32 field") {
     }
 
     SECTION("end_of_buffer") {
-        const std::string buffer = load_data("sfixed32/data-min-int");
+        const std::string buffer = load_data("sfixed32/data-min");
 
         for (std::string::size_type i = 1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
@@ -55,14 +55,14 @@ TEST_CASE("write sfixed32 field") {
         REQUIRE(buffer == load_data("sfixed32/data-zero"));
     }
 
-    SECTION("max-uint") {
+    SECTION("max") {
         pw.add_sfixed32(1, std::numeric_limits<int32_t>::max());
-        REQUIRE(buffer == load_data("sfixed32/data-max-int"));
+        REQUIRE(buffer == load_data("sfixed32/data-max"));
     }
 
-    SECTION("min-uint") {
+    SECTION("min") {
         pw.add_sfixed32(1, std::numeric_limits<int32_t>::min());
-        REQUIRE(buffer == load_data("sfixed32/data-min-int"));
+        REQUIRE(buffer == load_data("sfixed32/data-min"));
     }
 
 }

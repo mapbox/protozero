@@ -13,8 +13,8 @@ TEST_CASE("read sfixed64 field") {
         REQUIRE(!item.next());
     }
 
-    SECTION("max-int") {
-        const std::string buffer = load_data("sfixed64/data-max-int");
+    SECTION("max") {
+        const std::string buffer = load_data("sfixed64/data-max");
 
         protozero::pbf_reader item(buffer);
 
@@ -23,8 +23,8 @@ TEST_CASE("read sfixed64 field") {
         REQUIRE(!item.next());
     }
 
-    SECTION("min-int") {
-        const std::string buffer = load_data("sfixed64/data-min-int");
+    SECTION("min") {
+        const std::string buffer = load_data("sfixed64/data-min");
 
         protozero::pbf_reader item(buffer);
 
@@ -34,7 +34,7 @@ TEST_CASE("read sfixed64 field") {
     }
 
     SECTION("end_of_buffer") {
-        const std::string buffer = load_data("sfixed64/data-min-int");
+        const std::string buffer = load_data("sfixed64/data-min");
 
         for (std::string::size_type i = 1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
@@ -55,14 +55,14 @@ TEST_CASE("write sfixed64 field") {
         REQUIRE(buffer == load_data("sfixed64/data-zero"));
     }
 
-    SECTION("max-uint") {
+    SECTION("max") {
         pw.add_sfixed64(1, std::numeric_limits<int64_t>::max());
-        REQUIRE(buffer == load_data("sfixed64/data-max-int"));
+        REQUIRE(buffer == load_data("sfixed64/data-max"));
     }
 
-    SECTION("min-uint") {
+    SECTION("min") {
         pw.add_sfixed64(1, std::numeric_limits<int64_t>::min());
-        REQUIRE(buffer == load_data("sfixed64/data-min-int"));
+        REQUIRE(buffer == load_data("sfixed64/data-min"));
     }
 
 }

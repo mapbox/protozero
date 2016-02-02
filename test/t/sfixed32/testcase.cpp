@@ -9,9 +9,9 @@ int main(int c, char *argv[]) {
     write_to_file(msg, "data-zero.pbf");
 
     msg.set_i(std::numeric_limits<int32_t>::max());
-    write_to_file(msg, "data-max-int.pbf");
+    write_to_file(msg, "data-max.pbf");
 
     msg.set_i(std::numeric_limits<int32_t>::min());
-    write_to_file(msg, "data-min-int.pbf");
+    write_to_file(msg, "data-min.pbf");
 }
 
