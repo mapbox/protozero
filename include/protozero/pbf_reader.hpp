@@ -935,7 +935,7 @@ void pbf_reader::skip() {
             skip_bytes(4);
             break;
         default:
-            throw unknown_pbf_wire_type_exception();
+            protozero_assert(false && "can not be here because next() should have thrown already");
     }
 }
 

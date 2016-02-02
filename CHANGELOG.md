@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Various test and documentation cleanups.
+
 ### Fixed
 
 

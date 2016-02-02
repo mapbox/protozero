@@ -444,7 +444,7 @@ adding to the parent message:
 
     std::string buffer_parent;
     protozero::pbf_writer pbf_parent(buffer_parent);
-    pbf_parent.add_message(1,buffer_sub);
+    pbf_parent.add_message(1, buffer_sub);
 
 This is easy to do but it has the drawback of needing a separate `std::string`
 buffer. If this concerns you (and why would you use protozero and not the
