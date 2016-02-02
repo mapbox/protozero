@@ -43,13 +43,13 @@ FOR /F %%x in ('find test/ -name "testcase.proto"') DO "deps\protobuf\%platform%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 REM note windows requires --generator-output to be absolute
-python deps/gyp/gyp_main.py protozero.gyp --depth=. -f msvs -G msvs_version=2015
+python deps/gyp/gyp_main.py gyp/protozero.gyp --depth=. -f msvs -G msvs_version=2015
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 SET MSBUILD_PLATFORM=%platform%
 IF /I "%MSBUILD_PLATFORM%" == "x86" set MSBUILD_PLATFORM=Win32
 
-msbuild protozero.sln ^
+msbuild gyp/protozero.sln ^
 /nologo ^
 /maxcpucount:%NUMBER_OF_PROCESSORS% ^
 /p:BuildInParellel=true ^
@@ -58,12 +58,12 @@ msbuild protozero.sln ^
 /consoleloggerparameters:Summary
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-ECHO running %configuration%\%platform%\tests.exe ...
-%configuration%\%platform%\tests.exe
+ECHO running gyp\%configuration%\%platform%\tests.exe ...
+gyp\%configuration%\%platform%\tests.exe
 :: IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-ECHO running %configuration%\%platform%\writer_tests.exe ...
-%configuration%\%platform%\writer_tests.exe
+ECHO running gyp\%configuration%\%platform%\writer_tests.exe ...
+gyp\%configuration%\%platform%\writer_tests.exe
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 GOTO DONE

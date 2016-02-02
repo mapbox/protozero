@@ -112,5 +112,11 @@ clean:
 	rm -f ./*.gcov
 	rm -fr doc/doxygen_sqlite3.db doc/html coverage
 
+testpack:
+	rm -f ./*tgz
+	npm pack
+	tar -ztvf *tgz
+	rm -f ./*tgz
+
 .PHONY: all test iwyu check doc
 
