@@ -63,15 +63,6 @@ TEST_CASE("read int64 field") {
         }
     }
 
-    SECTION("varint overflow") {
-        const std::string buffer = load_data("int64/data-overflow");
-
-        protozero::pbf_reader item(buffer);
-
-        REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.get_int64(), protozero::varint_too_long_exception);
-    }
-
 }
 
 TEST_CASE("write int64 field") {
