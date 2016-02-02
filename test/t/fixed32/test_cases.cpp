@@ -24,6 +24,15 @@ TEST_CASE("read fixed32 field") {
             REQUIRE(!item.next());
         }
 
+        SECTION("positive") {
+            abuffer.append(load_data("fixed32/data-pos"));
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+
+            REQUIRE(item.next());
+            REQUIRE(item.get_fixed32() == 1UL);
+            REQUIRE(!item.next());
+        }
+
         SECTION("max") {
             abuffer.append(load_data("fixed32/data-max"));
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
@@ -33,17 +42,8 @@ TEST_CASE("read fixed32 field") {
             REQUIRE(!item.next());
         }
 
-        SECTION("min") {
-            abuffer.append(load_data("fixed32/data-min"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
-
-            REQUIRE(item.next());
-            REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::min());
-            REQUIRE(!item.next());
-        }
-
         SECTION("end_of_buffer") {
-            abuffer.append(load_data("fixed32/data-min"));
+            abuffer.append(load_data("fixed32/data-pos"));
 
             for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
                 protozero::pbf_reader item(abuffer.data() + n, i);
@@ -96,14 +96,14 @@ TEST_CASE("write fixed32 field") {
         REQUIRE(buffer == load_data("fixed32/data-zero"));
     }
 
+    SECTION("pos") {
+        pw.add_fixed32(1, 1);
+        REQUIRE(buffer == load_data("fixed32/data-pos"));
+    }
+
     SECTION("max") {
         pw.add_fixed32(1, std::numeric_limits<uint32_t>::max());
         REQUIRE(buffer == load_data("fixed32/data-max"));
-    }
-
-    SECTION("min") {
-        pw.add_fixed32(1, std::numeric_limits<uint32_t>::min());
-        REQUIRE(buffer == load_data("fixed32/data-min"));
     }
 
 }

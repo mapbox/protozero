@@ -13,6 +13,26 @@ TEST_CASE("read sfixed64 field") {
         REQUIRE(!item.next());
     }
 
+    SECTION("positive") {
+        const std::string buffer = load_data("sfixed64/data-pos");
+
+        protozero::pbf_reader item(buffer);
+
+        REQUIRE(item.next());
+        REQUIRE(item.get_sfixed64() == 1LL);
+        REQUIRE(!item.next());
+    }
+
+    SECTION("negative") {
+        const std::string buffer = load_data("sfixed64/data-neg");
+
+        protozero::pbf_reader item(buffer);
+
+        REQUIRE(item.next());
+        REQUIRE(item.get_sfixed64() == -1LL);
+        REQUIRE(!item.next());
+    }
+
     SECTION("max") {
         const std::string buffer = load_data("sfixed64/data-max");
 
@@ -53,6 +73,16 @@ TEST_CASE("write sfixed64 field") {
     SECTION("zero") {
         pw.add_sfixed64(1, 0);
         REQUIRE(buffer == load_data("sfixed64/data-zero"));
+    }
+
+    SECTION("positive") {
+        pw.add_sfixed64(1, 1);
+        REQUIRE(buffer == load_data("sfixed64/data-pos"));
+    }
+
+    SECTION("negative") {
+        pw.add_sfixed64(1, -1);
+        REQUIRE(buffer == load_data("sfixed64/data-neg"));
     }
 
     SECTION("max") {
