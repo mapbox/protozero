@@ -20,7 +20,7 @@ TEST_CASE("read float field") {
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(item.next());
-            REQUIRE(item.get_float() == Approx(0.0f));
+            REQUIRE(double(item.get_float()) == Approx(0.0));
             REQUIRE(!item.next());
         }
 
@@ -29,7 +29,7 @@ TEST_CASE("read float field") {
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(item.next());
-            REQUIRE(item.get_float() == Approx(5.34f));
+            REQUIRE(double(item.get_float()) == Approx(5.34));
             REQUIRE(!item.next());
         }
 
@@ -38,7 +38,7 @@ TEST_CASE("read float field") {
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(item.next());
-            REQUIRE(item.get_float() == Approx(-1.71f));
+            REQUIRE(double(item.get_float()) == Approx(-1.71));
             REQUIRE(!item.next());
         }
 
