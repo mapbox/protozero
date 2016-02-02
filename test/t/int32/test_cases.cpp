@@ -73,16 +73,6 @@ TEST_CASE("read int32 field") {
         }
     }
 
-    SECTION("check assert on string/fixed int access") {
-        const std::string buffer = load_data("int32/data-zero");
-
-        protozero::pbf_reader item(buffer);
-
-        REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.get_fixed32(), assert_error);
-        REQUIRE_THROWS_AS(item.get_string(), assert_error);
-    }
-
 }
 
 TEST_CASE("write int32 field") {

@@ -52,14 +52,6 @@ TEST_CASE("read fixed32 field") {
             }
         }
 
-        SECTION("check assert on varint/string access") {
-            abuffer.append(load_data("fixed32/data-zero"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
-
-            REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_string(), assert_error);
-        }
-
         SECTION("assert detecting tag==0") {
             abuffer.append(load_data("fixed32/data-zero"));
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
