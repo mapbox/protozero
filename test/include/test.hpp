@@ -18,3 +18,9 @@ struct assert_error : public std::runtime_error {
 
 extern std::string load_data(const std::string& filename);
 
+#define PROTOZERO_TEST_CONCAT2(x, y) x##y
+#define PROTOZERO_TEST_CONCAT(x, y) PROTOZERO_TEST_CONCAT2(x, y)
+
+#define PROTOZERO_TEST_STRING2(s) #s
+#define PROTOZERO_TEST_STRING(s) PROTOZERO_TEST_STRING2(s)
+
