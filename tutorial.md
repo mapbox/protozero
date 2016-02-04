@@ -395,9 +395,11 @@ that looks somewhat like this:
     pbf_example.add_fixed64(17, 3);
     pbf_example.add_string(2, "foobar"); // string s
 
-First you create an empty string which will be used as buffer to assemble the
+First you need a string which will be used as buffer to assemble the
 protobuf-formatted message. The `pbf_writer` object contains a reference to
 this string buffer and through it you add data to that buffer piece by piece.
+The buffer doesn't have to be empty, the `pbf_writer` will simply append its
+data to whatever is there already.
 
 
 ### Handling Scalar Fields
@@ -427,6 +429,59 @@ Repeated packed fields can easily be set from a pair of iterators:
     std::vector<int> v = { 1, 4, 9, 16, 25, 36 };
     pw.add_packed_int32(1, std::begin(v), std::end(v));
 
+If you don't have an iterator you can use the alternative form:
+
+    std::string data;
+    protozero::pbf_writer pw(data);
+    {
+        protozero::packed_field_int32 field{pw, 1};
+        field.add_element(1);
+        field.add_element(10);
+        field.add_element(100);
+    }
+
+Of course you can add as many elements as you want. If you add no elements
+at all, this code will still work, protozero detects this special case and
+pretends you never even initialized this field.
+
+The nested scope is important in this case, because the destructor of the
+`field` object will make sure the length stored inside the field is set to
+the right value. You must close that scope before adding other fields to the
+`pw` pbf writer.
+
+If you know how many elements you will add to the field and your field contains
+fixed length elements, you can tell Protozero and it can optimize this case:
+
+    std::string data;
+    protozero::pbf_writer pw(data);
+    {
+        protozero::packed_field_fixed32 field{pw, 1, 2}; // exactly two elements
+        field.add_element(42);
+        field.add_element(13);
+    }
+
+In this case you have to supply exactly as many elements as you promised,
+otherwise you will get a broken protobuf message.
+
+This works for `packed_field_fixed32`, `packed_field_sfixed32`,
+`packed_field_fixed64`, `packed_field_sfixed64`, `packed_field_float`, and
+`packed_field_double`.
+
+You can abandon writing of the packed field if this becomes necessary by
+calling `rollback()`:
+
+    std::string data;
+    protozero::pbf_writer pw(data);
+    {
+        protozero::packed_field_int32 field{pw, 1};
+        field.add_element(42);
+        // some error occurs, you don't want to have this field at all
+        field.rollback();
+    }
+
+The result is the same as if the lines inside the nested brackets had never
+been called. Do not try to call `add_element()` after a rollback.
+
 
 ### Handling Sub-Messages
 
@@ -450,8 +505,8 @@ This is easy to do but it has the drawback of needing a separate `std::string`
 buffer. If this concerns you (and why would you use protozero and not the
 Google protobuf library if it doesn't?) there is another way:
 
-    std::string buffer;
-    protozero::pbf_writer pbf_parent(buffer);
+    std::string data;
+    protozero::pbf_writer pbf_parent(data);
 
     // optionally add fields to parent here
     pbf_parent.add_...(...);
@@ -479,6 +534,32 @@ into it. It then adds the contents of the submessage to the buffer. When the
 written in the reserved space. If less space was needed for the length field
 than was available, the rest of the buffer is moved over a few bytes.
 
+You can abandon writing of submessage if this becomes necessary by
+calling `rollback()`:
+
+    std::string data;
+    protozero::pbf_writer pbf_parent(data);
+
+    // open a new scope
+    {
+        // create new pbf_writer with parent and the tag (field number)
+        // as parameters
+        protozero::pbf_writer pbf_sub(pbf_parent, 1);
+
+        // add fields to sub here...
+        pbf_sub.add_...(...);
+
+        // some problem occurs and you want to abandon the submessage:
+        pbf_sub.rollback();
+    }
+
+    // optionally add more fields to parent here
+    pbf_parent.add_...(...);
+
+The result is the same as if the lines inside the nested brackets had never
+been called. Do not try to call any of the `add_*` functions on the submessage
+after a rollback.
+
 ## Writing Protobuf-Encoded Messages Using `pbf_builder`
 
 Just like the `pbf_message` template class wraps the `pbf_reader` class, there
@@ -489,6 +570,20 @@ integers.
 
 See the `test/t/complex` test case for a complete example using this interface.
 
+## Reserving memory
+
+If you know beforehand how large a message will become or can take an educated
+guess, you can call the usual `std::string::reserve()` on the underlying string
+before you give it to an `pbf_writer` or `pbf_builder` object.
+
+Or you can (at any time) call `reserve()` on the `pbf_writer` or `pbf_builder`.
+This will reserve the given amount of bytes in addition to whatever is already
+in that message.
+
+In the general case it is not easy to figure out how much memory you will need
+because of the varint packing of integers. But sometimes you can make at least
+a rough estimate. Still, you should probably only use this facility if you have
+benchmarks proving that it actually makes your program faster.
 
 ## Using the Low-Level Varint and Zigzag Encoding and Decoding Functions
 
