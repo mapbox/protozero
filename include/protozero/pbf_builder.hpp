@@ -18,7 +18,7 @@ documentation.
 
 #include <type_traits>
 
-#include <protozero/pbf_types.hpp>
+#include <protozero/types.hpp>
 #include <protozero/pbf_writer.hpp>
 
 namespace protozero {

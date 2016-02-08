@@ -25,7 +25,7 @@ documentation.
 
 #include <protozero/config.hpp>
 #include <protozero/exception.hpp>
-#include <protozero/pbf_types.hpp>
+#include <protozero/types.hpp>
 #include <protozero/varint.hpp>
 
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN

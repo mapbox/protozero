@@ -39,8 +39,8 @@ PROTO_FILES_O := $(subst .proto,.pb.o,$(PROTO_FILES))
 
 HPP_FILES := include/protozero/byteswap.hpp \
              include/protozero/exception.hpp \
+             include/protozero/types.hpp \
              include/protozero/varint.hpp \
-             include/protozero/pbf_types.hpp \
              include/protozero/pbf_reader.hpp \
              include/protozero/pbf_writer.hpp
 
@@ -79,8 +79,8 @@ test: all
 
 iwyu: $(HPP_FILES) test/tests.cpp test/writer_tests.cpp
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/exception.hpp || true
+	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/types.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/varint.hpp || true
-	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_types.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_reader.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_writer.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude -Itest/include test/tests.cpp || true
