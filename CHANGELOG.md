@@ -10,10 +10,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Added `config.hpp` header which now includes all the macro magic to
   configure the library for different architectures etc.
+- New way to create repeated packed fields without using an iterator.
+- Add `rollback()` function to `pbf_writer` for "manual" rollback.
 
 ### Changed
 
 - Various test and documentation cleanups.
+- Rename `pbf_types.hpp` to `types.hpp`.
 
 ### Fixed
 
@@ -48,8 +51,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- pbf_message and pbf_builder template classes wrapping pbf_reader
-  and pbf_writer, respectively. The new classes are the preferred
+- `pbf_message` and `pbf_builder` template classes wrapping `pbf_reader`
+  and `pbf_writer`, respectively. The new classes are the preferred
   interface now.
 
 ### Changed
