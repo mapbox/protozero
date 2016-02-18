@@ -1,6 +1,6 @@
 {
     "name": "protozero",
-    "version": "1.2.3",
+    "version": "1.3.0",
     "description": "Minimalist protocol buffer decoder and encoder in C++",
     "main": "./package.json",
     "repository"   :  {

@@ -8,6 +8,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.3.0] - 2016-02-18
+
+### Added
+
 - Added `config.hpp` header which now includes all the macro magic to
   configure the library for different architectures etc.
 - New way to create repeated packed fields without using an iterator.
@@ -17,8 +26,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Various test and documentation cleanups.
 - Rename `pbf_types.hpp` to `types.hpp`.
-
-### Fixed
 
 
 ## [1.2.3] - 2015-11-30
@@ -68,7 +75,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.2.3...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/osmcode/libosmium/compare/v1.2.3...v1.3.0
 [1.2.3]: https://github.com/osmcode/libosmium/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/osmcode/libosmium/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/osmcode/libosmium/compare/v1.2.0...v1.2.1
