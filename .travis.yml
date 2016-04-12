@@ -10,7 +10,7 @@ addons_shortcuts:
       packages: [ 'clang-3.5', 'libprotobuf-dev','protobuf-compiler' ]
   addons_clang38: &clang38
     apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.8' ]
       packages: [ 'clang-3.8', 'libprotobuf-dev','protobuf-compiler' ]
   addons_gcc49: &gcc47
     apt:
