@@ -15,6 +15,10 @@ RELEASE_FLAGS := -O3 -DNDEBUG -march=native
 DEBUG_FLAGS := -O0 -g -fno-inline-functions
 PTHREAD_FLAGS =
 
+FUZZ_SANITIZER ?= undefined
+FUZZ_CXXFLAGS = -fsanitize=$(FUZZ_SANITIZER) -fsanitize-coverage=edge,indirect-calls,8bit-counters,trace-cmp
+FUZZ_LDFLAGS = -fsanitize=$(FUZZ_SANITIZER)
+
 OS:=$(shell uname -s)
 
 ifeq ($(OS),Linux)
@@ -77,6 +81,15 @@ test: all
 	./test/tests
 	./test/writer_tests
 
+./fuzz/varint.o: fuzz/varint.cpp $(HPP_FILES)
+	$(CXX) -c -Iinclude $(CXXFLAGS) $(COMMON_FLAGS) $(FUZZ_CXXFLAGS) $< -o $@
+
+./fuzz/varint: fuzz/varint.o
+	$(CXX) $(LDFLAGS) $^ -o $@ $(LDLIBS) $(FUZZ_LDFLAGS) -lFuzzer
+
+fuzz: ./fuzz/varint
+	./fuzz/varint -use_traces=1 fuzz/corpus
+
 iwyu: $(HPP_FILES) test/tests.cpp test/writer_tests.cpp
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/exception.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/types.hpp || true
@@ -109,6 +122,8 @@ clean:
 	rm -f ./test/t/*/test_cases.gc*
 	rm -f ./test/t/*/writer_test_cases.o
 	rm -f ./test/t/*/writer_test_cases.gc*
+	rm -f ./fuzz/varint
+	rm -f ./fuzz/varint.o
 	rm -f ./*.gcov
 	rm -fr doc/doxygen_sqlite3.db doc/html coverage
 
@@ -118,5 +133,5 @@ testpack:
 	tar -ztvf *tgz
 	rm -f ./*tgz
 
-.PHONY: all test iwyu check doc
+.PHONY: all test fuzz iwyu check doc
 
