@@ -23,7 +23,7 @@ namespace protozero {
     /**
      * The type used for field tags (field numbers).
      */
-    typedef uint32_t pbf_tag_type;
+    using pbf_tag_type = uint32_t;
 
     /**
      * The type used to encode type information.
@@ -42,7 +42,7 @@ namespace protozero {
     /**
      * The type used for length values, such as the length of a field.
      */
-    typedef uint32_t pbf_length_type;
+    using pbf_length_type = uint32_t;
 
 } // end namespace protozero
 

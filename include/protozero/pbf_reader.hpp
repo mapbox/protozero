@@ -652,28 +652,28 @@ private:
 public:
 
     /// Forward iterator for iterating over bool (int32 varint) values.
-    typedef const_varint_iterator< int32_t> const_bool_iterator;
+    using const_bool_iterator   = const_varint_iterator< int32_t>;
 
     /// Forward iterator for iterating over enum (int32 varint) values.
-    typedef const_varint_iterator< int32_t> const_enum_iterator;
+    using const_enum_iterator   = const_varint_iterator< int32_t>;
 
     /// Forward iterator for iterating over int32 (varint) values.
-    typedef const_varint_iterator< int32_t> const_int32_iterator;
+    using const_int32_iterator  = const_varint_iterator< int32_t>;
 
     /// Forward iterator for iterating over sint32 (varint) values.
-    typedef const_svarint_iterator<int32_t> const_sint32_iterator;
+    using const_sint32_iterator = const_svarint_iterator<int32_t>;
 
     /// Forward iterator for iterating over uint32 (varint) values.
-    typedef const_varint_iterator<uint32_t> const_uint32_iterator;
+    using const_uint32_iterator = const_varint_iterator<uint32_t>;
 
     /// Forward iterator for iterating over int64 (varint) values.
-    typedef const_varint_iterator< int64_t> const_int64_iterator;
+    using const_int64_iterator  = const_varint_iterator< int64_t>;
 
     /// Forward iterator for iterating over sint64 (varint) values.
-    typedef const_svarint_iterator<int64_t> const_sint64_iterator;
+    using const_sint64_iterator = const_svarint_iterator<int64_t>;
 
     /// Forward iterator for iterating over uint64 (varint) values.
-    typedef const_varint_iterator<uint64_t> const_uint64_iterator;
+    using const_uint64_iterator = const_varint_iterator<uint64_t>;
 
     ///@{
     /**
