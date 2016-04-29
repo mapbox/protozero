@@ -105,12 +105,18 @@ class pbf_reader {
 #else
 
     template <typename T>
-    class const_fixed_iterator : public std::iterator<std::forward_iterator_tag, T> {
+    class const_fixed_iterator {
 
         const char* m_data;
         const char* m_end;
 
     public:
+
+        using iterator_category = std::forward_iterator_tag;
+        using value_type        = T;
+        using difference_type   = std::ptrdiff_t;
+        using pointer           = value_type*;
+        using reference         = value_type&;
 
         const_fixed_iterator() noexcept :
             m_data(nullptr),
@@ -541,7 +547,7 @@ public:
 private:
 
     template <typename T>
-    class const_varint_iterator : public std::iterator<std::forward_iterator_tag, T> {
+    class const_varint_iterator {
 
     protected:
 
@@ -549,6 +555,12 @@ private:
         const char* m_end;
 
     public:
+
+        using iterator_category = std::forward_iterator_tag;
+        using value_type        = T;
+        using difference_type   = std::ptrdiff_t;
+        using pointer           = value_type*;
+        using reference         = value_type&;
 
         const_varint_iterator() noexcept :
             m_data(nullptr),
