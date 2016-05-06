@@ -61,10 +61,10 @@ namespace protozero {
 class pbf_reader {
 
     // A pointer to the next unread data.
-    const char *m_data = nullptr;
+    const char* m_data = nullptr;
 
     // A pointer to one past the end of data.
-    const char *m_end = nullptr;
+    const char* m_end = nullptr;
 
     // The wire type of the current field.
     pbf_wire_type m_wire_type = pbf_wire_type::unknown;
@@ -123,7 +123,7 @@ class pbf_reader {
             m_end(nullptr) {
         }
 
-        const_fixed_iterator(const char *data, const char* end) noexcept :
+        const_fixed_iterator(const char* data, const char* end) noexcept :
             m_data(data),
             m_end(end) {
         }
@@ -199,7 +199,7 @@ public:
      *
      * @post There is no current field.
      */
-    inline pbf_reader(const char *data, std::size_t length) noexcept;
+    inline pbf_reader(const char* data, std::size_t length) noexcept;
 
     /**
      * Construct a pbf_reader message from a data pointer and a length. The pointer
@@ -210,7 +210,7 @@ public:
      *
      * @post There is no current field.
      */
-    inline pbf_reader(std::pair<const char *, std::size_t> data) noexcept;
+    inline pbf_reader(std::pair<const char*, std::size_t> data) noexcept;
 
     /**
      * Construct a pbf_reader message from a std::string. A pointer to the string
@@ -567,7 +567,7 @@ private:
             m_end(nullptr) {
         }
 
-        const_varint_iterator(const char *data, const char* end) noexcept :
+        const_varint_iterator(const char* data, const char* end) noexcept :
             m_data(data),
             m_end(end) {
         }
@@ -617,7 +617,7 @@ private:
             const_varint_iterator<T>() {
         }
 
-        const_svarint_iterator(const char *data, const char* end) noexcept :
+        const_svarint_iterator(const char* data, const char* end) noexcept :
             const_varint_iterator<T>(data, end) {
         }
 
@@ -850,14 +850,14 @@ public:
 
 }; // class pbf_reader
 
-pbf_reader::pbf_reader(const char *data, std::size_t length) noexcept
+pbf_reader::pbf_reader(const char* data, std::size_t length) noexcept
     : m_data(data),
       m_end(data + length),
       m_wire_type(pbf_wire_type::unknown),
       m_tag(0) {
 }
 
-pbf_reader::pbf_reader(std::pair<const char *, std::size_t> data) noexcept
+pbf_reader::pbf_reader(std::pair<const char*, std::size_t> data) noexcept
     : m_data(data.first),
       m_end(data.first + data.second),
       m_wire_type(pbf_wire_type::unknown),
