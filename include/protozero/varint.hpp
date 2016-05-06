@@ -83,6 +83,35 @@ inline uint64_t decode_varint(const char** data, const char* end) {
 }
 
 /**
+ * Skip over a varint.
+ *
+ * Strong exception guarantee: if there is an exception the data pointer will
+ * not be changed.
+ *
+ * @param[in,out] data Pointer to pointer to the input data. After the function
+ *        returns this will point to the next data to be read.
+ * @param[in] end Pointer one past the end of the input data.
+ * @throws end_of_buffer_exception if the *end* of the buffer was reached
+ *         before the end of the varint.
+ */
+inline void skip_varint(const char** data, const char* end) {
+    const int8_t* p = reinterpret_cast<const int8_t*>(*data);
+    const int8_t* iend = reinterpret_cast<const int8_t*>(end);
+
+    while (p != iend && *p < 0) {
+        ++p;
+    }
+
+    if (p == iend) {
+        throw end_of_buffer_exception();
+    }
+
+    ++p;
+
+    *data = reinterpret_cast<const char*>(p);
+}
+
+/**
  * Varint encode a 64 bit integer.
  *
  * @tparam T Output iterator the varint encoded value will be written to

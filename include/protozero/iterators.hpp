@@ -157,9 +157,7 @@ namespace protozero {
         }
 
         const_varint_iterator& operator++() {
-            // Ignore the result, we call decode_varint() just for the
-            // side-effect of updating m_data.
-            decode_varint(&m_data, m_end);
+            skip_varint(&m_data, m_end);
             return *this;
         }
 
@@ -212,9 +210,7 @@ namespace protozero {
         }
 
         const_svarint_iterator& operator++() {
-            // Ignore the result, we call decode_varint() just for the
-            // side-effect of updating m_data.
-            decode_varint(&this->m_data, this->m_end);
+            skip_varint(&this->m_data, this->m_end);
             return *this;
         }
 

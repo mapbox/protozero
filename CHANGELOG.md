@@ -10,6 +10,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Use more efficient new `skip_varint()` function when iterating over
+  packed varints.
+
 ### Fixed
 
 
