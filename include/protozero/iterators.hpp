@@ -12,8 +12,8 @@ documentation.
 
 #include <iterator>
 
-#include "byteswap.hpp"
-#include "varint.hpp"
+#include <protozero/byteswap.hpp>
+#include <protozero/varint.hpp>
 
 namespace protozero {
 
