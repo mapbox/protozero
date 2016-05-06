@@ -51,10 +51,10 @@ TEST_CASE("rollback when using packed_field functions") {
 
         msg.next();
         REQUIRE(msg.tag() == 1);
-        auto it_pair = msg.get_packed_sint64();
-        auto it = it_pair.first;
+        auto it_range = msg.get_packed_sint64();
+        auto it = it_range.begin();
         REQUIRE(*it++ == 17L);
-        REQUIRE(it == it_pair.second);
+        REQUIRE(it == it_range.end());
 
         msg.next();
         REQUIRE(msg.tag() == 4);
@@ -86,15 +86,15 @@ TEST_CASE("rollback when using packed_field functions") {
 
         msg.next();
         REQUIRE(msg.tag() == 1);
-        auto it_pair = msg.get_packed_sint64();
-        auto it = it_pair.first;
+        auto it_range = msg.get_packed_sint64();
+        auto it = it_range.begin();
         REQUIRE(*it++ == 17L);
         REQUIRE(*it++ ==  0L);
         REQUIRE(*it++ ==  1L);
         REQUIRE(*it++ == -1L);
         REQUIRE(*it++ == std::numeric_limits<int64_t>::max());
         REQUIRE(*it++ == std::numeric_limits<int64_t>::min());
-        REQUIRE(it == it_pair.second);
+        REQUIRE(it == it_range.end());
 
         msg.next();
         REQUIRE(msg.tag() == 4);

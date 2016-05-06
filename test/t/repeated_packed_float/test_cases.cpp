@@ -27,11 +27,11 @@ TEST_CASE("read repeated packed float field") {
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(item.next());
-            auto it_pair = item.get_packed_float();
+            auto it_range = item.get_packed_float();
             REQUIRE(!item.next());
 
-            REQUIRE(*it_pair.first == 17.34f);
-            REQUIRE(++it_pair.first == it_pair.second);
+            REQUIRE(*it_range.begin() == 17.34f);
+            REQUIRE(std::next(it_range.begin()) == it_range.end());
         }
 
         SECTION("many") {
@@ -39,16 +39,16 @@ TEST_CASE("read repeated packed float field") {
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(item.next());
-            auto it_pair = item.get_packed_float();
+            auto it_range = item.get_packed_float();
             REQUIRE(!item.next());
 
-            auto it = it_pair.first;
+            auto it = it_range.begin();
             REQUIRE(*it++ == 17.34f);
             REQUIRE(*it++ ==   0.0f);
             REQUIRE(*it++ ==   1.0f);
             REQUIRE(*it++ == std::numeric_limits<float>::min());
             REQUIRE(*it++ == std::numeric_limits<float>::max());
-            REQUIRE(it == it_pair.second);
+            REQUIRE(it == it_range.end());
         }
 
         SECTION("end_of_buffer") {

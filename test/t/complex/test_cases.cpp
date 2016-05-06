@@ -118,10 +118,10 @@ TEST_CASE("read complex data using pbf_reader") {
                     break;
                 }
                 case 7: {
-                    auto pi = item.get_packed_sint32();
+                    const auto pi = item.get_packed_sint32();
                     int32_t sum = 0;
-                    for (auto it = pi.first; it != pi.second; ++it) {
-                        sum += *it;
+                    for (auto val : pi) {
+                        sum += val;
                     }
                     REQUIRE(sum == 5);
                     break;
@@ -264,10 +264,10 @@ TEST_CASE("read complex data using pbf_message") {
                     break;
                 }
                 case TestComplex::Test::packed_sint32_d: {
-                    auto pi = item.get_packed_sint32();
+                    const auto pi = item.get_packed_sint32();
                     int32_t sum = 0;
-                    for (auto it = pi.first; it != pi.second; ++it) {
-                        sum += *it;
+                    for (auto val : pi) {
+                        sum += val;
                     }
                     REQUIRE(sum == 5);
                     break;
@@ -448,10 +448,10 @@ TEST_CASE("write complex data using pbf_writer") {
                     break;
                 }
                 case 7: {
-                    auto pi = item.get_packed_sint32();
+                    const auto pi = item.get_packed_sint32();
                     int32_t sum = 0;
-                    for (auto it = pi.first; it != pi.second; ++it) {
-                        sum += *it;
+                    for (auto val : pi) {
+                        sum += val;
                     }
                     REQUIRE(sum == 5);
                     break;
@@ -607,10 +607,10 @@ TEST_CASE("write complex data using pbf_builder") {
                     break;
                 }
                 case 7: {
-                    auto pi = item.get_packed_sint32();
+                    const auto pi = item.get_packed_sint32();
                     int32_t sum = 0;
-                    for (auto it = pi.first; it != pi.second; ++it) {
-                        sum += *it;
+                    for (auto val : pi) {
+                        sum += val;
                     }
                     REQUIRE(sum == 5);
                     break;

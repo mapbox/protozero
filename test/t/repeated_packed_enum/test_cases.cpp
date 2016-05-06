@@ -17,12 +17,12 @@ TEST_CASE("read repeated packed enum field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        auto it_pair = item.get_packed_enum();
+        auto it_range = item.get_packed_enum();
         REQUIRE(!item.next());
 
-        REQUIRE(it_pair.first != it_pair.second);
-        REQUIRE(*it_pair.first == 0 /* BLACK */);
-        REQUIRE(++it_pair.first == it_pair.second);
+        REQUIRE(it_range.begin() != it_range.end());
+        REQUIRE(*it_range.begin() == 0 /* BLACK */);
+        REQUIRE(std::next(it_range.begin()) == it_range.end());
     }
 
     SECTION("many") {
@@ -31,15 +31,15 @@ TEST_CASE("read repeated packed enum field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        auto it_pair = item.get_packed_enum();
+        auto it_range = item.get_packed_enum();
         REQUIRE(!item.next());
 
-        auto it = it_pair.first;
-        REQUIRE(it != it_pair.second);
+        auto it = it_range.begin();
+        REQUIRE(it != it_range.end());
         REQUIRE(*it++ == 0 /* BLACK */);
         REQUIRE(*it++ == 3 /* BLUE */);
         REQUIRE(*it++ == 2 /* GREEN */);
-        REQUIRE(it == it_pair.second);
+        REQUIRE(it == it_range.end());
     }
 
     SECTION("end_of_buffer") {

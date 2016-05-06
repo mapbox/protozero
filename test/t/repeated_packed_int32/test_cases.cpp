@@ -17,12 +17,12 @@ TEST_CASE("read repeated packed int32 field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        auto it_pair = item.get_packed_int32();
+        auto it_range = item.get_packed_int32();
         REQUIRE(!item.next());
 
-        REQUIRE(it_pair.first != it_pair.second);
-        REQUIRE(*it_pair.first == 17L);
-        REQUIRE(++it_pair.first == it_pair.second);
+        REQUIRE(it_range.begin() != it_range.end());
+        REQUIRE(*it_range.begin() == 17L);
+        REQUIRE(std::next(it_range.begin()) == it_range.end());
     }
 
     SECTION("many") {
@@ -31,18 +31,18 @@ TEST_CASE("read repeated packed int32 field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        auto it_pair = item.get_packed_int32();
+        auto it_range = item.get_packed_int32();
         REQUIRE(!item.next());
 
-        auto it = it_pair.first;
-        REQUIRE(it != it_pair.second);
+        auto it = it_range.begin();
+        REQUIRE(it != it_range.end());
         REQUIRE(*it++ == 17L);
         REQUIRE(*it++ ==  0L);
         REQUIRE(*it++ ==  1L);
         REQUIRE(*it++ ==  -1L);
         REQUIRE(*it++ == std::numeric_limits<int32_t>::max());
         REQUIRE(*it++ == std::numeric_limits<int32_t>::min());
-        REQUIRE(it == it_pair.second);
+        REQUIRE(it == it_range.end());
     }
 
     SECTION("end_of_buffer") {

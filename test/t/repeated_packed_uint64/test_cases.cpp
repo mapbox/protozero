@@ -17,11 +17,11 @@ TEST_CASE("read repeated packed uint64 field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        auto it_pair = item.get_packed_uint64();
+        auto it_range = item.get_packed_uint64();
         REQUIRE(!item.next());
 
-        REQUIRE(*it_pair.first == 17ULL);
-        REQUIRE(++it_pair.first == it_pair.second);
+        REQUIRE(*it_range.begin() == 17ULL);
+        REQUIRE(std::next(it_range.begin()) == it_range.end());
     }
 
     SECTION("many") {
@@ -30,15 +30,15 @@ TEST_CASE("read repeated packed uint64 field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        auto it_pair = item.get_packed_uint64();
+        auto it_range = item.get_packed_uint64();
         REQUIRE(!item.next());
 
-        auto it = it_pair.first;
+        auto it = it_range.begin();
         REQUIRE(*it++ == 17ULL);
         REQUIRE(*it++ ==  0ULL);
         REQUIRE(*it++ ==  1ULL);
         REQUIRE(*it++ == std::numeric_limits<uint64_t>::max());
-        REQUIRE(it == it_pair.second);
+        REQUIRE(it == it_range.end());
     }
 
     SECTION("end_of_buffer") {
