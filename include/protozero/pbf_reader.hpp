@@ -85,7 +85,7 @@ class pbf_reader {
     }
 
     template <typename T>
-    inline T get_fixed() {
+    T get_fixed() {
         T result;
         skip_bytes(sizeof(T));
         copy_or_byteswap<sizeof(T)>(m_data - sizeof(T), &result);
@@ -93,21 +93,38 @@ class pbf_reader {
     }
 
     template <typename T>
-    inline std::pair<const_fixed_iterator<T>, const_fixed_iterator<T>> packed_fixed() {
+    std::pair<const_fixed_iterator<T>, const_fixed_iterator<T>> packed_fixed() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         auto len = get_len_and_skip();
         protozero_assert(len % sizeof(T) == 0);
         return create_fixed_iterator_pair<T>(m_data-len, m_data);
     }
 
-    template <typename T> inline T get_varint();
-    template <typename T> inline T get_svarint();
+    template <typename T> T get_varint();
+    template <typename T> T get_svarint();
 
-    inline pbf_length_type get_length() { return get_varint<pbf_length_type>(); }
+    pbf_length_type get_length() {
+        return get_varint<pbf_length_type>();
+    }
 
-    inline void skip_bytes(pbf_length_type len);
+    void skip_bytes(pbf_length_type len) {
+        if (m_data + len > m_end) {
+            throw end_of_buffer_exception();
+        }
+        m_data += len;
 
-    inline pbf_length_type get_len_and_skip();
+    // In debug builds reset the tag to zero so that we can detect (some)
+    // wrong code.
+#ifndef NDEBUG
+        m_tag = 0;
+#endif
+    }
+
+    pbf_length_type get_len_and_skip() {
+        const auto len = get_length();
+        skip_bytes(len);
+        return len;
+    }
 
 public:
 
@@ -120,7 +137,12 @@ public:
      *
      * @post There is no current field.
      */
-    inline pbf_reader(const char* data, std::size_t length) noexcept;
+    pbf_reader(const char* data, std::size_t length) noexcept
+        : m_data(data),
+          m_end(data + length),
+          m_wire_type(pbf_wire_type::unknown),
+          m_tag(0) {
+    }
 
     /**
      * Construct a pbf_reader message from a data pointer and a length. The pointer
@@ -131,7 +153,12 @@ public:
      *
      * @post There is no current field.
      */
-    inline pbf_reader(std::pair<const char*, std::size_t> data) noexcept;
+    pbf_reader(std::pair<const char*, std::size_t> data) noexcept
+        : m_data(data.first),
+          m_end(data.first + data.second),
+          m_wire_type(pbf_wire_type::unknown),
+          m_tag(0) {
+    }
 
     /**
      * Construct a pbf_reader message from a std::string. A pointer to the string
@@ -143,33 +170,40 @@ public:
      *
      * @post There is no current field.
      */
-    inline pbf_reader(const std::string& data) noexcept;
+    pbf_reader(const std::string& data) noexcept
+        : m_data(data.data()),
+          m_end(data.data() + data.size()),
+          m_wire_type(pbf_wire_type::unknown),
+          m_tag(0) {
+    }
 
     /**
      * pbf_reader can be default constructed and behaves like it has an empty
      * buffer.
      */
-    inline pbf_reader() noexcept = default;
+    pbf_reader() noexcept = default;
 
     /// pbf_reader messages can be copied trivially.
-    inline pbf_reader(const pbf_reader&) noexcept = default;
+    pbf_reader(const pbf_reader&) noexcept = default;
 
     /// pbf_reader messages can be moved trivially.
-    inline pbf_reader(pbf_reader&&) noexcept = default;
+    pbf_reader(pbf_reader&&) noexcept = default;
 
     /// pbf_reader messages can be copied trivially.
-    inline pbf_reader& operator=(const pbf_reader& other) noexcept = default;
+    pbf_reader& operator=(const pbf_reader& other) noexcept = default;
 
     /// pbf_reader messages can be moved trivially.
-    inline pbf_reader& operator=(pbf_reader&& other) noexcept = default;
+    pbf_reader& operator=(pbf_reader&& other) noexcept = default;
 
-    inline ~pbf_reader() = default;
+    ~pbf_reader() = default;
 
     /**
      * In a boolean context the pbf_reader class evaluates to `true` if there are
      * still fields available and to `false` if the last field has been read.
      */
-    inline operator bool() const noexcept;
+    operator bool() const noexcept {
+        return m_data < m_end;
+    }
 
     /**
      * Return the length in bytes of the current message. If you have
@@ -199,7 +233,31 @@ public:
      * @pre There must be no current field.
      * @post If it returns `true` there is a current field now.
      */
-    inline bool next();
+    bool next() {
+        if (m_data == m_end) {
+            return false;
+        }
+
+        const auto value = get_varint<uint32_t>();
+        m_tag = value >> 3;
+
+        // tags 0 and 19000 to 19999 are not allowed as per
+        // https://developers.google.com/protocol-buffers/docs/proto
+        protozero_assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999 && m_tag <= ((1 << 29) - 1))) && "tag out of range");
+
+        m_wire_type = pbf_wire_type(value & 0x07);
+        switch (m_wire_type) {
+            case pbf_wire_type::varint:
+            case pbf_wire_type::fixed64:
+            case pbf_wire_type::length_delimited:
+            case pbf_wire_type::fixed32:
+                break;
+            default:
+                throw unknown_pbf_wire_type_exception();
+        }
+
+        return true;
+    }
 
     /**
      * Set next field with given tag in the message as the current field.
@@ -226,7 +284,16 @@ public:
      * @pre There must be no current field.
      * @post If it returns `true` there is a current field now with the given tag.
      */
-    inline bool next(pbf_tag_type tag);
+    bool next(pbf_tag_type tag) {
+        while (next()) {
+            if (m_tag == tag) {
+                return true;
+            } else {
+                skip();
+            }
+        }
+        return false;
+    }
 
     /**
      * The tag of the current field. The tag is the field number from the
@@ -237,7 +304,9 @@ public:
      * @returns tag of the current field.
      * @pre There must be a current field (ie. next() must have returned `true`).
      */
-    inline pbf_tag_type tag() const noexcept;
+    pbf_tag_type tag() const noexcept {
+        return m_tag;
+    }
 
     /**
      * Get the wire type of the current field. The wire types are:
@@ -254,7 +323,9 @@ public:
      * @returns wire type of the current field.
      * @pre There must be a current field (ie. next() must have returned `true`).
      */
-    inline pbf_wire_type wire_type() const noexcept;
+    pbf_wire_type wire_type() const noexcept {
+        return m_wire_type;
+    }
 
     /**
      * Check the wire type of the current field.
@@ -262,7 +333,9 @@ public:
      * @returns `true` if the current field has the given wire type.
      * @pre There must be a current field (ie. next() must have returned `true`).
      */
-    inline bool has_wire_type(pbf_wire_type type) const noexcept;
+    bool has_wire_type(pbf_wire_type type) const noexcept {
+        return wire_type() == type;
+    }
 
     /**
      * Consume the current field.
@@ -270,7 +343,25 @@ public:
      * @pre There must be a current field (ie. next() must have returned `true`).
      * @post The current field was consumed and there is no current field now.
      */
-    inline void skip();
+    void skip() {
+        protozero_assert(tag() != 0 && "call next() before calling skip()");
+        switch (wire_type()) {
+            case pbf_wire_type::varint:
+                (void)get_uint32(); // called for the side-effect of skipping value
+                break;
+            case pbf_wire_type::fixed64:
+                skip_bytes(8);
+                break;
+            case pbf_wire_type::length_delimited:
+                skip_bytes(get_length());
+                break;
+            case pbf_wire_type::fixed32:
+                skip_bytes(4);
+                break;
+            default:
+                protozero_assert(false && "can not be here because next() should have thrown already");
+        }
+    }
 
     ///@{
     /**
@@ -663,119 +754,6 @@ public:
     ///@}
 
 }; // class pbf_reader
-
-pbf_reader::pbf_reader(const char* data, std::size_t length) noexcept
-    : m_data(data),
-      m_end(data + length),
-      m_wire_type(pbf_wire_type::unknown),
-      m_tag(0) {
-}
-
-pbf_reader::pbf_reader(std::pair<const char*, std::size_t> data) noexcept
-    : m_data(data.first),
-      m_end(data.first + data.second),
-      m_wire_type(pbf_wire_type::unknown),
-      m_tag(0) {
-}
-
-pbf_reader::pbf_reader(const std::string& data) noexcept
-    : m_data(data.data()),
-      m_end(data.data() + data.size()),
-      m_wire_type(pbf_wire_type::unknown),
-      m_tag(0) {
-}
-
-pbf_reader::operator bool() const noexcept {
-    return m_data < m_end;
-}
-
-bool pbf_reader::next() {
-    if (m_data == m_end) {
-        return false;
-    }
-
-    auto value = get_varint<uint32_t>();
-    m_tag = value >> 3;
-
-    // tags 0 and 19000 to 19999 are not allowed as per
-    // https://developers.google.com/protocol-buffers/docs/proto
-    protozero_assert(((m_tag > 0 && m_tag < 19000) || (m_tag > 19999 && m_tag <= ((1 << 29) - 1))) && "tag out of range");
-
-    m_wire_type = pbf_wire_type(value & 0x07);
-    switch (m_wire_type) {
-        case pbf_wire_type::varint:
-        case pbf_wire_type::fixed64:
-        case pbf_wire_type::length_delimited:
-        case pbf_wire_type::fixed32:
-            break;
-        default:
-            throw unknown_pbf_wire_type_exception();
-    }
-
-    return true;
-}
-
-bool pbf_reader::next(pbf_tag_type requested_tag) {
-    while (next()) {
-        if (m_tag == requested_tag) {
-            return true;
-        } else {
-            skip();
-        }
-    }
-    return false;
-}
-
-pbf_tag_type pbf_reader::tag() const noexcept {
-    return m_tag;
-}
-
-pbf_wire_type pbf_reader::wire_type() const noexcept {
-    return m_wire_type;
-}
-
-bool pbf_reader::has_wire_type(pbf_wire_type type) const noexcept {
-    return wire_type() == type;
-}
-
-void pbf_reader::skip_bytes(pbf_length_type len) {
-    if (m_data + len > m_end) {
-        throw end_of_buffer_exception();
-    }
-    m_data += len;
-
-// In debug builds reset the tag to zero so that we can detect (some)
-// wrong code.
-#ifndef NDEBUG
-    m_tag = 0;
-#endif
-}
-
-void pbf_reader::skip() {
-    protozero_assert(tag() != 0 && "call next() before calling skip()");
-    switch (wire_type()) {
-        case pbf_wire_type::varint:
-            (void)get_uint32(); // called for the side-effect of skipping value
-            break;
-        case pbf_wire_type::fixed64:
-            skip_bytes(8);
-            break;
-        case pbf_wire_type::length_delimited:
-            skip_bytes(get_length());
-            break;
-        case pbf_wire_type::fixed32:
-            skip_bytes(4);
-            break;
-        default:
-            protozero_assert(false && "can not be here because next() should have thrown already");
-    }
-}
-
-pbf_length_type pbf_reader::get_len_and_skip() {
-    auto len = get_length();
-    skip_bytes(len);
-    return len;
-}
 
 template <typename T>
 T pbf_reader::get_varint() {
