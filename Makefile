@@ -38,11 +38,15 @@ PROTO_FILES_H := $(subst .proto,.pb.h,$(PROTO_FILES))
 PROTO_FILES_O := $(subst .proto,.pb.o,$(PROTO_FILES))
 
 HPP_FILES := include/protozero/byteswap.hpp \
+             include/protozero/config.hpp \
              include/protozero/exception.hpp \
+             include/protozero/pbf_builder.hpp \
+             include/protozero/pbf_message.hpp \
+             include/protozero/pbf_reader.hpp \
+             include/protozero/pbf_writer.hpp \
              include/protozero/types.hpp \
              include/protozero/varint.hpp \
-             include/protozero/pbf_reader.hpp \
-             include/protozero/pbf_writer.hpp
+             include/protozero/version.hpp
 
 CFLAGS_PROTOBUF := $(subst -I,-isystem ,$(shell pkg-config protobuf --cflags))
 LDFLAGS_PROTOBUF := $(shell pkg-config protobuf --libs-only-L)
