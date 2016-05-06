@@ -40,6 +40,7 @@ PROTO_FILES_O := $(subst .proto,.pb.o,$(PROTO_FILES))
 HPP_FILES := include/protozero/byteswap.hpp \
              include/protozero/config.hpp \
              include/protozero/exception.hpp \
+             include/protozero/iterators.hpp \
              include/protozero/pbf_builder.hpp \
              include/protozero/pbf_message.hpp \
              include/protozero/pbf_reader.hpp \
