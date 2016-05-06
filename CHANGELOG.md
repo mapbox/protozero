@@ -14,6 +14,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   packed varints.
 - Split `decode_varint()` function into two functions speeding up the
   common case where a varint is only one byte long.
+- Introduce new class `iterator_range` used instead of `std::pair` of
+  iterators. This way the objects can be used in range-based for loops.
 
 ### Fixed
 

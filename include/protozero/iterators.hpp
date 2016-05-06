@@ -12,6 +12,7 @@ documentation.
 
 #include <cstring>
 #include <iterator>
+#include <utility>
 
 #include <protozero/config.hpp>
 #include <protozero/varint.hpp>
@@ -37,15 +38,54 @@ namespace protozero {
 
     } // end namespace detail
 
+    /**
+     * A range of iterators based on std::pair. Created from beginning and
+     * end iterators. Used as a return type from some pbf_reader methods
+     * that is easy to use with range-based for loops.
+     */
+    template <typename T, typename P = std::pair<T, T>>
+    class iterator_range : public P {
+
+    public:
+
+        using iterator = T;
+
+        constexpr iterator_range(iterator&& first, iterator&& last) :
+            P(std::forward<iterator>(first),
+              std::forward<iterator>(last)) {
+        }
+
+        constexpr iterator begin() const noexcept {
+            return this->first;
+        }
+
+        constexpr iterator end() const noexcept {
+            return this->second;
+        }
+
+        constexpr iterator cbegin() const noexcept {
+            return this->first;
+        }
+
+        constexpr iterator cend() const noexcept {
+            return this->second;
+        }
+
+        constexpr std::size_t empty() const noexcept {
+            return begin() == end();
+        }
+
+    }; // struct iterator_range
+
 #ifdef PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
 
     template <typename T>
     using const_fixed_iterator = const T*;
 
     template <typename T>
-    inline std::pair<const_fixed_iterator<T>, const_fixed_iterator<T>> create_fixed_iterator_pair(const char* first, const char* last) {
-        return std::make_pair(reinterpret_cast<const T*>(first),
-                              reinterpret_cast<const T*>(last));
+    inline iterator_range<const_fixed_iterator<T>> create_fixed_iterator_range(const char* first, const char* last) {
+        return iterator_range<const_fixed_iterator<T>>{reinterpret_cast<const T*>(first),
+                                                       reinterpret_cast<const T*>(last)};
     }
 
 #else
@@ -110,9 +150,9 @@ namespace protozero {
     }; // class const_fixed_iterator
 
     template <typename T>
-    inline std::pair<const_fixed_iterator<T>, const_fixed_iterator<T>> create_fixed_iterator_pair(const char* first, const char* last) {
-        return std::make_pair(const_fixed_iterator<T>(first, last),
-                              const_fixed_iterator<T>(last, last));
+    inline iterator_range<const_fixed_iterator<T>> create_fixed_iterator_range(const char* first, const char* last) {
+        return iterator_range<const_fixed_iterator<T>>{const_fixed_iterator<T>(first, last),
+                                                       const_fixed_iterator<T>(last, last)};
     }
 
 #endif

@@ -80,11 +80,11 @@ class pbf_reader {
     }
 
     template <typename T>
-    std::pair<const_fixed_iterator<T>, const_fixed_iterator<T>> packed_fixed() {
+    iterator_range<const_fixed_iterator<T>> packed_fixed() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
-        auto len = get_len_and_skip();
+        const auto len = get_len_and_skip();
         protozero_assert(len % sizeof(T) == 0);
-        return create_fixed_iterator_pair<T>(m_data-len, m_data);
+        return create_fixed_iterator_range<T>(m_data - len, m_data);
     }
 
     template <typename T> T get_varint();
@@ -111,6 +111,14 @@ class pbf_reader {
         const auto len = get_length();
         skip_bytes(len);
         return len;
+    }
+
+    template <typename T>
+    iterator_range<T> get_packed() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        const auto len = get_len_and_skip();
+        return iterator_range<T>{T{m_data - len, m_data},
+                                 T{m_data, m_data}};
     }
 
 public:
@@ -581,7 +589,9 @@ public:
      * @pre The current field must be of type "repeated packed bool".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf_reader::const_bool_iterator, pbf_reader::const_bool_iterator> get_packed_bool();
+    iterator_range<pbf_reader::const_bool_iterator> get_packed_bool() {
+        return get_packed<pbf_reader::const_bool_iterator>();
+    }
 
     /**
      * Consume current "repeated packed enum" field.
@@ -592,7 +602,9 @@ public:
      * @pre The current field must be of type "repeated packed enum".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf_reader::const_enum_iterator, pbf_reader::const_enum_iterator> get_packed_enum();
+    iterator_range<pbf_reader::const_enum_iterator> get_packed_enum() {
+        return get_packed<pbf_reader::const_enum_iterator>();
+    }
 
     /**
      * Consume current "repeated packed int32" field.
@@ -603,7 +615,9 @@ public:
      * @pre The current field must be of type "repeated packed int32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf_reader::const_int32_iterator, pbf_reader::const_int32_iterator> get_packed_int32();
+    iterator_range<pbf_reader::const_int32_iterator> get_packed_int32() {
+        return get_packed<pbf_reader::const_int32_iterator>();
+    }
 
     /**
      * Consume current "repeated packed sint32" field.
@@ -614,7 +628,9 @@ public:
      * @pre The current field must be of type "repeated packed sint32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf_reader::const_sint32_iterator, pbf_reader::const_sint32_iterator> get_packed_sint32();
+    iterator_range<pbf_reader::const_sint32_iterator> get_packed_sint32() {
+        return get_packed<pbf_reader::const_sint32_iterator>();
+    }
 
     /**
      * Consume current "repeated packed uint32" field.
@@ -625,7 +641,9 @@ public:
      * @pre The current field must be of type "repeated packed uint32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf_reader::const_uint32_iterator, pbf_reader::const_uint32_iterator> get_packed_uint32();
+    iterator_range<pbf_reader::const_uint32_iterator> get_packed_uint32() {
+        return get_packed<pbf_reader::const_uint32_iterator>();
+    }
 
     /**
      * Consume current "repeated packed int64" field.
@@ -636,7 +654,9 @@ public:
      * @pre The current field must be of type "repeated packed int64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf_reader::const_int64_iterator, pbf_reader::const_int64_iterator> get_packed_int64();
+    iterator_range<pbf_reader::const_int64_iterator> get_packed_int64() {
+        return get_packed<pbf_reader::const_int64_iterator>();
+    }
 
     /**
      * Consume current "repeated packed sint64" field.
@@ -647,7 +667,9 @@ public:
      * @pre The current field must be of type "repeated packed sint64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf_reader::const_sint64_iterator, pbf_reader::const_sint64_iterator> get_packed_sint64();
+    iterator_range<pbf_reader::const_sint64_iterator> get_packed_sint64() {
+        return get_packed<pbf_reader::const_sint64_iterator>();
+    }
 
     /**
      * Consume current "repeated packed uint64" field.
@@ -658,7 +680,9 @@ public:
      * @pre The current field must be of type "repeated packed uint64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<pbf_reader::const_uint64_iterator, pbf_reader::const_uint64_iterator> get_packed_uint64();
+    iterator_range<pbf_reader::const_uint64_iterator> get_packed_uint64() {
+        return get_packed<pbf_reader::const_uint64_iterator>();
+    }
 
     /**
      * Consume current "repeated packed fixed32" field.
@@ -811,56 +835,6 @@ std::string pbf_reader::get_bytes() {
 
 std::string pbf_reader::get_string() {
     return get_bytes();
-}
-
-std::pair<pbf_reader::const_bool_iterator, pbf_reader::const_bool_iterator> pbf_reader::get_packed_bool() {
-    return get_packed_int32();
-}
-
-std::pair<pbf_reader::const_enum_iterator, pbf_reader::const_enum_iterator> pbf_reader::get_packed_enum() {
-    return get_packed_int32();
-}
-
-std::pair<pbf_reader::const_int32_iterator, pbf_reader::const_int32_iterator> pbf_reader::get_packed_int32() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    auto len = get_len_and_skip();
-    return std::make_pair(pbf_reader::const_int32_iterator(m_data-len, m_data),
-                          pbf_reader::const_int32_iterator(m_data, m_data));
-}
-
-std::pair<pbf_reader::const_uint32_iterator, pbf_reader::const_uint32_iterator> pbf_reader::get_packed_uint32() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    auto len = get_len_and_skip();
-    return std::make_pair(pbf_reader::const_uint32_iterator(m_data-len, m_data),
-                          pbf_reader::const_uint32_iterator(m_data, m_data));
-}
-
-std::pair<pbf_reader::const_sint32_iterator, pbf_reader::const_sint32_iterator> pbf_reader::get_packed_sint32() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    auto len = get_len_and_skip();
-    return std::make_pair(pbf_reader::const_sint32_iterator(m_data-len, m_data),
-                          pbf_reader::const_sint32_iterator(m_data, m_data));
-}
-
-std::pair<pbf_reader::const_int64_iterator, pbf_reader::const_int64_iterator> pbf_reader::get_packed_int64() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    auto len = get_len_and_skip();
-    return std::make_pair(pbf_reader::const_int64_iterator(m_data-len, m_data),
-                          pbf_reader::const_int64_iterator(m_data, m_data));
-}
-
-std::pair<pbf_reader::const_uint64_iterator, pbf_reader::const_uint64_iterator> pbf_reader::get_packed_uint64() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    auto len = get_len_and_skip();
-    return std::make_pair(pbf_reader::const_uint64_iterator(m_data-len, m_data),
-                          pbf_reader::const_uint64_iterator(m_data, m_data));
-}
-
-std::pair<pbf_reader::const_sint64_iterator, pbf_reader::const_sint64_iterator> pbf_reader::get_packed_sint64() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    auto len = get_len_and_skip();
-    return std::make_pair(pbf_reader::const_sint64_iterator(m_data-len, m_data),
-                          pbf_reader::const_sint64_iterator(m_data, m_data));
 }
 
 } // end namespace protozero
