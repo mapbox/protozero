@@ -23,13 +23,13 @@ documentation.
 namespace protozero {
 
 /**
- * The maximum length of a 64bit varint.
+ * The maximum length of a 64 bit varint.
  */
 constexpr const int8_t max_varint_length = sizeof(uint64_t) * 8 / 7 + 1;
 
 // from https://github.com/facebook/folly/blob/master/folly/Varint.h
 /**
- * Decode a 64bit varint.
+ * Decode a 64 bit varint.
  *
  * Strong exception guarantee: if there is an exception the data pointer will
  * not be changed.
@@ -39,7 +39,7 @@ constexpr const int8_t max_varint_length = sizeof(uint64_t) * 8 / 7 + 1;
  * @param[in] end Pointer one past the end of the input data.
  * @returns The decoded integer
  * @throws varint_too_long_exception if the varint is longer then the maximum
- *         length that would fit in a 64bit int. Usually this means your data
+ *         length that would fit in a 64 bit int. Usually this means your data
  *         is corrupted or you are trying to read something as a varint that
  *         isn't.
  * @throws end_of_buffer_exception if the *end* of the buffer was reached
@@ -83,10 +83,15 @@ inline uint64_t decode_varint(const char** data, const char* end) {
 }
 
 /**
- * Varint-encode a 64bit integer.
+ * Varint encode a 64 bit integer.
+ *
+ * @tparam T Output iterator the varint encoded value will be written to
+ *           byte by byte.
+ * @param value The integer that will be encoded.
+ * @throws Any exception thrown by increment or dereference operator on data.
  */
-template <typename OutputIterator>
-inline int write_varint(OutputIterator data, uint64_t value) {
+template <typename T>
+inline int write_varint(T data, uint64_t value) {
     int n=1;
 
     while (value >= 0x80) {
