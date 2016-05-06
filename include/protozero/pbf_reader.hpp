@@ -18,8 +18,6 @@ documentation.
 
 #include <cstddef>
 #include <cstdint>
-#include <cstring>
-#include <iterator>
 #include <string>
 #include <utility>
 
@@ -73,22 +71,11 @@ class pbf_reader {
     // The tag of the current field.
     pbf_tag_type m_tag = 0;
 
-    // Copy N bytes from src to dest on little endian machines, on big endian
-    // swap the bytes in the process.
-    template <int N>
-    static void copy_or_byteswap(const char* src, void* dest) noexcept {
-#if PROTOZERO_BYTE_ORDER == PROTOZERO_LITTLE_ENDIAN
-        memcpy(dest, src, N);
-#else
-        byteswap<N>(src, reinterpret_cast<char*>(dest));
-#endif
-    }
-
     template <typename T>
     T get_fixed() {
         T result;
         skip_bytes(sizeof(T));
-        copy_or_byteswap<sizeof(T)>(m_data - sizeof(T), &result);
+        detail::copy_or_byteswap<sizeof(T)>(m_data - sizeof(T), &result);
         return result;
     }
 

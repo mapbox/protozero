@@ -10,12 +10,32 @@ documentation.
 
 *****************************************************************************/
 
+#include <cstring>
 #include <iterator>
 
-#include <protozero/byteswap.hpp>
+#include <protozero/config.hpp>
 #include <protozero/varint.hpp>
 
+#if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
+# include <protozero/byteswap.hpp>
+#endif
+
 namespace protozero {
+
+    namespace detail {
+
+        // Copy N bytes from src to dest on little endian machines, on big
+        // endian swap the bytes in the process.
+        template <int N>
+        inline void copy_or_byteswap(const char* src, void* dest) noexcept {
+#if PROTOZERO_BYTE_ORDER == PROTOZERO_LITTLE_ENDIAN
+            std::memcpy(dest, src, N);
+#else
+            byteswap<N>(src, reinterpret_cast<char*>(dest));
+#endif
+        }
+
+    } // end namespace detail
 
 #ifdef PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
 
@@ -64,7 +84,7 @@ namespace protozero {
 
         value_type operator*() {
             value_type result;
-            copy_or_byteswap<sizeof(value_type)>(m_data , &result);
+            detail::copy_or_byteswap<sizeof(value_type)>(m_data , &result);
             return result;
         }
 
