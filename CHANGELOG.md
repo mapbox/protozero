@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Use more efficient new `skip_varint()` function when iterating over
   packed varints.
+- Split `decode_varint()` function into two functions speeding up the
+  common case where a varint is only one byte long.
 
 ### Fixed
 
