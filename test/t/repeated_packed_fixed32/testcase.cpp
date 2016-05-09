@@ -10,6 +10,7 @@ int main(int c, char *argv[]) {
     msg.add_i(17UL);
     write_to_file(msg, "data-one.pbf");
 
+    msg.add_i(200UL);
     msg.add_i(0UL);
     msg.add_i(1UL);
     msg.add_i(std::numeric_limits<uint32_t>::max());

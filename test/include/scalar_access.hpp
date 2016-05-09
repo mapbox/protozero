@@ -25,6 +25,16 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
         REQUIRE(!item.next());
     }
 
+    SECTION("pos200") {
+        const std::string buffer = load_data(PBF_TYPE_NAME "/data-pos200");
+
+        protozero::pbf_reader item(buffer);
+
+        REQUIRE(item.next());
+        REQUIRE(item.GET_TYPE() == 200);
+        REQUIRE(!item.next());
+    }
+
     SECTION("max") {
         const std::string buffer = load_data(PBF_TYPE_NAME "/data-max");
 
@@ -46,6 +56,16 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
             REQUIRE(item.GET_TYPE() == -1);
             REQUIRE(!item.next());
         }
+    }
+
+    SECTION("neg200") {
+        const std::string buffer = load_data(PBF_TYPE_NAME "/data-neg200");
+
+        protozero::pbf_reader item(buffer);
+
+        REQUIRE(item.next());
+        REQUIRE(item.GET_TYPE() == -200);
+        REQUIRE(!item.next());
     }
 
     SECTION("min") {

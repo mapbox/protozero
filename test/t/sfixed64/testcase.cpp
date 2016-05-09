@@ -11,8 +11,14 @@ int main(int c, char *argv[]) {
     msg.set_i(1);
     write_to_file(msg, "data-pos.pbf");
 
+    msg.set_i(200);
+    write_to_file(msg, "data-pos200.pbf");
+
     msg.set_i(-1);
     write_to_file(msg, "data-neg.pbf");
+
+    msg.set_i(-200);
+    write_to_file(msg, "data-neg200.pbf");
 
     msg.set_i(std::numeric_limits<int64_t>::max());
     write_to_file(msg, "data-max.pbf");

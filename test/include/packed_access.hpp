@@ -33,7 +33,7 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(item.next());
-            auto it_range = item.GET_TYPE();
+            const auto it_range = item.GET_TYPE();
             REQUIRE(!item.next());
 
             REQUIRE(it_range.begin() != it_range.end());
@@ -47,19 +47,19 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
             REQUIRE(item.next());
-            auto it_range = item.GET_TYPE();
+            const auto it_range = item.GET_TYPE();
             REQUIRE(!item.next());
 
             auto it = it_range.begin();
             REQUIRE(it != it_range.end());
-            REQUIRE(*it++ == 17L);
-            REQUIRE(*it++ ==  0L);
-            REQUIRE(*it++ ==  1L);
-#if PBF_TYPE_IS_SIGNED
-            REQUIRE(*it++ ==  -1L);
-#endif
+            REQUIRE(*it++ ==   17L);
+            REQUIRE(*it++ ==  200L);
+            REQUIRE(*it++ ==    0L);
+            REQUIRE(*it++ ==    1L);
             REQUIRE(*it++ == std::numeric_limits<cpp_type>::max());
 #if PBF_TYPE_IS_SIGNED
+            REQUIRE(*it++ == -200L);
+            REQUIRE(*it++ ==   -1L);
             REQUIRE(*it++ == std::numeric_limits<cpp_type>::min());
 #endif
             REQUIRE(it == it_range.end());
@@ -100,14 +100,14 @@ TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
 
     SECTION("many") {
         cpp_type data[] = {
-             17L
-            , 0L
-            , 1L
-#if PBF_TYPE_IS_SIGNED
-            ,-1L
-#endif
+               17L
+            , 200L
+            ,   0L
+            ,   1L
             ,std::numeric_limits<cpp_type>::max()
 #if PBF_TYPE_IS_SIGNED
+            ,-200L
+            ,  -1L
             ,std::numeric_limits<cpp_type>::min()
 #endif
         };
@@ -143,14 +143,14 @@ TEST_CASE("write repeated packed field using packed field: " PBF_TYPE_NAME) {
     SECTION("many") {
         {
             packed_field_type field{pw, 1};
-            field.add_element(17L);
-            field.add_element( 0L);
-            field.add_element( 1L);
-#if PBF_TYPE_IS_SIGNED
-            field.add_element(-1L);
-#endif
+            field.add_element(  17L);
+            field.add_element( 200L);
+            field.add_element(   0L);
+            field.add_element(   1L);
             field.add_element(std::numeric_limits<cpp_type>::max());
 #if PBF_TYPE_IS_SIGNED
+            field.add_element(-200L);
+            field.add_element(  -1L);
             field.add_element(std::numeric_limits<cpp_type>::min());
 #endif
         }
@@ -167,9 +167,9 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
 
     SECTION("from uint16_t") {
 #if PBF_TYPE_IS_SIGNED
-        int16_t data[] = { 1, 4, 9, 16, 25 };
+        const  int16_t data[] = { 1, 4, 9, 16, 25 };
 #else
-        uint16_t data[] = { 1, 4, 9, 16, 25 };
+        const uint16_t data[] = { 1, 4, 9, 16, 25 };
 #endif
 
         pw.ADD_TYPE(1, std::begin(data), std::end(data));
@@ -180,7 +180,7 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
         std::stringstream sdata(data);
 
 #if PBF_TYPE_IS_SIGNED
-        using test_type = int32_t;
+        using test_type =  int32_t;
 #else
         using test_type = uint32_t;
 #endif
@@ -194,16 +194,16 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
     protozero::pbf_reader item(buffer);
 
     REQUIRE(item.next());
-    auto it_range = item.GET_TYPE();
+    const auto it_range = item.GET_TYPE();
     REQUIRE(!item.next());
     REQUIRE(std::distance(it_range.begin(), it_range.end()) == 5);
 
-    auto i = it_range.begin();
-    REQUIRE(*i++ ==  1);
-    REQUIRE(*i++ ==  4);
-    REQUIRE(*i++ ==  9);
-    REQUIRE(*i++ == 16);
-    REQUIRE(*i++ == 25);
-
+    auto it = it_range.begin();
+    REQUIRE(*it++ ==  1);
+    REQUIRE(*it++ ==  4);
+    REQUIRE(*it++ ==  9);
+    REQUIRE(*it++ == 16);
+    REQUIRE(*it++ == 25);
+    REQUIRE(it == it_range.end());
 }
 
