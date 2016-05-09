@@ -15,6 +15,8 @@ C++ API that can be generated via the Google Protobufs `protoc` program.
 [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/o354pq10y96mnr6d?svg=true)](https://ci.appveyor.com/project/Mapbox/protozero)
 [![Coverage Status](https://coveralls.io/repos/mapbox/protozero/badge.svg?branch=master&service=github)](https://coveralls.io/github/mapbox/protozero?branch=master)
 
+Please read [UPGRADING](UPGRADING.md) if you are upgrading from an older
+version of Protozero.
 
 ## Depends
 

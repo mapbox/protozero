@@ -44,7 +44,13 @@ namespace protozero {
      * that is easy to use with range-based for loops.
      */
     template <typename T, typename P = std::pair<T, T>>
-    class iterator_range : public P {
+    class iterator_range :
+#ifdef PROTOZERO_STRICT_API
+        protected
+#else
+        public
+#endif
+            P {
 
     public:
 

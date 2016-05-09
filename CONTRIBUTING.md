@@ -9,6 +9,7 @@ To release a new protozero version:
    - include/protozero/version.hpp
    - package.json
  - Update CHANGELOG.md
+ - Update UPGRADING.md
  - Create a new tag and push to github `git push --tags`
  - Publish to npm:
    - First run `make testpack` to see what files will be published
