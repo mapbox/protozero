@@ -54,7 +54,7 @@ LDFLAGS_PROTOBUF := $(shell pkg-config protobuf --libs-only-L)
 
 all: ./test/tests test/writer_tests
 
-./test/t/%/test_cases.o: test/t/%/test_cases.cpp test/include/test.hpp test/include/scalar_access.hpp $(HPP_FILES)
+./test/t/%/test_cases.o: test/t/%/test_cases.cpp test/include/test.hpp test/include/scalar_access.hpp test/include/packed_access.hpp $(HPP_FILES)
 	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/tests.o: test/tests.cpp $(HPP_FILES)
