@@ -37,7 +37,7 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
             REQUIRE(!item.next());
 
             REQUIRE(it_range.begin() != it_range.end());
-            REQUIRE(*it_range.begin() == 17L);
+            REQUIRE(*it_range.begin() == 17);
             REQUIRE(std::next(it_range.begin()) == it_range.end());
         }
 
@@ -52,14 +52,14 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
 
             auto it = it_range.begin();
             REQUIRE(it != it_range.end());
-            REQUIRE(*it++ ==   17L);
-            REQUIRE(*it++ ==  200L);
-            REQUIRE(*it++ ==    0L);
-            REQUIRE(*it++ ==    1L);
+            REQUIRE(*it++ ==   17);
+            REQUIRE(*it++ ==  200);
+            REQUIRE(*it++ ==    0);
+            REQUIRE(*it++ ==    1);
             REQUIRE(*it++ == std::numeric_limits<cpp_type>::max());
 #if PBF_TYPE_IS_SIGNED
-            REQUIRE(*it++ == -200L);
-            REQUIRE(*it++ ==   -1L);
+            REQUIRE(*it++ == -200);
+            REQUIRE(*it++ ==   -1);
             REQUIRE(*it++ == std::numeric_limits<cpp_type>::min());
 #endif
             REQUIRE(it == it_range.end());
@@ -85,14 +85,14 @@ TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
     protozero::pbf_writer pw(buffer);
 
     SECTION("empty") {
-        cpp_type data[] = { 17L };
+        cpp_type data[] = { 17 };
         pw.ADD_TYPE(1, std::begin(data), std::begin(data) /* !!!! */);
 
         REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-empty"));
     }
 
     SECTION("one") {
-        cpp_type data[] = { 17L };
+        cpp_type data[] = { 17 };
         pw.ADD_TYPE(1, std::begin(data), std::end(data));
 
         REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-one"));
@@ -100,14 +100,14 @@ TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
 
     SECTION("many") {
         cpp_type data[] = {
-               17L
-            , 200L
-            ,   0L
-            ,   1L
+               17
+            , 200
+            ,   0
+            ,   1
             ,std::numeric_limits<cpp_type>::max()
 #if PBF_TYPE_IS_SIGNED
-            ,-200L
-            ,  -1L
+            ,-200
+            ,  -1
             ,std::numeric_limits<cpp_type>::min()
 #endif
         };
@@ -134,7 +134,7 @@ TEST_CASE("write repeated packed field using packed field: " PBF_TYPE_NAME) {
     SECTION("one") {
         {
             packed_field_type field{pw, 1};
-            field.add_element(17L);
+            field.add_element(cpp_type(17));
         }
 
         REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-one"));
@@ -143,14 +143,14 @@ TEST_CASE("write repeated packed field using packed field: " PBF_TYPE_NAME) {
     SECTION("many") {
         {
             packed_field_type field{pw, 1};
-            field.add_element(  17L);
-            field.add_element( 200L);
-            field.add_element(   0L);
-            field.add_element(   1L);
+            field.add_element(cpp_type(  17));
+            field.add_element(cpp_type( 200));
+            field.add_element(cpp_type(   0));
+            field.add_element(cpp_type(   1));
             field.add_element(std::numeric_limits<cpp_type>::max());
 #if PBF_TYPE_IS_SIGNED
-            field.add_element(-200L);
-            field.add_element(  -1L);
+            field.add_element(cpp_type(-200));
+            field.add_element(cpp_type(  -1));
             field.add_element(std::numeric_limits<cpp_type>::min());
 #endif
         }
