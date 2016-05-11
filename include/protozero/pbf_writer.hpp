@@ -535,7 +535,7 @@ public:
     /**
      * Add "repeated packed bool" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to bool.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -549,7 +549,7 @@ public:
     /**
      * Add "repeated packed enum" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to int32_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -563,7 +563,7 @@ public:
     /**
      * Add "repeated packed int32" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to int32_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -577,7 +577,7 @@ public:
     /**
      * Add "repeated packed sint32" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to int32_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -591,7 +591,7 @@ public:
     /**
      * Add "repeated packed uint32" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to uint32_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -605,7 +605,7 @@ public:
     /**
      * Add "repeated packed int64" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to int64_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -619,7 +619,7 @@ public:
     /**
      * Add "repeated packed sint64" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to int64_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -633,7 +633,7 @@ public:
     /**
      * Add "repeated packed uint64" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to uint64_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -647,7 +647,7 @@ public:
     /**
      * Add "repeated packed fixed32" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to uint32_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -662,7 +662,7 @@ public:
     /**
      * Add "repeated packed sfixed32" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to int32_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -677,7 +677,7 @@ public:
     /**
      * Add "repeated packed fixed64" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to uint64_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -692,7 +692,7 @@ public:
     /**
      * Add "repeated packed sfixed64" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to int64_t.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -707,7 +707,7 @@ public:
     /**
      * Add "repeated packed float" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to float.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
@@ -722,7 +722,7 @@ public:
     /**
      * Add "repeated packed double" field to data.
      *
-     * @tparam InputIterator An type satisfying the InputIterator concept.
+     * @tparam InputIterator A type satisfying the InputIterator concept.
      *         Dereferencing the iterator must yield a type assignable to double.
      * @param tag Tag (field number) of the field
      * @param first Iterator pointing to the beginning of the data
