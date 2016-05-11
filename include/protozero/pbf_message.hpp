@@ -87,7 +87,7 @@ public:
         return T(pbf_reader::tag());
     }
 
-};
+}; // class pbf_message
 
 } // end namespace protozero
 

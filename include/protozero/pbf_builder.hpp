@@ -132,7 +132,7 @@ public:
 #undef PROTOZERO_WRITER_WRAP_ADD_PACKED
 /// @endcond
 
-};
+}; // class pbf_builder
 
 } // end namespace protozero
 
