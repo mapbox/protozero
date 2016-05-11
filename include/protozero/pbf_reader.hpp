@@ -242,7 +242,7 @@ public:
         }
 
         const auto value = get_varint<uint32_t>();
-        m_tag = value >> 3;
+        m_tag = pbf_tag_type(value >> 3);
 
         // tags 0 and 19000 to 19999 are not allowed as per
         // https://developers.google.com/protocol-buffers/docs/proto
