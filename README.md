@@ -135,3 +135,15 @@ For extra checks with [Cppcheck](http://cppcheck.sourceforge.net/) you can call
 
     make check
 
+
+## Who is using Protozero?
+
+* [Carmen](https://github.com/mapbox/carmen-cache)
+* [Libosmium](https://github.com/osmcode/libosmium)
+* [Mapnik](https://github.com/mapbox/mapnik-vector-tile)
+* [OSRM](https://github.com/Project-OSRM/osrm-backend)
+
+Are you using Protozero? Tell us! Send a pull request with changes to this
+README.
+
+
