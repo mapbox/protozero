@@ -380,9 +380,10 @@ TEST_CASE("write complex data using pbf_writer") {
                     break;
                 }
                 case 5: {
-                    protozero::pbf_reader subitem = item.get_message();
+                    auto view = item.get_view();
+                    protozero::pbf_reader subitem{view};
                     REQUIRE(subitem.next());
-                    REQUIRE(subitem.get_string() == "foobar");
+                    REQUIRE(std::string(subitem.get_view()) == "foobar");
                     REQUIRE(!subitem.next());
                     break;
                 }

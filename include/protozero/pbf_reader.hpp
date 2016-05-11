@@ -132,6 +132,23 @@ class pbf_reader {
 public:
 
     /**
+     * Construct a pbf_reader message from a data_view. The pointer from the
+     * data_view will be stored inside the pbf_reader object, no data is
+     * copied. So you must* make sure the view stays valid as long as the
+     * pbf_reader object is used.
+     *
+     * The buffer must contain a complete protobuf message.
+     *
+     * @post There is no current field.
+     */
+    explicit pbf_reader(const data_view& view) noexcept
+        : m_data(view.data()),
+          m_end(view.data() + view.size()),
+          m_wire_type(pbf_wire_type::unknown),
+          m_tag(0) {
+    }
+
+    /**
      * Construct a pbf_reader message from a data pointer and a length. The pointer
      * will be stored inside the pbf_reader object, no data is copied. So you must
      * make sure the buffer stays valid as long as the pbf_reader object is used.
@@ -546,6 +563,22 @@ public:
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
         return get_fixed<double>();
+    }
+
+    /**
+     * Consume and return value of current "bytes", "string", or "message"
+     * field.
+     *
+     * @returns A data_view object.
+     * @pre There must be a current field (ie. next() must have returned `true`).
+     * @pre The current field must be of type "bytes", "string", or "message".
+     * @post The current field was consumed and there is no current field now.
+     */
+    data_view get_view() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        protozero_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
+        auto len = get_len_and_skip();
+        return data_view{m_data-len, len};
     }
 
     /**

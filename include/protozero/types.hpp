@@ -16,7 +16,10 @@ documentation.
  * @brief Contains the declaration of low-level types used in the pbf format.
  */
 
+#include <cstddef>
 #include <cstdint>
+#include <cstring>
+#include <string>
 
 namespace protozero {
 
@@ -43,6 +46,58 @@ enum class pbf_wire_type : uint32_t {
  * The type used for length values, such as the length of a field.
  */
 using pbf_length_type = uint32_t;
+
+#ifdef PROTOZERO_USE_VIEW
+using data_view = PROTOZERO_USE_VIEW;
+#else
+
+/**
+ * Holds a pointer to some data and a length.
+ *
+ * This class is supposed to be compatible with the std::string_view
+ * that will be available in C++17.
+ */
+class data_view {
+
+    const char* m_data;
+    std::size_t m_size;
+
+public:
+
+    constexpr data_view(const char* data, std::size_t size) noexcept
+        : m_data(data),
+          m_size(size) {
+    }
+
+    constexpr data_view(const std::string& str) noexcept
+        : m_data(str.data()),
+          m_size(str.size()) {
+    }
+
+    data_view(const char* data) noexcept
+        : m_data(data),
+          m_size(std::strlen(data)) {
+    }
+
+    constexpr const char* data() const noexcept {
+        return m_data;
+    }
+    constexpr std::size_t size() const noexcept {
+        return m_size;
+    }
+
+    std::string to_string() const {
+        return std::string{m_data, m_size};
+    }
+
+    explicit operator std::string() const {
+        return std::string{m_data, m_size};
+    }
+
+}; // class data_view
+
+#endif
+
 
 } // end namespace protozero
 
