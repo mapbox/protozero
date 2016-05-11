@@ -378,7 +378,7 @@ public:
      * @pre The current field must be of type "bool".
      * @post The current field was consumed and there is no current field now.
      */
-    inline bool get_bool() {
+    bool get_bool() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
         protozero_assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
@@ -393,7 +393,7 @@ public:
      * @pre The current field must be of type "enum".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int32_t get_enum() {
+    int32_t get_enum() {
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
         return get_varint<int32_t>();
     }
@@ -405,7 +405,7 @@ public:
      * @pre The current field must be of type "int32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int32_t get_int32() {
+    int32_t get_int32() {
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
         return get_varint<int32_t>();
     }
@@ -417,7 +417,7 @@ public:
      * @pre The current field must be of type "sint32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int32_t get_sint32() {
+    int32_t get_sint32() {
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
         return get_svarint<int32_t>();
     }
@@ -429,7 +429,7 @@ public:
      * @pre The current field must be of type "uint32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline uint32_t get_uint32() {
+    uint32_t get_uint32() {
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
         return get_varint<uint32_t>();
     }
@@ -441,7 +441,7 @@ public:
      * @pre The current field must be of type "int64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int64_t get_int64() {
+    int64_t get_int64() {
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
         return get_varint<int64_t>();
     }
@@ -453,7 +453,7 @@ public:
      * @pre The current field must be of type "sint64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int64_t get_sint64() {
+    int64_t get_sint64() {
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
         return get_svarint<int64_t>();
     }
@@ -465,7 +465,7 @@ public:
      * @pre The current field must be of type "uint64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline uint64_t get_uint64() {
+    uint64_t get_uint64() {
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
         return get_varint<uint64_t>();
     }
@@ -477,7 +477,7 @@ public:
      * @pre The current field must be of type "fixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline uint32_t get_fixed32() {
+    uint32_t get_fixed32() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
         return get_fixed<uint32_t>();
@@ -490,7 +490,7 @@ public:
      * @pre The current field must be of type "sfixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int32_t get_sfixed32() {
+    int32_t get_sfixed32() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
         return get_fixed<int32_t>();
@@ -503,7 +503,7 @@ public:
      * @pre The current field must be of type "fixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline uint64_t get_fixed64() {
+    uint64_t get_fixed64() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
         return get_fixed<uint64_t>();
@@ -516,7 +516,7 @@ public:
      * @pre The current field must be of type "sfixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int64_t get_sfixed64() {
+    int64_t get_sfixed64() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
         return get_fixed<int64_t>();
@@ -529,7 +529,7 @@ public:
      * @pre The current field must be of type "float".
      * @post The current field was consumed and there is no current field now.
      */
-    inline float get_float() {
+    float get_float() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
         return get_fixed<float>();
@@ -542,7 +542,7 @@ public:
      * @pre The current field must be of type "double".
      * @post The current field was consumed and there is no current field now.
      */
-    inline double get_double() {
+    double get_double() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
         return get_fixed<double>();
@@ -556,7 +556,7 @@ public:
      * @pre The current field must be of type "bytes" or "string".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const char*, pbf_length_type> get_data() {
+    std::pair<const char*, pbf_length_type> get_data() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
         auto len = get_len_and_skip();
@@ -570,7 +570,7 @@ public:
      * @pre The current field must be of type "bytes".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::string get_bytes() {
+    std::string get_bytes() {
         auto d = get_data();
         return std::string(d.first, d.second);
     }
@@ -582,7 +582,7 @@ public:
      * @pre The current field must be of type "string".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::string get_string() {
+    std::string get_string() {
         return get_bytes();
     }
 
@@ -593,7 +593,7 @@ public:
      * @pre The current field must be of type "message".
      * @post The current field was consumed and there is no current field now.
      */
-    inline pbf_reader get_message() {
+    pbf_reader get_message() {
         return pbf_reader(get_data());
     }
 
@@ -741,7 +741,7 @@ public:
      * @pre The current field must be of type "repeated packed fixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline auto get_packed_fixed32() -> decltype(packed_fixed<uint32_t>()) {
+    auto get_packed_fixed32() -> decltype(packed_fixed<uint32_t>()) {
         return packed_fixed<uint32_t>();
     }
 
@@ -754,7 +754,7 @@ public:
      * @pre The current field must be of type "repeated packed sfixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline auto get_packed_sfixed32() -> decltype(packed_fixed<int32_t>()) {
+    auto get_packed_sfixed32() -> decltype(packed_fixed<int32_t>()) {
         return packed_fixed<int32_t>();
     }
 
@@ -767,7 +767,7 @@ public:
      * @pre The current field must be of type "repeated packed fixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline auto get_packed_fixed64() -> decltype(packed_fixed<uint64_t>()) {
+    auto get_packed_fixed64() -> decltype(packed_fixed<uint64_t>()) {
         return packed_fixed<uint64_t>();
     }
 
@@ -780,7 +780,7 @@ public:
      * @pre The current field must be of type "repeated packed sfixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline auto get_packed_sfixed64() -> decltype(packed_fixed<int64_t>()) {
+    auto get_packed_sfixed64() -> decltype(packed_fixed<int64_t>()) {
         return packed_fixed<int64_t>();
     }
 
@@ -793,7 +793,7 @@ public:
      * @pre The current field must be of type "repeated packed float".
      * @post The current field was consumed and there is no current field now.
      */
-    inline auto get_packed_float() -> decltype(packed_fixed<float>()) {
+    auto get_packed_float() -> decltype(packed_fixed<float>()) {
         return packed_fixed<float>();
     }
 
@@ -806,7 +806,7 @@ public:
      * @pre The current field must be of type "repeated packed double".
      * @post The current field was consumed and there is no current field now.
      */
-    inline auto get_packed_double() -> decltype(packed_fixed<double>()) {
+    auto get_packed_double() -> decltype(packed_fixed<double>()) {
         return packed_fixed<double>();
     }
 
