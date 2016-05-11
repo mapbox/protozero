@@ -76,7 +76,7 @@ class pbf_writer {
 
     void add_field(pbf_tag_type tag, pbf_wire_type type) {
         protozero_assert(((tag > 0 && tag < 19000) || (tag > 19999 && tag <= ((1 << 29) - 1))) && "tag out of range");
-        uint32_t b = (tag << 3) | uint32_t(type);
+        const uint32_t b = (tag << 3) | uint32_t(type);
         add_varint(b);
     }
 
@@ -92,7 +92,7 @@ class pbf_writer {
 #if PROTOZERO_BYTE_ORDER == PROTOZERO_LITTLE_ENDIAN
         m_data->append(reinterpret_cast<const char*>(&value), sizeof(T));
 #else
-        auto size = m_data->size();
+        const auto size = m_data->size();
         m_data->resize(size + sizeof(T));
         byteswap<sizeof(T)>(reinterpret_cast<const char*>(&value), const_cast<char*>(m_data->data() + size));
 #endif
@@ -117,7 +117,7 @@ class pbf_writer {
             return;
         }
 
-        auto length = std::distance(first, last);
+        const auto length = std::distance(first, last);
         add_length_varint(tag, sizeof(T) * pbf_length_type(length));
         reserve(sizeof(T) * std::size_t(length));
 
@@ -189,10 +189,10 @@ class pbf_writer {
         protozero_assert(m_pos != 0);
         protozero_assert(m_rollback_pos != size_is_known);
         protozero_assert(m_data);
-        auto length = pbf_length_type(m_data->size() - m_pos);
+        const auto length = pbf_length_type(m_data->size() - m_pos);
 
         protozero_assert(m_data->size() >= m_pos - reserve_bytes);
-        auto n = write_varint(m_data->begin() + long(m_pos) - reserve_bytes, length);
+        const auto n = write_varint(m_data->begin() + long(m_pos) - reserve_bytes, length);
 
         m_data->erase(m_data->begin() + long(m_pos) - reserve_bytes + n, m_data->begin() + long(m_pos));
         m_pos = 0;
