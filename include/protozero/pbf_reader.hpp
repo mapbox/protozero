@@ -87,8 +87,16 @@ class pbf_reader {
         return create_fixed_iterator_range<T>(m_data - len, m_data);
     }
 
-    template <typename T> T get_varint();
-    template <typename T> T get_svarint();
+    template <typename T>
+    T get_varint() {
+        return static_cast<T>(decode_varint(&m_data, m_end));
+    }
+
+    template <typename T>
+    T get_svarint() {
+        protozero_assert((has_wire_type(pbf_wire_type::varint) || has_wire_type(pbf_wire_type::length_delimited)) && "not a varint");
+        return static_cast<T>(decode_zigzag64(decode_varint(&m_data, m_end)));
+    }
 
     pbf_length_type get_length() {
         return get_varint<pbf_length_type>();
@@ -370,7 +378,13 @@ public:
      * @pre The current field must be of type "bool".
      * @post The current field was consumed and there is no current field now.
      */
-    inline bool get_bool();
+    inline bool get_bool() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
+        protozero_assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
+        skip_bytes(1);
+        return m_data[-1] != 0; // -1 okay because we incremented m_data the line before
+    }
 
     /**
      * Consume and return value of current "enum" field.
@@ -463,7 +477,11 @@ public:
      * @pre The current field must be of type "fixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline uint32_t get_fixed32();
+    inline uint32_t get_fixed32() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        protozero_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
+        return get_fixed<uint32_t>();
+    }
 
     /**
      * Consume and return value of current "sfixed32" field.
@@ -472,7 +490,11 @@ public:
      * @pre The current field must be of type "sfixed32".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int32_t get_sfixed32();
+    inline int32_t get_sfixed32() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        protozero_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
+        return get_fixed<int32_t>();
+    }
 
     /**
      * Consume and return value of current "fixed64" field.
@@ -481,7 +503,11 @@ public:
      * @pre The current field must be of type "fixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline uint64_t get_fixed64();
+    inline uint64_t get_fixed64() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
+        return get_fixed<uint64_t>();
+    }
 
     /**
      * Consume and return value of current "sfixed64" field.
@@ -490,7 +516,11 @@ public:
      * @pre The current field must be of type "sfixed64".
      * @post The current field was consumed and there is no current field now.
      */
-    inline int64_t get_sfixed64();
+    inline int64_t get_sfixed64() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
+        return get_fixed<int64_t>();
+    }
 
     /**
      * Consume and return value of current "float" field.
@@ -499,7 +529,11 @@ public:
      * @pre The current field must be of type "float".
      * @post The current field was consumed and there is no current field now.
      */
-    inline float get_float();
+    inline float get_float() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        protozero_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
+        return get_fixed<float>();
+    }
 
     /**
      * Consume and return value of current "double" field.
@@ -508,7 +542,11 @@ public:
      * @pre The current field must be of type "double".
      * @post The current field was consumed and there is no current field now.
      */
-    inline double get_double();
+    inline double get_double() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
+        return get_fixed<double>();
+    }
 
     /**
      * Consume and return value of current "bytes" or "string" field.
@@ -518,7 +556,12 @@ public:
      * @pre The current field must be of type "bytes" or "string".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::pair<const char*, pbf_length_type> get_data();
+    inline std::pair<const char*, pbf_length_type> get_data() {
+        protozero_assert(tag() != 0 && "call next() before accessing field value");
+        protozero_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
+        auto len = get_len_and_skip();
+        return std::make_pair(m_data-len, len);
+    }
 
     /**
      * Consume and return value of current "bytes" field.
@@ -527,7 +570,10 @@ public:
      * @pre The current field must be of type "bytes".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::string get_bytes();
+    inline std::string get_bytes() {
+        auto d = get_data();
+        return std::string(d.first, d.second);
+    }
 
     /**
      * Consume and return value of current "string" field.
@@ -536,7 +582,9 @@ public:
      * @pre The current field must be of type "string".
      * @post The current field was consumed and there is no current field now.
      */
-    inline std::string get_string();
+    inline std::string get_string() {
+        return get_bytes();
+    }
 
     /**
      * Consume and return value of current "message" field.
@@ -765,77 +813,6 @@ public:
     ///@}
 
 }; // class pbf_reader
-
-template <typename T>
-T pbf_reader::get_varint() {
-    return static_cast<T>(decode_varint(&m_data, m_end));
-}
-
-template <typename T>
-T pbf_reader::get_svarint() {
-    protozero_assert((has_wire_type(pbf_wire_type::varint) || has_wire_type(pbf_wire_type::length_delimited)) && "not a varint");
-    return static_cast<T>(decode_zigzag64(decode_varint(&m_data, m_end)));
-}
-
-uint32_t pbf_reader::get_fixed32() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    protozero_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
-    return get_fixed<uint32_t>();
-}
-
-int32_t pbf_reader::get_sfixed32() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    protozero_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
-    return get_fixed<int32_t>();
-}
-
-uint64_t pbf_reader::get_fixed64() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
-    return get_fixed<uint64_t>();
-}
-
-int64_t pbf_reader::get_sfixed64() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
-    return get_fixed<int64_t>();
-}
-
-float pbf_reader::get_float() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    protozero_assert(has_wire_type(pbf_wire_type::fixed32) && "not a 32-bit fixed");
-    return get_fixed<float>();
-}
-
-double pbf_reader::get_double() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    protozero_assert(has_wire_type(pbf_wire_type::fixed64) && "not a 64-bit fixed");
-    return get_fixed<double>();
-}
-
-bool pbf_reader::get_bool() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
-    protozero_assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
-    skip_bytes(1);
-    return m_data[-1] != 0; // -1 okay because we incremented m_data the line before
-}
-
-std::pair<const char*, pbf_length_type> pbf_reader::get_data() {
-    protozero_assert(tag() != 0 && "call next() before accessing field value");
-    protozero_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
-    auto len = get_len_and_skip();
-    return std::make_pair(m_data-len, len);
-}
-
-std::string pbf_reader::get_bytes() {
-    auto d = get_data();
-    return std::string(d.first, d.second);
-}
-
-std::string pbf_reader::get_string() {
-    return get_bytes();
-}
 
 } // end namespace protozero
 
