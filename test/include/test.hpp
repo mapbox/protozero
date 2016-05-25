@@ -1,4 +1,8 @@
 
+#ifdef _MSC_VER
+# define _SCL_SECURE_NO_WARNINGS
+#endif
+
 #include <catch.hpp>
 
 #include <stdexcept>
