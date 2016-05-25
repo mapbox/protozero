@@ -286,6 +286,13 @@ public:
         m_data->reserve(m_data->size() + size);
     }
 
+    /**
+     * Cancel writing of this submessage. The complete submessage will be
+     * removed as if it was never created and no fields were added.
+     *
+     * @pre Must be a pbf_writer of a submessage, ie one opened with the
+     *      pbf_writer constructor taking a parent message.
+     */
     void rollback() {
         protozero_assert(m_parent_writer && "you can't call rollback() on a pbf_writer without a parent");
         protozero_assert(m_pos == 0 && "you can't call rollback() on a pbf_writer that has an open nested submessage");

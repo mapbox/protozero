@@ -54,29 +54,41 @@ class iterator_range :
 
 public:
 
+    /// The type of the iterators in this range.
     using iterator = T;
 
+    /**
+     * Create iterator range from two iterators.
+     *
+     * @param first Iterator to beginning or range.
+     * @param last Iterator to end or range.
+     */
     constexpr iterator_range(iterator&& first, iterator&& last) :
         P(std::forward<iterator>(first),
           std::forward<iterator>(last)) {
     }
 
+    /// Return iterator to beginning of range.
     constexpr iterator begin() const noexcept {
         return this->first;
     }
 
+    /// Return iterator to end of range.
     constexpr iterator end() const noexcept {
         return this->second;
     }
 
+    /// Return iterator to beginning of range.
     constexpr iterator cbegin() const noexcept {
         return this->first;
     }
 
+    /// Return iterator to end of range.
     constexpr iterator cend() const noexcept {
         return this->second;
     }
 
+    /// Return true if this range is empty.
     constexpr std::size_t empty() const noexcept {
         return begin() == end();
     }

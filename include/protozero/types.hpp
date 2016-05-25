@@ -64,32 +64,53 @@ class data_view {
 
 public:
 
+    /**
+     * Create data_view from pointer and size.
+     *
+     * @param data Pointer to the data.
+     * @param size Length of the data.
+     */
     constexpr data_view(const char* data, std::size_t size) noexcept
         : m_data(data),
           m_size(size) {
     }
 
+    /**
+     * Create data_view from string.
+     *
+     * @param str String with the data.
+     */
     data_view(const std::string& str) noexcept
         : m_data(str.data()),
           m_size(str.size()) {
     }
 
+    /**
+     * Create data_view from zero-terminated string.
+     *
+     * @param data Pointer to the data.
+     */
     data_view(const char* data) noexcept
         : m_data(data),
           m_size(std::strlen(data)) {
     }
 
+    /// Return pointer to data.
     constexpr const char* data() const noexcept {
         return m_data;
     }
+
+    /// Return length of data in bytes.
     constexpr std::size_t size() const noexcept {
         return m_size;
     }
 
+    /// Convert data view to string.
     std::string to_string() const {
         return std::string{m_data, m_size};
     }
 
+    /// Convert data view to string.
     explicit operator std::string() const {
         return std::string{m_data, m_size};
     }
