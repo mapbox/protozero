@@ -69,7 +69,7 @@ public:
           m_size(size) {
     }
 
-    constexpr data_view(const std::string& str) noexcept
+    data_view(const std::string& str) noexcept
         : m_data(str.data()),
           m_size(str.size()) {
     }
