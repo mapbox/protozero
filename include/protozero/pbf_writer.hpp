@@ -468,6 +468,16 @@ public:
      * @param tag Tag (field number) of the field
      * @param value Value to be written
      */
+    void add_bytes(pbf_tag_type tag, const data_view& value) {
+        add_bytes(tag, value.data(), value.size());
+    }
+
+    /**
+     * Add "bytes" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
     void add_bytes(pbf_tag_type tag, const std::string& value) {
         add_bytes(tag, value.data(), value.size());
     }
@@ -481,6 +491,16 @@ public:
      */
     void add_string(pbf_tag_type tag, const char* value, std::size_t size) {
         add_bytes(tag, value, size);
+    }
+
+    /**
+     * Add "string" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written
+     */
+    void add_string(pbf_tag_type tag, const data_view& value) {
+        add_bytes(tag, value.data(), value.size());
     }
 
     /**
@@ -513,6 +533,16 @@ public:
      */
     void add_message(pbf_tag_type tag, const char* value, std::size_t size) {
         add_bytes(tag, value, size);
+    }
+
+    /**
+     * Add "message" field to data.
+     *
+     * @param tag Tag (field number) of the field
+     * @param value Value to be written. The value must be a complete message.
+     */
+    void add_message(pbf_tag_type tag, const data_view& value) {
+        add_bytes(tag, value.data(), value.size());
     }
 
     /**
