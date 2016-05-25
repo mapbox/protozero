@@ -22,22 +22,36 @@ older API usages.
   attribute accesses on the returned objects from `first` and `second` to
   `begin()` and `end()`, respectively. So change something like this:
 
-    auto x = message.get_packed_int32();
-    for (auto it = x.first; it != x.second; ++it) {
-        ....
-    }
- 
-  to: 
+      auto x = message.get_packed_int32();
+      for (auto it = x.first; it != x.second; ++it) {
+          ....
+      }
 
-    auto x = message.get_packed_int32();
-    for (auto it = x.begin(); it != x.end(); ++it) {
-        ....
-    }
+  to:
+
+      auto x = message.get_packed_int32();
+      for (auto it = x.begin(); it != x.end(); ++it) {
+          ....
+      }
 
   or even better use the range-based for loop:
 
-    auto x = message.get_packed_int32();
-    for (auto val : x) {
-        ....
-    }
+      auto x = message.get_packed_int32();
+      for (auto val : x) {
+          ....
+      }
+
+* The class `pbf_reader` has a new method `get_view()` returning an object
+  of the new `protozero::data_view` class. The `data_view` only has minimal
+  functionality, but what it has is compatible to the `std::string_view` class
+  which will be coming in C++17. The view autoconverts to a `std::string` if
+  needed. Use `get_view()` instead of `get_data()` giving you a more intuitive
+  interface (call `data()` and `size()` on the view instead of using `first`
+  and `second` on the `std::pair` returned by `get_data()`).
+
+  You can set the macro `PROTOZERO_USE_VIEW` (before including `types.hpp`) to
+  the name of any class that behaves like `protozero::data_view` and
+  `data_view` will be an alias to that class instead of the implementation
+  from protozero. This way you can use the C++17 `string_view` or a similar
+  class if it is already available on your system.
 
