@@ -43,7 +43,7 @@ information from the `.proto` description. This results in a few restrictions:
 The library will make sure not to overrun the buffer it was given, but
 basically all other checks have to be made in user code!
 
-See the [tutorial](tutorial.md) for more information on how to use it.
+See the [tutorial](tutorial.md) for more information on how to use it. There is also a [table of all types and functions](cheatsheet.md).
 
 Call `make doc` to build the Doxygen documentation. (You'll need
 [Doxygen](http://www.stack.nl/~dimitri/doxygen/) installed.) Then open
