@@ -27,43 +27,47 @@ namespace protozero {
  */
 constexpr const int8_t max_varint_length = sizeof(uint64_t) * 8 / 7 + 1;
 
-// from https://github.com/facebook/folly/blob/master/folly/Varint.h
-inline uint64_t decode_varint_impl(const char** data, const char* end) {
-    const int8_t* begin = reinterpret_cast<const int8_t*>(*data);
-    const int8_t* iend = reinterpret_cast<const int8_t*>(end);
-    const int8_t* p = begin;
-    uint64_t val = 0;
+namespace detail {
 
-    if (iend - begin >= max_varint_length) {  // fast path
-        do {
-            int64_t b;
-            b = *p++; val  = uint64_t((b & 0x7f)      ); if (b >= 0) break;
-            b = *p++; val |= uint64_t((b & 0x7f) <<  7); if (b >= 0) break;
-            b = *p++; val |= uint64_t((b & 0x7f) << 14); if (b >= 0) break;
-            b = *p++; val |= uint64_t((b & 0x7f) << 21); if (b >= 0) break;
-            b = *p++; val |= uint64_t((b & 0x7f) << 28); if (b >= 0) break;
-            b = *p++; val |= uint64_t((b & 0x7f) << 35); if (b >= 0) break;
-            b = *p++; val |= uint64_t((b & 0x7f) << 42); if (b >= 0) break;
-            b = *p++; val |= uint64_t((b & 0x7f) << 49); if (b >= 0) break;
-            b = *p++; val |= uint64_t((b & 0x7f) << 56); if (b >= 0) break;
-            b = *p++; val |= uint64_t((b & 0x7f) << 63); if (b >= 0) break;
-            throw varint_too_long_exception();
-        } while (false);
-    } else {
-        int shift = 0;
-        while (p != iend && *p < 0) {
-            val |= uint64_t(*p++ & 0x7f) << shift;
-            shift += 7;
+    // from https://github.com/facebook/folly/blob/master/folly/Varint.h
+    inline uint64_t decode_varint_impl(const char** data, const char* end) {
+        const int8_t* begin = reinterpret_cast<const int8_t*>(*data);
+        const int8_t* iend = reinterpret_cast<const int8_t*>(end);
+        const int8_t* p = begin;
+        uint64_t val = 0;
+
+        if (iend - begin >= max_varint_length) {  // fast path
+            do {
+                int64_t b;
+                b = *p++; val  = uint64_t((b & 0x7f)      ); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) <<  7); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 14); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 21); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 28); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 35); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 42); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 49); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 56); if (b >= 0) break;
+                b = *p++; val |= uint64_t((b & 0x7f) << 63); if (b >= 0) break;
+                throw varint_too_long_exception();
+            } while (false);
+        } else {
+            int shift = 0;
+            while (p != iend && *p < 0) {
+                val |= uint64_t(*p++ & 0x7f) << shift;
+                shift += 7;
+            }
+            if (p == iend) {
+                throw end_of_buffer_exception();
+            }
+            val |= uint64_t(*p++) << shift;
         }
-        if (p == iend) {
-            throw end_of_buffer_exception();
-        }
-        val |= uint64_t(*p++) << shift;
+
+        *data = reinterpret_cast<const char*>(p);
+        return val;
     }
 
-    *data = reinterpret_cast<const char*>(p);
-    return val;
-}
+} // end namespace detail
 
 /**
  * Decode a 64 bit varint.
@@ -90,7 +94,7 @@ inline uint64_t decode_varint(const char** data, const char* end) {
         return val;
     }
     // If this varint is more than one byte, defer to complete implementation.
-    return decode_varint_impl(data, end);
+    return detail::decode_varint_impl(data, end);
 }
 
 /**
