@@ -15,14 +15,9 @@ C++ API that can be generated via the Google Protobufs `protoc` program.
 [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/o354pq10y96mnr6d?svg=true)](https://ci.appveyor.com/project/Mapbox/protozero)
 [![Coverage Status](https://coveralls.io/repos/mapbox/protozero/badge.svg?branch=master&service=github)](https://coveralls.io/github/mapbox/protozero?branch=master)
 
-Please read [UPGRADING](UPGRADING.md) if you are upgrading from an older
-version of Protozero.
-
 ## Depends
 
  - C++11 compiler
- - A working knowledge of how
-   [protocol buffer encoding works](https://developers.google.com/protocol-buffers/docs/encoding).
 
 
 ## How it works
@@ -43,10 +38,22 @@ information from the `.proto` description. This results in a few restrictions:
 The library will make sure not to overrun the buffer it was given, but
 basically all other checks have to be made in user code!
 
-See the [tutorial](tutorial.md) for more information on how to use it. There is also a [table of all types and functions](cheatsheet.md).
 
-Call `make doc` to build the Doxygen documentation. (You'll need
-[Doxygen](http://www.stack.nl/~dimitri/doxygen/) installed.) Then open
+## Documentation
+
+You have to have a working knowledge of how
+[protocol buffer encoding works](https://developers.google.com/protocol-buffers/docs/encoding).
+
+* Read the [tutorial](doc/tutorial.md) for an introduction on how to use
+  Protozero.
+* There is a table of all types and functions in the
+  [cheat sheet](doc/cheatsheet.md).
+* [Macros defined or used by Protozero](doc/macros.md).
+* Read the [upgrading instructions](UPGRADING.md) if you are upgrading from
+  an older version of Protozero.
+
+Call `make doc` to build the Doxygen-based reference documentation. (You'll
+need [Doxygen](http://www.stack.nl/~dimitri/doxygen/) installed.) Then open
 `doc/html/index.html` in your browser to read it.
 
 

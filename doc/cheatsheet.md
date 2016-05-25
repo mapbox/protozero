@@ -1,5 +1,5 @@
 
-# Protozero Cheatsheet
+# Protozero Cheat Sheet
 
 See also this
 [handy table](https://developers.google.com/protocol-buffers/docs/proto#scalar)

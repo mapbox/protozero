@@ -16,7 +16,7 @@ Protocol Buffer documentation:
 Make sure you understand the basic types of values supported by Protocol
 Buffers. Refer to this
 [handy table](https://developers.google.com/protocol-buffers/docs/proto#scalar)
-and [this one](cheatsheet.md) if you are getting lost.
+and [the cheat sheet](cheatsheet.md) if you are getting lost.
 
 
 ## Prerequisites

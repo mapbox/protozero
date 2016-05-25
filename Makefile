@@ -49,6 +49,8 @@ HPP_FILES := include/protozero/byteswap.hpp \
              include/protozero/varint.hpp \
              include/protozero/version.hpp
 
+DOC_FILES = doc/cheatsheet.md doc/macros.md doc/tutorial.md
+
 CFLAGS_PROTOBUF := $(subst -I,-isystem ,$(shell pkg-config protobuf --cflags))
 LDFLAGS_PROTOBUF := $(shell pkg-config protobuf --libs-only-L)
 
@@ -94,7 +96,7 @@ iwyu: $(HPP_FILES) test/tests.cpp test/writer_tests.cpp
 check: $(HPP_FILES) test/tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(TEST_CASES)
 	cppcheck -Uassert --std=c++11 --enable=all --suppress=incorrectStringBooleanError $^
 
-doc: doc/Doxyfile README.md UPGRADING.md cheatsheet.md macros.md tutorial.md $(HPP_FILES)
+doc: doc/Doxyfile README.md UPGRADING.md $(DOC_FILES) $(HPP_FILES)
 	doxygen doc/Doxyfile
 
 clean:
