@@ -380,7 +380,7 @@ public:
         protozero_assert(tag() != 0 && "call next() before calling skip()");
         switch (wire_type()) {
             case pbf_wire_type::varint:
-                (void)get_uint32(); // called for the side-effect of skipping value
+                skip_varint(&m_data, m_end);
                 break;
             case pbf_wire_type::fixed64:
                 skip_bytes(8);

@@ -110,11 +110,16 @@ inline uint64_t decode_varint(const char** data, const char* end) {
  *         before the end of the varint.
  */
 inline void skip_varint(const char** data, const char* end) {
-    const int8_t* p = reinterpret_cast<const int8_t*>(*data);
+    const int8_t* begin = reinterpret_cast<const int8_t*>(*data);
     const int8_t* iend = reinterpret_cast<const int8_t*>(end);
+    const int8_t* p = begin;
 
     while (p != iend && *p < 0) {
         ++p;
+    }
+
+    if (p >= begin + max_varint_length) {
+        throw varint_too_long_exception();
     }
 
     if (p == iend) {
