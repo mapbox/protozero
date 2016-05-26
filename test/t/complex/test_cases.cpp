@@ -50,7 +50,11 @@ TEST_CASE("read complex data using pbf_reader") {
     SECTION("some") {
         const std::string buffer = load_data("complex/data-some");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item2(buffer);
+        protozero::pbf_reader item;
+
+        using std::swap;
+        swap(item, item2);
 
         uint32_t sum_of_u = 0;
         while (item.next()) {
@@ -349,8 +353,12 @@ TEST_CASE("write complex data using pbf_writer") {
 
     SECTION("some") {
         std::string buffer;
-        protozero::pbf_writer pw(buffer);
-        pw.add_fixed32(1, 12345678);
+        protozero::pbf_writer pw2(buffer);
+        pw2.add_fixed32(1, 12345678);
+
+        protozero::pbf_writer pw;
+        using std::swap;
+        swap(pw, pw2);
 
         std::string submessage;
         protozero::pbf_writer pws(submessage);

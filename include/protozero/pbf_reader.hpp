@@ -218,6 +218,19 @@ public:
     ~pbf_reader() = default;
 
     /**
+     * Swap the contents of this object with the other.
+     *
+     * @param other Other object to swap data with.
+     */
+    void swap(pbf_reader& other) noexcept {
+        using std::swap;
+        swap(m_data, other.m_data);
+        swap(m_end, other.m_end);
+        swap(m_wire_type, other.m_wire_type);
+        swap(m_tag, other.m_tag);
+    }
+
+    /**
      * In a boolean context the pbf_reader class evaluates to `true` if there are
      * still fields available and to `false` if the last field has been read.
      */
@@ -846,6 +859,10 @@ public:
     ///@}
 
 }; // class pbf_reader
+
+inline void swap(pbf_reader& lhs, pbf_reader& rhs) noexcept {
+    lhs.swap(rhs);
+}
 
 } // end namespace protozero
 

@@ -22,6 +22,7 @@ documentation.
 #include <iterator>
 #include <limits>
 #include <string>
+#include <utility>
 
 #include <protozero/config.hpp>
 #include <protozero/types.hpp>
@@ -271,6 +272,19 @@ public:
         if (m_parent_writer) {
             m_parent_writer->close_submessage();
         }
+    }
+
+    /**
+     * Swap the contents of this object with the other.
+     *
+     * @param other Other object to swap data with.
+     */
+    void swap(pbf_writer& other) noexcept {
+        using std::swap;
+        swap(m_data, other.m_data);
+        swap(m_parent_writer, other.m_parent_writer);
+        swap(m_rollback_pos, other.m_rollback_pos);
+        swap(m_pos, other.m_pos);
     }
 
     /**
@@ -778,6 +792,10 @@ public:
     template <typename T> friend class detail::packed_field_fixed;
 
 }; // class pbf_writer
+
+inline void swap(pbf_writer& lhs, pbf_writer& rhs) noexcept {
+    lhs.swap(rhs);
+}
 
 namespace detail {
 
