@@ -65,6 +65,13 @@ TEST_CASE("write message field") {
         pbf_submessage.add_string(1, "foobar");
     }
 
+    SECTION("string with subwriter with reserved size") {
+        std::string str{"foobar"};
+        auto size = 1 /* tag */ + 1 /* length field */ + str.size();
+        protozero::pbf_writer pbf_submessage(pbf_test, 1, size);
+        pbf_submessage.add_string(1, "foobar");
+    }
+
     REQUIRE(buffer_test == load_data("message/data-message"));
 
 }
