@@ -149,6 +149,12 @@ public:
 
 }; // class data_view
 
+/**
+ * Swap two data_view objects.
+ *
+ * @param lhs First object.
+ * @param rhs Second object.
+ */
 inline void swap(data_view& lhs, data_view& rhs) noexcept {
     lhs.swap(rhs);
 }

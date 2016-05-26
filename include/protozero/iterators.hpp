@@ -121,6 +121,10 @@ inline iterator_range<const_fixed_iterator<T>> create_fixed_iterator_range(const
 
 #else
 
+/**
+ * A forward iterator used for accessing packed repeated fields of fixed
+ * length (fixed32, sfixed32, float, double).
+ */
 template <typename T>
 class const_fixed_iterator {
 
@@ -188,6 +192,10 @@ inline iterator_range<const_fixed_iterator<T>> create_fixed_iterator_range(const
 
 #endif
 
+/**
+ * A forward iterator used for accessing packed repeated varint fields
+ * (int32, uint32, int64, uint64, bool, enum).
+ */
 template <typename T>
 class const_varint_iterator {
 
@@ -248,6 +256,10 @@ public:
 
 }; // class const_varint_iterator
 
+/**
+ * A forward iterator used for accessing packed repeated svarint fields
+ * (sint32, sint64).
+ */
 template <typename T>
 class const_svarint_iterator : public const_varint_iterator<T> {
 

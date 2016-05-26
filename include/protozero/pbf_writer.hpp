@@ -793,6 +793,12 @@ public:
 
 }; // class pbf_writer
 
+/**
+ * Swap two pbf_writer objects.
+ *
+ * @param lhs First object.
+ * @param rhs Second object.
+ */
 inline void swap(pbf_writer& lhs, pbf_writer& rhs) noexcept {
     lhs.swap(rhs);
 }

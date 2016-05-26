@@ -134,8 +134,9 @@ inline void skip_varint(const char** data, const char* end) {
 /**
  * Varint encode a 64 bit integer.
  *
- * @tparam T Output iterator the varint encoded value will be written to
- *           byte by byte.
+ * @tparam T An output iterator type.
+ * @param data Output iterator the varint encoded value will be written to
+ *             byte by byte.
  * @param value The integer that will be encoded.
  * @throws Any exception thrown by increment or dereference operator on data.
  */

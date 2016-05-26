@@ -860,6 +860,12 @@ public:
 
 }; // class pbf_reader
 
+/**
+ * Swap two pbf_reader objects.
+ *
+ * @param lhs First object.
+ * @param rhs Second object.
+ */
 inline void swap(pbf_reader& lhs, pbf_reader& rhs) noexcept {
     lhs.swap(rhs);
 }
