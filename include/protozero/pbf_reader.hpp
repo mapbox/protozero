@@ -590,7 +590,7 @@ public:
     data_view get_view() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
-        auto len = get_len_and_skip();
+        const auto len = get_len_and_skip();
         return data_view{m_data-len, len};
     }
 
@@ -605,7 +605,7 @@ public:
     std::pair<const char*, pbf_length_type> get_data() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
-        auto len = get_len_and_skip();
+        const auto len = get_len_and_skip();
         return std::make_pair(m_data-len, len);
     }
 
@@ -617,7 +617,7 @@ public:
      * @post The current field was consumed and there is no current field now.
      */
     std::string get_bytes() {
-        auto d = get_data();
+        const auto d = get_data();
         return std::string(d.first, d.second);
     }
 
