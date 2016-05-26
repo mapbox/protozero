@@ -10,12 +10,25 @@ documentation.
 
 *****************************************************************************/
 
+/**
+ * @file version.hpp
+ *
+ * @brief Contains macros defining the protozero version.
+ */
+
+/// The major version number
 #define PROTOZERO_VERSION_MAJOR 1
+
+/// The minor version number
 #define PROTOZERO_VERSION_MINOR 3
+
+/// The patch number
 #define PROTOZERO_VERSION_PATCH 0
 
+/// The complete version number
 #define PROTOZERO_VERSION_CODE (PROTOZERO_VERSION_MAJOR * 10000 + PROTOZERO_VERSION_MINOR * 100 + PROTOZERO_VERSION_PATCH)
 
+/// Version number as string
 #define PROTOZERO_VERSION_STRING "1.3.0"
 
 

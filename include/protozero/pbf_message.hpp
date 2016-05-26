@@ -13,7 +13,7 @@ documentation.
 /**
  * @file pbf_message.hpp
  *
- * @brief Contains the pbf_message class.
+ * @brief Contains the pbf_message template class.
  */
 
 #include <type_traits>

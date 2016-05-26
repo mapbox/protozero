@@ -10,6 +10,12 @@ documentation.
 
 *****************************************************************************/
 
+/**
+ * @file iterators.hpp
+ *
+ * @brief Contains the iterators for access to packed repeated fields.
+ */
+
 #include <cstring>
 #include <iterator>
 #include <utility>
