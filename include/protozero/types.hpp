@@ -20,6 +20,9 @@ documentation.
 #include <cstdint>
 #include <cstring>
 #include <string>
+#include <utility>
+
+#include <protozero/config.hpp>
 
 namespace protozero {
 
@@ -65,6 +68,14 @@ class data_view {
 public:
 
     /**
+     * Default constructor. Construct an empty data_view.
+     */
+    constexpr data_view() noexcept
+        : m_data(nullptr),
+          m_size(0) {
+    }
+
+    /**
      * Create data_view from pointer and size.
      *
      * @param data Pointer to the data.
@@ -95,6 +106,17 @@ public:
           m_size(std::strlen(data)) {
     }
 
+    /**
+     * Swap the contents of this object with the other.
+     *
+     * @param other Other object to swap data with.
+     */
+    void swap(data_view& other) noexcept {
+        using std::swap;
+        swap(m_data, other.m_data);
+        swap(m_size, other.m_size);
+    }
+
     /// Return pointer to data.
     constexpr const char* data() const noexcept {
         return m_data;
@@ -105,17 +127,31 @@ public:
         return m_size;
     }
 
-    /// Convert data view to string.
+    /**
+     * Convert data view to string.
+     *
+     * @pre Must not be default constructed data_view.
+     */
     std::string to_string() const {
+        protozero_assert(m_data);
         return std::string{m_data, m_size};
     }
 
-    /// Convert data view to string.
+    /**
+     * Convert data view to string.
+     *
+     * @pre Must not be default constructed data_view.
+     */
     explicit operator std::string() const {
+        protozero_assert(m_data);
         return std::string{m_data, m_size};
     }
 
 }; // class data_view
+
+inline void swap(data_view& lhs, data_view& rhs) noexcept {
+    lhs.swap(rhs);
+}
 
 #endif
 
