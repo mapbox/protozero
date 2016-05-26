@@ -65,6 +65,28 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
             REQUIRE(it == it_range.end());
         }
 
+        SECTION("swap iterator range") {
+            abuffer.append(load_data("repeated_packed_" PBF_TYPE_NAME "/data-many"));
+
+            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+
+            REQUIRE(item.next());
+            auto it_range1 = item.GET_TYPE();
+            REQUIRE(!item.next());
+
+            decltype(it_range1) it_range;
+            using std::swap;
+            swap(it_range, it_range1);
+
+            auto it = it_range.begin();
+            REQUIRE(it != it_range.end());
+            REQUIRE(*it++ ==   17);
+            REQUIRE(*it++ ==  200);
+            REQUIRE(*it++ ==    0);
+            REQUIRE(*it++ ==    1);
+            REQUIRE(*it++ == std::numeric_limits<cpp_type>::max());
+        }
+
         SECTION("end_of_buffer") {
             abuffer.append(load_data("repeated_packed_" PBF_TYPE_NAME "/data-many"));
 

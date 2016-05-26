@@ -58,6 +58,13 @@ public:
     using iterator = T;
 
     /**
+     * Default constructor. Create empty iterator_range.
+     */
+    constexpr iterator_range() :
+        P(iterator{}, iterator{}) {
+    }
+
+    /**
      * Create iterator range from two iterators.
      *
      * @param first Iterator to beginning or range.
