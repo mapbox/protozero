@@ -878,19 +878,46 @@ namespace detail {
 
 } // end namespace detail
 
+/// Class for generating packed repeated bool fields.
 using packed_field_bool     = detail::packed_field_varint<bool>;
+
+/// Class for generating packed repeated enum fields.
 using packed_field_enum     = detail::packed_field_varint<int32_t>;
+
+/// Class for generating packed repeated int32 fields.
 using packed_field_int32    = detail::packed_field_varint<int32_t>;
+
+/// Class for generating packed repeated sint32 fields.
 using packed_field_sint32   = detail::packed_field_svarint<int32_t>;
+
+/// Class for generating packed repeated uint32 fields.
 using packed_field_uint32   = detail::packed_field_varint<uint32_t>;
+
+/// Class for generating packed repeated int64 fields.
 using packed_field_int64    = detail::packed_field_varint<int64_t>;
+
+/// Class for generating packed repeated sint64 fields.
 using packed_field_sint64   = detail::packed_field_svarint<int64_t>;
+
+/// Class for generating packed repeated uint64 fields.
 using packed_field_uint64   = detail::packed_field_varint<uint64_t>;
+
+/// Class for generating packed repeated fixed32 fields.
 using packed_field_fixed32  = detail::packed_field_fixed<uint32_t>;
+
+/// Class for generating packed repeated sfixed32 fields.
 using packed_field_sfixed32 = detail::packed_field_fixed<int32_t>;
+
+/// Class for generating packed repeated fixed64 fields.
 using packed_field_fixed64  = detail::packed_field_fixed<uint64_t>;
+
+/// Class for generating packed repeated sfixed64 fields.
 using packed_field_sfixed64 = detail::packed_field_fixed<int64_t>;
+
+/// Class for generating packed repeated float fields.
 using packed_field_float    = detail::packed_field_fixed<float>;
+
+/// Class for generating packed repeated double fields.
 using packed_field_double   = detail::packed_field_fixed<double>;
 
 } // end namespace protozero
