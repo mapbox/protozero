@@ -35,9 +35,13 @@ from the Google Protocol Buffers documentation.
 
 ### Notes:
 
-* (1) preferred form, returns `protozero::data_view` which is convertible to `std::string` if needed.
-* (2) deprecated form, returns `std::pair<const char*, pbf_length_type>`, use `get_view()` instead.
-* The setter function of `pbf_writer` is always `add_` + the PBF type. Several overloads are available.
+* (1) preferred form, returns `protozero::data_view` which is convertible to
+  `std::string` if needed.
+* (2) deprecated form, returns `std::pair<const char*, pbf_length_type>`,
+  use `get_view()` instead. This form is only available if
+  `PROTOZERO_STRICT_API` is not defined.
+* The setter function of `pbf_writer` is always `add_` + the PBF type. Several
+  overloads are available.
 
 
 ## Packed Repeated Fields
@@ -59,5 +63,5 @@ from the Google Protocol Buffers documentation.
 | float    | `get_packed_float()`    |
 | double   | `get_packed_double()`   |
 
-There are not packed repeated fields possible for string, bytes, and message types.
+Packed repeated fields for string, bytes, and message types are not possible.
 
