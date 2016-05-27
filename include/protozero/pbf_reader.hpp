@@ -54,7 +54,7 @@ namespace protozero {
  *
  * All methods of the pbf_reader class except get_bytes() and get_string()
  * provide the strong exception guarantee, ie they either succeed or do not
- * change the pbf_reader object they are called on. Use the get_data() method
+ * change the pbf_reader object they are called on. Use the get_view() method
  * instead of get_bytes() or get_string(), if you need this guarantee.
  */
 class pbf_reader {
@@ -594,6 +594,7 @@ public:
         return data_view{m_data-len, len};
     }
 
+#ifndef PROTOZERO_STRICT_API
     /**
      * Consume and return value of current "bytes" or "string" field.
      *
@@ -608,6 +609,7 @@ public:
         const auto len = get_len_and_skip();
         return std::make_pair(m_data-len, len);
     }
+#endif
 
     /**
      * Consume and return value of current "bytes" field.
@@ -617,8 +619,7 @@ public:
      * @post The current field was consumed and there is no current field now.
      */
     std::string get_bytes() {
-        const auto d = get_data();
-        return std::string(d.first, d.second);
+        return std::string(get_view());
     }
 
     /**
@@ -629,7 +630,7 @@ public:
      * @post The current field was consumed and there is no current field now.
      */
     std::string get_string() {
-        return get_bytes();
+        return std::string(get_view());
     }
 
     /**
@@ -640,7 +641,7 @@ public:
      * @post The current field was consumed and there is no current field now.
      */
     pbf_reader get_message() {
-        return pbf_reader(get_data());
+        return pbf_reader(get_view());
     }
 
     ///@}

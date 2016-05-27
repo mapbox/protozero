@@ -132,9 +132,9 @@ function called `get_` + _field type_.
 For `string` and `bytes` types the internal handling is exactly the same, but
 both `get_string()` and `get_bytes()` are provided to make the code
 self-documenting. Both theses calls allocate and return a `std::string` which
-can add some overhead. You can call the `get_data()` function instead which
-returns a `std::pair<const char*, uint32_t>`, ie a pointer into the data and
-the length of the data.
+can add some overhead. You can call the `get_view()` function instead which
+returns a `data_view` containing a pointer into the data (access with `data()`)
+and the length of the data (access with `size()`).
 
 
 ### Handling Repeated Packed Fields
