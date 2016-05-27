@@ -113,6 +113,12 @@ public:
 template <typename T>
 using const_fixed_iterator = const T*;
 
+/**
+ * Create iterator_range from char pointers to beginning and end of range.
+ *
+ * @param first Beginning of range.
+ * @param last End of range.
+ */
 template <typename T>
 inline iterator_range<const_fixed_iterator<T>> create_fixed_iterator_range(const char* first, const char* last) {
     return iterator_range<const_fixed_iterator<T>>{reinterpret_cast<const T*>(first),
@@ -128,7 +134,10 @@ inline iterator_range<const_fixed_iterator<T>> create_fixed_iterator_range(const
 template <typename T>
 class const_fixed_iterator {
 
+    /// Pointer to current iterator position
     const char* m_data;
+
+    /// Pointer to end iterator position
     const char* m_end;
 
 public:
@@ -184,6 +193,12 @@ public:
 
 }; // class const_fixed_iterator
 
+/**
+ * Create iterator_range from char pointers to beginning and end of range.
+ *
+ * @param first Beginning of range.
+ * @param last End of range.
+ */
 template <typename T>
 inline iterator_range<const_fixed_iterator<T>> create_fixed_iterator_range(const char* first, const char* last) {
     return iterator_range<const_fixed_iterator<T>>{const_fixed_iterator<T>(first, last),
@@ -201,7 +216,10 @@ class const_varint_iterator {
 
 protected:
 
+    /// Pointer to current iterator position
     const char* m_data;
+
+    /// Pointer to end iterator position
     const char* m_end;
 
 public:
