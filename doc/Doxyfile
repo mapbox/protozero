@@ -815,7 +815,7 @@ EXCLUDE_PATTERNS       =
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories use the pattern */test/*
 
-EXCLUDE_SYMBOLS        = protozero::detail protozero_assert
+EXCLUDE_SYMBOLS        = protozero::detail protozero_assert PROTOZERO_*_ENDIAN PROTOZERO_BYTE_ORDER PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include
