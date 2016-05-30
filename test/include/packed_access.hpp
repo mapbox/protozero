@@ -216,16 +216,19 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
     protozero::pbf_reader item(buffer);
 
     REQUIRE(item.next());
-    const auto it_range = item.GET_TYPE();
+    auto it_range = item.GET_TYPE();
     REQUIRE(!item.next());
     REQUIRE(std::distance(it_range.begin(), it_range.end()) == 5);
 
-    auto it = it_range.begin();
-    REQUIRE(*it++ ==  1);
-    REQUIRE(*it++ ==  4);
-    REQUIRE(*it++ ==  9);
-    REQUIRE(*it++ == 16);
-    REQUIRE(*it++ == 25);
-    REQUIRE(it == it_range.end());
+    REQUIRE(it_range.front() ==  1); it_range.drop_front();
+    REQUIRE(it_range.front() ==  4); it_range.drop_front();
+    REQUIRE(it_range.front() ==  9); it_range.drop_front();
+    REQUIRE(it_range.front() == 16); it_range.drop_front();
+    REQUIRE(it_range.front() == 25); it_range.drop_front();
+    REQUIRE(it_range.empty());
+
+    REQUIRE_THROWS_AS(it_range.front(), assert_error);
+    REQUIRE_THROWS_AS(it_range.drop_front(), assert_error);
+
 }
 

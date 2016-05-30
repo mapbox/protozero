@@ -63,6 +63,9 @@ public:
     /// The type of the iterators in this range.
     using iterator = T;
 
+    /// The value type of the underlying iterator.
+    using value_type = typename std::iterator_traits<T>::value_type;
+
     /**
      * Default constructor. Create empty iterator_range.
      */
@@ -104,6 +107,26 @@ public:
     /// Return true if this range is empty.
     constexpr std::size_t empty() const noexcept {
         return begin() == end();
+    }
+
+    /**
+     * Get element at the beginning of the range.
+     *
+     * @pre Range must not be empty.
+     */
+    value_type front() const {
+        protozero_assert(!empty());
+        return *(this->first);
+    }
+
+    /**
+     * Advance beginning of range by one.
+     *
+     * @pre Range must not be empty.
+     */
+    void drop_front() {
+        protozero_assert(!empty());
+        ++this->first;
     }
 
 }; // struct iterator_range
