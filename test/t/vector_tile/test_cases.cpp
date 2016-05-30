@@ -28,15 +28,14 @@ std::string get_name(protozero::pbf_reader layer) { // copy!
 
 TEST_CASE("reading vector tiles") {
 
+    const std::string buffer = load_data("vector_tile/data.vector");
+    protozero::pbf_reader item{buffer};
+    std::vector<std::string> layer_names;
+
     SECTION("iterate over message using next()") {
-        const std::string buffer = load_data("vector_tile/data.vector");
-
-        protozero::pbf_reader item(buffer);
-
-        std::vector<std::string> layer_names;
         while (item.next()) {
             if (item.tag() == 3) { // repeated message Layer
-                protozero::pbf_reader layer { item.get_message() };
+                protozero::pbf_reader layer{item.get_message()};
                 while (layer.next()) {
                     switch (layer.tag()) {
                         case 1: // required string name
@@ -55,13 +54,8 @@ TEST_CASE("reading vector tiles") {
     }
 
     SECTION("iterate over message using next(type)") {
-        const std::string buffer = load_data("vector_tile/data.vector");
-
-        protozero::pbf_reader item(buffer);
-
-        std::vector<std::string> layer_names;
         while (item.next(3)) { // repeated message Layer
-            protozero::pbf_reader layermsg { item.get_message() };
+            protozero::pbf_reader layermsg{item.get_message()};
             while (layermsg.next(1)) { // required string name
                 layer_names.push_back(layermsg.get_string());
             }
@@ -71,28 +65,25 @@ TEST_CASE("reading vector tiles") {
     }
 
     SECTION("iterate over features in road layer") {
-        const std::string buffer = load_data("vector_tile/data.vector");
-
-        protozero::pbf_reader item(buffer);
 
         int n=0;
         while (item.next(3)) { // repeated message Layer
-            protozero::pbf_reader layer { item.get_message() };
+            protozero::pbf_reader layer{item.get_message()};
             std::string name = get_name(layer);
             if (name == "road") {
                 while (layer.next(2)) { // repeated Feature
                     ++n;
-                    protozero::pbf_reader feature { layer.get_message() };
+                    protozero::pbf_reader feature{layer.get_message()};
                     while (feature.next()) {
                         switch (feature.tag()) {
                             case 1: { // optional uint64 id
-                                auto id = feature.get_uint64();
+                                const auto id = feature.get_uint64();
                                 REQUIRE(id >=   1ULL);
                                 REQUIRE(id <= 504ULL);
                                 break;
                             }
                             case 3: { // optional GeomType
-                                auto geom_type = feature.get_uint32();
+                                const auto geom_type = feature.get_uint32();
                                 REQUIRE(geom_type >= 1UL);
                                 REQUIRE(geom_type <= 3UL);
                                 break;
