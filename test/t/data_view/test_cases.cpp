@@ -59,4 +59,25 @@ TEST_CASE("swapping data_view") {
     REQUIRE(view1.to_string() == "bar");
 }
 
+TEST_CASE("comparing data_views") {
+    protozero::data_view v1{"foo"};
+    protozero::data_view v2{"bar"};
+    protozero::data_view v3{"foox"};
+    protozero::data_view v4{"foo"};
+
+    REQUIRE_FALSE(v1 == v2);
+    REQUIRE_FALSE(v1 == v3);
+    REQUIRE(v1 == v4);
+    REQUIRE_FALSE(v2 == v3);
+    REQUIRE_FALSE(v2 == v4);
+    REQUIRE_FALSE(v3 == v4);
+
+    REQUIRE(v1 != v2);
+    REQUIRE(v1 != v3);
+    REQUIRE_FALSE(v1 != v4);
+    REQUIRE(v2 != v3);
+    REQUIRE(v2 != v4);
+    REQUIRE(v3 != v4);
+}
+
 

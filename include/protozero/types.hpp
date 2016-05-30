@@ -159,6 +159,28 @@ inline void swap(data_view& lhs, data_view& rhs) noexcept {
     lhs.swap(rhs);
 }
 
+/**
+ * Two data_view instances are equal if they have the same size and the
+ * same content.
+ *
+ * @param lhs First object.
+ * @param rhs Second object.
+ */
+inline bool operator==(data_view& lhs, data_view& rhs) noexcept {
+    return lhs.size() == rhs.size() && !std::strcmp(lhs.data(), rhs.data());
+}
+
+/**
+ * Two data_view instances are not equal if they have different sizes or the
+ * content differs.
+ *
+ * @param lhs First object.
+ * @param rhs Second object.
+ */
+inline bool operator!=(data_view& lhs, data_view& rhs) noexcept {
+    return !(lhs == rhs);
+}
+
 #endif
 
 
