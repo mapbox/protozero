@@ -166,7 +166,7 @@ public:
 
     ~const_fixed_iterator() noexcept = default;
 
-    value_type operator*() {
+    value_type operator*() const {
         value_type result;
         detail::copy_or_byteswap<sizeof(value_type)>(m_data , &result);
         return result;
@@ -248,7 +248,7 @@ public:
 
     ~const_varint_iterator() noexcept = default;
 
-    value_type operator*() {
+    value_type operator*() const {
         const char* d = m_data; // will be thrown away
         return static_cast<value_type>(decode_varint(&d, m_end));
     }
@@ -305,7 +305,7 @@ public:
 
     ~const_svarint_iterator() = default;
 
-    value_type operator*() {
+    value_type operator*() const {
         const char* d = this->m_data; // will be thrown away
         return static_cast<value_type>(decode_zigzag64(decode_varint(&d, this->m_end)));
     }
