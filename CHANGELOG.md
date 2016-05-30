@@ -16,6 +16,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   common case where a varint is only one byte long.
 - Introduce new class `iterator_range` used instead of `std::pair` of
   iterators. This way the objects can be used in range-based for loops.
+  Read UPGRADING.md for details.
+- Introduce new class `data_view` and functions using and returning it.
+  Read UPGRADING.md for details.
 
 ### Fixed
 

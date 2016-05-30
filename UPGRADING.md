@@ -41,6 +41,15 @@ older API usages.
           ....
       }
 
+  Ranges can also be used in this way. This will change the range in-place:
+
+      auto range = message.get_packed_int32();
+      while (!range.empty()) {
+          auto value = range.front();
+          range.drop_front();
+          ....
+      }
+
 * The class `pbf_reader` has a new method `get_view()` returning an object
   of the new `protozero::data_view` class. The `data_view` only has minimal
   functionality, but what it has is compatible to the `std::string_view` class
