@@ -129,7 +129,29 @@ public:
         ++this->first;
     }
 
+    /**
+     * Swap the contents of this range with the other.
+     *
+     * @param other Other range to swap data with.
+     */
+    void swap(iterator_range& other) noexcept {
+        using std::swap;
+        swap(this->first, other.first);
+        swap(this->second, other.second);
+    }
+
 }; // struct iterator_range
+
+/**
+ * Swap two iterator_ranges.
+ *
+ * @param lhs First range.
+ * @param rhs Second range.
+ */
+template <typename T>
+inline void swap(iterator_range<T>& lhs, iterator_range<T>& rhs) noexcept {
+    lhs.swap(rhs);
+}
 
 #ifdef PROTOZERO_USE_BARE_POINTER_FOR_PACKED_FIXED
 
