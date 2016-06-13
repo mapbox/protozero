@@ -1,3 +1,6 @@
+fuzz-*.log
+fuzz/corpus
+fuzz/varint
 coverage
 *.gcov
 out
