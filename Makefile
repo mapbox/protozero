@@ -3,6 +3,9 @@ CXX := $(CXX)
 CXXFLAGS := $(CXXFLAGS)
 LDFLAGS := $(LDFLAGS)
 
+# Installation directory
+DESTDIR ?= /usr
+
 WARNING_FLAGS := -Wall -Wextra -pedantic -Wsign-compare -Wsign-conversion -Wunused-parameter -Wno-float-equal -Wno-covered-switch-default
 
 ifneq ($(findstring clang,$(CXX)),)
@@ -124,6 +127,10 @@ testpack:
 	npm pack
 	tar -ztvf *tgz
 	rm -f ./*tgz
+
+install:
+	install -m 0755 -o root -g root -d $(DESTDIR)/include/protozero
+	install -m 0644 -o root -g root include/protozero/* $(DESTDIR)/include/protozero
 
 .PHONY: all test iwyu check doc
 

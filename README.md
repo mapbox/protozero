@@ -57,6 +57,12 @@ need [Doxygen](http://www.stack.nl/~dimitri/doxygen/) installed.) Then open
 `doc/html/index.html` in your browser to read it.
 
 
+## Installation
+
+Call `make install` to install include files in `/usr/include/protozero`. Call
+`make install DESTDIR=/usr/local` or similar to change install directory.
+
+
 ## Limitations
 
 * A protobuf message has to fit into memory completely, otherwise it can not
