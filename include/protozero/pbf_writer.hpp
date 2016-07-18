@@ -156,12 +156,12 @@ class pbf_writer {
     // The number of bytes to reserve for the varint holding the length of
     // a length-delimited field. The length has to fit into pbf_length_type,
     // and a varint needs 8 bit for every 7 bit.
-    static const int reserve_bytes = sizeof(pbf_length_type) * 8 / 7 + 1;
+    static constexpr const int reserve_bytes = sizeof(pbf_length_type) * 8 / 7 + 1;
 
     // If m_rollpack_pos is set to this special value, it means that when
     // the submessage is closed, nothing needs to be done, because the length
     // of the submessage has already been written correctly.
-    static const std::size_t size_is_known = std::numeric_limits<std::size_t>::max();
+    static constexpr const std::size_t size_is_known = std::numeric_limits<std::size_t>::max();
 
     void open_submessage(pbf_tag_type tag, std::size_t size) {
         protozero_assert(m_pos == 0);
