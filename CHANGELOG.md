@@ -10,6 +10,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Fixed
+
+
+## [1.4.0] - 2016-07-22
+
+### Changed
+
 - Use more efficient new `skip_varint()` function when iterating over
   packed varints.
 - Split `decode_varint()` function into two functions speeding up the
@@ -19,8 +26,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   Read UPGRADING.md for details.
 - Introduce new class `data_view` and functions using and returning it.
   Read UPGRADING.md for details.
-
-### Fixed
 
 
 ## [1.3.0] - 2016-02-18
@@ -85,7 +90,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.3.0...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/osmcode/libosmium/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/osmcode/libosmium/compare/v1.2.3...v1.3.0
 [1.2.3]: https://github.com/osmcode/libosmium/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/osmcode/libosmium/compare/v1.2.1...v1.2.2

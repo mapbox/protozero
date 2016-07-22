@@ -13,7 +13,7 @@ macro `PROTOZERO_STRICT_API` in which case Protozero will compile without the
 code used for backwards compatibilty. You will then get compile errors for
 older API usages.
 
-## Upgrading from *v1.3.0* to *master*
+## Upgrading from *v1.3.0* to *v1.4.0*
 
 * Functions in `pbf_reader` (and the derived `pbf_message`) called
   `get_packed_*()` now return an `iterator_range` instead of a `std::pair`.
