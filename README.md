@@ -154,7 +154,9 @@ For extra checks with [Cppcheck](http://cppcheck.sourceforge.net/) you can call
 * [Carmen](https://github.com/mapbox/carmen-cache)
 * [Libosmium](https://github.com/osmcode/libosmium)
 * [Mapnik](https://github.com/mapbox/mapnik-vector-tile)
+* [Mapbox GL Native](https://github.com/mapbox/mapbox-gl-native)
 * [OSRM](https://github.com/Project-OSRM/osrm-backend)
+* [Tippecanoe](https://github.com/mapbox/tippecanoe)
 
 Are you using Protozero? Tell us! Send a pull request with changes to this
 README.
