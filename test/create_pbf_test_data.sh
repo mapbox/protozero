@@ -21,7 +21,7 @@ echo "Generating $1..."
 cd $1
 if [ -f testcase.proto ]; then
     protoc --cpp_out=. testcase.proto
-    $CXX -std=c++11 -I../../include -o testcase testcase.cpp testcase.pb.cc -lprotobuf-lite -pthreads
+    $CXX -std=c++11 -I../../include -o testcase testcase.cpp testcase.pb.cc -lprotobuf-lite -pthread
     ./testcase
 fi
 cd ../..
