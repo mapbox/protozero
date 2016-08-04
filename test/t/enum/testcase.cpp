@@ -10,5 +10,14 @@ int main(int c, char *argv[]) {
 
     msg.set_color(TestEnum::BLUE);
     write_to_file(msg, "data-blue.pbf");
+
+    msg.set_color(TestEnum::NEG);
+    write_to_file(msg, "data-neg.pbf");
+
+    msg.set_color(TestEnum::MAX);
+    write_to_file(msg, "data-max.pbf");
+
+    msg.set_color(TestEnum::MIN);
+    write_to_file(msg, "data-min.pbf");
 }
 

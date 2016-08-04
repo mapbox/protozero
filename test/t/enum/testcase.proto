@@ -8,6 +8,9 @@ enum Color {
     RED   = 1;
     GREEN = 2;
     BLUE  = 3;
+    MAX   = 2147483647;
+    NEG   = -1;
+    MIN   = -2147483648;
 }
 
 message Test {
