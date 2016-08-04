@@ -43,7 +43,7 @@ TEST_CASE("write enum field and check with libprotobuf") {
     }
 
     SECTION("min") {
-        pw.add_enum(1, std::numeric_limits<int32_t>::min());
+        pw.add_enum(1, std::numeric_limits<int32_t>::min() + 1);
 
         msg.ParseFromString(buffer);
 

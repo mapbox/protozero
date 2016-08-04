@@ -49,7 +49,7 @@ TEST_CASE("read enum field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        REQUIRE(item.get_enum() == std::numeric_limits<int32_t>::min());
+        REQUIRE(item.get_enum() == (std::numeric_limits<int32_t>::min() + 1));
         REQUIRE(!item.next());
     }
 
@@ -81,7 +81,7 @@ TEST_CASE("write enum field") {
     }
 
     SECTION("min") {
-        pw.add_enum(1, std::numeric_limits<int32_t>::min());
+        pw.add_enum(1, std::numeric_limits<int32_t>::min() + 1);
         REQUIRE(buffer == load_data("enum/data-min"));
     }
 
