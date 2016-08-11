@@ -26,5 +26,29 @@ TEST_CASE("write enum field and check with libprotobuf") {
         REQUIRE(msg.color() == TestEnum::Color::BLUE);
     }
 
+    SECTION("negative") {
+        pw.add_enum(1, -1L);
+
+        msg.ParseFromString(buffer);
+
+        REQUIRE(msg.color() == TestEnum::Color::NEG);
+    }
+
+    SECTION("max") {
+        pw.add_enum(1, std::numeric_limits<int32_t>::max());
+
+        msg.ParseFromString(buffer);
+
+        REQUIRE(msg.color() == TestEnum::Color::MAX);
+    }
+
+    SECTION("min") {
+        pw.add_enum(1, std::numeric_limits<int32_t>::min() + 1);
+
+        msg.ParseFromString(buffer);
+
+        REQUIRE(msg.color() == TestEnum::Color::MIN);
+    }
+
 }
 
