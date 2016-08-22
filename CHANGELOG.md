@@ -100,7 +100,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.0...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/osmcode/libosmium/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/osmcode/libosmium/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/osmcode/libosmium/compare/v1.2.3...v1.3.0
 [1.2.3]: https://github.com/osmcode/libosmium/compare/v1.2.2...v1.2.3
