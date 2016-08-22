@@ -13,6 +13,11 @@ macro `PROTOZERO_STRICT_API` in which case Protozero will compile without the
 code used for backwards compatibilty. You will then get compile errors for
 older API usages.
 
+## Upgrading from *v1.4.0* to *v1.4.1*
+
+* You can now do `require('protozero')` in nodejs to print the path
+  to the include paths for the protozero headers.
+
 ## Upgrading from *v1.3.0* to *v1.4.0*
 
 * Functions in `pbf_reader` (and the derived `pbf_message`) called

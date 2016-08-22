@@ -13,6 +13,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [1.4.1] - 2016-08-21
+
+### Fixed
+
+ - GCC 4.8 compile fixed
+
+### Added
+
+- New ability to dynamically require the module as a node module to ease building against from other node C++ modules.
+
 ## [1.4.0] - 2016-07-22
 
 ### Changed
