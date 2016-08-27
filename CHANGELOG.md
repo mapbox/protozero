@@ -13,6 +13,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [1.4.2] - 2016-08-27
+
+### Fixed
+
+- Compile fix: Variable shadowing.
+
+
 ## [1.4.1] - 2016-08-21
 
 ### Fixed
@@ -101,7 +108,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.1...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.2...HEAD
+[1.4.2]: https://github.com/osmcode/libosmium/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/osmcode/libosmium/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/osmcode/libosmium/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/osmcode/libosmium/compare/v1.2.3...v1.3.0
