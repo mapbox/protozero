@@ -16,6 +16,7 @@ documentation.
  * @brief Contains functions to swap bytes in values (for different endianness).
  */
 
+#include <cstring>
 #include <cstdint>
 #include <cassert>
 
@@ -38,7 +39,10 @@ inline void byteswap(const char* /*data*/, char* /*result*/) noexcept {
 template <>
 inline void byteswap<4>(const char* data, char* result) noexcept {
 #ifdef PROTOZERO_USE_BUILTIN_BSWAP
-    *reinterpret_cast<uint32_t*>(result) = __builtin_bswap32(*reinterpret_cast<const uint32_t*>(data));
+    uint32_t tmp;
+    std::memcpy(&tmp, data, sizeof(tmp));
+    const uint32_t swapped = __builtin_bswap32(tmp);
+    std::memcpy(result, &swapped, sizeof(swapped));
 #else
     result[3] = data[0];
     result[2] = data[1];
@@ -53,7 +57,10 @@ inline void byteswap<4>(const char* data, char* result) noexcept {
 template <>
 inline void byteswap<8>(const char* data, char* result) noexcept {
 #ifdef PROTOZERO_USE_BUILTIN_BSWAP
-    *reinterpret_cast<uint64_t*>(result) = __builtin_bswap64(*reinterpret_cast<const uint64_t*>(data));
+    uint64_t tmp;
+    std::memcpy(&tmp, data, sizeof(tmp));
+    const uint64_t swapped = __builtin_bswap64(tmp);
+    std::memcpy(result, &swapped, sizeof(swapped));
 #else
     result[7] = data[0];
     result[6] = data[1];
