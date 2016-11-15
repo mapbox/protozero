@@ -50,25 +50,32 @@ inline uint64_t byteswap_impl(uint64_t value) noexcept {
 #endif
 }
 
-inline int32_t byteswap_impl(int32_t value) noexcept {
-    return static_cast<int32_t>(byteswap_impl(static_cast<uint32_t>(value)));
+inline void byteswap_inplace(uint32_t* ptr) noexcept {
+    *ptr = byteswap_impl(*ptr);
 }
 
-inline int64_t byteswap_impl(int64_t value) noexcept {
-    return static_cast<int64_t>(byteswap_impl(static_cast<uint64_t>(value)));
+inline void byteswap_inplace(uint64_t* ptr) noexcept {
+    *ptr = byteswap_impl(*ptr);
 }
 
-inline float byteswap_impl(float value) noexcept {
-    return static_cast<float>(byteswap_impl(static_cast<uint32_t>(value)));
+inline void byteswap_inplace(int32_t* ptr) noexcept {
+    auto bptr = reinterpret_cast<uint32_t*>(ptr);
+    *bptr = byteswap_impl(*bptr);
 }
 
-inline double byteswap_impl(double value) noexcept {
-    return static_cast<double>(byteswap_impl(static_cast<uint64_t>(value)));
+inline void byteswap_inplace(int64_t* ptr) noexcept {
+    auto bptr = reinterpret_cast<uint64_t*>(ptr);
+    *bptr = byteswap_impl(*bptr);
 }
 
-template <typename T>
-inline void byteswap_inplace(T& value) noexcept {
-    value = static_cast<T>(byteswap_impl(value));
+inline void byteswap_inplace(float* ptr) noexcept {
+    auto bptr = reinterpret_cast<uint32_t*>(ptr);
+    *bptr = byteswap_impl(*bptr);
+}
+
+inline void byteswap_inplace(double* ptr) noexcept {
+    auto bptr = reinterpret_cast<uint64_t*>(ptr);
+    *bptr = byteswap_impl(*bptr);
 }
 
 } // end namespace detail
