@@ -12,6 +12,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+
+## [1.4.3] - 2016-11-15
+
+### Fixed
+
 - Undefined behaviour in byte swapping code.
 - Rename some parameters to avoid "shadow" warning from some compilers.
 
@@ -111,7 +116,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.2...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.3...HEAD
+[1.4.3]: https://github.com/osmcode/libosmium/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/osmcode/libosmium/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/osmcode/libosmium/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/osmcode/libosmium/compare/v1.3.0...v1.4.0
