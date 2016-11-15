@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - Undefined behaviour in byte swapping code.
+- Rename some parameters to avoid "shadow" warning from some compilers.
 
 
 ## [1.4.2] - 2016-08-27
