@@ -75,7 +75,10 @@ class pbf_reader {
     T get_fixed() {
         T result;
         skip_bytes(sizeof(T));
-        detail::copy_or_byteswap<sizeof(T)>(m_data - sizeof(T), &result);
+        std::memcpy(&result, m_data - sizeof(T), sizeof(T));
+#if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
+        detail::byteswap_inplace(result);
+#endif
         return result;
     }
 

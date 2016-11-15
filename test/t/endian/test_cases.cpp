@@ -7,24 +7,16 @@
 
 namespace {
 
-    int32_t check_swap_4(const int32_t data) {
-        int32_t swapped;
-        int32_t back;
-
-        protozero::byteswap<4>(reinterpret_cast<const char*>(&data), reinterpret_cast<char*>(&swapped));
-        protozero::byteswap<4>(reinterpret_cast<const char*>(&swapped), reinterpret_cast<char*>(&back));
-
-        return back;
+    int32_t check_swap_4(int32_t data) {
+        protozero::detail::byteswap_inplace(data);
+        protozero::detail::byteswap_inplace(data);
+        return data;
     }
 
-    int64_t check_swap_8(const int64_t data) {
-        int64_t swapped;
-        int64_t back;
-
-        protozero::byteswap<8>(reinterpret_cast<const char*>(&data), reinterpret_cast<char*>(&swapped));
-        protozero::byteswap<8>(reinterpret_cast<const char*>(&swapped), reinterpret_cast<char*>(&back));
-
-        return back;
+    int64_t check_swap_8(int64_t data) {
+        protozero::detail::byteswap_inplace(data);
+        protozero::detail::byteswap_inplace(data);
+        return data;
     }
 
 }
