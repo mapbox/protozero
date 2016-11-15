@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+- Byteswap implementation.
+
 
 ## [1.4.3] - 2016-11-15
 

@@ -18,7 +18,6 @@ documentation.
 
 #include <cstdint>
 #include <cassert>
-#include <type_traits>
 
 #include <protozero/config.hpp>
 
@@ -51,9 +50,25 @@ inline uint64_t byteswap_impl(uint64_t value) noexcept {
 #endif
 }
 
+inline int32_t byteswap_impl(int32_t value) noexcept {
+    return static_cast<int32_t>(byteswap_impl(static_cast<uint32_t>(value)));
+}
+
+inline int64_t byteswap_impl(int64_t value) noexcept {
+    return static_cast<int64_t>(byteswap_impl(static_cast<uint64_t>(value)));
+}
+
+inline float byteswap_impl(float value) noexcept {
+    return static_cast<float>(byteswap_impl(static_cast<uint32_t>(value)));
+}
+
+inline double byteswap_impl(double value) noexcept {
+    return static_cast<double>(byteswap_impl(static_cast<uint64_t>(value)));
+}
+
 template <typename T>
 inline void byteswap_inplace(T& value) noexcept {
-    value = static_cast<T>(byteswap_impl(static_cast<typename std::make_unsigned<T>::type>(value)));
+    value = static_cast<T>(byteswap_impl(value));
 }
 
 } // end namespace detail
