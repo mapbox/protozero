@@ -12,6 +12,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+
+## [1.4.4] - 2016-11-15
+
+### Fixed
+
 - Byteswap implementation.
 
 
@@ -118,7 +123,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.3...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.4...HEAD
+[1.4.4]: https://github.com/osmcode/libosmium/compare/v1.4.3...v1.4.4
 [1.4.3]: https://github.com/osmcode/libosmium/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/osmcode/libosmium/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/osmcode/libosmium/compare/v1.4.0...v1.4.1
