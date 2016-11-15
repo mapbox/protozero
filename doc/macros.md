@@ -41,8 +41,14 @@ others taking a `protozero::data_view` as parameters.
 ## `PROTOZERO_DO_NOT_USE_BARE_POINTER`
 
 Can be set to force Protozero to not use bare pointers for some iterators
-returned from `get_packed_*` calls. It is usually not necessary to use this
-and might affect performance if you do. If you are getting errors about
-unaligned memory access or a SIGBUS, you can try to set this. (Please also
-report on error if this is the case.)
+returned from `get_packed_*` calls. Use of the bare pointers leads to undefined
+behaviour according to the C++ standard, so define this if you don't want to
+have that.
+
+But it is usually not necessary to use this and might affect performance if you
+do. If you are getting errors about unaligned memory access or a SIGBUS, you
+can try to set this. (Please also report an error if this is the case.)
+
+If you don't set this, the clang UBSan (Undefined behaviour sanitizer) will
+report unaligned memory accesses.
 
