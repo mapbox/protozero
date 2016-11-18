@@ -13,6 +13,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [1.4.5] - 2016-11-18
+
+### Fixed
+
+- Undefined behaviour in packed fixed iterator. As a result, the macro
+  `PROTOZERO_DO_NOT_USE_BARE_POINTER` is not used any more.
+
+
 ## [1.4.4] - 2016-11-15
 
 ### Fixed
@@ -123,7 +131,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.4...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.5...HEAD
+[1.4.5]: https://github.com/osmcode/libosmium/compare/v1.4.4...v1.4.5
 [1.4.4]: https://github.com/osmcode/libosmium/compare/v1.4.3...v1.4.4
 [1.4.3]: https://github.com/osmcode/libosmium/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/osmcode/libosmium/compare/v1.4.1...v1.4.2

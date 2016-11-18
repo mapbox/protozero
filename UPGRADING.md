@@ -13,6 +13,11 @@ macro `PROTOZERO_STRICT_API` in which case Protozero will compile without the
 code used for backwards compatibilty. You will then get compile errors for
 older API usages.
 
+## Upgrading from *v1.4.4* to *v1.4.5*
+
+* The macro `PROTOZERO_DO_NOT_USE_BARE_POINTER` is not used any more. If you
+  have been setting this, remove it.
+
 ## Upgrading from *v1.4.0* to *v1.4.1*
 
 * You can now do `require('protozero')` in nodejs to print the path
