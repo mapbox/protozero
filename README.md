@@ -6,10 +6,10 @@ Designed for high performance. Suitable for writing zero copy parsers and
 encoders with minimal need for run-time allocation of memory.
 
 Low-level: this is designed to be a building block for writing a very
-customized decoder for a stable protobuf schema. If your protobuf schema
-is changing frequently or lazy decoding is not critical for your application
-then this approach offers no value: just use the decoding API available via the
-C++ API that can be generated via the Google Protobufs `protoc` program.
+customized decoder for a stable protobuf schema. If your protobuf schema is
+changing frequently or lazy decoding is not critical for your application then
+this approach offers no value: just use the C++ API that can be generated with
+the Google Protobufs `protoc` program.
 
 [![Travis Build Status](https://travis-ci.org/mapbox/protozero.svg?branch=master)](https://travis-ci.org/mapbox/protozero)
 [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/o354pq10y96mnr6d?svg=true)](https://ci.appveyor.com/project/Mapbox/protozero)
@@ -17,7 +17,9 @@ C++ API that can be generated via the Google Protobufs `protoc` program.
 
 ## Depends
 
- - C++11 compiler
+* C++11 compiler
+* Tests depend on the Google Protobuf library, but use of Protozero doesn't
+  need it
 
 
 ## How it works
@@ -82,7 +84,8 @@ Call `make install` to install include files in `/usr/include/protozero`. Call
 
 Protozero uses a very simplistic test to check the byte order of the system it
 compiles on. If this check is wrong, you'll get test failures. If this is the
-case, please open an issue on Github and tell us about your system.
+case, please [open an issue](https://github.com/mapbox/protozero/issues) and
+tell us about your system.
 
 
 ## Tests
@@ -138,8 +141,9 @@ For extra checks with [Cppcheck](http://cppcheck.sourceforge.net/) you can call
 
 * [Carmen](https://github.com/mapbox/carmen-cache)
 * [Libosmium](https://github.com/osmcode/libosmium)
-* [Mapnik](https://github.com/mapbox/mapnik-vector-tile)
 * [Mapbox GL Native](https://github.com/mapbox/mapbox-gl-native)
+* [Mapbox Vector Tile library](https://github.com/mapbox/vector-tile)
+* [Mapnik](https://github.com/mapbox/mapnik-vector-tile)
 * [OSRM](https://github.com/Project-OSRM/osrm-backend)
 * [Tippecanoe](https://github.com/mapbox/tippecanoe)
 
