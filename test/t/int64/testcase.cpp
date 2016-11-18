@@ -24,6 +24,6 @@ int main(int c, char *argv[]) {
     write_to_file(msg, "data-max.pbf");
 
     msg.set_i(std::numeric_limits<int64_t>::min());
-    std::string data = write_to_file(msg, "data-min.pbf");
+    write_to_file(msg, "data-min.pbf");
 }
 
