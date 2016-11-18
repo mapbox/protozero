@@ -87,7 +87,8 @@ class pbf_reader {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         const auto len = get_len_and_skip();
         protozero_assert(len % sizeof(T) == 0);
-        return create_fixed_iterator_range<T>(m_data - len, m_data);
+        return iterator_range<const_fixed_iterator<T>>{const_fixed_iterator<T>(m_data - len, m_data),
+                                                       const_fixed_iterator<T>(m_data, m_data)};
     }
 
     template <typename T>

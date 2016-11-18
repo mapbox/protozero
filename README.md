@@ -78,26 +78,11 @@ Call `make install` to install include files in `/usr/include/protozero`. Call
   https://developers.google.com/protocol-buffers/docs/proto3#maps.
 
 
-## Memory Alignment Issues and Endianness
+## Endianness
 
-Protobuf-encoded data is not necessarily properly aligned for the machine we
-are using. For single values this isn't a problem, because we copy those into
-a properly aligned variable and return that one. But for repeated packed values
-it can be a problem, because we give users access to them through an iterator.
-To get the best performance this iterator is usually just a raw pointer. This
-works fine on Intel processors, non-aligned access is just slower than aligned
-access. On ARM this is not necessarily the case (depends on machine type and
-compile options), so we need to go through a special iterator there
-which makes sure to return aligned data on member access. Basically the same
-iterator is used on big endian architectures to put the bytes in the correct
-order before handing them back to the application.
-
-Detection of endianess and those architectures which have problems with
-non-aligned data is not perfect. If tests fail for you, this might be a problem
-in your setup. Please open an issue on Github in this case and tell us about
-your system.
-
-See also the discussion on https://github.com/mapbox/protozero/issues/33 .
+Protozero uses a very simplistic test to check the byte order of the system it
+compiles on. If this check is wrong, you'll get test failures. If this is the
+case, please open an issue on Github and tell us about your system.
 
 
 ## Tests
