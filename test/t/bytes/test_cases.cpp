@@ -131,3 +131,16 @@ TEST_CASE("write bytes field using vectored approach") {
     REQUIRE(buffer == load_data("bytes/data-string"));
 }
 
+TEST_CASE("write bytes field using vectored approach with builder") {
+    enum class foo : protozero::pbf_tag_type { bar = 1 };
+    std::string buffer;
+    protozero::pbf_builder<foo> pw(buffer);
+
+    std::string d1{"foo"};
+    std::string d2{"bar"};
+
+    pw.add_bytes_vectored(foo::bar, d1, d2);
+
+    REQUIRE(buffer == load_data("bytes/data-string"));
+}
+
