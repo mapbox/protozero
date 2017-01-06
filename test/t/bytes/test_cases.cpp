@@ -92,3 +92,42 @@ TEST_CASE("write bytes field") {
 
 }
 
+TEST_CASE("write bytes field using vectored approach") {
+
+    std::string buffer;
+    protozero::pbf_writer pw(buffer);
+
+    SECTION("string") {
+        std::string d1{"foo"};
+        std::string d2{"bar"};
+
+        pw.add_bytes_vectored(1, d1, d2);
+    }
+
+    SECTION("string") {
+        std::string d1{"foo"};
+        std::string d2{"bar"};
+        protozero::data_view dv{d2};
+
+        pw.add_bytes_vectored(1, d1, dv);
+    }
+
+    SECTION("string") {
+        std::string d1{"foo"};
+        std::string d2{"ba"};
+        std::string d3{"r"};
+
+        pw.add_bytes_vectored(1, d1, d2, d3);
+    }
+
+    SECTION("string") {
+        std::string d1{"foo"};
+        std::string d2{""};
+        std::string d3{"bar"};
+
+        pw.add_bytes_vectored(1, d1, d2, d3);
+    }
+
+    REQUIRE(buffer == load_data("bytes/data-string"));
+}
+

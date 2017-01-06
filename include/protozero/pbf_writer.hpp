@@ -505,6 +505,37 @@ public:
     }
 
     /**
+     * Add "bytes" field to data using vectored input. All the data in the
+     * 2nd and further arguments is "concatenated" with only a single copy
+     * into the final buffer.
+     *
+     * This will work with objects of any type supporting the data() and
+     * size() methods like std::string or protozero::data_view.
+     *
+     * Example:
+     * @code
+     * std::string data1 = "abc";
+     * std::string data2 = "xyz";
+     * writer.add_bytes_vectored(1, data1, data2);
+     * @endcode
+     *
+     * @tparam Ts List of types supporting data() and size() methods.
+     * @param tag Tag (field number) of the field
+     * @param values List of objects of types Ts with data to be appended.
+     */
+    template <typename... Ts>
+    void add_bytes_vectored(pbf_tag_type tag, Ts&&... values) {
+        protozero_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
+        protozero_assert(m_data);
+        size_t sum_size = 0;
+        (void)std::initializer_list<size_t>{sum_size += values.size()...};
+        protozero_assert(sum_size <= std::numeric_limits<pbf_length_type>::max());
+        add_length_varint(tag, pbf_length_type(sum_size));
+        m_data->reserve(m_data->size() + sum_size);
+        (void)std::initializer_list<int>{(m_data->append(values.data(), values.size()), 0)...};
+    }
+
+    /**
      * Add "string" field to data.
      *
      * @param tag Tag (field number) of the field
