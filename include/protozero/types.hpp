@@ -166,7 +166,7 @@ inline void swap(data_view& lhs, data_view& rhs) noexcept {
  * @param lhs First object.
  * @param rhs Second object.
  */
-inline bool operator==(data_view& lhs, data_view& rhs) noexcept {
+inline bool operator==(const data_view& lhs, const data_view& rhs) noexcept {
     return lhs.size() == rhs.size() && !std::strcmp(lhs.data(), rhs.data());
 }
 
@@ -177,7 +177,7 @@ inline bool operator==(data_view& lhs, data_view& rhs) noexcept {
  * @param lhs First object.
  * @param rhs Second object.
  */
-inline bool operator!=(data_view& lhs, data_view& rhs) noexcept {
+inline bool operator!=(const data_view& lhs, const data_view& rhs) noexcept {
     return !(lhs == rhs);
 }
 
