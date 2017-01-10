@@ -870,12 +870,14 @@ namespace detail {
 
     public:
 
-        packed_field_fixed(pbf_writer& parent_writer, pbf_tag_type tag) :
-            packed_field(parent_writer, tag) {
+        template <typename P>
+        packed_field_fixed(pbf_writer& parent_writer, P tag) :
+            packed_field(parent_writer, static_cast<pbf_tag_type>(tag)) {
         }
 
-        packed_field_fixed(pbf_writer& parent_writer, pbf_tag_type tag, std::size_t size) :
-            packed_field(parent_writer, tag, size * sizeof(T)) {
+        template <typename P>
+        packed_field_fixed(pbf_writer& parent_writer, P tag, std::size_t size) :
+            packed_field(parent_writer, static_cast<pbf_tag_type>(tag), size * sizeof(T)) {
         }
 
         void add_element(T value) {
@@ -889,8 +891,9 @@ namespace detail {
 
     public:
 
-        packed_field_varint(pbf_writer& parent_writer, pbf_tag_type tag) :
-            packed_field(parent_writer, tag) {
+        template <typename P>
+        packed_field_varint(pbf_writer& parent_writer, P tag) :
+            packed_field(parent_writer, static_cast<pbf_tag_type>(tag)) {
         }
 
         void add_element(T value) {
@@ -904,8 +907,9 @@ namespace detail {
 
     public:
 
-        packed_field_svarint(pbf_writer& parent_writer, pbf_tag_type tag) :
-            packed_field(parent_writer, tag) {
+        template <typename P>
+        packed_field_svarint(pbf_writer& parent_writer, P tag) :
+            packed_field(parent_writer, static_cast<pbf_tag_type>(tag)) {
         }
 
         void add_element(T value) {

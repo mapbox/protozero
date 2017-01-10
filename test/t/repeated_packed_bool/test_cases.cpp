@@ -119,3 +119,43 @@ TEST_CASE("write repeated packed bool field using packed_field_bool") {
 
 }
 
+TEST_CASE("write repeated packed bool field using packed_field_bool with pbf_builder") {
+
+    enum class msg : protozero::pbf_tag_type {
+        f = 1
+    };
+
+    std::string buffer;
+    protozero::pbf_builder<msg> pw(buffer);
+
+    SECTION("empty - should do rollback") {
+        {
+            protozero::packed_field_bool field{pw, msg::f};
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_bool/data-empty"));
+    }
+
+    SECTION("one") {
+        {
+            protozero::packed_field_bool field{pw, msg::f};
+            field.add_element(true);
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_bool/data-one"));
+    }
+
+    SECTION("many") {
+        {
+            protozero::packed_field_bool field{pw, msg::f};
+            field.add_element(true);
+            field.add_element(true);
+            field.add_element(false);
+            field.add_element(true);
+        }
+
+        REQUIRE(buffer == load_data("repeated_packed_bool/data-many"));
+    }
+
+}
+
