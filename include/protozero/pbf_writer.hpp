@@ -845,6 +845,12 @@ namespace detail {
 
     public:
 
+        packed_field(const packed_field&) = delete;
+        packed_field& operator=(const packed_field&) = delete;
+
+        packed_field(packed_field&&) = default;
+        packed_field& operator=(packed_field&&) = default;
+
         packed_field(pbf_writer& parent_writer, pbf_tag_type tag) :
             m_writer(parent_writer, tag) {
         }
