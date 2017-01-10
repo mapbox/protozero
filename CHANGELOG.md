@@ -8,9 +8,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Add `add_bytes_vectored()` methods to `pbf_writer` and `pbf_builder`. This
+  allows single-copy scatter-gather type adding of data that has been prepared
+  in pieces to a protobuf message.
+- New functions to check the tag and wire type at the same time: Two parameter
+  version of `pbf_reader::next()` and `pbf_reader::tag_and_type()` can be used
+  together with the free function `tag_and_type()` to easily and quickly check
+  that not only the tag but also the wire type is correct for a field.
+
 ### Changed
 
+- `packed_field_*` classes now work with `pbf_builder`.
+
 ### Fixed
+
+- `packed_field` class is now non-copyable because data can get corrupted if
+  you copy it around.
+- Comparison operators of `data_view` now have const& parameters.
+- Make zigzag encoding/decoding functions constexpr.
 
 
 ## [1.4.5] - 2016-11-18
