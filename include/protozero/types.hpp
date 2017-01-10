@@ -46,6 +46,17 @@ enum class pbf_wire_type : uint32_t {
 };
 
 /**
+ * Get the tag and wire type of the current field in one integer suitable
+ * for comparison with a switch statement.
+ *
+ * See pbf_reader.tag_and_type() for an example how to use this.
+ */
+template <typename T>
+constexpr inline uint32_t tag_and_type(T tag, pbf_wire_type wire_type) noexcept {
+    return (static_cast<uint32_t>(static_cast<pbf_tag_type>(tag)) << 3) | static_cast<uint32_t>(wire_type);
+}
+
+/**
  * The type used for length values, such as the length of a field.
  */
 using pbf_length_type = uint32_t;

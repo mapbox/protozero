@@ -75,6 +75,12 @@ Call `make install` to install include files in `/usr/include/protozero`. Call
   return the value of the last version of that field in this case.
   `pbf_reader.hpp` does not enforce this. If this feature is needed in your
   case, you have to do this yourself.
+* The Google Protobuf spec says that you must be able to read a packed
+  repeated field where a not-packed repeated field is expected and vice
+  versa. Also there can be several (packed or not-packed) repeated fields
+  with the same tag and their contents must be concatenated. It is your
+  responsibility to do this, protozero doesn't do that for you.
+  See https://developers.google.com/protocol-buffers/docs/encoding#packed
 * There is no specific support for maps but they can be used as described in
   the "Backwards compatibility" section of
   https://developers.google.com/protocol-buffers/docs/proto3#maps.
