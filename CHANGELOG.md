@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - `packed_field_*` classes now work with `pbf_builder`.
+- Reorganized documentation. Advanced docs are now under doc/advanced.md.
 
 ### Fixed
 
