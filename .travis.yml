@@ -35,7 +35,7 @@ addons_shortcuts:
   addons_gcc6: &gcc6
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'g++-6', 'gcc-6', 'libprotobuf-dev','protobuf-compiler' ]
+      packages: [ 'g++-6', 'gcc-6', 'libprotobuf-dev','protobuf-compiler', 'doxygen', 'graphviz' ]
 
 matrix:
   include:
@@ -86,7 +86,7 @@ matrix:
       addons: *gcc5
     - os: linux
       compiler: "gcc-6"
-      env: CXX=g++-6
+      env: CXX=g++-6 BUILD_DOC=1
       addons: *gcc6
 
 before_install:
@@ -104,6 +104,7 @@ before_install:
 
 install:
  - make test
+ - if [ -n "${BUILD_DOC}" ]; then make doc; fi
 
 script:
  - if [ -n "${COVERAGE}" ]; then
