@@ -31,5 +31,4 @@ documentation.
 /// Version number as string
 #define PROTOZERO_VERSION_STRING "1.5.0"
 
-
 #endif // PROTOZERO_VERSION_HPP
