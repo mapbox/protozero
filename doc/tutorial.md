@@ -21,7 +21,7 @@ and [the cheat sheet](cheatsheet.md) if you are getting lost.
 
 ## Prerequisites
 
-You need a C++11-capable compiler for protozero to work. Copy the files in the
+You need a C++11-capable compiler for Protozero to work. Copy the files in the
 `include/protozero` directory somewhere where your build system can find them.
 Keep the `protozero` directory and include the files in the form
 
@@ -231,7 +231,7 @@ the `get_enum()` function to get the value of the enum, you have to translate
 this into the symbolic name yourself. See the `enum` test case for an example.
 
 
-### Asserts and exceptions in the protozero library
+### Asserts and exceptions in the Protozero library
 
 Protozero uses `assert()` liberally to help you find bugs in your own code when
 compiled in debug mode (ie with `NDEBUG` not set). If such an assert "fires",
@@ -241,7 +241,7 @@ this is a very strong indication that there is a bug in your code somewhere.
 own test code. This is done to make sure the asserts actually work as intended.
 Your test code will not need this!)
 
-Exceptions, on the other hand, are thrown by protozero if some kind of data
+Exceptions, on the other hand, are thrown by Protozero if some kind of data
 corruption was detected while it is trying to parse the data. This could also
 be an indicator for a bug in the user code, but because it can happen if the
 data was (intentionally or not intentionally) been messed with, it is reported
@@ -471,7 +471,7 @@ protozero::pbf_writer pw(data);
 ```
 
 Of course you can add as many elements as you want. If you add no elements
-at all, this code will still work, protozero detects this special case and
+at all, this code will still work, Protozero detects this special case and
 pretends you never even initialized this field.
 
 The nested scope is important in this case, because the destructor of the
@@ -609,46 +609,4 @@ like the `pbf_writer` class but using the values of the enum instead of bare
 integers.
 
 See the `test/t/complex` test case for a complete example using this interface.
-
-## Reserving memory
-
-If you know beforehand how large a message will become or can take an educated
-guess, you can call the usual `std::string::reserve()` on the underlying string
-before you give it to an `pbf_writer` or `pbf_builder` object.
-
-Or you can (at any time) call `reserve()` on the `pbf_writer` or `pbf_builder`.
-This will reserve the given amount of bytes in addition to whatever is already
-in that message.
-
-In the general case it is not easy to figure out how much memory you will need
-because of the varint packing of integers. But sometimes you can make at least
-a rough estimate. Still, you should probably only use this facility if you have
-benchmarks proving that it actually makes your program faster.
-
-## Using the Low-Level Varint and Zigzag Encoding and Decoding Functions
-
-Protozero gives you access to the low-level functions for encoding and
-decoding varint and zigzag integer encodings, because these functions can
-sometimes be useful outside the Protocol Buffer context.
-
-### Using Low-Level Functions
-
-To use the low-level, add this include to your C++ program:
-
-    #include <protozero/varint.hpp>
-
-### Functions
-
-The following functions are then available:
-
-```cpp
-decode_varint()
-write_varint()
-encode_zigzag32()
-encode_zigzag64()
-decode_zigzag32()
-decode_zigzag64()
-```
-
-See the reference documentation created by `make doc` for details.
 
