@@ -52,7 +52,7 @@ HPP_FILES := include/protozero/byteswap.hpp \
              include/protozero/varint.hpp \
              include/protozero/version.hpp
 
-DOC_FILES = doc/cheatsheet.md doc/macros.md doc/tutorial.md
+DOC_FILES = doc/advanced.md doc/cheatsheet.md doc/tutorial.md
 
 CFLAGS_PROTOBUF := $(subst -I,-isystem ,$(shell pkg-config protobuf --cflags))
 LDFLAGS_PROTOBUF := $(shell pkg-config protobuf --libs-only-L)
