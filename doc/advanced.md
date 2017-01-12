@@ -118,3 +118,55 @@ decode_zigzag64()
 
 See the reference documentation created by `make doc` for details.
 
+
+## Vectored input for length-delimited fields
+
+Length-delimited fields (like string fields, byte fields and messages) are
+usually set by calling `add_string()`, `add_message()`, etc. These functions
+have several forms, but they basically all take a *tag*, a *size*, and a
+*pointer to the data*. They write the length of the data into the message
+and then copy the data over.
+
+Sometimes you have the data not in one place, but spread over several
+buffers. In this case you have to consolidate those buffers first, which needs
+an extra copy. Say you have two very long strings that should be concatenated
+into a message:
+
+```cpp
+std::string a{"very long string..."};
+std::string b{"another very long string..."};
+
+std::string data;
+protozero::pbf_writer writer{data};
+
+a.append(b); // expensive extra copy
+
+writer.add_string(1, a);
+```
+
+To avoid this, the function `add_bytes_vectored()` can be used which allows
+vectored (or scatter/gather) input like this:
+
+```cpp
+std::string a{"very long string..."};
+std::string b{"another very long string..."};
+
+std::string data;
+protozero::pbf_writer writer{data};
+
+writer.add_bytes_vectored(1, a, b);
+```
+
+`add_bytes_vectored()` will add up the sizes of all its arguments and copy over
+all the data only once.
+
+The function takes any number of arguments. The arguments must be of a type
+supporting the `data()` and `size()` methods like `protozero::data_view()`,
+`std::string` or the C++17 `std::string_view`.
+
+Note that there is only one version of the function which can be used for any
+length-delimited field including strings, bytes, messages and repeated packed
+fields.
+
+The function is also available in the `pbf_builder` class.
+
