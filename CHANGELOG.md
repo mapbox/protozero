@@ -8,6 +8,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.5.0] - 2017-01-12
+
+### Added
+
 - Add `add_bytes_vectored()` methods to `pbf_writer` and `pbf_builder`. This
   allows single-copy scatter-gather type adding of data that has been prepared
   in pieces to a protobuf message.
@@ -147,7 +156,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.4.5...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/osmcode/libosmium/compare/v1.4.5...v1.5.0
 [1.4.5]: https://github.com/osmcode/libosmium/compare/v1.4.4...v1.4.5
 [1.4.4]: https://github.com/osmcode/libosmium/compare/v1.4.3...v1.4.4
 [1.4.3]: https://github.com/osmcode/libosmium/compare/v1.4.2...v1.4.3
