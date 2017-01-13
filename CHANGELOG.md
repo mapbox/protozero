@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Better documentation for `tag_and_type()` in doc/advanced.md.
+
 ### Changed
 
 ### Fixed
