@@ -33,13 +33,13 @@ If `protozero/version.hpp` is included, the following macros are set:
 The behaviour of Protozero can be changed by defining the following macros.
 They have to be set before including any of the Protozero headers.
 
-## `PROTOZERO_STRICT_API`
+### `PROTOZERO_STRICT_API`
 
 If this is set, you will get some extra warnings or errors during compilation
 if you are using an old (deprecated) interface to Protozero. Enable this if
 you want to make sure your code will work with future versions of Protozero.
 
-## `PROTOZERO_USE_VIEW`
+### `PROTOZERO_USE_VIEW`
 
 Protozero uses the class `protozero::data_view` as the return type of the
 `pbf_reader::get_view()` method and a few other functions take a
@@ -70,6 +70,59 @@ repeated field is expected and vice versa. Also there can be several (packed or
 not-packed) repeated fields with the same tag and their contents must be
 concatenated. It is your responsibility to do this, Protozero doesn't do that
 for you.
+
+### Using `tag_and_type()`
+
+The `tag_and_type()` free function and the method of the same name on the
+`pbf_reader` and `pbf_message` classes can be used to access both packed and
+unpacked repeated fields. (It can also be used to check that you have the
+right type of encoding for other fields.)
+
+Here is the outline:
+
+```cpp
+enum class ExampleMsg : protozero::pbf_tag_type {
+    repeated_uint32_x = 1
+};
+
+std::string data = ...
+pbf_message<ExampleMsg> message{data};
+while (message.next()) {
+    switch (message.tag_and_type()) {
+        case tag_and_type(ExampleMsg::repeated_uint32_x, pbf_wire_type::length_delimited): {
+                auto xit = message.get_packed_uint32();
+                ... // handle the repeated field when it is packed
+            }
+            break;
+        case tag_and_type(ExampleMsg::repeated_uint32_x, pbf_wire_type::varint): {
+                auto x = message.get_uint32();
+                ... // handle the repeated field when it is not packed
+            }
+            break;
+        default:
+            message.skip();
+    }
+}
+```
+
+All this works on `pbf_reader` in the same way as with `pbf_message` with the
+usual difference that `pbf_reader` takes a numeric field tag and `pbf_message`
+an enum field.
+
+If you only want to check for one specific tag and type you can use the
+two-argument version of `pbf_reader::next()`. In this case `17` is the field
+tag we are looking for:
+
+```cpp
+std::string data = ...
+pbf_reader message{data};
+while (message.next(17, pbf_wire_type::varint)) {
+    auto foo = message.get_int32();
+    ...
+}
+```
+
+See the test under `test/t/tag_and_type/` for a complete example.
 
 
 ## Reserving memory when writing messages

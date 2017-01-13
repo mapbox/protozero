@@ -13,6 +13,12 @@ macro `PROTOZERO_STRICT_API` in which case Protozero will compile without the
 code used for backwards compatibilty. You will then get compile errors for
 older API usages.
 
+## Upgrading from *v1.4.5* to *v1.5.0*
+
+* New functions for checking tag and type at the same time to make your
+  program more robust. Read the section "Repeated fields in messages" in
+  the new [Advanced Topics documentation](doc/advanced.md).
+
 ## Upgrading from *v1.4.4* to *v1.4.5*
 
 * The macro `PROTOZERO_DO_NOT_USE_BARE_POINTER` is not used any more. If you
