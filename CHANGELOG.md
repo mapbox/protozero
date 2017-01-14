@@ -8,9 +8,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- Better documentation for `tag_and_type()` in doc/advanced.md.
-
 ### Changed
+
+### Fixed
+
+
+## [1.5.1] - 2017-01-14
+
+### Added
+
+- Better documentation for `tag_and_type()` in doc/advanced.md.
 
 ### Fixed
 
@@ -160,7 +167,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.5.0...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/osmcode/libosmium/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/osmcode/libosmium/compare/v1.4.5...v1.5.0
 [1.4.5]: https://github.com/osmcode/libosmium/compare/v1.4.4...v1.4.5
 [1.4.4]: https://github.com/osmcode/libosmium/compare/v1.4.3...v1.4.4
