@@ -26,10 +26,7 @@ TEST_CASE("check every possible value for single byte in buffer") {
 
         REQUIRE(item.length() == 1);
         REQUIRE(!!item); // test operator bool()
-        REQUIRE_THROWS({
-            item.next();
-            item.skip();
-        });
+        REQUIRE_THROWS((item.next(), item.skip()));
     }
 }
 
