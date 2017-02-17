@@ -367,9 +367,9 @@ public:
      * @pre There must be no current field.
      * @post If it returns `true` there is a current field now with the given tag.
      */
-    bool next(pbf_tag_type next_tag, pbf_wire_type wire_type) {
+    bool next(pbf_tag_type next_tag, pbf_wire_type type) {
         while (next()) {
-            if (m_tag == next_tag && m_wire_type == wire_type) {
+            if (m_tag == next_tag && m_wire_type == type) {
                 return true;
             } else {
                 skip();
