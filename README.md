@@ -13,7 +13,7 @@ the Google Protobufs `protoc` program.
 
 [![Travis Build Status](https://travis-ci.org/mapbox/protozero.svg?branch=master)](https://travis-ci.org/mapbox/protozero)
 [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/o354pq10y96mnr6d?svg=true)](https://ci.appveyor.com/project/Mapbox/protozero)
-[![Coverage Status](https://coveralls.io/repos/mapbox/protozero/badge.svg?branch=master&service=github)](https://coveralls.io/github/mapbox/protozero?branch=master)
+[![Coverage Status](https://codecov.io/gh/mapbox/protozero/branch/master/graph/badge.svg)](https://codecov.io/gh/mapbox/protozero)
 
 ## Depends
 
