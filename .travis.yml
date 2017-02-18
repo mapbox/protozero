@@ -91,15 +91,8 @@ matrix:
 
 before_install:
  - echo ${CXX}
- - if [[ $(uname -s) == 'Linux' ]]; then
-     export PYTHONPATH=$(pwd)/.local/lib/python2.7/site-packages;
-   else
+ - if [[ $(uname -s) == 'Darwin' ]]; then
      brew install protobuf;
-     export PYTHONPATH=$(pwd)/.local/lib/python/site-packages;
-   fi
- - if [ -n "${COVERAGE}" ]; then
-     PYTHONUSERBASE=$(pwd)/.local pip install --user urllib3[secure];
-     PYTHONUSERBASE=$(pwd)/.local pip install --user cpp-coveralls;
    fi
 
 install:
@@ -107,9 +100,13 @@ install:
  - if [ -n "${BUILD_DOC}" ]; then make doc; fi
 
 script:
- - if [ -n "${COVERAGE}" ]; then
-    make clean;
-    CXXFLAGS="--coverage ${CXXFLAGS}" LDFLAGS="--coverage ${LDFLAGS}" make test;
-    ${COVERAGE} -lp test/*tests.o test/t/*/*test_cases.o;
-    ./.local/bin/cpp-coveralls --no-gcov -i include/protozero;
-   fi
+  - |
+    if [ -n "${COVERAGE}" ]; then
+      make clean
+      CXXFLAGS="--coverage ${CXXFLAGS}" LDFLAGS="--coverage ${LDFLAGS}" make test
+      which ${COVERAGE}
+      curl -S -f https://codecov.io/bash -o codecov
+      chmod +x codecov
+      ${COVERAGE} -p $(find test/ -name '*.o')
+      ./codecov -Z -f '*protozero*' -X search
+    fi
