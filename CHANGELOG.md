@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Top level protozero header: `#include <protozero/protozero.hpp>` to include all public headers
+
 ### Changed
 
 ### Fixed

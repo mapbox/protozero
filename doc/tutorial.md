@@ -25,6 +25,14 @@ You need a C++11-capable compiler for Protozero to work. Copy the files in the
 `include/protozero` directory somewhere where your build system can find them.
 Keep the `protozero` directory and include the files in the form
 
+Either include the main protozero header which includes all you need
+
+```cpp
+#include <protozero/protozero.hpp>
+```
+
+or be specific and include
+
 ```cpp
 #include <protozero/FILENAME.hpp>
 ```
