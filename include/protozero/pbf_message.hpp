@@ -83,6 +83,10 @@ public:
         return pbf_reader::next(pbf_tag_type(next_tag));
     }
 
+    bool next(T next_tag, pbf_wire_type wire_type) {
+        return pbf_reader::next(pbf_tag_type(next_tag), wire_type);
+    }
+
     T tag() const noexcept {
         return T(pbf_reader::tag());
     }
