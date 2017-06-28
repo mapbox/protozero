@@ -9,7 +9,7 @@ TEST_CASE("read bytes field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        REQUIRE(item.get_string() == "");
+        REQUIRE(item.get_bytes() == "");
         REQUIRE(!item.next());
     }
 
@@ -19,7 +19,7 @@ TEST_CASE("read bytes field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        REQUIRE(item.get_string() == "x");
+        REQUIRE(item.get_bytes() == "x");
         REQUIRE(!item.next());
     }
 
@@ -29,7 +29,7 @@ TEST_CASE("read bytes field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        REQUIRE(item.get_string() == "foobar");
+        REQUIRE(item.get_bytes() == "foobar");
         REQUIRE(!item.next());
     }
 
@@ -39,7 +39,7 @@ TEST_CASE("read bytes field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        const std::string data = item.get_string();
+        const std::string data = item.get_bytes();
         REQUIRE(data.size() == 3);
         REQUIRE(data[0] == char(1));
         REQUIRE(data[1] == char(2));
@@ -53,7 +53,7 @@ TEST_CASE("read bytes field") {
         for (std::string::size_type i = 1; i < buffer.size(); ++i) {
             protozero::pbf_reader item(buffer.data(), i);
             REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_string(), protozero::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_bytes(), protozero::end_of_buffer_exception);
         }
     }
 
