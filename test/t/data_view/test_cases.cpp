@@ -62,20 +62,32 @@ TEST_CASE("comparing data_views") {
     protozero::data_view v2{"bar"};
     protozero::data_view v3{"foox"};
     protozero::data_view v4{"foo"};
+    protozero::data_view v5{"fooooooo", 3};
+    protozero::data_view v6{"f\0o", 3};
+    protozero::data_view v7{"f\0obar", 3};
 
     REQUIRE_FALSE(v1 == v2);
     REQUIRE_FALSE(v1 == v3);
     REQUIRE(v1 == v4);
+    REQUIRE(v1 == v5);
+    REQUIRE_FALSE(v1 == v6);
+    REQUIRE_FALSE(v1 == v7);
     REQUIRE_FALSE(v2 == v3);
     REQUIRE_FALSE(v2 == v4);
     REQUIRE_FALSE(v3 == v4);
+    REQUIRE(v4 == v5);
+    REQUIRE(v6 == v7);
 
     REQUIRE(v1 != v2);
     REQUIRE(v1 != v3);
     REQUIRE_FALSE(v1 != v4);
+    REQUIRE_FALSE(v1 != v5);
+    REQUIRE(v1 != v6);
+    REQUIRE(v1 != v7);
     REQUIRE(v2 != v3);
     REQUIRE(v2 != v4);
     REQUIRE(v3 != v4);
+    REQUIRE_FALSE(v4 != v5);
+    REQUIRE_FALSE(v6 != v7);
 }
-
 
