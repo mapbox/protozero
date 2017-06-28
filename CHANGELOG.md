@@ -8,9 +8,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Add missing two-parameter version of `pbf_message::next()` function.
+
 ### Changed
 
+- Clarify include file usage in tutorial.
+- Updated included Catch unit test framework to version 1.9.6 and updated
+  tests to work with the current version.
+
 ### Fixed
+
+- Important bugfix in `data_view` equality operator. The equality operator is
+  actually never used in the protozero code itself, but users of protozero
+  might use it. This is a serious bug that could lead to buffer overrun type
+  problems.
 
 
 ## [1.5.1] - 2017-01-14
