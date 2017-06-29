@@ -7,12 +7,14 @@ TEST_CASE("default constructed data_view") {
     protozero::data_view view;
     REQUIRE(view.data() == nullptr);
     REQUIRE(view.size() == 0);
+    REQUIRE(view.empty());
 }
 
 TEST_CASE("data_view from C string") {
     protozero::data_view view{"foobar"};
     REQUIRE(view.data());
     REQUIRE(view.size() == 6);
+    REQUIRE_FALSE(view.empty());
 }
 
 TEST_CASE("data_view from std::string") {

@@ -139,6 +139,11 @@ public:
         return m_size;
     }
 
+    /// Returns true if size is 0.
+    constexpr bool empty() const noexcept {
+        return m_size == 0;
+    }
+
     /**
      * Convert data view to string.
      *
