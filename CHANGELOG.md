@@ -8,6 +8,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.5.2] - 2017-06-30
+
+### Added
+
 - Add missing two-parameter version of `pbf_message::next()` function.
 - Add `data_view::empty()` function.
 - Add missing versions of `add_bytes()`, `add_string()`, and `add_message()`
@@ -182,7 +191,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.5.1...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.5.2...HEAD
+[1.5.2]: https://github.com/osmcode/libosmium/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/osmcode/libosmium/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/osmcode/libosmium/compare/v1.4.5...v1.5.0
 [1.4.5]: https://github.com/osmcode/libosmium/compare/v1.4.4...v1.4.5
