@@ -1,4 +1,6 @@
 
+#include <array>
+
 #include <test.hpp>
 
 #include <protozero/types.hpp>
@@ -27,6 +29,20 @@ TEST_CASE("data_view from std::string") {
 TEST_CASE("data_view from ptr, size") {
     std::string str{"foobar"};
     protozero::data_view view{str.data(), str.size()};
+    REQUIRE(view.data());
+    REQUIRE(view.size() == 6);
+}
+
+TEST_CASE("data_view from C array") {
+    const char str[] = "foobar";
+    protozero::data_view view{str};
+    REQUIRE(view.data());
+    REQUIRE(view.size() == 6);
+}
+
+TEST_CASE("data_view from std::array") {
+    std::array<char, 7> str{"foobar"};
+    protozero::data_view view{str.data(), 6};
     REQUIRE(view.data());
     REQUIRE(view.size() == 6);
 }

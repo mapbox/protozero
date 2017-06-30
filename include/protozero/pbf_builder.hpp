@@ -46,7 +46,7 @@ public:
 
     using enum_type = T;
 
-    pbf_builder(std::string& data) noexcept :
+    explicit pbf_builder(std::string& data) noexcept :
         pbf_writer(data) {
     }
 

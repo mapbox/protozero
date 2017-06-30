@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Clarify include file usage in tutorial.
 - Updated included Catch unit test framework to version 1.9.6 and updated
   tests to work with the current version.
+- Make some constructors explicit (best practice to avoid silent conversions).
 
 ### Fixed
 

@@ -179,7 +179,7 @@ public:
      *
      * @post There is no current field.
      */
-    pbf_reader(const std::pair<const char*, std::size_t>& data) noexcept
+    explicit pbf_reader(const std::pair<const char*, std::size_t>& data) noexcept
         : m_data(data.first),
           m_end(data.first + data.second),
           m_wire_type(pbf_wire_type::unknown),
@@ -196,7 +196,7 @@ public:
      *
      * @post There is no current field.
      */
-    pbf_reader(const std::string& data) noexcept
+    explicit pbf_reader(const std::string& data) noexcept
         : m_data(data.data()),
           m_end(data.data() + data.size()),
           m_wire_type(pbf_wire_type::unknown),
