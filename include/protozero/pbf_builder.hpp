@@ -91,6 +91,10 @@ public:
         pbf_writer::add_bytes(pbf_tag_type(tag), value);
     }
 
+    void add_bytes(T tag, const char* value) {
+        pbf_writer::add_bytes(pbf_tag_type(tag), value);
+    }
+
     template <typename... Ts>
     void add_bytes_vectored(T tag, Ts&&... values) {
         pbf_writer::add_bytes_vectored(pbf_tag_type(tag), std::forward<Ts>(values)...);
