@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Add missing two-parameter version of `pbf_message::next()` function.
 - Add `data_view::empty()` function.
+- Add missing versions of `add_bytes()`, `add_string()`, and `add_message()`
+  to `pbf_builder`.
 
 ### Changed
 

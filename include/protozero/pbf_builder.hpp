@@ -83,6 +83,10 @@ public:
         pbf_writer::add_bytes(pbf_tag_type(tag), value, size);
     }
 
+    void add_bytes(T tag, const data_view& value) {
+        pbf_writer::add_bytes(pbf_tag_type(tag), value);
+    }
+
     void add_bytes(T tag, const std::string& value) {
         pbf_writer::add_bytes(pbf_tag_type(tag), value);
     }
@@ -96,6 +100,10 @@ public:
         pbf_writer::add_string(pbf_tag_type(tag), value, size);
     }
 
+    void add_string(T tag, const data_view& value) {
+        pbf_writer::add_string(pbf_tag_type(tag), value);
+    }
+
     void add_string(T tag, const std::string& value) {
         pbf_writer::add_string(pbf_tag_type(tag), value);
     }
@@ -106,6 +114,10 @@ public:
 
     void add_message(T tag, const char* value, std::size_t size) {
         pbf_writer::add_message(pbf_tag_type(tag), value, size);
+    }
+
+    void add_message(T tag, const data_view& value) {
+        pbf_writer::add_message(pbf_tag_type(tag), value);
     }
 
     void add_message(T tag, const std::string& value) {
