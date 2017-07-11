@@ -298,10 +298,10 @@ public:
     }
 
     const_svarint_iterator(const const_svarint_iterator&) = default;
-    const_svarint_iterator(const_svarint_iterator&&) = default;
+    const_svarint_iterator(const_svarint_iterator&&) noexcept = default;
 
     const_svarint_iterator& operator=(const const_svarint_iterator&) = default;
-    const_svarint_iterator& operator=(const_svarint_iterator&&) = default;
+    const_svarint_iterator& operator=(const_svarint_iterator&&) noexcept = default;
 
     ~const_svarint_iterator() = default;
 

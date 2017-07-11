@@ -908,8 +908,8 @@ namespace detail {
         packed_field(const packed_field&) = delete;
         packed_field& operator=(const packed_field&) = delete;
 
-        packed_field(packed_field&&) = default;
-        packed_field& operator=(packed_field&&) = default;
+        packed_field(packed_field&&) noexcept = default;
+        packed_field& operator=(packed_field&&) noexcept = default;
 
         packed_field() :
             m_writer() {
