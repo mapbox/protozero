@@ -254,22 +254,56 @@ public:
         m_parent_writer->open_submessage(tag, size);
     }
 
-    /// A pbf_writer object can be copied
-    pbf_writer(const pbf_writer&) noexcept = default;
+    /// A pbf_writer object can not be copied
+    pbf_writer(const pbf_writer&) = delete;
 
-    /// A pbf_writer object can be copied
-    pbf_writer& operator=(const pbf_writer&) noexcept = default;
+    /// A pbf_writer object can not be copied
+    pbf_writer& operator=(const pbf_writer&) = delete;
 
-    /// A pbf_writer object can be moved
-    pbf_writer(pbf_writer&&) noexcept = default;
+    /**
+     * A pbf_writer object can be moved. After this the other pbf_writer will
+     * be invalid.
+     */
+    pbf_writer(pbf_writer&& other) noexcept :
+        m_data(other.m_data),
+        m_parent_writer(other.m_parent_writer),
+        m_rollback_pos(other.m_rollback_pos),
+        m_pos(other.m_pos) {
+        other.m_data = nullptr;
+        other.m_parent_writer = nullptr;
+        other.m_rollback_pos = 0;
+        other.m_pos = 0;
+    }
 
-    /// A pbf_writer object can be moved
-    pbf_writer& operator=(pbf_writer&&) noexcept = default;
+    /**
+     * A pbf_writer object can be moved. After this the other pbf_writer will
+     * be invalid.
+     */
+    pbf_writer& operator=(pbf_writer&& other) noexcept {
+        m_data = other.m_data;
+        m_parent_writer = other.m_parent_writer;
+        m_rollback_pos = other.m_rollback_pos;
+        m_pos = other.m_pos;
+        other.m_data = nullptr;
+        other.m_parent_writer = nullptr;
+        other.m_rollback_pos = 0;
+        other.m_pos = 0;
+        return *this;
+    }
 
     ~pbf_writer() {
-        if (m_parent_writer) {
+        if (m_parent_writer != nullptr) {
             m_parent_writer->close_submessage();
         }
+    }
+
+    /**
+     * Check if this writer is valid. A writer is invalid if it was default
+     * constructed, moved from, or if commit() has been called on it.
+     * Otherwise it is valid.
+     */
+    bool valid() const noexcept {
+        return m_data != nullptr;
     }
 
     /**
@@ -299,16 +333,34 @@ public:
     }
 
     /**
+     * Commit this submessage. This does the same as when the pbf_writer
+     * goes out of scope and is destructed.
+     *
+     * @pre Must be a pbf_writer of a submessage, ie one opened with the
+     *      pbf_writer constructor taking a parent message.
+     * @post The pbf_writer is invalid and can't be used any more.
+     */
+    void commit() {
+        protozero_assert(m_parent_writer && "you can't call commit() on a pbf_writer without a parent");
+        protozero_assert(m_pos == 0 && "you can't call commit() on a pbf_writer that has an open nested submessage");
+        m_parent_writer->close_submessage();
+        m_parent_writer = nullptr;
+        m_data = nullptr;
+    }
+
+    /**
      * Cancel writing of this submessage. The complete submessage will be
      * removed as if it was never created and no fields were added.
      *
      * @pre Must be a pbf_writer of a submessage, ie one opened with the
      *      pbf_writer constructor taking a parent message.
+     * @post The pbf_writer is invalid and can't be used any more.
      */
     void rollback() {
         protozero_assert(m_parent_writer && "you can't call rollback() on a pbf_writer without a parent");
         protozero_assert(m_pos == 0 && "you can't call rollback() on a pbf_writer that has an open nested submessage");
         m_parent_writer->rollback_submessage();
+        m_parent_writer = nullptr;
         m_data = nullptr;
     }
 
@@ -859,12 +911,24 @@ namespace detail {
         packed_field(packed_field&&) = default;
         packed_field& operator=(packed_field&&) = default;
 
+        packed_field() :
+            m_writer() {
+        }
+
         packed_field(pbf_writer& parent_writer, pbf_tag_type tag) :
             m_writer(parent_writer, tag) {
         }
 
         packed_field(pbf_writer& parent_writer, pbf_tag_type tag, std::size_t size) :
             m_writer(parent_writer, tag, size) {
+        }
+
+        bool valid() const noexcept {
+            return m_writer.valid();
+        }
+
+        void commit() {
+            m_writer.commit();
         }
 
         void rollback() {
@@ -877,6 +941,10 @@ namespace detail {
     class packed_field_fixed : public packed_field {
 
     public:
+
+        packed_field_fixed() :
+            packed_field() {
+        }
 
         template <typename P>
         packed_field_fixed(pbf_writer& parent_writer, P tag) :
@@ -899,6 +967,10 @@ namespace detail {
 
     public:
 
+        packed_field_varint() :
+            packed_field() {
+        }
+
         template <typename P>
         packed_field_varint(pbf_writer& parent_writer, P tag) :
             packed_field(parent_writer, static_cast<pbf_tag_type>(tag)) {
@@ -914,6 +986,10 @@ namespace detail {
     class packed_field_svarint : public packed_field {
 
     public:
+
+        packed_field_svarint() :
+            packed_field() {
+        }
 
         template <typename P>
         packed_field_svarint(pbf_writer& parent_writer, P tag) :

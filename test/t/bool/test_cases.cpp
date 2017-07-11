@@ -131,3 +131,25 @@ TEST_CASE("write bool field using pbf_builder") {
 
 }
 
+TEST_CASE("write bool field using moved pbf_builder") {
+
+    std::string buffer;
+    protozero::pbf_builder<TestBoolean::Test> pw2{buffer};
+    REQUIRE(pw2.valid());
+
+    protozero::pbf_builder<TestBoolean::Test> pw{std::move(pw2)};
+    REQUIRE(pw.valid());
+    REQUIRE_FALSE(pw2.valid());
+
+    SECTION("false") {
+        pw.add_bool(TestBoolean::Test::required_bool_b, false);
+        REQUIRE(buffer == load_data("bool/data-false"));
+    }
+
+    SECTION("true") {
+        pw.add_bool(TestBoolean::Test::required_bool_b, true);
+        REQUIRE(buffer == load_data("bool/data-true"));
+    }
+
+}
+

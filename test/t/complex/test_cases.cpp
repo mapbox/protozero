@@ -362,6 +362,9 @@ TEST_CASE("write complex data using pbf_writer") {
         using std::swap;
         swap(pw, pw2);
 
+        REQUIRE(pw.valid());
+        REQUIRE_FALSE(pw2.valid());
+
         std::string submessage;
         protozero::pbf_writer pws(submessage);
         pws.add_string(1, "foobar");

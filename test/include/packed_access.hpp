@@ -175,11 +175,74 @@ TEST_CASE("write repeated packed field using packed field: " PBF_TYPE_NAME) {
             field.add_element(cpp_type(  -1));
             field.add_element(std::numeric_limits<cpp_type>::min());
 #endif
+            REQUIRE(field.valid());
+            SECTION("with commit") {
+                field.commit();
+                REQUIRE_FALSE(field.valid());
+            }
         }
 
         REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-many"));
     }
 
+}
+
+TEST_CASE("move repeated packed field: " PBF_TYPE_NAME) {
+
+    std::string buffer;
+    protozero::pbf_writer pw{buffer};
+
+    SECTION("move rvalue") {
+        packed_field_type field;
+        REQUIRE_FALSE(field.valid());
+        field = packed_field_type{pw, 1};
+        REQUIRE(field.valid());
+        field.add_element(cpp_type(17));
+    }
+
+    SECTION("explicit move") {
+        packed_field_type field2{pw, 1};
+        packed_field_type field;
+
+        REQUIRE(field2.valid());
+        REQUIRE_FALSE(field.valid());
+
+        field = std::move(field2);
+
+        REQUIRE_FALSE(field2.valid());
+        REQUIRE(field.valid());
+
+        field.add_element(cpp_type(17));
+    }
+
+    SECTION("move constructor") {
+        packed_field_type field2{pw, 1};
+        REQUIRE(field2.valid());
+
+        packed_field_type field{std::move(field2)};
+        REQUIRE(field.valid());
+        REQUIRE_FALSE(field2.valid());
+
+        field.add_element(cpp_type(17));
+    }
+
+    SECTION("swap") {
+        packed_field_type field;
+        packed_field_type field2{pw, 1};
+
+        REQUIRE_FALSE(field.valid());
+        REQUIRE(field2.valid());
+
+        using std::swap;
+        swap(field, field2);
+
+        REQUIRE(field.valid());
+        REQUIRE_FALSE(field2.valid());
+
+        field.add_element(cpp_type(17));
+    }
+
+    REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-one"));
 }
 
 TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
