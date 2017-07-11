@@ -60,7 +60,7 @@ TEST_CASE("read not packed repeated field with tag_and_type") {
 TEST_CASE("read not packed repeated field with tag_and_type using next(...)") {
     const auto values = read_data_packed(load_data("tag_and_type/data-not-packed"));
 
-    REQUIRE(values.size() == 0);
+    REQUIRE(values.empty());
 }
 
 TEST_CASE("read packed repeated field with tag_and_type") {

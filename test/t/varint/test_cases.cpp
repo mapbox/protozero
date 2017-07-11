@@ -65,11 +65,11 @@ TEST_CASE("varint") {
         REQUIRE(item.next());
 
         SECTION("get") {
-            REQUIRE_THROWS_AS(item.get_uint64(), protozero::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_uint64(), protozero::end_of_buffer_exception&);
         }
 
         SECTION("skip") {
-            REQUIRE_THROWS_AS(item.skip(), protozero::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.skip(), protozero::end_of_buffer_exception&);
         }
     }
 
@@ -80,11 +80,11 @@ TEST_CASE("varint") {
         REQUIRE(item.next());
 
         SECTION("get") {
-            REQUIRE_THROWS_AS(item.get_uint64(), protozero::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.get_uint64(), protozero::end_of_buffer_exception&);
         }
 
         SECTION("skip") {
-            REQUIRE_THROWS_AS(item.skip(), protozero::end_of_buffer_exception);
+            REQUIRE_THROWS_AS(item.skip(), protozero::end_of_buffer_exception&);
         }
     }
 
@@ -95,11 +95,11 @@ TEST_CASE("varint") {
         REQUIRE(item.next());
 
         SECTION("get") {
-            REQUIRE_THROWS_AS(item.get_uint64(), protozero::varint_too_long_exception);
+            REQUIRE_THROWS_AS(item.get_uint64(), protozero::varint_too_long_exception&);
         }
 
         SECTION("skip") {
-            REQUIRE_THROWS_AS(item.skip(), protozero::varint_too_long_exception);
+            REQUIRE_THROWS_AS(item.skip(), protozero::varint_too_long_exception&);
         }
     }
 

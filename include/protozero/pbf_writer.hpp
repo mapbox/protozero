@@ -97,7 +97,7 @@ class pbf_writer {
     }
 
     template <typename T, typename It>
-    void add_packed_fixed(pbf_tag_type tag, It first, It last, std::input_iterator_tag) {
+    void add_packed_fixed(pbf_tag_type tag, It first, It last, std::input_iterator_tag /*unused*/) {
         if (first == last) {
             return;
         }
@@ -110,7 +110,7 @@ class pbf_writer {
     }
 
     template <typename T, typename It>
-    void add_packed_fixed(pbf_tag_type tag, It first, It last, std::forward_iterator_tag) {
+    void add_packed_fixed(pbf_tag_type tag, It first, It last, std::forward_iterator_tag /*unused*/) {
         if (first == last) {
             return;
         }
@@ -327,7 +327,7 @@ public:
         add_field(tag, pbf_wire_type::varint);
         protozero_assert(m_pos == 0 && "you can't add fields to a parent pbf_writer if there is an existing pbf_writer for a submessage");
         protozero_assert(m_data);
-        m_data->append(1, value);
+        m_data->append(1, char(value));
     }
 
     /**

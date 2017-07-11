@@ -332,9 +332,8 @@ public:
         while (next()) {
             if (m_tag == next_tag) {
                 return true;
-            } else {
-                skip();
             }
+            skip();
         }
         return false;
     }
@@ -371,9 +370,8 @@ public:
         while (next()) {
             if (m_tag == next_tag && m_wire_type == type) {
                 return true;
-            } else {
-                skip();
             }
+            skip();
         }
         return false;
     }

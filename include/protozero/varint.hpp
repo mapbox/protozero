@@ -39,16 +39,16 @@ namespace detail {
         if (iend - begin >= max_varint_length) {  // fast path
             do {
                 int64_t b;
-                b = *p++; val  = uint64_t((b & 0x7f)      ); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) <<  7); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 14); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 21); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 28); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 35); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 42); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 49); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 56); if (b >= 0) break;
-                b = *p++; val |= uint64_t((b & 0x7f) << 63); if (b >= 0) break;
+                b = *p++; val  = uint64_t((b & 0x7f)      ); if (b >= 0) { break; }
+                b = *p++; val |= uint64_t((b & 0x7f) <<  7); if (b >= 0) { break; }
+                b = *p++; val |= uint64_t((b & 0x7f) << 14); if (b >= 0) { break; }
+                b = *p++; val |= uint64_t((b & 0x7f) << 21); if (b >= 0) { break; }
+                b = *p++; val |= uint64_t((b & 0x7f) << 28); if (b >= 0) { break; }
+                b = *p++; val |= uint64_t((b & 0x7f) << 35); if (b >= 0) { break; }
+                b = *p++; val |= uint64_t((b & 0x7f) << 42); if (b >= 0) { break; }
+                b = *p++; val |= uint64_t((b & 0x7f) << 49); if (b >= 0) { break; }
+                b = *p++; val |= uint64_t((b & 0x7f) << 56); if (b >= 0) { break; }
+                b = *p++; val |= uint64_t((b & 0x7f) << 63); if (b >= 0) { break; }
                 throw varint_too_long_exception();
             } while (false);
         } else {

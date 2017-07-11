@@ -18,6 +18,8 @@ RELEASE_FLAGS := -O3 -DNDEBUG -march=native
 DEBUG_FLAGS := -O0 -g -fno-inline-functions
 PTHREAD_FLAGS =
 
+CLANG_TIDY := clang-tidy-3.8
+
 OS:=$(shell uname -s)
 
 ifeq ($(OS),Linux)
@@ -131,6 +133,12 @@ testpack:
 install:
 	install -m 0755 -o root -g root -d $(DESTDIR)/include/protozero
 	install -m 0644 -o root -g root include/protozero/* $(DESTDIR)/include/protozero
+
+clang-tidy: clean
+	bear make -j4 # create compile_commands.json compilation database
+	# some checks disabled because they are triggered by Catch unit test framework
+	# or they are too strict
+	$(CLANG_TIDY) -header-filter='.*' -checks='*,-cert-err58-cpp,-cert-dcl59-cpp,-google-build-namespaces,-misc-definitions-in-headers,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-reinterpret-cast' $(TEST_CASES)
 
 .PHONY: all test iwyu check doc
 
