@@ -122,7 +122,7 @@ TEST_CASE("write bytes field using vectored approach") {
 
     SECTION("with empty string") {
         std::string d1{"foo"};
-        std::string d2{""};
+        std::string d2{};
         std::string d3{"bar"};
 
         pw.add_bytes_vectored(1, d1, d2, d3);
