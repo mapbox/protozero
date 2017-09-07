@@ -923,6 +923,8 @@ namespace detail {
             m_writer(parent_writer, tag, size) {
         }
 
+        ~packed_field() noexcept = default;
+
         bool valid() const noexcept {
             return m_writer.valid();
         }
