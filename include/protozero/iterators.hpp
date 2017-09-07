@@ -90,7 +90,7 @@ public:
     }
 
     /// Return true if this range is empty.
-    constexpr std::size_t empty() const noexcept {
+    constexpr bool empty() const noexcept {
         return begin() == end();
     }
 
