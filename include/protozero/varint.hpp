@@ -31,8 +31,8 @@ namespace detail {
 
     // from https://github.com/facebook/folly/blob/master/folly/Varint.h
     inline uint64_t decode_varint_impl(const char** data, const char* end) {
-        const int8_t* begin = reinterpret_cast<const int8_t*>(*data);
-        const int8_t* iend = reinterpret_cast<const int8_t*>(end);
+        const auto begin = reinterpret_cast<const int8_t*>(*data);
+        const auto iend = reinterpret_cast<const int8_t*>(end);
         const int8_t* p = begin;
         uint64_t val = 0;
 
@@ -89,7 +89,7 @@ namespace detail {
 inline uint64_t decode_varint(const char** data, const char* end) {
     // If this is a one-byte varint, decode it here.
     if (end != *data && ((**data & 0x80) == 0)) {
-        uint64_t val = uint64_t(**data);
+        const auto val = static_cast<uint64_t>(**data);
         ++(*data);
         return val;
     }
@@ -110,8 +110,8 @@ inline uint64_t decode_varint(const char** data, const char* end) {
  *         before the end of the varint.
  */
 inline void skip_varint(const char** data, const char* end) {
-    const int8_t* begin = reinterpret_cast<const int8_t*>(*data);
-    const int8_t* iend = reinterpret_cast<const int8_t*>(end);
+    const auto begin = reinterpret_cast<const int8_t*>(*data);
+    const auto iend = reinterpret_cast<const int8_t*>(end);
     const int8_t* p = begin;
 
     while (p != iend && *p < 0) {
