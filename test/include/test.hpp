@@ -1,3 +1,5 @@
+#ifndef TEST_HPP
+#define TEST_HPP
 
 #ifdef _MSC_VER
 # define _SCL_SECURE_NO_WARNINGS
@@ -14,11 +16,10 @@ struct assert_error : public std::runtime_error {
 };
 #define protozero_assert(x) if (!(x)) { throw(assert_error(#x)); }
 
-#include <protozero/pbf_reader.hpp>
-#include <protozero/pbf_message.hpp>
-
-#include <protozero/pbf_writer.hpp>
 #include <protozero/pbf_builder.hpp>
+#include <protozero/pbf_message.hpp>
+#include <protozero/pbf_reader.hpp>
+#include <protozero/pbf_writer.hpp>
 
 extern std::string load_data(const std::string& filename);
 
@@ -28,3 +29,4 @@ extern std::string load_data(const std::string& filename);
 #define PROTOZERO_TEST_STRING2(s) #s
 #define PROTOZERO_TEST_STRING(s) PROTOZERO_TEST_STRING2(s)
 
+#endif // TEST_HPP
