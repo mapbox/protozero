@@ -15,16 +15,12 @@ static const std::vector<std::string> expected_layer_names = {
     "airport_label", "road_label", "waterway_label", "building_label"
 };
 
-namespace {
-
-std::string get_name(protozero::pbf_reader layer) { // copy!
+static std::string get_name(protozero::pbf_reader layer) { // copy!
     while (layer.next(1)) { // required string name
         return layer.get_string();
     }
     return "";
 }
-
-} // anon namespace
 
 TEST_CASE("reading vector tiles") {
 

@@ -6,20 +6,16 @@
 
 #include <protozero/byteswap.hpp>
 
-namespace {
+static int32_t check_swap_4(int32_t data) noexcept {
+    protozero::detail::byteswap_inplace(&data);
+    protozero::detail::byteswap_inplace(&data);
+    return data;
+}
 
-    int32_t check_swap_4(int32_t data) {
-        protozero::detail::byteswap_inplace(&data);
-        protozero::detail::byteswap_inplace(&data);
-        return data;
-    }
-
-    int64_t check_swap_8(int64_t data) {
-        protozero::detail::byteswap_inplace(&data);
-        protozero::detail::byteswap_inplace(&data);
-        return data;
-    }
-
+static int64_t check_swap_8(int64_t data) noexcept {
+    protozero::detail::byteswap_inplace(&data);
+    protozero::detail::byteswap_inplace(&data);
+    return data;
 }
 
 TEST_CASE("byte swapping") {
