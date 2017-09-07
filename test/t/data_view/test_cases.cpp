@@ -34,7 +34,7 @@ TEST_CASE("data_view from ptr, size") {
 }
 
 TEST_CASE("data_view from C array") {
-    const char str[] = "foobar";
+    const char* str = "foobar";
     protozero::data_view view{str};
     REQUIRE(view.data());
     REQUIRE(view.size() == 6);
