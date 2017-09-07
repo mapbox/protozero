@@ -62,7 +62,7 @@ inline void check_empty(protozero::pbf_reader message) {
     while (message.next()) {
         switch (message.tag()) {
             case 1: {
-                REQUIRE(!message.get_message().next());
+                REQUIRE_FALSE(message.get_message().next());
                 break;
             }
             case 2: {

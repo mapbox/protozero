@@ -17,7 +17,7 @@ TEST_CASE("write bool field and check with libprotobuf") {
 
         msg.ParseFromString(buffer);
 
-        REQUIRE(!msg.b());
+        REQUIRE_FALSE(msg.b());
     }
 
     SECTION("true") {

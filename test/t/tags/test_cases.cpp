@@ -7,7 +7,7 @@ inline void check_tag(const std::string& buffer, protozero::pbf_tag_type tag) {
     REQUIRE(item.next());
     REQUIRE(item.tag() == tag);
     REQUIRE(item.get_int32() == 333L);
-    REQUIRE(!item.next());
+    REQUIRE_FALSE(item.next());
 }
 
 TEST_CASE("read tags") {

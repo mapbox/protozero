@@ -21,7 +21,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed32() == 0UL);
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("positive") {
@@ -30,7 +30,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed32() == 1UL);
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("max") {
@@ -39,7 +39,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::max());
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("end_of_buffer") {
@@ -60,7 +60,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
             REQUIRE(item.next());
             REQUIRE(item.get_fixed32() == 0UL);
             REQUIRE_THROWS(item.get_fixed32());
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("skip") {
@@ -71,7 +71,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
             REQUIRE(item.next());
             item.skip();
             REQUIRE_THROWS(item.skip());
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
     }
@@ -92,7 +92,7 @@ TEST_CASE("check alignment issues for fixed64 field") {
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed64() == 0ULL);
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("positive") {
@@ -101,7 +101,7 @@ TEST_CASE("check alignment issues for fixed64 field") {
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed64() == 1ULL);
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("max") {
@@ -110,7 +110,7 @@ TEST_CASE("check alignment issues for fixed64 field") {
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed64() == std::numeric_limits<uint64_t>::max());
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("end_of_buffer") {

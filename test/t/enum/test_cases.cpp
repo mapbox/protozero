@@ -10,7 +10,7 @@ TEST_CASE("read enum field") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == 0L);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("positive") {
@@ -20,7 +20,7 @@ TEST_CASE("read enum field") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == 3L);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("negative") {
@@ -30,7 +30,7 @@ TEST_CASE("read enum field") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == -1L);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("max") {
@@ -40,7 +40,7 @@ TEST_CASE("read enum field") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == std::numeric_limits<int32_t>::max());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("min") {
@@ -50,7 +50,7 @@ TEST_CASE("read enum field") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == (std::numeric_limits<int32_t>::min() + 1));
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
 }

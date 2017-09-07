@@ -12,7 +12,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == 0);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("positive") {
@@ -22,7 +22,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == 1);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("pos200") {
@@ -32,7 +32,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == 200);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("max") {
@@ -42,7 +42,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == std::numeric_limits<cpp_type>::max());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
 #if PBF_TYPE_IS_SIGNED
@@ -54,7 +54,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
 
             REQUIRE(item.next());
             REQUIRE(item.GET_TYPE() == -1);
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
     }
 
@@ -65,7 +65,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == -200);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("min") {
@@ -76,7 +76,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
 
             REQUIRE(item.next());
             REQUIRE(item.GET_TYPE() == std::numeric_limits<cpp_type>::min());
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
     }
 #endif

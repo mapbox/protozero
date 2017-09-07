@@ -17,8 +17,8 @@ TEST_CASE("read bool field using pbf_reader") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        REQUIRE(!item.get_bool());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.get_bool());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("true") {
@@ -28,7 +28,7 @@ TEST_CASE("read bool field using pbf_reader") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_bool());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("also true") {
@@ -38,7 +38,7 @@ TEST_CASE("read bool field using pbf_reader") {
 
         REQUIRE(item.next(1));
         REQUIRE(item.get_bool());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("still true") {
@@ -48,7 +48,7 @@ TEST_CASE("read bool field using pbf_reader") {
 
         REQUIRE(item.next(1));
         REQUIRE(item.get_bool());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
 }
@@ -61,8 +61,8 @@ TEST_CASE("read bool field using pbf_message") {
         protozero::pbf_message<TestBoolean::Test> item(buffer);
 
         REQUIRE(item.next());
-        REQUIRE(!item.get_bool());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.get_bool());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("true") {
@@ -72,7 +72,7 @@ TEST_CASE("read bool field using pbf_message") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_bool());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("also true") {
@@ -82,7 +82,7 @@ TEST_CASE("read bool field using pbf_message") {
 
         REQUIRE(item.next(TestBoolean::Test::required_bool_b));
         REQUIRE(item.get_bool());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("still true") {
@@ -92,7 +92,7 @@ TEST_CASE("read bool field using pbf_message") {
 
         REQUIRE(item.next(TestBoolean::Test::required_bool_b));
         REQUIRE(item.get_bool());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
 }

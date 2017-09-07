@@ -115,7 +115,7 @@ TEST_CASE("lots of varints back and forth") {
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
         REQUIRE(n == item.get_uint32());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
         buffer.clear();
     }
 
@@ -125,7 +125,7 @@ TEST_CASE("lots of varints back and forth") {
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
         REQUIRE(n == item.get_int32());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
         buffer.clear();
     }
 
@@ -135,7 +135,7 @@ TEST_CASE("lots of varints back and forth") {
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
         REQUIRE(n == item.get_sint32());
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
         buffer.clear();
     }
 

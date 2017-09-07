@@ -10,7 +10,7 @@ TEST_CASE("read string field using get_string") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "");
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("one") {
@@ -20,7 +20,7 @@ TEST_CASE("read string field using get_string") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "x");
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("string") {
@@ -30,7 +30,7 @@ TEST_CASE("read string field using get_string") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "foobar");
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("end_of_buffer") {
@@ -55,7 +55,7 @@ TEST_CASE("read string field using get_view") {
         REQUIRE(item.next());
         auto v = item.get_view();
         REQUIRE(v.size() == 0);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("one") {
@@ -67,7 +67,7 @@ TEST_CASE("read string field using get_view") {
         auto v = item.get_view();
         REQUIRE(*v.data() == 'x');
         REQUIRE(v.size() == 1);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("string") {
@@ -77,7 +77,7 @@ TEST_CASE("read string field using get_view") {
 
         REQUIRE(item.next());
         REQUIRE(std::string(item.get_view()) == "foobar");
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("end_of_buffer") {

@@ -21,7 +21,7 @@ TEST_CASE("read float field") {
 
             REQUIRE(item.next());
             REQUIRE(double(item.get_float()) == Approx(0.0));
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("positive") {
@@ -30,7 +30,7 @@ TEST_CASE("read float field") {
 
             REQUIRE(item.next());
             REQUIRE(double(item.get_float()) == Approx(5.34));
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("negative") {
@@ -39,7 +39,7 @@ TEST_CASE("read float field") {
 
             REQUIRE(item.next());
             REQUIRE(double(item.get_float()) == Approx(-1.71));
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("end_of_buffer") {

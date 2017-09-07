@@ -103,7 +103,7 @@ TEST_CASE("skip() skips the right amount of bytes") {
 
         REQUIRE(item.next());
         item.skip();
-        REQUIRE(!item);
+        REQUIRE_FALSE(item);
     }
 }
 

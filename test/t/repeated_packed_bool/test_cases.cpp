@@ -8,7 +8,7 @@ TEST_CASE("read repeated packed bool field") {
 
         protozero::pbf_reader item(buffer);
 
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("one") {
@@ -19,7 +19,7 @@ TEST_CASE("read repeated packed bool field") {
         REQUIRE(item.next());
         auto it_range = item.get_packed_bool();
         REQUIRE(it_range.size() == 1);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
 
         REQUIRE(it_range.begin() != it_range.end());
         REQUIRE(*it_range.begin());
@@ -34,13 +34,13 @@ TEST_CASE("read repeated packed bool field") {
         REQUIRE(item.next());
         auto it_range = item.get_packed_bool();
         REQUIRE(it_range.size() == 4);
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
 
         auto it = it_range.begin();
         REQUIRE(it != it_range.end());
         REQUIRE(*it++);
         REQUIRE(*it++);
-        REQUIRE(! *it++);
+        REQUIRE_FALSE(*it++);
         REQUIRE(*it++);
         REQUIRE(it == it_range.end());
     }

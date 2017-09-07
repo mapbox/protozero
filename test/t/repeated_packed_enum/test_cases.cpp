@@ -8,7 +8,7 @@ TEST_CASE("read repeated packed enum field") {
 
         protozero::pbf_reader item(buffer);
 
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("one") {
@@ -18,7 +18,7 @@ TEST_CASE("read repeated packed enum field") {
 
         REQUIRE(item.next());
         auto it_range = item.get_packed_enum();
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
 
         REQUIRE(it_range.begin() != it_range.end());
         REQUIRE(*it_range.begin() == 0 /* BLACK */);
@@ -32,7 +32,7 @@ TEST_CASE("read repeated packed enum field") {
 
         REQUIRE(item.next());
         auto it_range = item.get_packed_enum();
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
 
         auto it = it_range.begin();
         REQUIRE(it != it_range.end());

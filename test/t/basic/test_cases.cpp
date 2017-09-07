@@ -5,8 +5,8 @@ TEST_CASE("default constructed pbf_reader is okay") {
     protozero::pbf_reader item;
 
     REQUIRE(item.length() == 0);
-    REQUIRE(!item); // test operator bool()
-    REQUIRE(!item.next());
+    REQUIRE_FALSE(item); // test operator bool()
+    REQUIRE_FALSE(item.next());
 }
 
 TEST_CASE("empty buffer in pbf_reader is okay") {
@@ -14,8 +14,8 @@ TEST_CASE("empty buffer in pbf_reader is okay") {
     protozero::pbf_reader item{buffer};
 
     REQUIRE(item.length() == 0);
-    REQUIRE(!item); // test operator bool()
-    REQUIRE(!item.next());
+    REQUIRE_FALSE(item); // test operator bool()
+    REQUIRE_FALSE(item.next());
 }
 
 TEST_CASE("check every possible value for single byte in buffer") {
@@ -25,7 +25,7 @@ TEST_CASE("check every possible value for single byte in buffer") {
         protozero::pbf_reader item(&buffer, 1);
 
         REQUIRE(item.length() == 1);
-        REQUIRE(!!item); // test operator bool()
+        REQUIRE_FALSE(!item); // test operator bool()
         REQUIRE_THROWS((item.next(), item.skip()));
     }
 }

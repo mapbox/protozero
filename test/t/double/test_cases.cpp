@@ -21,7 +21,7 @@ TEST_CASE("read double field") {
 
             REQUIRE(item.next());
             REQUIRE(item.get_double() == Approx(0.0));
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("positive") {
@@ -30,7 +30,7 @@ TEST_CASE("read double field") {
 
             REQUIRE(item.next());
             REQUIRE(item.get_double() == Approx(4.893));
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("negative") {
@@ -39,7 +39,7 @@ TEST_CASE("read double field") {
 
             REQUIRE(item.next());
             REQUIRE(item.get_double() == Approx(-9232.33));
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("end_of_buffer") {

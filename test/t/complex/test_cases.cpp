@@ -36,7 +36,7 @@ TEST_CASE("read complex data using pbf_reader") {
                     protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 default: {
@@ -75,7 +75,7 @@ TEST_CASE("read complex data using pbf_reader") {
                     protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 default: {
@@ -117,7 +117,7 @@ TEST_CASE("read complex data using pbf_reader") {
                     protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 case 7: {
@@ -185,7 +185,7 @@ TEST_CASE("read complex data using pbf_message") {
                     protozero::pbf_message<TestComplex::Sub> subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 default: {
@@ -224,7 +224,7 @@ TEST_CASE("read complex data using pbf_message") {
                     protozero::pbf_message<TestComplex::Sub> subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 default: {
@@ -266,7 +266,7 @@ TEST_CASE("read complex data using pbf_message") {
                     protozero::pbf_message<TestComplex::Sub> subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 case TestComplex::Test::packed_sint32_d: {
@@ -342,7 +342,7 @@ TEST_CASE("write complex data using pbf_writer") {
                     protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 default: {
@@ -397,7 +397,7 @@ TEST_CASE("write complex data using pbf_writer") {
                     protozero::pbf_reader subitem{view};
                     REQUIRE(subitem.next());
                     REQUIRE(std::string(subitem.get_view()) == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 default: {
@@ -458,7 +458,7 @@ TEST_CASE("write complex data using pbf_writer") {
                     protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 case 7: {
@@ -509,7 +509,7 @@ TEST_CASE("write complex data using pbf_builder") {
                     protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 default: {
@@ -561,7 +561,7 @@ TEST_CASE("write complex data using pbf_builder") {
                     protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 default: {
@@ -622,7 +622,7 @@ TEST_CASE("write complex data using pbf_builder") {
                     protozero::pbf_reader subitem = item.get_message();
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
-                    REQUIRE(!subitem.next());
+                    REQUIRE_FALSE(subitem.next());
                     break;
                 }
                 case 7: {
@@ -661,7 +661,7 @@ static void check_message(const std::string& buffer) {
                 protozero::pbf_reader subitem = item.get_message();
                 REQUIRE(subitem.next());
                 REQUIRE(subitem.get_string() == "foobar");
-                REQUIRE(!subitem.next());
+                REQUIRE_FALSE(subitem.next());
                 break;
             }
             default: {

@@ -10,11 +10,11 @@ TEST_CASE("read message field") {
 
         REQUIRE(item.next());
         protozero::pbf_reader subitem { item.get_message() };
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
 
         REQUIRE(subitem.next());
         REQUIRE(subitem.get_string() == "foobar");
-        REQUIRE(!subitem.next());
+        REQUIRE_FALSE(subitem.next());
     }
 
     SECTION("end_of_buffer") {
@@ -32,7 +32,7 @@ TEST_CASE("read message field") {
 
         protozero::pbf_reader item(buffer);
 
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("string") {
@@ -42,7 +42,7 @@ TEST_CASE("read message field") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_string() == "optional");
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
 }

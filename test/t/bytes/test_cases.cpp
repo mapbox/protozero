@@ -10,7 +10,7 @@ TEST_CASE("read bytes field") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_bytes() == "");
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("one") {
@@ -20,7 +20,7 @@ TEST_CASE("read bytes field") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_bytes() == "x");
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("string") {
@@ -30,7 +30,7 @@ TEST_CASE("read bytes field") {
 
         REQUIRE(item.next());
         REQUIRE(item.get_bytes() == "foobar");
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("binary") {
@@ -44,7 +44,7 @@ TEST_CASE("read bytes field") {
         REQUIRE(data[0] == char(1));
         REQUIRE(data[1] == char(2));
         REQUIRE(data[2] == char(3));
-        REQUIRE(!item.next());
+        REQUIRE_FALSE(item.next());
     }
 
     SECTION("end_of_buffer") {

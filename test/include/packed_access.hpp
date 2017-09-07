@@ -24,7 +24,7 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
 
             protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
 
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
         }
 
         SECTION("one") {
@@ -34,7 +34,7 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
 
             REQUIRE(item.next());
             const auto it_range = item.GET_TYPE();
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
 
             REQUIRE(it_range.begin() != it_range.end());
             REQUIRE(*it_range.begin() == 17);
@@ -48,7 +48,7 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
 
             REQUIRE(item.next());
             const auto it_range = item.GET_TYPE();
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
 
             auto it = it_range.begin();
             REQUIRE(it != it_range.end());
@@ -72,7 +72,7 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
 
             REQUIRE(item.next());
             auto it_range1 = item.GET_TYPE();
-            REQUIRE(!item.next());
+            REQUIRE_FALSE(item.next());
 
             decltype(it_range1) it_range;
             using std::swap;
@@ -280,7 +280,7 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
 
     REQUIRE(item.next());
     auto it_range = item.GET_TYPE();
-    REQUIRE(!item.next());
+    REQUIRE_FALSE(item.next());
     REQUIRE_FALSE(it_range.empty());
     REQUIRE(std::distance(it_range.begin(), it_range.end()) == 5);
     REQUIRE(it_range.size() == 5);
