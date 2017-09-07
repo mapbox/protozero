@@ -108,7 +108,7 @@ class pbf_reader {
 
     void skip_bytes(pbf_length_type len) {
         if (m_data + len > m_end) {
-            throw end_of_buffer_exception();
+            throw end_of_buffer_exception{};
         }
         m_data += len;
 
@@ -294,7 +294,7 @@ public:
             case pbf_wire_type::fixed32:
                 break;
             default:
-                throw unknown_pbf_wire_type_exception();
+                throw unknown_pbf_wire_type_exception{};
         }
 
         return true;

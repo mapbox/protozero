@@ -14,7 +14,7 @@ struct assert_error : public std::runtime_error {
     explicit assert_error(const char* what_arg) : std::runtime_error(what_arg) {
     }
 };
-#define protozero_assert(x) if (!(x)) { throw(assert_error(#x)); }
+#define protozero_assert(x) if (!(x)) { throw assert_error{#x}; }
 
 #include <protozero/pbf_builder.hpp>
 #include <protozero/pbf_message.hpp>

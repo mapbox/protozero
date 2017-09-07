@@ -49,7 +49,7 @@ namespace detail {
                 b = *p++; val |= uint64_t((b & 0x7f) << 49); if (b >= 0) { break; }
                 b = *p++; val |= uint64_t((b & 0x7f) << 56); if (b >= 0) { break; }
                 b = *p++; val |= uint64_t((b & 0x7f) << 63); if (b >= 0) { break; }
-                throw varint_too_long_exception();
+                throw varint_too_long_exception{};
             } while (false);
         } else {
             int shift = 0;
@@ -58,7 +58,7 @@ namespace detail {
                 shift += 7;
             }
             if (p == iend) {
-                throw end_of_buffer_exception();
+                throw end_of_buffer_exception{};
             }
             val |= uint64_t(*p++) << shift;
         }
@@ -119,11 +119,11 @@ inline void skip_varint(const char** data, const char* end) {
     }
 
     if (p >= begin + max_varint_length) {
-        throw varint_too_long_exception();
+        throw varint_too_long_exception{};
     }
 
     if (p == iend) {
-        throw end_of_buffer_exception();
+        throw end_of_buffer_exception{};
     }
 
     ++p;
