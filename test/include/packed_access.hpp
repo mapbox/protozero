@@ -292,7 +292,7 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
     REQUIRE(it_range.front() == 16); it_range.drop_front();
     REQUIRE(it_range.front() == 25); it_range.drop_front();
     REQUIRE(it_range.empty());
-    REQUIRE(it_range.size() == 0);
+    REQUIRE(it_range.size() == 0); // NOLINT clang-tidy: readability-container-size-empty
 
     REQUIRE_THROWS_AS(it_range.front(), assert_error&);
     REQUIRE_THROWS_AS(it_range.drop_front(), assert_error&);

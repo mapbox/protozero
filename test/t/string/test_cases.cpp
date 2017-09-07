@@ -9,7 +9,7 @@ TEST_CASE("read string field using get_string") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        REQUIRE(item.get_string() == "");
+        REQUIRE(item.get_string().empty());
         REQUIRE_FALSE(item.next());
     }
 
@@ -54,7 +54,7 @@ TEST_CASE("read string field using get_view") {
 
         REQUIRE(item.next());
         auto v = item.get_view();
-        REQUIRE(v.size() == 0);
+        REQUIRE(v.empty());
         REQUIRE_FALSE(item.next());
     }
 

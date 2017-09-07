@@ -9,7 +9,7 @@ TEST_CASE("read bytes field") {
         protozero::pbf_reader item(buffer);
 
         REQUIRE(item.next());
-        REQUIRE(item.get_bytes() == "");
+        REQUIRE(item.get_bytes().empty());
         REQUIRE_FALSE(item.next());
     }
 
