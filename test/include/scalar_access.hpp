@@ -8,7 +8,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
     SECTION("zero") {
         const std::string buffer = load_data(PBF_TYPE_NAME "/data-zero");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == 0);
@@ -18,7 +18,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
     SECTION("positive") {
         const std::string buffer = load_data(PBF_TYPE_NAME "/data-pos");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == 1);
@@ -28,7 +28,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
     SECTION("pos200") {
         const std::string buffer = load_data(PBF_TYPE_NAME "/data-pos200");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == 200);
@@ -38,7 +38,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
     SECTION("max") {
         const std::string buffer = load_data(PBF_TYPE_NAME "/data-max");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == std::numeric_limits<cpp_type>::max());
@@ -50,7 +50,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
         if (std::is_signed<cpp_type>::value) {
             const std::string buffer = load_data(PBF_TYPE_NAME "/data-neg");
 
-            protozero::pbf_reader item(buffer);
+            protozero::pbf_reader item{buffer};
 
             REQUIRE(item.next());
             REQUIRE(item.GET_TYPE() == -1);
@@ -61,7 +61,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
     SECTION("neg200") {
         const std::string buffer = load_data(PBF_TYPE_NAME "/data-neg200");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.GET_TYPE() == -200);
@@ -72,7 +72,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
         if (std::is_signed<cpp_type>::value) {
             const std::string buffer = load_data(PBF_TYPE_NAME "/data-min");
 
-            protozero::pbf_reader item(buffer);
+            protozero::pbf_reader item{buffer};
 
             REQUIRE(item.next());
             REQUIRE(item.GET_TYPE() == std::numeric_limits<cpp_type>::min());
@@ -85,7 +85,7 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
         const std::string buffer = load_data(PBF_TYPE_NAME "/data-max");
 
         for (std::string::size_type i = 1; i < buffer.size(); ++i) {
-            protozero::pbf_reader item(buffer.data(), i);
+            protozero::pbf_reader item{buffer.data(), i};
             REQUIRE(item.next());
             REQUIRE_THROWS_AS(item.GET_TYPE(), protozero::end_of_buffer_exception&);
         }
