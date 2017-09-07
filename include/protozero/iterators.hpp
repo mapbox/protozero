@@ -16,6 +16,7 @@ documentation.
  * @brief Contains the iterators for access to packed repeated fields.
  */
 
+#include <algorithm>
 #include <cstring>
 #include <iterator>
 #include <utility>
@@ -92,6 +93,10 @@ public:
     /// Return true if this range is empty.
     constexpr bool empty() const noexcept {
         return begin() == end();
+    }
+
+    std::size_t size() const noexcept {
+        return begin().size();
     }
 
     /**
@@ -197,6 +202,10 @@ public:
         return tmp;
     }
 
+    std::size_t size() const noexcept {
+        return static_cast<std::size_t>(m_end - m_data) / sizeof(T);
+    }
+
     bool operator==(const const_fixed_iterator& rhs) const noexcept {
         return m_data == rhs.m_data && m_end == rhs.m_end;
     }
@@ -262,6 +271,15 @@ public:
         const const_varint_iterator tmp(*this);
         ++(*this);
         return tmp;
+    }
+
+    std::size_t size() const noexcept {
+        // We know that each varint contains exactly one byte with the most
+        // significant bit not set. We can use this to quickly figure out
+        // how many varints there are without actually decoding the varints.
+        return static_cast<std::size_t>(std::count_if(m_data, m_end, [](char c) {
+            return (static_cast<unsigned char>(c) & 0x80) == 0;
+        }));
     }
 
     bool operator==(const const_varint_iterator& rhs) const noexcept {
