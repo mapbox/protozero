@@ -151,10 +151,10 @@ template <typename T>
 class const_fixed_iterator {
 
     /// Pointer to current iterator position
-    const char* m_data;
+    const char* m_data = nullptr;
 
     /// Pointer to end iterator position
-    const char* m_end;
+    const char* m_end = nullptr;
 
 public:
 
@@ -164,10 +164,7 @@ public:
     using pointer           = value_type*;
     using reference         = value_type&;
 
-    const_fixed_iterator() noexcept :
-        m_data(nullptr),
-        m_end(nullptr) {
-    }
+    const_fixed_iterator() noexcept = default;
 
     const_fixed_iterator(const char* data, const char* end) noexcept :
         m_data(data),
@@ -226,10 +223,10 @@ class const_varint_iterator {
 protected:
 
     /// Pointer to current iterator position
-    const char* m_data;
+    const char* m_data = nullptr;
 
     /// Pointer to end iterator position
-    const char* m_end;
+    const char* m_end = nullptr;
 
 public:
 
@@ -239,10 +236,7 @@ public:
     using pointer           = value_type*;
     using reference         = value_type&;
 
-    const_varint_iterator() noexcept :
-        m_data(nullptr),
-        m_end(nullptr) {
-    }
+    const_varint_iterator() noexcept = default;
 
     const_varint_iterator(const char* data, const char* end) noexcept :
         m_data(data),

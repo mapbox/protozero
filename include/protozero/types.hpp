@@ -74,18 +74,15 @@ using data_view = PROTOZERO_USE_VIEW;
  */
 class data_view {
 
-    const char* m_data;
-    std::size_t m_size;
+    const char* m_data = nullptr;
+    std::size_t m_size = 0;
 
 public:
 
     /**
      * Default constructor. Construct an empty data_view.
      */
-    constexpr data_view() noexcept
-        : m_data(nullptr),
-          m_size(0) {
-    }
+    constexpr data_view() noexcept = default;
 
     /**
      * Create data_view from pointer and size.

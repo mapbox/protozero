@@ -147,9 +147,7 @@ public:
      */
     explicit pbf_reader(const data_view& view) noexcept
         : m_data(view.data()),
-          m_end(view.data() + view.size()),
-          m_wire_type(pbf_wire_type::unknown),
-          m_tag(0) {
+          m_end(view.data() + view.size()) {
     }
 
     /**
@@ -164,9 +162,7 @@ public:
      */
     pbf_reader(const char* data, std::size_t size) noexcept
         : m_data(data),
-          m_end(data + size),
-          m_wire_type(pbf_wire_type::unknown),
-          m_tag(0) {
+          m_end(data + size) {
     }
 
     /**
@@ -181,9 +177,7 @@ public:
      */
     explicit pbf_reader(const std::pair<const char*, std::size_t>& data) noexcept
         : m_data(data.first),
-          m_end(data.first + data.second),
-          m_wire_type(pbf_wire_type::unknown),
-          m_tag(0) {
+          m_end(data.first + data.second) {
     }
 
     /**
@@ -198,9 +192,7 @@ public:
      */
     explicit pbf_reader(const std::string& data) noexcept
         : m_data(data.data()),
-          m_end(data.data() + data.size()),
-          m_wire_type(pbf_wire_type::unknown),
-          m_tag(0) {
+          m_end(data.data() + data.size()) {
     }
 
     /**

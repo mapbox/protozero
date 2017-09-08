@@ -53,11 +53,11 @@ class pbf_writer {
     // A pointer to a string buffer holding the data already written to the
     // PBF message. For default constructed writers or writers that have been
     // rolled back, this is a nullptr.
-    std::string* m_data;
+    std::string* m_data = nullptr;
 
     // A pointer to a parent writer object if this is a submessage. If this
     // is a top-level writer, it is a nullptr.
-    pbf_writer* m_parent_writer;
+    pbf_writer* m_parent_writer = nullptr;
 
     // This is usually 0. If there is an open submessage, this is set in the
     // parent to the rollback position, ie. the last position before the
@@ -225,18 +225,14 @@ public:
      * doesn't have to be empty. The pbf_writer will just append data.
      */
     explicit pbf_writer(std::string& data) noexcept :
-        m_data(&data),
-        m_parent_writer(nullptr) {
+        m_data(&data) {
     }
 
     /**
      * Create a writer without a data store. In this form the writer can not
      * be used!
      */
-    pbf_writer() noexcept :
-        m_data(nullptr),
-        m_parent_writer(nullptr) {
-    }
+    pbf_writer() noexcept = default;
 
     /**
      * Construct a pbf_writer for a submessage from the pbf_writer of the
@@ -901,7 +897,7 @@ namespace detail {
 
     protected:
 
-        pbf_writer m_writer;
+        pbf_writer m_writer{};
 
     public:
 
@@ -911,9 +907,7 @@ namespace detail {
         packed_field(packed_field&&) noexcept = default;
         packed_field& operator=(packed_field&&) noexcept = default;
 
-        packed_field() :
-            m_writer() {
-        }
+        packed_field() = default;
 
         packed_field(pbf_writer& parent_writer, pbf_tag_type tag) :
             m_writer(parent_writer, tag) {
