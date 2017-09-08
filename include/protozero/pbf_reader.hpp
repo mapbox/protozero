@@ -18,6 +18,7 @@ documentation.
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <string>
 #include <utility>
 
