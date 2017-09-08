@@ -1,7 +1,3 @@
-# first inherit from env
-CXX := $(CXX)
-CXXFLAGS := $(CXXFLAGS)
-LDFLAGS := $(LDFLAGS)
 
 # Installation directory
 DESTDIR ?= /usr
@@ -12,7 +8,9 @@ ifneq ($(findstring clang,$(CXX)),)
     WARNING_FLAGS += -Wno-reserved-id-macro -Weverything -Wno-weak-vtables -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-exit-time-destructors -Wno-switch-enum -Wno-padded -Wno-documentation-unknown-command
 endif
 
-COMMON_FLAGS := -fvisibility-inlines-hidden -std=c++11 $(WARNING_FLAGS)
+CXX_STD ?= c++11
+
+COMMON_FLAGS := -fvisibility-inlines-hidden -std=$(CXX_STD) $(WARNING_FLAGS)
 
 RELEASE_FLAGS := -O3 -DNDEBUG -march=native
 DEBUG_FLAGS := -O0 -g -fno-inline-functions

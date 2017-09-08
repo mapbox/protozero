@@ -1,53 +1,64 @@
-language: c
+#-----------------------------------------------------------------------------
+#
+#  Configuration for continuous integration service at travis-ci.org
+#
+#-----------------------------------------------------------------------------
+
+language: generic
 
 sudo: false
+
+dist: trusty
+
+#-----------------------------------------------------------------------------
 
 # Save common build configurations as shortcuts, so we can reference them later.
 addons_shortcuts:
   addons_clang35: &clang35
     apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.5' ]
-      packages: [ 'clang-3.5', 'libprotobuf-dev','protobuf-compiler' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-3.5' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-3.5' ]
   addons_clang38: &clang38
     apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.8' ]
-      packages: [ 'clang-3.8', 'libprotobuf-dev','protobuf-compiler' ]
-#  addons_clang39: &clang39
-#    apt:
-#      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.9' ]
-#      packages: [ 'clang-3.9', 'libprotobuf-dev','protobuf-compiler' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-3.8' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-3.8' ]
+  addons_clang39: &clang39
+    apt:
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-3.9' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-3.9' ]
+  addons_clang39: &clang40
+    apt:
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-4.0' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-4.0' ]
+  addons_clang39: &clang50
+    apt:
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-5.0' ]
   addons_gcc47: &gcc47
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'g++-4.7', 'gcc-4.7', 'libprotobuf-dev','protobuf-compiler' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'g++-4.7', 'gcc-4.7' ]
   addons_gcc48: &gcc48
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'g++-4.8', 'gcc-4.8', 'libprotobuf-dev','protobuf-compiler' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'g++-4.8', 'gcc-4.8' ]
   addons_gcc49: &gcc49
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'g++-4.9', 'gcc-4.9', 'libprotobuf-dev','protobuf-compiler' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'g++-4.9', 'gcc-4.9' ]
   addons_gcc5: &gcc5
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'g++-5', 'gcc-5', 'libprotobuf-dev','protobuf-compiler' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'g++-5', 'gcc-5' ]
   addons_gcc6: &gcc6
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'g++-6', 'gcc-6', 'libprotobuf-dev','protobuf-compiler', 'doxygen', 'graphviz' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'g++-6', 'gcc-6', 'doxygen', 'graphviz' ]
+
+#-----------------------------------------------------------------------------
 
 matrix:
   include:
-    - os: osx
-      osx_image: xcode6
-      compiler: clang
-    - os: osx
-      osx_image: xcode7
-      compiler: clang
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
     - os: linux
       compiler: "clang-3.5"
       env: CXX=clang++-3.5
@@ -57,9 +68,21 @@ matrix:
       env: CXX=clang++-3.8
       addons: *clang38
     - os: linux
-      compiler: "clang-3.8"
-      env: CXX=clang++-3.8 CXX_STD=c++14
-      addons: *clang38
+      compiler: "clang-3.9"
+      env: CXX=clang++-3.9
+      addons: *clang39
+    - os: linux
+      compiler: "clang-4.0"
+      env: CXX=clang++-4.0
+      addons: *clang40
+    - os: linux
+      compiler: "clang-4.0"
+      env: CXX=clang++-5.0
+      addons: *clang50
+    - os: linux
+      compiler: "clang-5.0"
+      env: CXX=clang++-5.0 CXX_STD=c++14
+      addons: *clang50
     - os: linux
       compiler: "gcc-4.7"
       env: CXX=g++-4.7
@@ -88,6 +111,17 @@ matrix:
       compiler: "gcc-6"
       env: CXX=g++-6 BUILD_DOC=1
       addons: *gcc6
+    - os: osx
+      osx_image: xcode6
+      compiler: clang
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+    - os: osx
+      osx_image: xcode8
+      compiler: clang
+
+#-----------------------------------------------------------------------------
 
 before_install:
  - echo ${CXX}
@@ -110,3 +144,4 @@ script:
       ${COVERAGE} -p $(find test/ -name '*.o')
       ./codecov -Z -f '*protozero*' -X search
     fi
+
