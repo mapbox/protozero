@@ -11,7 +11,8 @@
       ],
       "include_dirs": [
         "../include/",
-        "../test/include/"
+        "../test/include/",
+        "../test/catch/"
       ]
     },
     {
@@ -27,6 +28,7 @@
         "../",
         "../include/",
         "../test/include/",
+        "../test/catch/",
         "../deps/protobuf/include"
       ],
       "libraries" : [
