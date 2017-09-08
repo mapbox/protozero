@@ -182,7 +182,7 @@ TEST_CASE("read complex data using pbf_message") {
                     break;
                 }
                 case TestComplex::Test::required_Sub_submessage: {
-                    protozero::pbf_message<TestComplex::Sub> subitem = item.get_message();
+                    protozero::pbf_message<TestComplex::Sub> subitem{item.get_message()};
                     REQUIRE(subitem.next());
                     REQUIRE(subitem.get_string() == "foobar");
                     REQUIRE_FALSE(subitem.next());

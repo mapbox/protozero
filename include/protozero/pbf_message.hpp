@@ -76,7 +76,7 @@ public:
      * parent class.
      */
     template <typename... Args>
-    pbf_message(Args&&... args) noexcept :
+    pbf_message(Args&&... args) noexcept : // NOLINT clang-tidy: google-explicit-constructor
         pbf_reader(std::forward<Args>(args)...) {
     }
 

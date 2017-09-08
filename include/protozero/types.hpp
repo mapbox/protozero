@@ -100,7 +100,7 @@ public:
      *
      * @param str String with the data.
      */
-    data_view(const std::string& str) noexcept
+    data_view(const std::string& str) noexcept // NOLINT clang-tidy: google-explicit-constructor
         : m_data(str.data()),
           m_size(str.size()) {
     }
@@ -110,7 +110,7 @@ public:
      *
      * @param ptr Pointer to the data.
      */
-    data_view(const char* ptr) noexcept
+    data_view(const char* ptr) noexcept // NOLINT clang-tidy: google-explicit-constructor
         : m_data(ptr),
           m_size(std::strlen(ptr)) {
     }
