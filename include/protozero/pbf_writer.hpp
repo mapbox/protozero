@@ -194,9 +194,9 @@ class pbf_writer {
         const auto length = pbf_length_type(m_data->size() - m_pos);
 
         protozero_assert(m_data->size() >= m_pos - reserve_bytes);
-        const auto n = write_varint(m_data->begin() + long(m_pos) - reserve_bytes, length);
+        const auto n = write_varint(m_data->begin() + int64_t(m_pos) - reserve_bytes, length);
 
-        m_data->erase(m_data->begin() + long(m_pos) - reserve_bytes + n, m_data->begin() + long(m_pos));
+        m_data->erase(m_data->begin() + int64_t(m_pos) - reserve_bytes + n, m_data->begin() + int64_t(m_pos));
         m_pos = 0;
     }
 
