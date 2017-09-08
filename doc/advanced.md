@@ -223,3 +223,30 @@ fields.
 
 The function is also available in the `pbf_builder` class.
 
+
+## How many items are there in a repeated packed field?
+
+Sometimes it is useful to know how many values there are in a repeated packed
+field. For instance when you want to reserve space in a `std::vector`.
+
+```cpp
+protozero::pbf_reader message{...};
+message.next(...);
+const auto range = message.get_packed_sint32();
+
+std::vector<int> myvalues;
+myvalues.reserve(range.size());
+
+for (auto value : range) {
+    myvalues.push_back(value);
+}
+```
+
+It depends on the type of range how expensive the `size()` call is. For ranges
+derived from packed repeated fixed sized values the effort will be constant,
+for ranges derived from packed repeated varints, the effort will be linear, but
+still considerably cheaper than decoding the varints (for instance by calling
+`std::distance(range.begin(), range.end());`). You have to benchmark your use
+case to see whether the `reserve()` (or whatever you are using the `size()`
+for) is worth it.
+
