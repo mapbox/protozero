@@ -115,6 +115,16 @@ If you are using `g++` you can use `gcovr` to generate nice HTML output:
 Open `coverage/index.html` in your browser to see the report.
 
 
+## Clang-tidy
+
+Run
+
+    make clang-tidy
+
+to check the code with [clang-tidy](https://clang.llvm.org/extra/clang-tidy/).
+You might have to change the `CLANG_TIDY` variable in the Makefile first.
+
+
 ## Cppcheck
 
 For extra checks with [Cppcheck](http://cppcheck.sourceforge.net/) you can call
