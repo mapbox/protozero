@@ -16,7 +16,7 @@ RELEASE_FLAGS := -O3 -DNDEBUG -march=native
 DEBUG_FLAGS := -O0 -g -fno-inline-functions
 PTHREAD_FLAGS =
 
-CLANG_TIDY := clang-tidy-3.8
+CLANG_TIDY := clang-tidy-5.0
 
 OS:=$(shell uname -s)
 
@@ -59,11 +59,13 @@ LDFLAGS_PROTOBUF := $(shell pkg-config protobuf --libs-only-L)
 
 all: ./test/tests test/writer_tests
 
+TEST_INCLUDES := -Iinclude -Itest/include -isystem test/catch
+
 ./test/t/%/test_cases.o: test/t/%/test_cases.cpp test/include/test.hpp test/include/scalar_access.hpp test/include/packed_access.hpp $(HPP_FILES)
-	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c $(TEST_INCLUDES) $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/tests.o: test/tests.cpp $(HPP_FILES)
-	$(CXX) -c -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c $(TEST_INCLUDES) $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/tests: test/tests.o $(TEST_CASES_O)
 	$(CXX) $(LDFLAGS) $^ -o $@
@@ -72,13 +74,13 @@ all: ./test/tests test/writer_tests
 	protoc --cpp_out=. $^
 
 ./test/t/%/testcase.pb.o: ./test/t/%/testcase.pb.cc
-	$(CXX) -c -I. -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -I. $(TEST_INCLUDES) $(CXXFLAGS) $(CFLAGS_PROTOBUF) -std=c++11 $(DEBUG_FLAGS) $< -o $@
 
 ./test/t/%/writer_test_cases.o: ./test/t/%/writer_test_cases.cpp $(HPP_FILES)
-	$(CXX) -c -I. -Iinclude -Itest/include $(CXXFLAGS) $(CFLAGS_PROTOBUF) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -I. $(TEST_INCLUDES) $(CXXFLAGS) $(CFLAGS_PROTOBUF) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/writer_tests.o: test/writer_tests.cpp $(HPP_FILES) $(PROTO_FILES_CC)
-	$(CXX) -c -I. -Iinclude -Itest/include $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
+	$(CXX) -c -I. $(TEST_INCLUDES) $(CXXFLAGS) $(COMMON_FLAGS) $(DEBUG_FLAGS) $< -o $@
 
 ./test/writer_tests: test/writer_tests.o $(PROTO_FILES_O) $(WRITER_TEST_CASES_O)
 	$(CXX) $(LDFLAGS) $(LDFLAGS_PROTOBUF) $^ -lprotobuf-lite $(PTHREAD_FLAGS) -o $@
@@ -93,8 +95,8 @@ iwyu: $(HPP_FILES) test/tests.cpp test/writer_tests.cpp
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/varint.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_reader.hpp || true
 	iwyu -Xiwyu -- -std=c++11 -Iinclude include/protozero/pbf_writer.hpp || true
-	iwyu -Xiwyu -- -std=c++11 -Iinclude -Itest/include test/tests.cpp || true
-	iwyu -Xiwyu -- -std=c++11 -Iinclude -Itest/include test/writer_tests.cpp || true
+	iwyu -Xiwyu -- -std=c++11 $(TEST_INCLUDES) test/tests.cpp || true
+	iwyu -Xiwyu -- -std=c++11 $(TEST_INCLUDES) test/writer_tests.cpp || true
 
 check: $(HPP_FILES) test/tests.cpp test/include/test.hpp test/include/testcase.hpp test/t/*/testcase.cpp $(TEST_CASES)
 	cppcheck -Uassert --std=c++11 --enable=all --suppress=incorrectStringBooleanError $^
@@ -136,7 +138,7 @@ clang-tidy: clean
 	bear make -j4 # create compile_commands.json compilation database
 	# some checks disabled because they are triggered by Catch unit test framework,
 	# they are too strict, or produce false positives
-	$(CLANG_TIDY) -header-filter='.*' -checks='*,-cert-err58-cpp,-cert-dcl59-cpp,-google-build-namespaces,-misc-definitions-in-headers,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-reinterpret-cast,-clang-analyzer-alpha.*' $(TEST_CASES)
+	$(CLANG_TIDY) -header-filter='.*' -checks='*,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-reinterpret-cast,-google-runtime-references' $(TEST_CASES)
 
 .PHONY: all test iwyu check doc
 
