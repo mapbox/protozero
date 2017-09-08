@@ -17,7 +17,7 @@ TEST_CASE("read float field") {
 
         SECTION("zero") {
             abuffer.append(load_data("float/data-zero"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(double(item.get_float()) == Approx(0.0));
@@ -26,7 +26,7 @@ TEST_CASE("read float field") {
 
         SECTION("positive") {
             abuffer.append(load_data("float/data-pos"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(double(item.get_float()) == Approx(5.34));
@@ -35,7 +35,7 @@ TEST_CASE("read float field") {
 
         SECTION("negative") {
             abuffer.append(load_data("float/data-neg"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(double(item.get_float()) == Approx(-1.71));
@@ -46,7 +46,7 @@ TEST_CASE("read float field") {
             abuffer.append(load_data("float/data-neg"));
 
             for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
-                protozero::pbf_reader item(abuffer.data() + n, i);
+                protozero::pbf_reader item{abuffer.data() + n, i};
                 REQUIRE(item.next());
                 REQUIRE_THROWS_AS(item.get_float(), const protozero::end_of_buffer_exception&);
             }

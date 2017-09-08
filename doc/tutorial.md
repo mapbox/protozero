@@ -66,7 +66,7 @@ looks somewhat like this:
 std::string input = get_input_data();
 
 // initialize pbf message with this data
-protozero::pbf_reader message(input);
+protozero::pbf_reader message{input};
 
 // iterate over fields in the message
 while (message.next()) {
@@ -157,7 +157,7 @@ message Example2 {
 You can get to the data like this:
 
 ```cpp
-protozero::pbf_reader message(input.data(), input.size());
+protozero::pbf_reader message{input.data(), input.size()};
 
 // set current field
 item.next(1);
@@ -197,7 +197,7 @@ message Example3 {
 you can parse with this code:
 
 ```cpp
-protozero::pbf_reader message(input);
+protozero::pbf_reader message{input};
 
 while (message.next(10)) {
     protozero::pbf_reader point = message.get_message();
@@ -329,7 +329,7 @@ looks somewhat like this, this time using `pbf_message` instead of
 std::string input = get_input_data();
 
 // initialize pbf message with this data
-protozero::pbf_message<Example1> message(input);
+protozero::pbf_message<Example1> message{input};
 
 // iterate over fields in the message
 while (message.next()) {
@@ -478,7 +478,7 @@ fixed length elements, you can tell Protozero and it can optimize this case:
 
 ```cpp
 std::string data;
-protozero::pbf_writer pw(data);
+protozero::pbf_writer pw{data};
 {
     protozero::packed_field_fixed32 field{pw, 1, 2}; // exactly two elements
     field.add_element(42);
@@ -498,7 +498,7 @@ calling `rollback()`:
 
 ```cpp
 std::string data;
-protozero::pbf_writer pw(data);
+protozero::pbf_writer pw{data};
 {
     protozero::packed_field_int32 field{pw, 1};
     field.add_element(42);
@@ -518,7 +518,7 @@ adding to the parent message:
 
 ```cpp
 std::string buffer_sub;
-protozero::pbf_writer pbf_sub(buffer_sub);
+protozero::pbf_writer pbf_sub{buffer_sub};
 
 // add fields to sub-message
 pbf_sub.add_...(...);
@@ -527,7 +527,7 @@ pbf_sub.add_...(...);
 // sub-message is finished here
 
 std::string buffer_parent;
-protozero::pbf_writer pbf_parent(buffer_parent);
+protozero::pbf_writer pbf_parent{buffer_parent};
 pbf_parent.add_message(1, buffer_sub);
 ```
 
@@ -537,7 +537,7 @@ Google protobuf library if it doesn't?) there is another way:
 
 ```cpp
 std::string data;
-protozero::pbf_writer pbf_parent(data);
+protozero::pbf_writer pbf_parent{data};
 
 // optionally add fields to parent here
 pbf_parent.add_...(...);
@@ -546,7 +546,7 @@ pbf_parent.add_...(...);
 {
     // create new pbf_writer with parent and the tag (field number)
     // as parameters
-    protozero::pbf_writer pbf_sub(pbf_parent, 1);
+    protozero::pbf_writer pbf_sub{pbf_parent, 1};
 
     // add fields to sub here...
     pbf_sub.add_...(...);
@@ -571,13 +571,13 @@ calling `rollback()`:
 
 ```cpp
 std::string data;
-protozero::pbf_writer pbf_parent(data);
+protozero::pbf_writer pbf_parent{data};
 
 // open a new scope
 {
     // create new pbf_writer with parent and the tag (field number)
     // as parameters
-    protozero::pbf_writer pbf_sub(pbf_parent, 1);
+    protozero::pbf_writer pbf_sub{pbf_parent, 1};
 
     // add fields to sub here...
     pbf_sub.add_...(...);

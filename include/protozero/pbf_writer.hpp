@@ -103,7 +103,7 @@ class pbf_writer {
             return;
         }
 
-        pbf_writer sw(*this, tag);
+        pbf_writer sw{*this, tag};
 
         while (first != last) {
             sw.add_fixed<T>(*first++);
@@ -131,7 +131,7 @@ class pbf_writer {
             return;
         }
 
-        pbf_writer sw(*this, tag);
+        pbf_writer sw{*this, tag};
 
         while (first != last) {
             sw.add_varint(uint64_t(*first++));
@@ -144,7 +144,7 @@ class pbf_writer {
             return;
         }
 
-        pbf_writer sw(*this, tag);
+        pbf_writer sw{*this, tag};
 
         while (first != last) {
             sw.add_varint(encode_zigzag64(*first++));

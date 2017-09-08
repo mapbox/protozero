@@ -6,16 +6,16 @@
 TEST_CASE("write nested message fields and check with libprotobuf") {
 
     std::string buffer_test;
-    protozero::pbf_writer pbf_test(buffer_test);
+    protozero::pbf_writer pbf_test{buffer_test};
 
     SECTION("string") {
         std::string buffer_subsub;
-        protozero::pbf_writer pbf_subsub(buffer_subsub);
+        protozero::pbf_writer pbf_subsub{buffer_subsub};
         pbf_subsub.add_string(1, "foobar");
         pbf_subsub.add_int32(2, 99);
 
         std::string buffer_sub;
-        protozero::pbf_writer pbf_sub(buffer_sub);
+        protozero::pbf_writer pbf_sub{buffer_sub};
         pbf_sub.add_string(1, buffer_subsub);
         pbf_sub.add_int32(2, 88);
 
@@ -23,7 +23,7 @@ TEST_CASE("write nested message fields and check with libprotobuf") {
     }
 
     SECTION("with subwriter") {
-        protozero::pbf_writer pbf_sub(pbf_test, 1);
+        protozero::pbf_writer pbf_sub{pbf_test, 1};
         {
             protozero::pbf_writer pbf_subsub(pbf_sub, 1);
             pbf_subsub.add_string(1, "foobar");

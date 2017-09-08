@@ -17,7 +17,7 @@ TEST_CASE("read double field") {
 
         SECTION("zero") {
             abuffer.append(load_data("double/data-zero"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(item.get_double() == Approx(0.0));
@@ -26,7 +26,7 @@ TEST_CASE("read double field") {
 
         SECTION("positive") {
             abuffer.append(load_data("double/data-pos"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(item.get_double() == Approx(4.893));
@@ -35,7 +35,7 @@ TEST_CASE("read double field") {
 
         SECTION("negative") {
             abuffer.append(load_data("double/data-neg"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(item.get_double() == Approx(-9232.33));
@@ -46,7 +46,7 @@ TEST_CASE("read double field") {
             abuffer.append(load_data("double/data-neg"));
 
             for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
-                protozero::pbf_reader item(abuffer.data() + n, i);
+                protozero::pbf_reader item{abuffer.data() + n, i};
                 REQUIRE(item.next());
                 REQUIRE_THROWS_AS(item.get_double(), const protozero::end_of_buffer_exception&);
             }
@@ -59,7 +59,7 @@ TEST_CASE("read double field") {
 TEST_CASE("write double field") {
 
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("zero") {
         pw.add_double(1, 0.0);

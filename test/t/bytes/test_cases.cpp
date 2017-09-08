@@ -6,7 +6,7 @@ TEST_CASE("read bytes field") {
     SECTION("empty") {
         const std::string buffer = load_data("bytes/data-empty");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_bytes().empty());
@@ -16,7 +16,7 @@ TEST_CASE("read bytes field") {
     SECTION("one") {
         const std::string buffer = load_data("bytes/data-one");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_bytes() == "x");
@@ -26,7 +26,7 @@ TEST_CASE("read bytes field") {
     SECTION("string") {
         const std::string buffer = load_data("bytes/data-string");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_bytes() == "foobar");
@@ -36,7 +36,7 @@ TEST_CASE("read bytes field") {
     SECTION("binary") {
         const std::string buffer = load_data("bytes/data-binary");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         const std::string data = item.get_bytes();
@@ -51,7 +51,7 @@ TEST_CASE("read bytes field") {
         const std::string buffer = load_data("bytes/data-binary");
 
         for (std::string::size_type i = 1; i < buffer.size(); ++i) {
-            protozero::pbf_reader item(buffer.data(), i);
+            protozero::pbf_reader item{buffer.data(), i};
             REQUIRE(item.next());
             REQUIRE_THROWS_AS(item.get_bytes(), const protozero::end_of_buffer_exception&);
         }

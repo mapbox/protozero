@@ -35,7 +35,7 @@ namespace protozero {
  *
  *    std::string buffer;
  *    // fill buffer...
- *    pbf_message<Message> message(buffer.data(), buffer.size());
+ *    pbf_message<Message> message{buffer.data(), buffer.size()};
  * @endcode
  *
  * Sub-messages are created using get_message():
@@ -45,7 +45,7 @@ namespace protozero {
  *       ...
  *    };
  *
- *    pbf_message<Message> message(...);
+ *    pbf_message<Message> message{...};
  *    message.next();
  *    pbf_message<SubMessage> submessage = message.get_message();
  * @endcode
@@ -64,7 +64,8 @@ namespace protozero {
 template <typename T>
 class pbf_message : public pbf_reader {
 
-    static_assert(std::is_same<pbf_tag_type, typename std::underlying_type<T>::type>::value, "T must be enum with underlying type protozero::pbf_tag_type");
+    static_assert(std::is_same<pbf_tag_type, typename std::underlying_type<T>::type>::value,
+                  "T must be enum with underlying type protozero::pbf_tag_type");
 
 public:
 

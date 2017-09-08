@@ -22,7 +22,7 @@ TEST_CASE("check every possible value for single byte in buffer") {
     char buffer;
     for (int i = 0; i <= 255; ++i) {
         buffer = static_cast<char>(i);
-        protozero::pbf_reader item(&buffer, 1);
+        protozero::pbf_reader item{&buffer, 1};
 
         REQUIRE(item.length() == 1);
         REQUIRE_FALSE(!item); // test operator bool()

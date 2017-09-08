@@ -6,7 +6,7 @@ TEST_CASE("read enum field") {
     SECTION("zero") {
         const std::string buffer = load_data("enum/data-black");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == 0L);
@@ -16,7 +16,7 @@ TEST_CASE("read enum field") {
     SECTION("positive") {
         const std::string buffer = load_data("enum/data-blue");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == 3L);
@@ -26,7 +26,7 @@ TEST_CASE("read enum field") {
     SECTION("negative") {
         const std::string buffer = load_data("enum/data-neg");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == -1L);
@@ -36,7 +36,7 @@ TEST_CASE("read enum field") {
     SECTION("max") {
         const std::string buffer = load_data("enum/data-max");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == std::numeric_limits<int32_t>::max());
@@ -46,7 +46,7 @@ TEST_CASE("read enum field") {
     SECTION("min") {
         const std::string buffer = load_data("enum/data-min");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_enum() == (std::numeric_limits<int32_t>::min() + 1));
@@ -58,7 +58,7 @@ TEST_CASE("read enum field") {
 TEST_CASE("write enum field") {
 
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("zero") {
         pw.add_enum(1, 0L);

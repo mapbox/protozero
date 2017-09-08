@@ -17,7 +17,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
 
         SECTION("zero") {
             abuffer.append(load_data("fixed32/data-zero"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed32() == 0UL);
@@ -26,7 +26,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
 
         SECTION("positive") {
             abuffer.append(load_data("fixed32/data-pos"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed32() == 1UL);
@@ -35,7 +35,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
 
         SECTION("max") {
             abuffer.append(load_data("fixed32/data-max"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed32() == std::numeric_limits<uint32_t>::max());
@@ -46,7 +46,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
             abuffer.append(load_data("fixed32/data-pos"));
 
             for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
-                protozero::pbf_reader item(abuffer.data() + n, i);
+                protozero::pbf_reader item{abuffer.data() + n, i};
                 REQUIRE(item.next());
                 REQUIRE_THROWS_AS(item.get_fixed32(), const protozero::end_of_buffer_exception&);
             }
@@ -54,7 +54,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
 
         SECTION("assert detecting tag==0") {
             abuffer.append(load_data("fixed32/data-zero"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE_THROWS_AS(item.get_fixed32(), const assert_error&);
             REQUIRE(item.next());
@@ -65,7 +65,7 @@ TEST_CASE("check alignment issues for fixed32 field") {
 
         SECTION("skip") {
             abuffer.append(load_data("fixed32/data-zero"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE_THROWS_AS(item.skip(), const assert_error&);
             REQUIRE(item.next());
@@ -88,7 +88,7 @@ TEST_CASE("check alignment issues for fixed64 field") {
 
         SECTION("zero") {
             abuffer.append(load_data("fixed64/data-zero"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed64() == 0ULL);
@@ -97,7 +97,7 @@ TEST_CASE("check alignment issues for fixed64 field") {
 
         SECTION("positive") {
             abuffer.append(load_data("fixed64/data-pos"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed64() == 1ULL);
@@ -106,7 +106,7 @@ TEST_CASE("check alignment issues for fixed64 field") {
 
         SECTION("max") {
             abuffer.append(load_data("fixed64/data-max"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             REQUIRE(item.get_fixed64() == std::numeric_limits<uint64_t>::max());
@@ -117,7 +117,7 @@ TEST_CASE("check alignment issues for fixed64 field") {
             abuffer.append(load_data("fixed64/data-pos"));
 
             for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
-                protozero::pbf_reader item(abuffer.data() + n, i);
+                protozero::pbf_reader item{abuffer.data() + n, i};
                 REQUIRE(item.next());
                 REQUIRE_THROWS_AS(item.get_fixed64(), const protozero::end_of_buffer_exception&);
             }

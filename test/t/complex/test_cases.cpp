@@ -24,7 +24,7 @@ TEST_CASE("read complex data using pbf_reader") {
     SECTION("minimal") {
         const std::string buffer = load_data("complex/data-minimal");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         while (item.next()) {
             switch (item.tag()) {
@@ -50,7 +50,7 @@ TEST_CASE("read complex data using pbf_reader") {
     SECTION("some") {
         const std::string buffer = load_data("complex/data-some");
 
-        protozero::pbf_reader item2(buffer);
+        protozero::pbf_reader item2{buffer};
         protozero::pbf_reader item;
         using std::swap;
         swap(item, item2);
@@ -90,7 +90,7 @@ TEST_CASE("read complex data using pbf_reader") {
     SECTION("all") {
         const std::string buffer = load_data("complex/data-all");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         int number_of_u = 0;
         while (item.next()) {
@@ -145,7 +145,7 @@ TEST_CASE("read complex data using pbf_reader") {
     SECTION("skip everything") {
         const std::string buffer = load_data("complex/data-all");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         while (item.next()) {
             switch (item.tag()) {
@@ -173,7 +173,7 @@ TEST_CASE("read complex data using pbf_message") {
     SECTION("minimal") {
         const std::string buffer = load_data("complex/data-minimal");
 
-        protozero::pbf_message<TestComplex::Test> item(buffer);
+        protozero::pbf_message<TestComplex::Test> item{buffer};
 
         while (item.next()) {
             switch (item.tag()) {
@@ -199,7 +199,7 @@ TEST_CASE("read complex data using pbf_message") {
     SECTION("some") {
         const std::string buffer = load_data("complex/data-some");
 
-        protozero::pbf_message<TestComplex::Test> item2(buffer);
+        protozero::pbf_message<TestComplex::Test> item2{buffer};
         protozero::pbf_message<TestComplex::Test> item;
         using std::swap;
         swap(item, item2);
@@ -239,7 +239,7 @@ TEST_CASE("read complex data using pbf_message") {
     SECTION("all") {
         const std::string buffer = load_data("complex/data-all");
 
-        protozero::pbf_message<TestComplex::Test> item(buffer);
+        protozero::pbf_message<TestComplex::Test> item{buffer};
 
         int number_of_u = 0;
         while (item.next()) {
@@ -294,7 +294,7 @@ TEST_CASE("read complex data using pbf_message") {
     SECTION("skip everything") {
         const std::string buffer = load_data("complex/data-all");
 
-        protozero::pbf_message<TestComplex::Test> item(buffer);
+        protozero::pbf_message<TestComplex::Test> item{buffer};
 
         while (item.next()) {
             switch (item.tag()) {
@@ -321,16 +321,16 @@ TEST_CASE("write complex data using pbf_writer") {
 
     SECTION("minimal") {
         std::string buffer;
-        protozero::pbf_writer pw(buffer);
+        protozero::pbf_writer pw{buffer};
         pw.add_fixed32(1, 12345678);
 
         std::string submessage;
-        protozero::pbf_writer pws(submessage);
+        protozero::pbf_writer pws{submessage};
         pws.add_string(1, "foobar");
 
         pw.add_message(5, submessage);
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         while (item.next()) {
             switch (item.tag()) {
@@ -355,7 +355,7 @@ TEST_CASE("write complex data using pbf_writer") {
 
     SECTION("some") {
         std::string buffer;
-        protozero::pbf_writer pw2(buffer);
+        protozero::pbf_writer pw2{buffer};
         pw2.add_fixed32(1, 12345678);
 
         protozero::pbf_writer pw;
@@ -366,7 +366,7 @@ TEST_CASE("write complex data using pbf_writer") {
         REQUIRE_FALSE(pw2.valid());
 
         std::string submessage;
-        protozero::pbf_writer pws(submessage);
+        protozero::pbf_writer pws{submessage};
         pws.add_string(1, "foobar");
 
         pw.add_uint32(4, 22);
@@ -374,7 +374,7 @@ TEST_CASE("write complex data using pbf_writer") {
         pw.add_int64(2, -9876543);
         pw.add_message(5, submessage);
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         uint32_t sum_of_u = 0;
         while (item.next()) {
@@ -393,10 +393,10 @@ TEST_CASE("write complex data using pbf_writer") {
                     break;
                 }
                 case 5: {
-                    auto view = item.get_view();
+                    const auto view = item.get_view();
                     protozero::pbf_reader subitem{view};
                     REQUIRE(subitem.next());
-                    REQUIRE(std::string(subitem.get_view()) == "foobar");
+                    REQUIRE(std::string{subitem.get_view()} == "foobar");
                     REQUIRE_FALSE(subitem.next());
                     break;
                 }
@@ -411,11 +411,11 @@ TEST_CASE("write complex data using pbf_writer") {
 
     SECTION("all") {
         std::string buffer;
-        protozero::pbf_writer pw(buffer);
+        protozero::pbf_writer pw{buffer};
         pw.add_fixed32(1, 12345678);
 
         std::string submessage;
-        protozero::pbf_writer pws(submessage);
+        protozero::pbf_writer pws{submessage};
         pws.add_string(1, "foobar");
         pw.add_message(5, submessage);
 
@@ -426,12 +426,12 @@ TEST_CASE("write complex data using pbf_writer") {
         pw.add_uint32(4, 66);
         pw.add_uint32(4, 66);
 
-        int32_t d[] = { -17, 22 };
+        const int32_t d[] = { -17, 22 };
         pw.add_packed_sint32(7, std::begin(d), std::end(d));
 
         pw.add_int64(3, 555555555);
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         int number_of_u = 0;
         while (item.next()) {
@@ -488,16 +488,16 @@ TEST_CASE("write complex data using pbf_builder") {
 
     SECTION("minimal") {
         std::string buffer;
-        protozero::pbf_builder<TestComplex::Test> pw(buffer);
+        protozero::pbf_builder<TestComplex::Test> pw{buffer};
         pw.add_fixed32(TestComplex::Test::required_fixed32_f, 12345678);
 
         std::string submessage;
-        protozero::pbf_builder<TestComplex::Sub> pws(submessage);
+        protozero::pbf_builder<TestComplex::Sub> pws{submessage};
         pws.add_string(TestComplex::Sub::required_string_s, "foobar");
 
         pw.add_message(TestComplex::Test::required_Sub_submessage, submessage);
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         while (item.next()) {
             switch (item.tag()) {
@@ -522,16 +522,16 @@ TEST_CASE("write complex data using pbf_builder") {
 
     SECTION("some") {
         std::string buffer;
-        protozero::pbf_builder<TestComplex::Test> pw2(buffer);
+        protozero::pbf_builder<TestComplex::Test> pw2{buffer};
         pw2.add_fixed32(TestComplex::Test::required_fixed32_f, 12345678);
 
         std::string dummy_buffer;
-        protozero::pbf_builder<TestComplex::Test> pw(dummy_buffer);
+        protozero::pbf_builder<TestComplex::Test> pw{dummy_buffer};
         using std::swap;
         swap(pw, pw2);
 
         std::string submessage;
-        protozero::pbf_builder<TestComplex::Sub> pws(submessage);
+        protozero::pbf_builder<TestComplex::Sub> pws{submessage};
         pws.add_string(TestComplex::Sub::required_string_s, "foobar");
 
         pw.add_uint32(TestComplex::Test::repeated_uint32_u, 22);
@@ -539,7 +539,7 @@ TEST_CASE("write complex data using pbf_builder") {
         pw.add_int64(TestComplex::Test::optional_int64_i, -9876543);
         pw.add_message(TestComplex::Test::required_Sub_submessage, submessage);
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         uint32_t sum_of_u = 0;
         while (item.next()) {
@@ -575,11 +575,11 @@ TEST_CASE("write complex data using pbf_builder") {
 
     SECTION("all") {
         std::string buffer;
-        protozero::pbf_builder<TestComplex::Test> pw(buffer);
+        protozero::pbf_builder<TestComplex::Test> pw{buffer};
         pw.add_fixed32(TestComplex::Test::required_fixed32_f, 12345678);
 
         std::string submessage;
-        protozero::pbf_builder<TestComplex::Sub> pws(submessage);
+        protozero::pbf_builder<TestComplex::Sub> pws{submessage};
         pws.add_string(TestComplex::Sub::required_string_s, "foobar");
         pw.add_message(TestComplex::Test::required_Sub_submessage, submessage);
 
@@ -590,12 +590,12 @@ TEST_CASE("write complex data using pbf_builder") {
         pw.add_uint32(TestComplex::Test::repeated_uint32_u, 66);
         pw.add_uint32(TestComplex::Test::repeated_uint32_u, 66);
 
-        int32_t d[] = { -17, 22 };
+        const int32_t d[] = { -17, 22 };
         pw.add_packed_sint32(TestComplex::Test::packed_sint32_d, std::begin(d), std::end(d));
 
         pw.add_int64(TestComplex::Test::optional_int64_j, 555555555);
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         int number_of_u = 0;
         while (item.next()) {
@@ -649,7 +649,7 @@ TEST_CASE("write complex data using pbf_builder") {
 }
 
 static void check_message(const std::string& buffer) {
-    protozero::pbf_reader item(buffer);
+    protozero::pbf_reader item{buffer};
 
     while (item.next()) {
         switch (item.tag()) {
@@ -674,11 +674,11 @@ static void check_message(const std::string& buffer) {
 
 TEST_CASE("write complex with subwriter using pbf_writer") {
     std::string buffer_test;
-    protozero::pbf_writer pbf_test(buffer_test);
+    protozero::pbf_writer pbf_test{buffer_test};
     pbf_test.add_fixed32(1, 42L);
 
     SECTION("message in message") {
-        protozero::pbf_writer pbf_submessage(pbf_test, 5);
+        protozero::pbf_writer pbf_submessage{pbf_test, 5};
         pbf_submessage.add_string(1, "foobar");
     }
 
@@ -687,11 +687,11 @@ TEST_CASE("write complex with subwriter using pbf_writer") {
 
 TEST_CASE("write complex with subwriter using pbf_builder") {
     std::string buffer_test;
-    protozero::pbf_builder<TestComplex::Test> pbf_test(buffer_test);
+    protozero::pbf_builder<TestComplex::Test> pbf_test{buffer_test};
     pbf_test.add_fixed32(TestComplex::Test::required_fixed32_f, 42L);
 
     SECTION("message in message") {
-        protozero::pbf_builder<TestComplex::Sub> pbf_submessage(pbf_test, TestComplex::Test::required_Sub_submessage);
+        protozero::pbf_builder<TestComplex::Sub> pbf_submessage{pbf_test, TestComplex::Test::required_Sub_submessage};
         pbf_submessage.add_string(TestComplex::Sub::required_string_s, "foobar");
     }
 

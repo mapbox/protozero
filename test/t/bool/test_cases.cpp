@@ -14,7 +14,7 @@ TEST_CASE("read bool field using pbf_reader") {
     SECTION("false") {
         const std::string buffer = load_data("bool/data-false");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE_FALSE(item.get_bool());
@@ -24,7 +24,7 @@ TEST_CASE("read bool field using pbf_reader") {
     SECTION("true") {
         const std::string buffer = load_data("bool/data-true");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_bool());
@@ -34,7 +34,7 @@ TEST_CASE("read bool field using pbf_reader") {
     SECTION("also true") {
         const std::string buffer = load_data("bool/data-also-true");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next(1));
         REQUIRE(item.get_bool());
@@ -44,7 +44,7 @@ TEST_CASE("read bool field using pbf_reader") {
     SECTION("still true") {
         const std::string buffer = load_data("bool/data-still-true");
 
-        protozero::pbf_reader item(buffer);
+        protozero::pbf_reader item{buffer};
 
         REQUIRE(item.next(1));
         REQUIRE(item.get_bool());
@@ -58,7 +58,7 @@ TEST_CASE("read bool field using pbf_message") {
     SECTION("false") {
         const std::string buffer = load_data("bool/data-false");
 
-        protozero::pbf_message<TestBoolean::Test> item(buffer);
+        protozero::pbf_message<TestBoolean::Test> item{buffer};
 
         REQUIRE(item.next());
         REQUIRE_FALSE(item.get_bool());
@@ -68,7 +68,7 @@ TEST_CASE("read bool field using pbf_message") {
     SECTION("true") {
         const std::string buffer = load_data("bool/data-true");
 
-        protozero::pbf_message<TestBoolean::Test> item(buffer);
+        protozero::pbf_message<TestBoolean::Test> item{buffer};
 
         REQUIRE(item.next());
         REQUIRE(item.get_bool());
@@ -78,7 +78,7 @@ TEST_CASE("read bool field using pbf_message") {
     SECTION("also true") {
         const std::string buffer = load_data("bool/data-also-true");
 
-        protozero::pbf_message<TestBoolean::Test> item(buffer);
+        protozero::pbf_message<TestBoolean::Test> item{buffer};
 
         REQUIRE(item.next(TestBoolean::Test::required_bool_b));
         REQUIRE(item.get_bool());
@@ -88,7 +88,7 @@ TEST_CASE("read bool field using pbf_message") {
     SECTION("still true") {
         const std::string buffer = load_data("bool/data-still-true");
 
-        protozero::pbf_message<TestBoolean::Test> item(buffer);
+        protozero::pbf_message<TestBoolean::Test> item{buffer};
 
         REQUIRE(item.next(TestBoolean::Test::required_bool_b));
         REQUIRE(item.get_bool());
@@ -100,7 +100,7 @@ TEST_CASE("read bool field using pbf_message") {
 TEST_CASE("write bool field using pbf_writer") {
 
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("false") {
         pw.add_bool(1, false);
@@ -117,7 +117,7 @@ TEST_CASE("write bool field using pbf_writer") {
 TEST_CASE("write bool field using pbf_builder") {
 
     std::string buffer;
-    protozero::pbf_builder<TestBoolean::Test> pw(buffer);
+    protozero::pbf_builder<TestBoolean::Test> pw{buffer};
 
     SECTION("false") {
         pw.add_bool(TestBoolean::Test::required_bool_b, false);
