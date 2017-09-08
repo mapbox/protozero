@@ -136,8 +136,7 @@ install:
 
 clang-tidy: clean
 	bear make -j4 # create compile_commands.json compilation database
-	# some checks disabled because they are triggered by Catch unit test framework,
-	# they are too strict, or produce false positives
+	# some checks disabled because they are too strict for our use case
 	$(CLANG_TIDY) -header-filter='.*' -checks='*,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-reinterpret-cast,-google-runtime-references' $(TEST_CASES)
 
 .PHONY: all test iwyu check doc
