@@ -94,7 +94,7 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
             for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
                 protozero::pbf_reader item{abuffer.data() + n, i};
                 REQUIRE(item.next());
-                REQUIRE_THROWS_AS(item.GET_TYPE(), protozero::end_of_buffer_exception&);
+                REQUIRE_THROWS_AS(item.GET_TYPE(), const protozero::end_of_buffer_exception&);
             }
         }
 
@@ -295,8 +295,8 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
     REQUIRE(it_range.empty());
     REQUIRE(it_range.size() == 0); // NOLINT clang-tidy: readability-container-size-empty
 
-    REQUIRE_THROWS_AS(it_range.front(), assert_error&);
-    REQUIRE_THROWS_AS(it_range.drop_front(), assert_error&);
+    REQUIRE_THROWS_AS(it_range.front(), const assert_error&);
+    REQUIRE_THROWS_AS(it_range.drop_front(), const assert_error&);
 
 }
 

@@ -132,7 +132,7 @@ TEST_CASE("rollback when using packed_field functions") {
             protozero::packed_field_sint64 field{pw, 1};
             field.add_element(1L);
             field.rollback();
-            REQUIRE_THROWS_AS(field.add_element(1L), assert_error&);
+            REQUIRE_THROWS_AS(field.add_element(1L), const assert_error&);
         }
     }
 }
@@ -185,7 +185,7 @@ TEST_CASE("rollback on parent message is not allowed even if there is a submessa
     {
         protozero::pbf_writer pws(pw, 1);
         pws.add_string(1, "foobar");
-        REQUIRE_THROWS_AS(pw.rollback(), assert_error&);
+        REQUIRE_THROWS_AS(pw.rollback(), const assert_error&);
     }
 }
 

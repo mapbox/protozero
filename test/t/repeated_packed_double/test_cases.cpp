@@ -57,7 +57,7 @@ TEST_CASE("read repeated packed double field") {
             for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
                 protozero::pbf_reader item(abuffer.data() + n, i);
                 REQUIRE(item.next());
-                REQUIRE_THROWS_AS(item.get_packed_double(), protozero::end_of_buffer_exception&);
+                REQUIRE_THROWS_AS(item.get_packed_double(), const protozero::end_of_buffer_exception&);
             }
         }
 
