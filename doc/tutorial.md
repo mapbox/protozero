@@ -142,7 +142,7 @@ and the length of the data (access with `size()`).
 ### Handling repeated packed fields
 
 Fields that are marked as `[packed=true]` in the `.proto` file are handled
-somewhat differently. `get_packed_...()` functions returning an iterator pair
+somewhat differently. `get_packed_...()` functions returning an iterator range
 are used to access the data.
 
 So, for example, if you have a protocol description in a `.proto` file like
@@ -160,19 +160,27 @@ You can get to the data like this:
 protozero::pbf_reader message{input.data(), input.size()};
 
 // set current field
-item.next(1);
+message.next(1);
 
-// get an iterator pair
-auto pi = item.get_packed_sint32();
+// get an iterator range
+auto pi = message.get_packed_sint32();
 
 // iterate to get to all values
-for (auto it = pi.first; it != pi.second; ++it) {
-    std::cout << *it << "\n";
+for (auto it = pi.begin(); it != pi.end(); ++it) {
+    std::cout << *it << '\n';
 }
 ```
 
-So you are getting a pair of normal forward iterators that can be used with any
-STL algorithms etc.
+Or, with a range-based for-loop:
+
+```cpp
+for (auto value : pi) {
+    std::cout << v << '\n';
+}
+```
+
+So you are getting a pair of normal forward iterators wrapped in an iterator
+range object. The iterators can be used with any STL algorithms etc.
 
 Note that the previous only applies to repeated **packed** fields, normal
 repeated fields are handled in the usual way for scalar fields.
