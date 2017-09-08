@@ -41,13 +41,13 @@ namespace protozero {
  * @code
  *    std::string buffer;
  *    // fill buffer...
- *    pbf_reader message(buffer.data(), buffer.size());
+ *    pbf_reader message{buffer.data(), buffer.size()};
  * @endcode
  *
  * Sub-messages are created using get_message():
  *
  * @code
- *    pbf_reader message(...);
+ *    pbf_reader message{...};
  *    message.next();
  *    pbf_reader submessage = message.get_message();
  * @endcode
@@ -306,7 +306,7 @@ public:
      * loop for repeated fields:
      *
      * @code
-     *    pbf_reader message(...);
+     *    pbf_reader message{...};
      *    while (message.next(17)) {
      *        // handle field
      *    }
@@ -315,7 +315,7 @@ public:
      * or you can call it just once to get the one field with this tag:
      *
      * @code
-     *    pbf_reader message(...);
+     *    pbf_reader message{...};
      *    if (message.next(17)) {
      *        // handle field
      *    }
@@ -344,7 +344,7 @@ public:
      * called in a while loop for repeated fields:
      *
      * @code
-     *    pbf_reader message(...);
+     *    pbf_reader message{...};
      *    while (message.next(17, pbf_wire_type::varint)) {
      *        // handle field
      *    }
@@ -353,7 +353,7 @@ public:
      * or you can call it just once to get the one field with this tag:
      *
      * @code
-     *    pbf_reader message(...);
+     *    pbf_reader message{...};
      *    if (message.next(17, pbf_wire_type::varint)) {
      *        // handle field
      *    }
@@ -415,7 +415,7 @@ public:
      * Use it like this:
      *
      * @code
-     *    pbf_reader message(...);
+     *    pbf_reader message{...};
      *    while (message.next()) {
      *        switch (message.tag_and_type()) {
      *            case tag_and_type(17, pbf_wire_type::length_delimited):
