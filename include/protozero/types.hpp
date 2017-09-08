@@ -148,7 +148,7 @@ public:
      */
     std::string to_string() const {
         protozero_assert(m_data);
-        return std::string{m_data, m_size};
+        return {m_data, m_size};
     }
 
     /**
@@ -158,7 +158,7 @@ public:
      */
     explicit operator std::string() const {
         protozero_assert(m_data);
-        return std::string{m_data, m_size};
+        return {m_data, m_size};
     }
 
 }; // class data_view

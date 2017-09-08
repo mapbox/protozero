@@ -88,8 +88,8 @@ class pbf_reader {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         const auto len = get_len_and_skip();
         protozero_assert(len % sizeof(T) == 0);
-        return iterator_range<const_fixed_iterator<T>>{const_fixed_iterator<T>(m_data - len, m_data),
-                                                       const_fixed_iterator<T>(m_data, m_data)};
+        return {const_fixed_iterator<T>(m_data - len, m_data),
+                const_fixed_iterator<T>(m_data, m_data)};
     }
 
     template <typename T>
@@ -130,8 +130,8 @@ class pbf_reader {
     iterator_range<T> get_packed() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         const auto len = get_len_and_skip();
-        return iterator_range<T>{T{m_data - len, m_data},
-                                 T{m_data, m_data}};
+        return {T{m_data - len, m_data},
+                T{m_data, m_data}};
     }
 
 public:
@@ -658,7 +658,7 @@ public:
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
         const auto len = get_len_and_skip();
-        return data_view{m_data - len, len};
+        return {m_data - len, len};
     }
 
 #ifndef PROTOZERO_STRICT_API
@@ -674,7 +674,7 @@ public:
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::length_delimited) && "not of type string, bytes or message");
         const auto len = get_len_and_skip();
-        return std::make_pair(m_data - len, len);
+        return {m_data - len, len};
     }
 #endif
 
