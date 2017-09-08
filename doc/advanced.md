@@ -142,13 +142,13 @@ a rough estimate. Still, you should probably only use this facility if you have
 benchmarks proving that it actually makes your program faster.
 
 
-## Using the Low-Level Varint and Zigzag Encoding and Decoding Functions
+## Using the low-level varint and zigzag encoding and decoding functions
 
 Protozero gives you access to the low-level functions for encoding and
 decoding varint and zigzag integer encodings, because these functions can
 sometimes be useful outside the Protocol Buffer context.
 
-### Using Low-Level Functions
+### Using low-level functions
 
 To use the low-level functions, add this include to your C++ program:
 

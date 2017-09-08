@@ -1,7 +1,7 @@
 
 # Protozero Tutorial
 
-## Getting to Know Protocol Buffers
+## Getting to know Protocol Buffers
 
 Protozero is a very low level library. You really have to know some of the
 insides of Protocol Buffers to work with it!
@@ -44,7 +44,7 @@ The `pbf_reader` class contains asserts that will detect some programming
 errors. We encourage you to compile with asserts enabled in your debug builds.
 
 
-### An Introductory Example
+### An introductory example
 
 Lets say you have a protocol description in a `.proto` file like this:
 
@@ -110,7 +110,7 @@ fields, too, unless you want your program to break if somebody adds a new
 field.
 
 
-### If You Only Need a Single Field
+### If you only need a single field
 
 If, out of a protocol buffer message, you only need the value of a single
 field, you can use the version of the `next()` function with a parameter:
@@ -125,7 +125,7 @@ while (message.next(17)) {
 }
 ```
 
-### Handling Scalar Fields
+### Handling scalar fields
 
 As you saw in the example, handling scalar field types is reasonably easy. You
 just check the `.proto` file for the type of a field and call the corresponding
@@ -139,7 +139,7 @@ returns a `data_view` containing a pointer into the data (access with `data()`)
 and the length of the data (access with `size()`).
 
 
-### Handling Repeated Packed Fields
+### Handling repeated packed fields
 
 Fields that are marked as `[packed=true]` in the `.proto` file are handled
 somewhat differently. `get_packed_...()` functions returning an iterator pair
@@ -178,7 +178,7 @@ Note that the previous only applies to repeated **packed** fields, normal
 repeated fields are handled in the usual way for scalar fields.
 
 
-### Handling Embedded Messages
+### Handling embedded messages
 
 Protocol Buffers can embed any message inside another message. To access an
 embedded message use the `get_message()` function. So for this description:
@@ -218,7 +218,7 @@ while (message.next(10)) {
 }
 ```
 
-### Handling Enums
+### Handling enums
 
 Enums are stored as varints and they can't be differentiated from them. Use
 the `get_enum()` function to get the value of the enum, you have to translate
@@ -270,7 +270,7 @@ This exception indicates an illegal encoding of a varint. It means your input
 data is corrupted in some way.
 
 
-### The `pbf_reader` Class
+### The `pbf_reader` class
 
 The `pbf_reader` class behaves like a value type. Objects are reasonably small
 (two pointers and two `uint32_t`, so 24 bytes on a 64bit system) and they can
@@ -282,7 +282,7 @@ In all cases objects of the `pbf_reader` class store a pointer into the input
 data that was given to the constructor. You have to make sure this pointer
 stays valid for the duration of the objects lifetime.
 
-## Parsing Protobuf-Encoded Messages Using `pbf_message`
+## Parsing protobuf-encoded messages using `pbf_message`
 
 One problem in the code above are the "magic numbers" used as tags for the
 different fields that you got from the `.proto` file. Instead of spreading
@@ -373,7 +373,7 @@ for future extension of those messages (and maybe also to detect corrupted
 data). You can switch of this warning with `-Wno-covered-switch-default`).
 
 
-## Writing Protobuf-Encoded Messages
+## Writing protobuf-encoded messages
 
 ### Using `pbf_writer`
 
@@ -387,7 +387,7 @@ The `pbf_writer` class contains asserts that will detect some programming
 errors. We encourage you to compile with asserts enabled in your debug builds.
 
 
-### An Introductory Example
+### An introductory example
 
 Lets say you have a protocol description in a `.proto` file like this:
 
@@ -422,7 +422,7 @@ The buffer doesn't have to be empty, the `pbf_writer` will simply append its
 data to whatever is there already.
 
 
-### Handling Scalar Fields
+### Handling scalar fields
 
 As you could see in the introductory example handling any kind of scalar field
 is easy. The type of field doesn't matter and it doesn't matter whether it is
@@ -439,7 +439,7 @@ For `enum` types you have to use the numeric value as the symbolic names from
 the `.proto` file are not available.
 
 
-### Handling Repeated Packed Fields
+### Handling repeated packed fields
 
 Repeated packed fields can easily be set from a pair of iterators:
 
@@ -511,7 +511,7 @@ The result is the same as if the lines inside the nested brackets had never
 been called. Do not try to call `add_element()` after a rollback.
 
 
-### Handling Sub-Messages
+### Handling sub-messages
 
 Nested sub-messages can be handled by first creating the submessage and then
 adding to the parent message:
@@ -594,7 +594,7 @@ The result is the same as if the lines inside the nested brackets had never
 been called. Do not try to call any of the `add_*` functions on the submessage
 after a rollback.
 
-## Writing Protobuf-Encoded Messages Using `pbf_builder`
+## Writing protobuf-encoded messages using `pbf_builder`
 
 Just like the `pbf_message` template class wraps the `pbf_reader` class, there
 is a `pbf_builder` template class wrapping the `pbf_writer` class. It is

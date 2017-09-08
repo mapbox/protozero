@@ -5,7 +5,7 @@ See also this
 [handy table](https://developers.google.com/protocol-buffers/docs/proto#scalar)
 from the Google Protocol Buffers documentation.
 
-## Scalar Types
+## Scalar types
 
 | PBF Type | Underlying Storage | C++ Type      | Getter           | Notes |
 | -------- | ------------------ | ------------- | ---------------- | ----- |
@@ -44,7 +44,7 @@ from the Google Protocol Buffers documentation.
   overloads are available.
 
 
-## Packed Repeated Fields
+## Packed repeated fields
 
 | PBF Type | Getter                  |
 | -------- | ----------------------- |
