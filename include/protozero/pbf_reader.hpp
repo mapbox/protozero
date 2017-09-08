@@ -686,7 +686,7 @@ public:
      * @post The current field was consumed and there is no current field now.
      */
     std::string get_bytes() {
-        return std::string{get_view()};
+        return std::string(get_view());
     }
 
     /**
@@ -697,7 +697,7 @@ public:
      * @post The current field was consumed and there is no current field now.
      */
     std::string get_string() {
-        return std::string{get_view()};
+        return std::string(get_view());
     }
 
     /**

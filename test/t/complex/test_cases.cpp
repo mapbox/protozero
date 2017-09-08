@@ -396,7 +396,7 @@ TEST_CASE("write complex data using pbf_writer") {
                     const auto view = item.get_view();
                     protozero::pbf_reader subitem{view};
                     REQUIRE(subitem.next());
-                    REQUIRE(std::string{subitem.get_view()} == "foobar");
+                    REQUIRE(std::string(subitem.get_view()) == "foobar");
                     REQUIRE_FALSE(subitem.next());
                     break;
                 }
