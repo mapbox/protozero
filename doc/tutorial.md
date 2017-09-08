@@ -414,7 +414,7 @@ that looks somewhat like this:
 #include <protozero/pbf_writer.hpp>
 
 std::string data;
-protozero::pbf_writer pbf_example(data);
+protozero::pbf_writer pbf_example{data};
 
 pbf_example.add_uint32(1, 27);       // uint32_t x
 pbf_example.add_fixed64(17, 1);      // fixed64 r
@@ -453,7 +453,7 @@ Repeated packed fields can easily be set from a pair of iterators:
 
 ```cpp
 std::string data;
-protozero::pbf_writer pw(data);
+protozero::pbf_writer pw{data};
 
 std::vector<int> v = { 1, 4, 9, 16, 25, 36 };
 pw.add_packed_int32(1, std::begin(v), std::end(v));
@@ -463,7 +463,7 @@ If you don't have an iterator you can use the alternative form:
 
 ```cpp
 std::string data;
-protozero::pbf_writer pw(data);
+protozero::pbf_writer pw{data};
 {
     protozero::packed_field_int32 field{pw, 1};
     field.add_element(1);
