@@ -1,3 +1,4 @@
+// NOLINT clang-tidy: llvm-header-guard
 
 #define PBF_TYPE_NAME PROTOZERO_TEST_STRING(PBF_TYPE)
 #define GET_TYPE PROTOZERO_TEST_CONCAT(get_, PBF_TYPE)
