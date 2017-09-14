@@ -111,6 +111,10 @@ matrix:
       compiler: "gcc-6"
       env: CXX=g++-6 BUILD_DOC=1
       addons: *gcc6
+    - os: linux
+      compiler: "gcc-6"
+      env: CXX=g++-6 PROTOZERO_DATA_VIEW=std::experimental::string_view
+      addons: *gcc6
     - os: osx
       osx_image: xcode6
       compiler: clang

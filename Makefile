@@ -8,9 +8,14 @@ ifneq ($(findstring clang,$(CXX)),)
     WARNING_FLAGS += -Wno-reserved-id-macro -Weverything -Wno-weak-vtables -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-exit-time-destructors -Wno-switch-enum -Wno-padded -Wno-documentation-unknown-command
 endif
 
+ifeq ($(PROTOZERO_DATA_VIEW),std::experimental::string_view)
+    PROTOZERO_FLAGS := -include experimental/string_view -DPROTOZERO_USE_VIEW=std::experimental::string_view
+    CXX_STD ?= c++14
+endif
+
 CXX_STD ?= c++11
 
-COMMON_FLAGS := -fvisibility-inlines-hidden -std=$(CXX_STD) $(WARNING_FLAGS)
+COMMON_FLAGS := -fvisibility-inlines-hidden -std=$(CXX_STD) $(WARNING_FLAGS) $(PROTOZERO_FLAGS)
 
 RELEASE_FLAGS := -O3 -DNDEBUG -march=native
 DEBUG_FLAGS := -O0 -g -fno-inline-functions

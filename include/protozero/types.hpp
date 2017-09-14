@@ -145,6 +145,10 @@ public:
      * Convert data view to string.
      *
      * @pre Must not be default constructed data_view.
+     *
+     * @deprecated to_string() is not available in C++17 string_view so it
+     *             should not be used to make conversion to that class easier
+     *             in the future.
      */
     std::string to_string() const {
         protozero_assert(m_data);
