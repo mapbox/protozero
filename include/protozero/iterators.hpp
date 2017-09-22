@@ -90,11 +90,20 @@ public:
         return this->second;
     }
 
-    /// Return true if this range is empty.
+    /**
+     * Return true if this range is empty.
+     *
+     * Complexity: Constant.
+     */
     constexpr bool empty() const noexcept {
         return begin() == end();
     }
 
+    /**
+     * Get the size of the range, ie the number of elements it contains.
+     *
+     * Complexity: Constant or linear depending on the underlaying iterator.
+     */
     std::size_t size() const noexcept {
         return begin().size();
     }
