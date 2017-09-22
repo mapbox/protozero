@@ -8,6 +8,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.5.3] - 2017-09-22
+
+### Added
+
 - More documentation.
 - New `size()` method on iterator range used for packed repeated fields to
   find out how many elements there are in the range. This is much faster
@@ -214,7 +223,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.5.2...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.5.3...HEAD
+[1.5.3]: https://github.com/osmcode/libosmium/compare/v1.5.3...v1.5.3
 [1.5.2]: https://github.com/osmcode/libosmium/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/osmcode/libosmium/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/osmcode/libosmium/compare/v1.4.5...v1.5.0
