@@ -8,9 +8,32 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- More documentation.
+- New `size()` method on iterator range used for packed repeated fields to
+  find out how many elements there are in the range. This is much faster
+  compared to the `std::difference()` call you had to do before, because the
+  varints don't have to be fully decoded. See [Advanced
+  Topics](doc/advanced.md) for details.
+
 ### Changed
 
+- Updated clang-tidy settings in Makefiles and fixed a lot of minor issues
+  reported by clang-tidy.
+- Update included catch.hpp to version 1.10.0.
+- Miscellaneous code cleanups.
+- Support for invalid state in `pbf_writer` and `packed_repeated_fields`.
+  This fixes move construction and move assignement in `pbf_writer` and
+  disables the copy construction and copy assignement which don't have
+  clear semantics. It introduces an invalid or empty state in the
+  `pbf_writer`, `pbf_builder`, and `packed_repeated_fields` classes used for
+  default-constructed, moved from, or committed objects. There is a new
+  `commit()` function for `pbf_writer` and the `packed_repeated_fields` which
+  basically does the same as the destructor but can be called explicitly.
+
 ### Fixed
+
+- The `empty()` method of the iterator range now returns a `bool` instead of
+  a `size_t`.
 
 
 ## [1.5.2] - 2017-06-30
