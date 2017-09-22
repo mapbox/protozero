@@ -129,12 +129,6 @@ clean:
 	rm -f ./*.gcov
 	rm -fr doc/doxygen_sqlite3.db doc/html coverage
 
-testpack:
-	rm -f ./*tgz
-	npm pack
-	tar -ztvf *tgz
-	rm -f ./*tgz
-
 install:
 	install -m 0755 -o root -g root -d $(DESTDIR)/include/protozero
 	install -m 0644 -o root -g root include/protozero/* $(DESTDIR)/include/protozero
