@@ -193,8 +193,8 @@ public:
         return *this;
     }
 
-    const const_fixed_iterator operator++(int) {
-        const const_fixed_iterator tmp{*this};
+    const_fixed_iterator operator++(int) {
+        const const_fixed_iterator tmp(*this);
         ++(*this);
         return tmp;
     }
@@ -261,8 +261,8 @@ public:
         return *this;
     }
 
-    const const_varint_iterator operator++(int) {
-        const const_varint_iterator tmp{*this};
+    const_varint_iterator operator++(int) {
+        const const_varint_iterator tmp(*this);
         ++(*this);
         return tmp;
     }
@@ -327,8 +327,8 @@ public:
         return *this;
     }
 
-    const const_svarint_iterator operator++(int) {
-        const const_svarint_iterator tmp{*this};
+    const_svarint_iterator operator++(int) {
+        const const_svarint_iterator tmp(*this);
         ++(*this);
         return tmp;
     }
