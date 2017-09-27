@@ -105,7 +105,7 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
 TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
 
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("empty") {
         cpp_type data[] = { 17 };
@@ -144,7 +144,7 @@ TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
 TEST_CASE("write repeated packed field using packed field: " PBF_TYPE_NAME) {
 
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("empty - should do rollback") {
         {
@@ -249,7 +249,7 @@ TEST_CASE("move repeated packed field: " PBF_TYPE_NAME) {
 TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
 
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("from uint16_t") {
 #if PBF_TYPE_IS_SIGNED
