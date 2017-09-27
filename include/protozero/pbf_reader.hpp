@@ -275,9 +275,10 @@ public:
         m_tag = pbf_tag_type(value >> 3);
 
         // tags 0 and 19000 to 19999 are not allowed as per
-        // https://developers.google.com/protocol-buffers/docs/proto
-        protozero_assert(((m_tag >     0 && m_tag < 19000) ||
-                          (m_tag > 19999 && m_tag <= ((1 << 29) - 1))) && "tag out of range");
+        // https://developers.google.com/protocol-buffers/docs/proto#assigning-tags
+        if (m_tag == 0 || (m_tag >= 19000 && m_tag <= 19999)) {
+            throw invalid_tag_exception{};
+        }
 
         m_wire_type = pbf_wire_type(value & 0x07);
         switch (m_wire_type) {

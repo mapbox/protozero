@@ -277,6 +277,13 @@ Protocol Buffers implementation.
 This exception indicates an illegal encoding of a varint. It means your input
 data is corrupted in some way.
 
+#### `invalid_tag_exception`
+
+This exception is thrown when a tag has an invalid value. Tags must be
+unsigned integers between 1 and 2^29-1. Tags between 19000 and 19999 are not
+allowed. See
+https://developers.google.com/protocol-buffers/docs/proto#assigning-tags
+
 
 ### The `pbf_reader` class
 
