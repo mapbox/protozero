@@ -481,9 +481,9 @@ public:
     bool get_bool() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
-        protozero_assert((*m_data & 0x80) == 0 && "not a 1 byte varint");
-        skip_bytes(1);
-        return m_data[-1] != 0; // -1 okay because we incremented m_data the line before
+        const auto data = m_data;
+        skip_varint(&m_data, m_end);
+        return bool(data[0]);
     }
 
     /**

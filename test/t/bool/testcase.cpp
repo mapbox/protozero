@@ -14,7 +14,7 @@ int main(int c, char *argv[]) {
     msg.set_b(2);
     write_to_file(msg, "data-also-true.pbf");
 
-    msg.set_b(127);
+    msg.set_b(2000);
     write_to_file(msg, "data-still-true.pbf");
 }
 

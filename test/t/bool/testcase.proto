@@ -5,7 +5,10 @@ package TestBoolean;
 
 message Test {
 
-    required bool b = 1;
+    // this should be bool, but we are using uint32
+    // to be able to encode values other than 0 (false)
+    // and 1 (true)
+    required uint32 b = 1;
 
 }
 
