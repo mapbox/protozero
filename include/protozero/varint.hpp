@@ -138,6 +138,7 @@ inline void skip_varint(const char** data, const char* end) {
  * @param data Output iterator the varint encoded value will be written to
  *             byte by byte.
  * @param value The integer that will be encoded.
+ * @returns the number of bytes written
  * @throws Any exception thrown by increment or dereference operator on data.
  */
 template <typename T>
