@@ -284,6 +284,11 @@ unsigned integers between 1 and 2^29-1. Tags between 19000 and 19999 are not
 allowed. See
 https://developers.google.com/protocol-buffers/docs/proto#assigning-tags
 
+#### `invalid_length_exception`
+
+This exception is thrown when a length field of a packed repeated field is
+invalid. For fixed size types the length must be a multiple of the size of
+the type.
 
 ### The `pbf_reader` class
 

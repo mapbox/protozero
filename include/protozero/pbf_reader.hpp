@@ -87,7 +87,9 @@ class pbf_reader {
     iterator_range<const_fixed_iterator<T>> packed_fixed() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
         const auto len = get_len_and_skip();
-        protozero_assert(len % sizeof(T) == 0);
+        if (len % sizeof(T) != 0) {
+            throw invalid_length_exception{};
+        }
         return {const_fixed_iterator<T>(m_data - len, m_data),
                 const_fixed_iterator<T>(m_data, m_data)};
     }
