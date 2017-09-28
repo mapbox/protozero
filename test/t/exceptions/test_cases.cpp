@@ -21,3 +21,13 @@ TEST_CASE("exceptions messages for end of buffer") {
     REQUIRE(std::string{e.what()} == std::string{"end of buffer exception"});
 }
 
+TEST_CASE("exceptions messages for invalid tag") {
+    protozero::invalid_tag_exception e;
+    REQUIRE(std::string{e.what()} == std::string{"invalid tag exception"});
+}
+
+TEST_CASE("exceptions messages for invalid length") {
+    protozero::invalid_length_exception e;
+    REQUIRE(std::string{e.what()} == std::string{"invalid length exception"});
+}
+
