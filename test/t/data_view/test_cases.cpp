@@ -113,3 +113,50 @@ TEST_CASE("comparing data_views") {
     REQUIRE_FALSE(v6 != v7);
 }
 
+TEST_CASE("ordering of data_views") {
+    protozero::data_view v1{"foo"};
+    protozero::data_view v2{"foo"};
+    protozero::data_view v3{"bar"};
+    protozero::data_view v4{"foox"};
+    protozero::data_view v5{"zzz"};
+
+    REQUIRE(v1.compare(v1) == 0);
+    REQUIRE(v1.compare(v2) == 0);
+    REQUIRE(v1.compare(v3) > 0);
+    REQUIRE(v1.compare(v4) < 0);
+    REQUIRE(v1.compare(v5) < 0);
+
+    REQUIRE(v2.compare(v1) == 0);
+    REQUIRE(v2.compare(v2) == 0);
+    REQUIRE(v2.compare(v3) > 0);
+    REQUIRE(v2.compare(v4) < 0);
+    REQUIRE(v2.compare(v5) < 0);
+
+    REQUIRE(v3.compare(v1) < 0);
+    REQUIRE(v3.compare(v2) < 0);
+    REQUIRE(v3.compare(v3) == 0);
+    REQUIRE(v3.compare(v4) < 0);
+    REQUIRE(v3.compare(v5) < 0);
+
+    REQUIRE(v4.compare(v1) > 0);
+    REQUIRE(v4.compare(v2) > 0);
+    REQUIRE(v4.compare(v3) > 0);
+    REQUIRE(v4.compare(v4) == 0);
+    REQUIRE(v4.compare(v5) < 0);
+
+    REQUIRE(v5.compare(v1) > 0);
+    REQUIRE(v5.compare(v2) > 0);
+    REQUIRE(v5.compare(v3) > 0);
+    REQUIRE(v5.compare(v4) > 0);
+    REQUIRE(v5.compare(v5) == 0);
+
+    REQUIRE(v1 == v2);
+    REQUIRE(v1 <= v2);
+    REQUIRE(v1 >= v2);
+    REQUIRE(v1 < v4);
+    REQUIRE(v3 < v1);
+    REQUIRE(v3 <= v1);
+    REQUIRE(v5 > v1);
+    REQUIRE(v5 >= v1);
+}
+

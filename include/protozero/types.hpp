@@ -165,6 +165,29 @@ public:
         return {m_data, m_size};
     }
 
+    /**
+     * Compares the contents of this object with the given other object.
+     *
+     * @returns 0 if they are the same, <0 if this object is smaller than
+     *          the other or >0 if it is larger. If both objects have the
+     *          same size returns <0 if this object is lexicographically
+     *          before the other, >0 otherwise.
+     *
+     * @pre Must not be default constructed data_view.
+     */
+    int compare(data_view other) const {
+        protozero_assert(m_data && other.m_data);
+        const int cmp = std::memcmp(data(), other.data(),
+                                    std::min(size(), other.size()));
+        if (cmp == 0) {
+            if (size() == other.size()) {
+                return 0;
+            }
+            return size() < other.size() ? -1 : 1;
+        }
+        return cmp;
+    }
+
 }; // class data_view
 
 /**
@@ -184,8 +207,9 @@ inline void swap(data_view& lhs, data_view& rhs) noexcept {
  * @param lhs First object.
  * @param rhs Second object.
  */
-inline bool operator==(const data_view& lhs, const data_view& rhs) noexcept {
-    return lhs.size() == rhs.size() && std::equal(lhs.data(), lhs.data() + lhs.size(), rhs.data());
+inline bool operator==(const data_view lhs, const data_view rhs) noexcept {
+    return lhs.size() == rhs.size() &&
+           std::equal(lhs.data(), lhs.data() + lhs.size(), rhs.data());
 }
 
 /**
@@ -195,8 +219,48 @@ inline bool operator==(const data_view& lhs, const data_view& rhs) noexcept {
  * @param lhs First object.
  * @param rhs Second object.
  */
-inline bool operator!=(const data_view& lhs, const data_view& rhs) noexcept {
+inline bool operator!=(const data_view lhs, const data_view rhs) noexcept {
     return !(lhs == rhs);
+}
+
+/**
+ * Returns true if lhs.compare(rhs) < 0.
+ *
+ * @param lhs First object.
+ * @param rhs Second object.
+ */
+inline bool operator<(const data_view lhs, const data_view rhs) noexcept {
+    return lhs.compare(rhs) < 0;
+}
+
+/**
+ * Returns true if lhs.compare(rhs) <= 0.
+ *
+ * @param lhs First object.
+ * @param rhs Second object.
+ */
+inline bool operator<=(const data_view lhs, const data_view rhs) noexcept {
+    return lhs.compare(rhs) <= 0;
+}
+
+/**
+ * Returns true if lhs.compare(rhs) > 0.
+ *
+ * @param lhs First object.
+ * @param rhs Second object.
+ */
+inline bool operator>(const data_view lhs, const data_view rhs) noexcept {
+    return lhs.compare(rhs) > 0;
+}
+
+/**
+ * Returns true if lhs.compare(rhs) >= 0.
+ *
+ * @param lhs First object.
+ * @param rhs Second object.
+ */
+inline bool operator>=(const data_view lhs, const data_view rhs) noexcept {
+    return lhs.compare(rhs) >= 0;
 }
 
 #endif
