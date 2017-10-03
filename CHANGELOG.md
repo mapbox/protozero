@@ -8,9 +8,23 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Comparison functions (<, <=, >, >=) for `data_view`. Allows use in `std::map`
+  for instance.
+
 ### Changed
 
 ### Fixed
+
+- Do not assert when reading too long varints for bools any more. A valid
+  encoder should never generate varints with more than one byte for bools,
+  but if they are longer that's not really a problem, so just handle it.
+- Throw exception if the length of a packed repeated field of a fixed-length
+  type is invalid. The length must always be a multiple of the size of the
+  underlying type. This can only happen if the data is corrupted in some way,
+  a valid encoder would never generate data like this.
+- Throw an exception when reading invalid tags. This can only happen if the
+  data is corrupted in some way, a valid encoder would never generate invalid
+  tags.
 
 
 ## [1.5.3] - 2017-09-22
