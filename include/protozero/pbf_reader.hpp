@@ -90,8 +90,8 @@ class pbf_reader {
         if (len % sizeof(T) != 0) {
             throw invalid_length_exception{};
         }
-        return {const_fixed_iterator<T>(m_data - len, m_data),
-                const_fixed_iterator<T>(m_data, m_data)};
+        return {const_fixed_iterator<T>(m_data - len),
+                const_fixed_iterator<T>(m_data)};
     }
 
     template <typename T>
