@@ -13,6 +13,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Moved `data_view` class from `types.hpp` into its own header file
+  `data_view.hpp`.
+- Implementation of the `const_fixed_iterator` to use only a single pointer
+  instead of two.
+
 ### Fixed
 
 - Do not assert when reading too long varints for bools any more. A valid
