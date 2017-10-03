@@ -176,7 +176,7 @@ public:
 
     const_fixed_iterator() noexcept = default;
 
-    const_fixed_iterator(const char* data) noexcept :
+    explicit const_fixed_iterator(const char* data) noexcept :
         m_data(data) {
     }
 
