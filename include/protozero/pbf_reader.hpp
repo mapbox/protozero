@@ -23,6 +23,7 @@ documentation.
 #include <utility>
 
 #include <protozero/config.hpp>
+#include <protozero/data_view.hpp>
 #include <protozero/exception.hpp>
 #include <protozero/iterators.hpp>
 #include <protozero/types.hpp>

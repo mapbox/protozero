@@ -26,6 +26,7 @@ documentation.
 #include <utility>
 
 #include <protozero/config.hpp>
+#include <protozero/data_view.hpp>
 #include <protozero/types.hpp>
 #include <protozero/varint.hpp>
 
