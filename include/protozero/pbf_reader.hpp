@@ -76,8 +76,9 @@ class pbf_reader {
     template <typename T>
     T get_fixed() {
         T result;
+        const char* data = m_data;
         skip_bytes(sizeof(T));
-        std::memcpy(&result, m_data - sizeof(T), sizeof(T));
+        std::memcpy(&result, data, sizeof(T));
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
         detail::byteswap_inplace(&result);
 #endif
