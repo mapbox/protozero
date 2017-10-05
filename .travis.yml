@@ -76,7 +76,7 @@ matrix:
       env: CXX=clang++-4.0
       addons: *clang40
     - os: linux
-      compiler: "clang-4.0"
+      compiler: "clang-5.0"
       env: CXX=clang++-5.0
       addons: *clang50
     - os: linux
