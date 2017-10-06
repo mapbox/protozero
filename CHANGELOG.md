@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   `data_view.hpp`.
 - Implementation of the `const_fixed_iterator` to use only a single pointer
   instead of two.
+- Made `operator==` and `operator!=` on `data_view` constexpr.
 
 ### Fixed
 
