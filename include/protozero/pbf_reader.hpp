@@ -485,7 +485,7 @@ public:
         protozero_assert(has_wire_type(pbf_wire_type::varint) && "not a varint");
         const auto data = m_data;
         skip_varint(&m_data, m_end);
-        return bool(data[0]);
+        return data[0] != 0;
     }
 
     /**
