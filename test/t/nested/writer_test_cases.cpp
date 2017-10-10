@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "test/t/nested/testcase.pb.h"
+#include "t/nested/testcase.pb.h"
 
 TEST_CASE("write nested message fields and check with libprotobuf") {
 

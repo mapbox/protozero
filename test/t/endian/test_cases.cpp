@@ -30,10 +30,10 @@ TEST_CASE("byte swapping") {
     REQUIRE(0 == check_swap_8(0));
     REQUIRE(1 == check_swap_8(1));
     REQUIRE(-1 == check_swap_8(-1));
-    REQUIRE(395503 == check_swap_8(395503));
-    REQUIRE(-804022 == check_swap_8(-804022));
-    REQUIRE(3280329805 == check_swap_8(3280329805));
-    REQUIRE(-2489204041 == check_swap_8(-2489204041));
+    REQUIRE(395503ll == check_swap_8(395503ll));
+    REQUIRE(-804022ll == check_swap_8(-804022ll));
+    REQUIRE(3280329805ll == check_swap_8(3280329805ll));
+    REQUIRE(-2489204041ll == check_swap_8(-2489204041ll));
     REQUIRE(std::numeric_limits<int64_t>::max() == check_swap_8(std::numeric_limits<int64_t>::max()));
     REQUIRE(std::numeric_limits<int64_t>::min() == check_swap_8(std::numeric_limits<int64_t>::min()));
 }

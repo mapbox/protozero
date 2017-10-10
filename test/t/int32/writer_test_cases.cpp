@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "test/t/int32/testcase.pb.h"
+#include "t/int32/testcase.pb.h"
 
 TEST_CASE("write int32 field and check with libprotobuf") {
 

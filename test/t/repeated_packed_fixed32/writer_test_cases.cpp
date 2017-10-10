@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "test/t/repeated_packed_fixed32/testcase.pb.h"
+#include "t/repeated_packed_fixed32/testcase.pb.h"
 
 TEST_CASE("write repeated packed fixed32 field and check with libprotobuf") {
 
@@ -16,7 +16,8 @@ TEST_CASE("write repeated packed fixed32 field and check with libprotobuf") {
 
         msg.ParseFromString(buffer);
 
-        REQUIRE(msg.i().size() == 0);
+        REQUIRE(msg.i().size() == 0); // NOLINT clang-tidy: readability-container-size-empty
+                                      // empty() is not available in older versions of the protobuf library
     }
 
     SECTION("one") {

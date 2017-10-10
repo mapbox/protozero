@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "test/t/message/testcase.pb.h"
+#include "t/message/testcase.pb.h"
 
 TEST_CASE("write message field and check with libprotobuf") {
 

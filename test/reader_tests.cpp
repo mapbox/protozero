@@ -7,7 +7,13 @@
 #include <test.hpp> // IWYU pragma: keep
 
 std::string load_data(const std::string& filename) {
-    std::string fullname{"test/t/"};
+    const char* tests_dir = std::getenv("TESTS_DIR");
+    if (tests_dir == nullptr) {
+        tests_dir = "test";
+    }
+
+    std::string fullname{tests_dir};
+    fullname += "/t/";
     fullname += filename;
     fullname += ".pbf";
 

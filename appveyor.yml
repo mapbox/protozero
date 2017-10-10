@@ -1,17 +1,53 @@
-os: Visual Studio 2015
+#-----------------------------------------------------------------------------
+#
+#  Configuration for continuous integration service at appveyor.com
+#
+#-----------------------------------------------------------------------------
 
-platform:
-  - x64
-  - x86
+platform: x64
 
-configuration:
-  - Debug
-  - Release
+image: Visual Studio 2017
+
+clone_depth: 1
+
+#-----------------------------------------------------------------------------
+
+environment:
+  matrix:
+  - config: MSYS2
+    autocrlf: true
+  - config: Debug
+    autocrlf: true
+  - config: RelWithDebInfo
+    autocrlf: true
+  - config: Debug
+    autocrlf: false
+  - config: RelWithDebInfo
+    autocrlf: false
+
+#-----------------------------------------------------------------------------
+
+init:
+  - git config --global core.autocrlf %autocrlf%
+  - git config --get core.autocrlf
 
 install:
-  - CALL build-appveyor.bat
+  - if [%config%]==[MSYS2] (
+          C:\msys64\usr\bin\pacman --noconfirm --sync --refresh --refresh --sysupgrade --sysupgrade
+       && C:\msys64\usr\bin\pacman -Rc --noconfirm mingw-w64-x86_64-gcc-libs
+    )
 
-build: off
-test: off
-deploy: off
-#test
+build_script:
+  - if [%config%]==[MSYS2] (
+        build-msys2.bat
+    ) else (
+        build-appveyor.bat
+    )
+
+# remove garbage VS messages
+# http://help.appveyor.com/discussions/problems/4569-the-target-_convertpdbfiles-listed-in-a-beforetargets-attribute-at-c-does-not-exist-in-the-project-and-will-be-ignored
+before_build:
+  - del "C:\Program Files (x86)\MSBuild\14.0\Microsoft.Common.targets\ImportAfter\Xamarin.Common.targets"
+
+
+#-----------------------------------------------------------------------------

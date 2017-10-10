@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "test/t/repeated/testcase.pb.h"
+#include "t/repeated/testcase.pb.h"
 
 TEST_CASE("write repeated fields and check with libprotobuf") {
 

@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "test/t/bytes/testcase.pb.h"
+#include "t/bytes/testcase.pb.h"
 
 TEST_CASE("write bytes field and check with libprotobuf") {
 
@@ -15,7 +15,7 @@ TEST_CASE("write bytes field and check with libprotobuf") {
 
         msg.ParseFromString(buffer);
 
-        REQUIRE(msg.s() == "");
+        REQUIRE(msg.s().empty());
     }
 
     SECTION("one") {

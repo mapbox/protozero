@@ -18,8 +18,9 @@ the Google Protobufs `protoc` program.
 ## Depends
 
 * C++11 compiler
-* Tests depend on the Google Protobuf library, but use of Protozero doesn't
-  need it
+* CMake
+* Some tests depend on the Google Protobuf library, but use of Protozero
+  doesn't need it
 
 
 ## How it works
@@ -54,15 +55,9 @@ You have to have a working knowledge of how
 * Read the [upgrading instructions](UPGRADING.md) if you are upgrading from
   an older version of Protozero.
 
-Call `make doc` to build the Doxygen-based reference documentation. (You'll
-need [Doxygen](http://www.stack.nl/~dimitri/doxygen/) installed.) Then open
-`doc/html/index.html` in your browser to read it.
-
-
-## Installation
-
-Call `make install` to install include files in `/usr/include/protozero`. Call
-`make install DESTDIR=/usr/local` or similar to change install directory.
+The build process will also build the Doxygen-based reference documentation
+if you have [Doxygen](http://www.stack.nl/~dimitri/doxygen/) installed. Then
+open `doc/html/index.html` in your browser to read it.
 
 
 ## Endianness
@@ -73,63 +68,70 @@ case, please [open an issue](https://github.com/mapbox/protozero/issues) and
 tell us about your system.
 
 
-## Tests
+## Building tests
 
-Extensive tests are included. Call
+Extensive tests are included. Build them using CMake:
 
-    make test
+    mkdir build
+    cd build
+    cmake ..
+    make
 
-to build all tests and run them.
+Call `ctest` to run the tests.
+
+The reader tests are always build, the writer tests are only build if the
+Google Protobuf library is found when running CMake.
 
 See `test/README.md` for more details about the test.
-
-You can also use `gyp` to build the reader tests:
-
-    gyp gyp/protozero.gyp --depth=. --build=Release
-    ./out/Release/tests
-
-This will clobber the `Makefile` from the repository! Instead of `Release` you
-can use `Debug` for a debug build.
 
 
 ## Coverage report
 
-To get a coverage report compile and link with `--coverage`:
+To get a coverage report set `CXXFLAGS` and `LDFLAGS` before calling CMake:
 
-    CXXFLAGS="--coverage" LDFLAGS="--coverage" make test
+    CXXFLAGS="--coverage" LDFLAGS="--coverage" cmake ..
+
+Then call `make` as usual and run the tests using `ctest`.
 
 If you are using `g++` use `gcov` to generate a report (results are in `*.gcov`
 files):
 
-    gcov -lp test/*tests.o test/t/*/*test_cases.o
+    gcov -lp $(find test/ -name '*.o')
 
 If you are using `clang++` use `llvm-cov` instead:
 
-    llvm-cov gcov -lp test/*tests.o test/t/*/*test_cases.o
+    llvm-cov gcov -lp $(find test/ -name '*.o')
 
 If you are using `g++` you can use `gcovr` to generate nice HTML output:
 
     mkdir -p coverage
-    gcovr -r . --html --html-details -o coverage/index.html
+    gcovr . -r SRCDIR --html --html-details -o coverage/index.html
 
 Open `coverage/index.html` in your browser to see the report.
 
 
 ## Clang-tidy
 
-Run
+After the CMake step, run
 
     make clang-tidy
 
 to check the code with [clang-tidy](https://clang.llvm.org/extra/clang-tidy/).
-You might have to change the `CLANG_TIDY` variable in the Makefile first.
+You might have to set `CLANG_TIDY` in CMake config.
 
 
 ## Cppcheck
 
-For extra checks with [Cppcheck](http://cppcheck.sourceforge.net/) you can call
+For extra checks with [Cppcheck](http://cppcheck.sourceforge.net/) you can,
+after the CMake step, call
 
-    make check
+    make cppcheck
+
+
+## Installation
+
+After the CMake step, call `make install` to install the include files in
+`/usr/local/include/protozero`.
 
 
 ## Who is using Protozero?

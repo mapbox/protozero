@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "test/t/enum/testcase.pb.h"
+#include "t/enum/testcase.pb.h"
 
 TEST_CASE("write enum field and check with libprotobuf") {
 
@@ -35,7 +35,7 @@ TEST_CASE("write enum field and check with libprotobuf") {
     }
 
     SECTION("max") {
-        pw.add_enum(1, std::numeric_limits<int32_t>::max());
+        pw.add_enum(1, std::numeric_limits<int32_t>::max() - 1);
 
         msg.ParseFromString(buffer);
 
