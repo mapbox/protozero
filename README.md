@@ -133,6 +133,10 @@ after the CMake step, call
 After the CMake step, call `make install` to install the include files in
 `/usr/local/include/protozero`.
 
+If you are using CMake to build your own software, you can copy the file
+`cmake/FindProtozero.cmake` and use it in your build. See the file for
+details.
+
 
 ## Who is using Protozero?
 
