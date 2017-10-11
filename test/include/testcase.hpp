@@ -2,9 +2,9 @@
 #define TESTCASE_HPP
 
 #include <cassert>
-#include <string>
 #include <fstream>
 #include <limits>
+#include <string>
 
 template <class T>
 std::string write_to_file(const T& msg, const char* filename) {
