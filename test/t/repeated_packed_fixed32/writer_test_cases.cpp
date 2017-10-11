@@ -13,11 +13,6 @@ TEST_CASE("write repeated packed fixed32 field and check with libprotobuf") {
     SECTION("empty") {
         uint32_t data[] = { 17UL };
         pw.add_packed_fixed32(1, std::begin(data), std::begin(data) /* !!!! */);
-
-        msg.ParseFromString(buffer);
-
-        REQUIRE(msg.i().size() == 0); // NOLINT clang-tidy: readability-container-size-empty
-                                      // empty() is not available in older versions of the protobuf library
     }
 
     SECTION("one") {
@@ -42,7 +37,6 @@ TEST_CASE("write repeated packed fixed32 field and check with libprotobuf") {
         REQUIRE(msg.i(2) ==  1UL);
         REQUIRE(msg.i(3) == std::numeric_limits<uint32_t>::max());
     }
-
 }
 
 TEST_CASE("write from different types of iterators and check with libprotobuf") {

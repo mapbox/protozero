@@ -87,8 +87,8 @@ matrix:
     - os: linux
       compiler: "clang-5.0"
       env: BUILD='Debug' CC=clang-5.0 CXX=clang++-5.0
-           CXXFLAGS="-fsanitize=address,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
-           LDFLAGS="-fsanitize=address,integer"
+           CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
+           LDFLAGS="-fsanitize=address,undefined,integer"
       addons: *clang50
     - os: linux
       compiler: "gcc-4.7"
