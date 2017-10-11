@@ -14,6 +14,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Protozero now uses CMake to build the tests etc. This does not affect
+  simple users of the library, but if you are using CMake yourself you might
+  want to use the `cmake/FindProtozero.cmake` module provided. The README
+  contains more information about build options.
 - Moved `data_view` class from `types.hpp` into its own header file
   `data_view.hpp`.
 - Implementation of the `const_fixed_iterator` to use only a single pointer

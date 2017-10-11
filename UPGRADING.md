@@ -13,6 +13,17 @@ macro `PROTOZERO_STRICT_API` in which case Protozero will compile without the
 code used for backwards compatibilty. You will then get compile errors for
 older API usages.
 
+## Upgrading from *v1.5.0* to *master*
+
+* The `data_view` class moved from `types.hpp` into its own header file
+  `data_view.hpp`. Most people should not include those headers directly,
+  but if you do, you might have to change your includes.
+* There are two new exceptions `invalid_tag_exception` and
+  `invalid_length_exception` which cover cases that were only checked by
+  `assert` before this version. If you catch specific exceptions in your code
+  you might have to amend it. But just catching `protozero::exception` is
+  usually fine for most code (if you catch exceptions at all).
+
 ## Upgrading from *v1.4.5* to *v1.5.0*
 
 * New functions for checking tag and type at the same time to make your
