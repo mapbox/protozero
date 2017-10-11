@@ -6,7 +6,7 @@
 TEST_CASE("write string field and check with libprotobuf") {
 
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     TestString::Test msg;
 
