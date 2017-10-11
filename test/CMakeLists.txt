@@ -57,7 +57,7 @@ set(TEST_DIRS alignment
               wrong_type_access
               zigzag)
 
-string(REGEX REPLACE "([^;]+)" "t/\\1/test_cases.cpp" _test_sources "${TEST_DIRS}")
+string(REGEX REPLACE "([^;]+)" "t/\\1/reader_test_cases.cpp" _test_sources "${TEST_DIRS}")
 
 add_executable(reader_tests reader_tests.cpp ${_test_sources})
 

@@ -9,7 +9,7 @@ Tests are using the [Catch Unit Test Framework](https://github.com/philsquared/C
 Each test case is in its own directory under the `t` directory. Each directory
 contains (some of) the following files:
 
-* `test_cases.cpp`: The C++ source code that runs the reader tests.
+* `reader_test_cases.cpp`: The C++ source code that runs the reader tests.
 * `writer_test_cases.cpp`: The C++ source code that runs the writer tests.
 * `data-*.pbf`: PBF data files used by the tests.
 * `testcase.proto`: Protobuf file describing the format of the data files.
@@ -17,7 +17,7 @@ contains (some of) the following files:
 
 ### Reader tests
 
-The CMake config finds all the `test_cases.cpp` files and compiles them.
+The CMake config finds all the `reader_test_cases.cpp` files and compiles them.
 Together with the `reader_tests.cpp` file they make up the `reader_tests`
 executable which can be called to execute all the reader tests.
 
