@@ -68,6 +68,7 @@ if(CLANG_TIDY)
         ${CMAKE_SOURCE_DIR}/test/*.cpp
         ${CMAKE_SOURCE_DIR}/test/t/*/test_cases.cpp
         ${CMAKE_SOURCE_DIR}/test/t/*/writer_test_cases.cpp
+        ${CMAKE_SOURCE_DIR}/tools/*.cpp
     )
     add_dependencies(clang-tidy writer_tests)
 else()
@@ -93,6 +94,7 @@ if(CPPCHECK)
         ${CMAKE_SOURCE_DIR}/test/*.cpp
         ${CMAKE_SOURCE_DIR}/test/include/*.hpp
         ${CMAKE_SOURCE_DIR}/test/t/*/*.cpp
+        ${CMAKE_SOURCE_DIR}/tools/*.cpp
     )
 else()
     message(STATUS "Looking for cppcheck - not found")
@@ -133,6 +135,8 @@ install(DIRECTORY include/protozero DESTINATION include)
 enable_testing()
 
 add_subdirectory(doc)
+
+add_subdirectory(tools)
 
 add_subdirectory(test)
 
