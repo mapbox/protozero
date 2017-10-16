@@ -30,6 +30,11 @@ if(NOT MSVC)
     set_tests_properties(pbf-decoder-data PROPERTIES
                          PASS_REGULAR_EXPRESSION "^1:")
 
+    add_test(NAME pbf-decoder-vt
+             COMMAND pbf-decoder -l 999999 -o 0 "${CMAKE_SOURCE_DIR}/test/t/vector_tile/data.vector.pbf")
+    set_tests_properties(pbf-decoder-vt PROPERTIES
+                         PASS_REGULAR_EXPRESSION "^3:")
+
 endif()
 
 
