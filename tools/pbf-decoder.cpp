@@ -29,7 +29,6 @@ Call with --help/-h to see more options.
 #include <getopt.h>
 #include <iostream>
 #include <limits>
-#include <regex>
 #include <sstream>
 #include <string>
 
@@ -49,20 +48,18 @@ bool decode_message(std::stringstream& out, const std::string& indent, const pro
 // Try decoding as a string (only printable characters allowed).
 bool decode_printable_string(std::stringstream& out, const protozero::data_view view) {
     static constexpr const std::size_t max_string_length = 60;
-    static const std::regex printable{"^[A-Za-z0-9_:-]*$"};
 
     const std::string str{view.data(), view.size()};
-    std::smatch match;
-    if (std::regex_match(str, match, printable)) {
-        if (str.size() > max_string_length) {
-            out << '"' << str.substr(0, max_string_length) << "\"...\n";
-        } else {
-            out << '"' << str << '"' << '\n';
-        }
-        return true;
+    if (str.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_:-") != std::string::npos) {
+        return false;
     }
 
-    return false;
+    if (str.size() > max_string_length) {
+        out << '"' << str.substr(0, max_string_length) << "\"...\n";
+    } else {
+        out << '"' << str << '"' << '\n';
+    }
+    return true;
 }
 
 // Try decoding as a string.
