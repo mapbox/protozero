@@ -66,7 +66,7 @@ if(CLANG_TIDY)
         ${CLANG_TIDY}
         -p ${CMAKE_BINARY_DIR}
         ${CMAKE_SOURCE_DIR}/test/*.cpp
-        ${CMAKE_SOURCE_DIR}/test/t/*/test_cases.cpp
+        ${CMAKE_SOURCE_DIR}/test/t/*/reader_test_cases.cpp
         ${CMAKE_SOURCE_DIR}/test/t/*/writer_test_cases.cpp
         ${CMAKE_SOURCE_DIR}/tools/*.cpp
     )
