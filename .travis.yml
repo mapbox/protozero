@@ -168,8 +168,8 @@ script:
       which ${COVERAGE}
       curl -S -f https://codecov.io/bash -o codecov
       chmod +x codecov
-      ${COVERAGE} -p $(find test/ -name '*.o')
-      ./codecov -Z -f '*protozero*' -f '!*catch*' -X search
+      ${COVERAGE} -p $(find test/ tools/ -name '*.o')
+      ./codecov -Z -f '*protozero*' -f '*tools*' -f '!*catch*' -X search
     fi
 
 
