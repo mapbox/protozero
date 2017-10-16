@@ -73,7 +73,7 @@ bool decode_string(std::stringstream& out, const protozero::data_view view) {
     out << '"';
 
     for (const auto c : str) {
-        if (std::isprint(c)) {
+        if (std::isprint(c) != 0) {
             out << c;
         } else {
             out << '.';
@@ -227,10 +227,12 @@ int main(int argc, char* argv[]) {
                 print_help();
                 return 0;
             case 'l':
-                length = atoll(optarg);
+                length = std::atoll(optarg); // NOLINT clang-tidy: cert-err34-c
+                                             // good enough for a limited-use tool
                 break;
             case 'o':
-                offset = atoll(optarg);
+                offset = std::atoll(optarg); // NOLINT clang-tidy: cert-err34-c
+                                             // good enough for a limited-use tool
                 break;
             default:
                 return 1;

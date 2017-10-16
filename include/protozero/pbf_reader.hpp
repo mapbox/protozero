@@ -464,7 +464,7 @@ public:
                 skip_bytes(4);
                 break;
             default:
-                protozero_assert(false && "can not be here because next() should have thrown already");
+                break;
         }
     }
 
