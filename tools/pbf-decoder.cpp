@@ -66,7 +66,7 @@ bool decode_printable_string(std::stringstream& out, const protozero::data_view 
 bool decode_string(std::stringstream& out, const protozero::data_view view) {
     static constexpr const std::size_t max_string_length = 60;
 
-    std::string str{view.data(), std::max(view.size(), max_string_length)};
+    std::string str{view.data(), std::min(view.size(), max_string_length)};
     out << '"';
 
     for (const auto c : str) {
