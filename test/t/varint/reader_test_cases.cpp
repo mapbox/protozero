@@ -105,6 +105,21 @@ TEST_CASE("varint") {
 
 }
 
+TEST_CASE("10-byte varint") {
+    std::string buffer;
+    protozero::pbf_writer pw{buffer};
+    pw.add_uint64(1, 1);
+    buffer.back() = 0xff;
+    for (int i = 0; i < 9; ++i) {
+        buffer.push_back(0xff);
+    }
+    buffer.push_back(0x02);
+
+    protozero::pbf_reader item{buffer};
+    REQUIRE(item.next());
+    REQUIRE_THROWS_AS(item.get_uint64(), const protozero::varint_too_long_exception&);
+}
+
 TEST_CASE("lots of varints back and forth") {
 
     std::string buffer;
@@ -135,6 +150,39 @@ TEST_CASE("lots of varints back and forth") {
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
         REQUIRE(n == item.get_sint32());
+        REQUIRE_FALSE(item.next());
+        buffer.clear();
+    }
+
+    for (int i = 0; i < 63; ++i) {
+        int64_t n = 1ll << i;
+        protozero::pbf_writer pw{buffer};
+        pw.add_int64(1, n);
+        protozero::pbf_reader item{buffer};
+        REQUIRE(item.next());
+        REQUIRE(n == item.get_int64());
+        REQUIRE_FALSE(item.next());
+        buffer.clear();
+    }
+
+    for (int i = 0; i < 63; ++i) {
+        int64_t n = - (1ll << i);
+        protozero::pbf_writer pw{buffer};
+        pw.add_int64(1, n);
+        protozero::pbf_reader item{buffer};
+        REQUIRE(item.next());
+        REQUIRE(n == item.get_int64());
+        REQUIRE_FALSE(item.next());
+        buffer.clear();
+    }
+
+    for (int i = 0; i < 64; ++i) {
+        uint64_t n = 1ull << i;
+        protozero::pbf_writer pw{buffer};
+        pw.add_int64(1, n);
+        protozero::pbf_reader item{buffer};
+        REQUIRE(item.next());
+        REQUIRE(n == item.get_int64());
         REQUIRE_FALSE(item.next());
         buffer.clear();
     }
