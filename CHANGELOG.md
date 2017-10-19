@@ -11,6 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Comparison functions (<, <=, >, >=) for `data_view`. Allows use in `std::map`
   for instance.
+- Tool `pbf-decoder` for decoding raw messages. This has limited use for
+  normal users, but it can be used for fuzzing.
 
 ### Changed
 
@@ -26,6 +28,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+- Varints where the last byte was larger than what would fit in 64bit were
+  triggering undefined behaviour. This can only happen when the message
+  being decoded was corrupt in some way.
 - Do not assert when reading too long varints for bools any more. A valid
   encoder should never generate varints with more than one byte for bools,
   but if they are longer that's not really a problem, so just handle it.
