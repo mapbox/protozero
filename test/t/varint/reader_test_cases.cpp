@@ -109,9 +109,9 @@ TEST_CASE("10-byte varint") {
     std::string buffer;
     protozero::pbf_writer pw{buffer};
     pw.add_uint64(1, 1);
-    buffer.back() = 0xff;
+    buffer.back() = static_cast<char>(0xff);
     for (int i = 0; i < 9; ++i) {
-        buffer.push_back(0xff);
+        buffer.push_back(static_cast<char>(0xff));
     }
     buffer.push_back(0x02);
 
