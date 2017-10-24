@@ -7,7 +7,6 @@
 using packed_field_type = PROTOZERO_TEST_CONCAT(protozero::packed_field_, PBF_TYPE);
 
 TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
-
     // Run these tests twice, the second time we basically move the data
     // one byte down in the buffer. It doesn't matter how the data or buffer
     // is aligned before that, in at least one of these cases the ints will
@@ -15,7 +14,6 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
     // will be extracted properly.
 
     for (std::string::size_type n = 0; n < 2; ++n) {
-
         std::string abuffer;
         abuffer.reserve(1000);
         abuffer.append(n, '\0');
@@ -103,7 +101,6 @@ TEST_CASE("read repeated packed field: " PBF_TYPE_NAME) {
 }
 
 TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
-
     std::string buffer;
     protozero::pbf_writer pw{buffer};
 
@@ -142,7 +139,6 @@ TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
 }
 
 TEST_CASE("write repeated packed field using packed field: " PBF_TYPE_NAME) {
-
     std::string buffer;
     protozero::pbf_writer pw{buffer};
 
@@ -185,11 +181,9 @@ TEST_CASE("write repeated packed field using packed field: " PBF_TYPE_NAME) {
 
         REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-many"));
     }
-
 }
 
 TEST_CASE("move repeated packed field: " PBF_TYPE_NAME) {
-
     std::string buffer;
     protozero::pbf_writer pw{buffer};
 
@@ -247,7 +241,6 @@ TEST_CASE("move repeated packed field: " PBF_TYPE_NAME) {
 }
 
 TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
-
     std::string buffer;
     protozero::pbf_writer pw{buffer};
 
@@ -297,6 +290,5 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
 
     REQUIRE_THROWS_AS(it_range.front(), const assert_error&);
     REQUIRE_THROWS_AS(it_range.drop_front(), const assert_error&);
-
 }
 

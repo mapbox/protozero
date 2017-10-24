@@ -91,11 +91,9 @@ TEST_CASE("read field: " PBF_TYPE_NAME) {
             REQUIRE_THROWS_AS(item.GET_TYPE(), const protozero::end_of_buffer_exception&);
         }
     }
-
 }
 
 TEST_CASE("write field: " PBF_TYPE_NAME) {
-
     std::string buffer;
     protozero::pbf_writer pw(buffer);
 
@@ -127,6 +125,5 @@ TEST_CASE("write field: " PBF_TYPE_NAME) {
         }
     }
 #endif
-
 }
 
