@@ -160,11 +160,11 @@ std::string decode(const char* data, std::size_t len, const std::string& indent)
                 const auto view = message.get_view();
 
                 decode_message(stream, indent, view) ||
-                decode_printable_string(stream, view) ||
-                decode_packed_double(stream, view.size(), message_copy) ||
-                decode_packed_float(stream, view.size(), message_copy) ||
-                decode_packed_varint(stream, message_copy) ||
-                decode_string(stream, view);
+                    decode_printable_string(stream, view) ||
+                    decode_packed_double(stream, view.size(), message_copy) ||
+                    decode_packed_float(stream, view.size(), message_copy) ||
+                    decode_packed_varint(stream, message_copy) ||
+                    decode_string(stream, view);
                 break;
             }
             case protozero::pbf_wire_type::fixed32:
