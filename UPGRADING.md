@@ -23,6 +23,9 @@ older API usages.
   `assert` before this version. If you catch specific exceptions in your code
   you might have to amend it. But just catching `protozero::exception` is
   usually fine for most code (if you catch exceptions at all).
+* The `pbf_reader` constructor taking a `std::pair` is now deprecated. If you
+  are compiling with `PROTOZERO_STRICT_API` it is not available any more. Use
+  one of the other constructors instead.
 
 ## Upgrading from *v1.4.5* to *v1.5.0*
 

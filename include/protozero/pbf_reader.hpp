@@ -170,6 +170,7 @@ public:
           m_end(data + size) {
     }
 
+#ifndef PROTOZERO_STRICT_API
     /**
      * Construct a pbf_reader message from a data pointer and a length. The
      * pointer will be stored inside the pbf_reader object, no data is copied.
@@ -179,11 +180,13 @@ public:
      * The buffer must contain a complete protobuf message.
      *
      * @post There is no current field.
+     * @deprecated Use one of the other constructors.
      */
     explicit pbf_reader(const std::pair<const char*, std::size_t>& data) noexcept
         : m_data(data.first),
           m_end(data.first + data.second) {
     }
+#endif
 
     /**
      * Construct a pbf_reader message from a std::string. A pointer to the

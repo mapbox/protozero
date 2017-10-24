@@ -25,6 +25,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Implementation of the `const_fixed_iterator` to use only a single pointer
   instead of two.
 - Made `operator==` and `operator!=` on `data_view` constexpr.
+- The `pbf_reader` constructor taking a `std::pair` is deprecated. Use one
+  of the other constructors instead.
 
 ### Fixed
 
