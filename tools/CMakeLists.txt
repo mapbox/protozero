@@ -35,6 +35,16 @@ if(NOT MSVC)
     set_tests_properties(pbf-decoder-vt PROPERTIES
                          PASS_REGULAR_EXPRESSION "^3:")
 
+    add_test(NAME pbf-decoder-fail
+             COMMAND pbf-decoder -l 1 "${CMAKE_SOURCE_DIR}/test/t/vector_tile/data.vector.pbf")
+    set_tests_properties(pbf-decoder-fail PROPERTIES
+                         WILL_FAIL true)
+
+    add_test(NAME pbf-decoder-fail-msg
+             COMMAND pbf-decoder -l 1 "${CMAKE_SOURCE_DIR}/test/t/vector_tile/data.vector.pbf")
+    set_tests_properties(pbf-decoder-fail-msg PROPERTIES
+                         PASS_REGULAR_EXPRESSION "^end of buffer exception")
+
 endif()
 
 
