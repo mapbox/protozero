@@ -6,7 +6,7 @@
 #include <protozero/types.hpp>
 
 TEST_CASE("default constructed data_view") {
-    const protozero::data_view view;
+    const protozero::data_view view{};
     REQUIRE(view.data() == nullptr);
     REQUIRE(view.size() == 0); // NOLINT clang-tidy: readability-container-size-empty
     REQUIRE(view.empty());
@@ -60,7 +60,7 @@ TEST_CASE("convert data_view to std::string") {
 // This test only works with our own data_view implementation, because only
 // that one contains the protozero_assert() which generates the exception.
 TEST_CASE("converting default constructed data_view to string fails") {
-    const protozero::data_view view;
+    const protozero::data_view view{};
     REQUIRE_THROWS_AS(view.to_string(), const assert_error&);
 }
 #endif
