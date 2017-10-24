@@ -8,7 +8,6 @@
 // will be extracted properly.
 
 TEST_CASE("check alignment issues for fixed32 field") {
-
     for (std::string::size_type n = 0; n < 2; ++n) {
 
         std::string abuffer;
@@ -73,15 +72,11 @@ TEST_CASE("check alignment issues for fixed32 field") {
             REQUIRE_THROWS(item.skip());
             REQUIRE_FALSE(item.next());
         }
-
     }
-
 }
 
 TEST_CASE("check alignment issues for fixed64 field") {
-
     for (std::string::size_type n = 0; n < 2; ++n) {
-
         std::string abuffer;
         abuffer.reserve(1000);
         abuffer.append(n, '\0');
@@ -122,8 +117,6 @@ TEST_CASE("check alignment issues for fixed64 field") {
                 REQUIRE_THROWS_AS(item.get_fixed64(), const protozero::end_of_buffer_exception&);
             }
         }
-
     }
-
 }
 

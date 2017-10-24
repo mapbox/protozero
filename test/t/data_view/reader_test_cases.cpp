@@ -6,51 +6,51 @@
 #include <protozero/types.hpp>
 
 TEST_CASE("default constructed data_view") {
-    protozero::data_view view;
+    const protozero::data_view view;
     REQUIRE(view.data() == nullptr);
     REQUIRE(view.size() == 0); // NOLINT clang-tidy: readability-container-size-empty
     REQUIRE(view.empty());
 }
 
 TEST_CASE("data_view from C string") {
-    protozero::data_view view{"foobar"};
+    const protozero::data_view view{"foobar"};
     REQUIRE(view.data());
     REQUIRE(view.size() == 6);
     REQUIRE_FALSE(view.empty());
 }
 
 TEST_CASE("data_view from std::string") {
-    std::string str{"foobar"};
-    protozero::data_view view{str};
+    const std::string str{"foobar"};
+    const protozero::data_view view{str};
     REQUIRE(view.data());
     REQUIRE(view.size() == 6);
 }
 
 TEST_CASE("data_view from ptr, size") {
-    std::string str{"foobar"};
-    protozero::data_view view{str.data(), str.size()};
+    const std::string str{"foobar"};
+    const protozero::data_view view{str.data(), str.size()};
     REQUIRE(view.data());
     REQUIRE(view.size() == 6);
 }
 
 TEST_CASE("data_view from C array") {
     const char* str = "foobar";
-    protozero::data_view view{str};
+    const protozero::data_view view{str};
     REQUIRE(view.data());
     REQUIRE(view.size() == 6);
 }
 
 TEST_CASE("data_view from std::array") {
-    std::array<char, 7> str{"foobar"};
-    protozero::data_view view{str.data(), 6};
+    const std::array<char, 7> str{"foobar"};
+    const protozero::data_view view{str.data(), 6};
     REQUIRE(view.data());
     REQUIRE(view.size() == 6);
 }
 
 TEST_CASE("convert data_view to std::string") {
-    protozero::data_view view{"foobar"};
+    const protozero::data_view view{"foobar"};
 
-    std::string s = std::string(view);
+    const std::string s = std::string(view);
     REQUIRE(s == "foobar");
     REQUIRE(std::string(view) == "foobar");
     REQUIRE(view.to_string() == "foobar");
@@ -60,7 +60,7 @@ TEST_CASE("convert data_view to std::string") {
 // This test only works with our own data_view implementation, because only
 // that one contains the protozero_assert() which generates the exception.
 TEST_CASE("converting default constructed data_view to string fails") {
-    protozero::data_view view;
+    const protozero::data_view view;
     REQUIRE_THROWS_AS(view.to_string(), const assert_error&);
 }
 #endif
@@ -80,13 +80,13 @@ TEST_CASE("swapping data_view") {
 }
 
 TEST_CASE("comparing data_views") {
-    protozero::data_view v1{"foo"};
-    protozero::data_view v2{"bar"};
-    protozero::data_view v3{"foox"};
-    protozero::data_view v4{"foo"};
-    protozero::data_view v5{"fooooooo", 3};
-    protozero::data_view v6{"f\0o", 3};
-    protozero::data_view v7{"f\0obar", 3};
+    const protozero::data_view v1{"foo"};
+    const protozero::data_view v2{"bar"};
+    const protozero::data_view v3{"foox"};
+    const protozero::data_view v4{"foo"};
+    const protozero::data_view v5{"fooooooo", 3};
+    const protozero::data_view v6{"f\0o", 3};
+    const protozero::data_view v7{"f\0obar", 3};
 
     REQUIRE_FALSE(v1 == v2);
     REQUIRE_FALSE(v1 == v3);
@@ -114,11 +114,11 @@ TEST_CASE("comparing data_views") {
 }
 
 TEST_CASE("ordering of data_views") {
-    protozero::data_view v1{"foo"};
-    protozero::data_view v2{"foo"};
-    protozero::data_view v3{"bar"};
-    protozero::data_view v4{"foox"};
-    protozero::data_view v5{"zzz"};
+    const protozero::data_view v1{"foo"};
+    const protozero::data_view v2{"foo"};
+    const protozero::data_view v3{"bar"};
+    const protozero::data_view v4{"foox"};
+    const protozero::data_view v5{"zzz"};
 
     REQUIRE(v1.compare(v1) == 0);
     REQUIRE(v1.compare(v2) == 0);

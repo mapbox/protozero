@@ -1,68 +1,63 @@
 
 #include <test.hpp>
 
-TEST_CASE("read bytes field") {
+TEST_CASE("read bytes field: empty") {
+    const std::string buffer = load_data("bytes/data-empty");
 
-    SECTION("empty") {
-        const std::string buffer = load_data("bytes/data-empty");
+    protozero::pbf_reader item{buffer};
 
-        protozero::pbf_reader item{buffer};
+    REQUIRE(item.next());
+    REQUIRE(item.get_bytes().empty());
+    REQUIRE_FALSE(item.next());
+}
 
+TEST_CASE("read bytes field: one") {
+    const std::string buffer = load_data("bytes/data-one");
+
+    protozero::pbf_reader item{buffer};
+
+    REQUIRE(item.next());
+    REQUIRE(item.get_bytes() == "x");
+    REQUIRE_FALSE(item.next());
+}
+
+TEST_CASE("read bytes field: string") {
+    const std::string buffer = load_data("bytes/data-string");
+
+    protozero::pbf_reader item{buffer};
+
+    REQUIRE(item.next());
+    REQUIRE(item.get_bytes() == "foobar");
+    REQUIRE_FALSE(item.next());
+}
+
+TEST_CASE("read bytes field: binary") {
+    const std::string buffer = load_data("bytes/data-binary");
+
+    protozero::pbf_reader item{buffer};
+
+    REQUIRE(item.next());
+    const std::string data = item.get_bytes();
+    REQUIRE(data.size() == 3);
+    REQUIRE(data[0] == char(1));
+    REQUIRE(data[1] == char(2));
+    REQUIRE(data[2] == char(3));
+    REQUIRE_FALSE(item.next());
+}
+
+TEST_CASE("read bytes field: end of buffer") {
+    const std::string buffer = load_data("bytes/data-binary");
+
+    for (std::string::size_type i = 1; i < buffer.size(); ++i) {
+        protozero::pbf_reader item{buffer.data(), i};
         REQUIRE(item.next());
-        REQUIRE(item.get_bytes().empty());
-        REQUIRE_FALSE(item.next());
+        REQUIRE_THROWS_AS(item.get_bytes(), const protozero::end_of_buffer_exception&);
     }
-
-    SECTION("one") {
-        const std::string buffer = load_data("bytes/data-one");
-
-        protozero::pbf_reader item{buffer};
-
-        REQUIRE(item.next());
-        REQUIRE(item.get_bytes() == "x");
-        REQUIRE_FALSE(item.next());
-    }
-
-    SECTION("string") {
-        const std::string buffer = load_data("bytes/data-string");
-
-        protozero::pbf_reader item{buffer};
-
-        REQUIRE(item.next());
-        REQUIRE(item.get_bytes() == "foobar");
-        REQUIRE_FALSE(item.next());
-    }
-
-    SECTION("binary") {
-        const std::string buffer = load_data("bytes/data-binary");
-
-        protozero::pbf_reader item{buffer};
-
-        REQUIRE(item.next());
-        const std::string data = item.get_bytes();
-        REQUIRE(data.size() == 3);
-        REQUIRE(data[0] == char(1));
-        REQUIRE(data[1] == char(2));
-        REQUIRE(data[2] == char(3));
-        REQUIRE_FALSE(item.next());
-    }
-
-    SECTION("end_of_buffer") {
-        const std::string buffer = load_data("bytes/data-binary");
-
-        for (std::string::size_type i = 1; i < buffer.size(); ++i) {
-            protozero::pbf_reader item{buffer.data(), i};
-            REQUIRE(item.next());
-            REQUIRE_THROWS_AS(item.get_bytes(), const protozero::end_of_buffer_exception&);
-        }
-    }
-
 }
 
 TEST_CASE("write bytes field") {
-
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("empty") {
         pw.add_string(1, "");
@@ -89,13 +84,11 @@ TEST_CASE("write bytes field") {
 
         REQUIRE(buffer == load_data("bytes/data-binary"));
     }
-
 }
 
 TEST_CASE("write bytes field using vectored approach") {
-
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("using two strings") {
         std::string d1{"foo"};
@@ -134,10 +127,10 @@ TEST_CASE("write bytes field using vectored approach") {
 TEST_CASE("write bytes field using vectored approach with builder") {
     enum class foo : protozero::pbf_tag_type { bar = 1 };
     std::string buffer;
-    protozero::pbf_builder<foo> pw(buffer);
+    protozero::pbf_builder<foo> pw{buffer};
 
-    std::string d1{"foo"};
-    std::string d2{"bar"};
+    const std::string d1{"foo"};
+    const std::string d2{"bar"};
 
     pw.add_bytes_vectored(foo::bar, d1, d2);
 

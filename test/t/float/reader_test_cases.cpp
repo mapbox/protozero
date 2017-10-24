@@ -2,7 +2,6 @@
 #include <test.hpp>
 
 TEST_CASE("read float field") {
-
     // Run these tests twice, the second time we basically move the data
     // one byte down in the buffer. It doesn't matter how the data or buffer
     // is aligned before that, in at least one of these cases the float will
@@ -10,7 +9,6 @@ TEST_CASE("read float field") {
     // will be extracted properly.
 
     for (std::string::size_type n = 0; n < 2; ++n) {
-
         std::string abuffer;
         abuffer.reserve(1000);
         abuffer.append(n, '\0');
@@ -51,15 +49,12 @@ TEST_CASE("read float field") {
                 REQUIRE_THROWS_AS(item.get_float(), const protozero::end_of_buffer_exception&);
             }
         }
-
     }
-
 }
 
 TEST_CASE("write float field") {
-
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("zero") {
         pw.add_float(1, 0.0f);
@@ -75,6 +70,5 @@ TEST_CASE("write float field") {
         pw.add_float(1, -1.71f);
         REQUIRE(buffer == load_data("float/data-neg"));
     }
-
 }
 

@@ -149,6 +149,5 @@ TEST_CASE("reading vector tiles") {
         REQUIRE(n_id == 502);
         REQUIRE(n_geomtype == 502);
     }
-
 }
 

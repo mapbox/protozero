@@ -31,7 +31,7 @@ TEST_CASE("check every possible value for single byte in buffer") {
 }
 
 TEST_CASE("next() should throw when illegal wire type is encountered") {
-    char buffer = 1 << 3 | 7;
+    const char buffer = 1 << 3 | 7;
 
     protozero::pbf_reader item{&buffer, 1};
     REQUIRE_THROWS_AS(item.next(), const protozero::unknown_pbf_wire_type_exception&);

@@ -6,7 +6,6 @@ TEST_CASE("max varint length") {
 }
 
 TEST_CASE("varint") {
-
     std::string buffer;
     protozero::pbf_writer pw{buffer};
 
@@ -102,7 +101,6 @@ TEST_CASE("varint") {
             REQUIRE_THROWS_AS(item.skip(), const protozero::varint_too_long_exception&);
         }
     }
-
 }
 
 TEST_CASE("10-byte varint") {
@@ -121,7 +119,6 @@ TEST_CASE("10-byte varint") {
 }
 
 TEST_CASE("lots of varints back and forth") {
-
     std::string buffer;
 
     for (uint32_t n = 0; n < 70000; ++n) {
@@ -186,6 +183,5 @@ TEST_CASE("lots of varints back and forth") {
         REQUIRE_FALSE(item.next());
         buffer.clear();
     }
-
 }
 

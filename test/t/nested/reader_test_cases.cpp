@@ -77,26 +77,21 @@ inline void check_empty(protozero::pbf_reader message) {
     }
 }
 
-TEST_CASE("read nested message fields") {
+TEST_CASE("read nested message fields: string") {
+    const std::string buffer = load_data("nested/data-message");
 
-    SECTION("string") {
-        const std::string buffer = load_data("nested/data-message");
+    protozero::pbf_reader message{buffer};
+    check(message);
+}
 
-        protozero::pbf_reader message{buffer};
-        check(message);
-    }
+TEST_CASE("read nested message fields: no submessage") {
+    const std::string buffer = load_data("nested/data-no-message");
 
-    SECTION("no submessage") {
-        const std::string buffer = load_data("nested/data-no-message");
-
-        protozero::pbf_reader message{buffer};
-        check_empty(message);
-    }
-
+    protozero::pbf_reader message{buffer};
+    check_empty(message);
 }
 
 TEST_CASE("write nested message fields") {
-
     std::string buffer_test;
     protozero::pbf_writer pbf_test{buffer_test};
 
@@ -131,7 +126,6 @@ TEST_CASE("write nested message fields") {
 }
 
 TEST_CASE("write nested message fields - no message") {
-
     std::string buffer_test;
     protozero::pbf_writer pbf_test{buffer_test};
 
@@ -152,7 +146,7 @@ TEST_CASE("write nested message fields - no message") {
     }
 
     SECTION("string with subwriter") {
-        protozero::pbf_writer pbf_sub(pbf_test, 1);
+        protozero::pbf_writer pbf_sub{pbf_test, 1};
     }
 
     pbf_test.add_int32(2, 77);

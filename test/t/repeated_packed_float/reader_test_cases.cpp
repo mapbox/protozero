@@ -2,7 +2,6 @@
 #include <test.hpp>
 
 TEST_CASE("read repeated packed float field") {
-
     // Run these tests twice, the second time we basically move the data
     // one byte down in the buffer. It doesn't matter how the data or buffer
     // is aligned before that, in at least one of these cases the floats will
@@ -10,21 +9,20 @@ TEST_CASE("read repeated packed float field") {
     // will be extracted properly.
 
     for (std::string::size_type n = 0; n < 2; ++n) {
-
         std::string abuffer;
         abuffer.reserve(1000);
         abuffer.append(n, '\0');
 
         SECTION("empty") {
             abuffer.append(load_data("repeated_packed_float/data-empty"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE_FALSE(item.next());
         }
 
         SECTION("one") {
             abuffer.append(load_data("repeated_packed_float/data-one"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             auto it_range = item.get_packed_float();
@@ -36,7 +34,7 @@ TEST_CASE("read repeated packed float field") {
 
         SECTION("many") {
             abuffer.append(load_data("repeated_packed_float/data-many"));
-            protozero::pbf_reader item(abuffer.data() + n, abuffer.size() - n);
+            protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
             auto it_range = item.get_packed_float();
@@ -55,20 +53,17 @@ TEST_CASE("read repeated packed float field") {
             abuffer.append(load_data("repeated_packed_float/data-many"));
 
             for (std::string::size_type i = 1; i < abuffer.size() - n; ++i) {
-                protozero::pbf_reader item(abuffer.data() + n, i);
+                protozero::pbf_reader item{abuffer.data() + n, i};
                 REQUIRE(item.next());
                 REQUIRE_THROWS_AS(item.get_packed_float(), const protozero::end_of_buffer_exception&);
             }
         }
-
     }
-
 }
 
 TEST_CASE("write repeated packed float field") {
-
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("empty") {
         float data[] = { 17.34f };
@@ -90,6 +85,5 @@ TEST_CASE("write repeated packed float field") {
 
         REQUIRE(buffer == load_data("repeated_packed_float/data-many"));
     }
-
 }
 

@@ -2,7 +2,6 @@
 #include <test.hpp>
 
 TEST_CASE("skip() skips the right amount of bytes") {
-
     // These are all the data files which contain exactly one field.
     //
     // Create this list with:
@@ -107,9 +106,7 @@ TEST_CASE("skip() skips the right amount of bytes") {
     }
 }
 
-
 TEST_CASE("exceptional cases") {
-
     std::string buffer;
     protozero::pbf_writer pw{buffer};
     pw.add_fixed32(1, 123);
@@ -129,6 +126,5 @@ TEST_CASE("exceptional cases") {
         REQUIRE(item.next());
         REQUIRE_THROWS_AS(item.skip(), const protozero::end_of_buffer_exception&);
     }
-
 }
 

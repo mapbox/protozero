@@ -2,7 +2,7 @@
 #include <test.hpp>
 
 inline void check_tag(const std::string& buffer, protozero::pbf_tag_type tag) {
-    protozero::pbf_reader item(buffer);
+    protozero::pbf_reader item{buffer};
 
     REQUIRE(item.next());
     REQUIRE(item.tag() == tag);
@@ -10,30 +10,25 @@ inline void check_tag(const std::string& buffer, protozero::pbf_tag_type tag) {
     REQUIRE_FALSE(item.next());
 }
 
-TEST_CASE("read tags") {
+TEST_CASE("read tag: 1") {
+    check_tag(load_data("tags/data-tag-1"), 1L);
+}
 
-    SECTION("tag 1") {
-        check_tag(load_data("tags/data-tag-1"), 1L);
-    }
+TEST_CASE("read tag: 200") {
+    check_tag(load_data("tags/data-tag-200"), 200L);
+}
 
-    SECTION("tag 200") {
-        check_tag(load_data("tags/data-tag-200"), 200L);
-    }
+TEST_CASE("read tag: 200000") {
+    check_tag(load_data("tags/data-tag-200000"), 200000L);
+}
 
-    SECTION("tag 200000") {
-        check_tag(load_data("tags/data-tag-200000"), 200000L);
-    }
-
-    SECTION("tag max") {
-        check_tag(load_data("tags/data-tag-max"), (1L << 29) - 1);
-    }
-
+TEST_CASE("read tag: max") {
+    check_tag(load_data("tags/data-tag-max"), (1L << 29) - 1);
 }
 
 TEST_CASE("write tags") {
-
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     SECTION("tag 1") {
         pw.add_int32(1L, 333L);
@@ -54,6 +49,5 @@ TEST_CASE("write tags") {
         pw.add_int32((1L << 29) - 1, 333L);
         REQUIRE(buffer == load_data("tags/data-tag-max"));
     }
-
 }
 

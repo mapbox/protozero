@@ -2,7 +2,6 @@
 #include <test.hpp>
 
 TEST_CASE("rollback when using packed_field functions") {
-
     std::string buffer;
     protozero::pbf_writer pw{buffer};
 
@@ -51,7 +50,7 @@ TEST_CASE("rollback when using packed_field functions") {
 
         msg.next();
         REQUIRE(msg.tag() == 1);
-        auto it_range = msg.get_packed_sint64();
+        const auto it_range = msg.get_packed_sint64();
         auto it = it_range.begin();
         REQUIRE(*it++ == 17L);
         REQUIRE(it == it_range.end());
@@ -86,7 +85,7 @@ TEST_CASE("rollback when using packed_field functions") {
 
         msg.next();
         REQUIRE(msg.tag() == 1);
-        auto it_range = msg.get_packed_sint64();
+        const auto it_range = msg.get_packed_sint64();
         auto it = it_range.begin();
         REQUIRE(*it++ == 17L);
         REQUIRE(*it++ ==  0L);
@@ -138,7 +137,6 @@ TEST_CASE("rollback when using packed_field functions") {
 }
 
 TEST_CASE("rollback when using submessages") {
-
     std::string buffer;
     protozero::pbf_writer pw{buffer};
 
@@ -191,7 +189,7 @@ TEST_CASE("rollback on parent message is not allowed even if there is a submessa
 
 TEST_CASE("rollback on message is not allowed if there is a nested submessage") {
     std::string buffer;
-    protozero::pbf_writer pw(buffer);
+    protozero::pbf_writer pw{buffer};
 
     pw.add_fixed64(2, 111);
     pw.add_string(3, "foo");

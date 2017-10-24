@@ -2,15 +2,12 @@
 #include <test.hpp>
 
 TEST_CASE("read double field") {
-
     // Run these tests twice, the second time we basically move the data
     // one byte down in the buffer. It doesn't matter how the data or buffer
     // is aligned before that, in at least one of these cases the double will
     // not be aligned properly. So we test that even in that case the double
     // will be extracted properly.
-
     for (std::string::size_type n = 0; n < 2; ++n) {
-
         std::string abuffer;
         abuffer.reserve(1000);
         abuffer.append(n, '\0');
@@ -51,13 +48,10 @@ TEST_CASE("read double field") {
                 REQUIRE_THROWS_AS(item.get_double(), const protozero::end_of_buffer_exception&);
             }
         }
-
     }
-
 }
 
 TEST_CASE("write double field") {
-
     std::string buffer;
     protozero::pbf_writer pw{buffer};
 
@@ -75,6 +69,5 @@ TEST_CASE("write double field") {
         pw.add_double(1, -9232.33);
         REQUIRE(buffer == load_data("double/data-neg"));
     }
-
 }
 
