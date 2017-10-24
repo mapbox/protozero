@@ -38,6 +38,22 @@ TEST_CASE("byte swapping") {
     REQUIRE(std::numeric_limits<int64_t>::min() == check_swap_8(std::numeric_limits<int64_t>::min()));
 }
 
+TEST_CASE("byte swap uint32_t") {
+    uint32_t a = 17;
+    protozero::detail::byteswap_inplace(&a);
+    protozero::detail::byteswap_inplace(&a);
+
+    REQUIRE(17 == a);
+}
+
+TEST_CASE("byte swap uint64_t") {
+    uint64_t a = 347529808;
+    protozero::detail::byteswap_inplace(&a);
+    protozero::detail::byteswap_inplace(&a);
+
+    REQUIRE(347529808 == a);
+}
+
 TEST_CASE("byte swap double") {
     double a = 1.1;
     protozero::detail::byteswap_inplace(&a);
