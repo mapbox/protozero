@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [unreleased] -
+## [1.6.0] - 2017-10-24
 
 ### Added
 
@@ -255,8 +255,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.5.3...HEAD
-[1.5.3]: https://github.com/osmcode/libosmium/compare/v1.5.3...v1.5.3
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/osmcode/libosmium/compare/v1.5.3...v1.6.0
+[1.5.3]: https://github.com/osmcode/libosmium/compare/v1.5.2...v1.5.3
 [1.5.2]: https://github.com/osmcode/libosmium/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/osmcode/libosmium/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/osmcode/libosmium/compare/v1.4.5...v1.5.0

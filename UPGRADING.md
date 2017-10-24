@@ -13,7 +13,7 @@ macro `PROTOZERO_STRICT_API` in which case Protozero will compile without the
 code used for backwards compatibilty. You will then get compile errors for
 older API usages.
 
-## Upgrading from *v1.5.0* to *master*
+## Upgrading from *v1.5* to *v1.6.0*
 
 * The `data_view` class moved from `types.hpp` into its own header file
   `data_view.hpp`. Most people should not include those headers directly,
