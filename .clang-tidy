@@ -13,7 +13,7 @@ Checks:          '*,-cert-dcl21-cpp,-cert-err60-cpp,-cppcoreguidelines-pro-bound
 #    This is a low-level library, it needs to do pointer arithmetic.
 #
 #  cppcoreguidelines-pro-bounds-array-to-pointer-decay
-#    Limited use and many false positives including all for all asserts
+#    Limited use and many false positives including for all asserts
 #
 #  cppcoreguidelines-pro-type-reinterpret-cast
 #    This is a low-level library, it needs to do reinterpret-casts.

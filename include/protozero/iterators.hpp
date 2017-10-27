@@ -62,8 +62,8 @@ public:
     /**
      * Create iterator range from two iterators.
      *
-     * @param first_iterator Iterator to beginning or range.
-     * @param last_iterator Iterator to end or range.
+     * @param first_iterator Iterator to beginning of range.
+     * @param last_iterator Iterator to end of range.
      */
     constexpr iterator_range(iterator&& first_iterator, iterator&& last_iterator) :
         P(std::forward<iterator>(first_iterator),
