@@ -245,7 +245,7 @@ public:
         // We know that each varint contains exactly one byte with the most
         // significant bit not set. We can use this to quickly figure out
         // how many varints there are without actually decoding the varints.
-        return static_cast<std::size_t>(std::count_if(begin.m_data, end.m_data, [](char c) {
+        return static_cast<std::size_t>(std::count_if(begin.m_data, end.m_data, [](char c) noexcept {
             return (static_cast<unsigned char>(c) & 0x80) == 0;
         }));
     }
