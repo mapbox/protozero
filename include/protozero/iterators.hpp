@@ -229,7 +229,7 @@ public:
     }
     
     friend bool operator<(const const_fixed_iterator& lhs, const const_fixed_iterator& rhs) {
-        return (lhs.m_data - rhs.m_data) > 0;
+        return (rhs.m_data - lhs.m_data) > 0;
     }
 
     friend bool operator>(const const_fixed_iterator& lhs, const const_fixed_iterator& rhs) {
@@ -269,12 +269,12 @@ public:
 
     friend const_fixed_iterator operator-(const const_fixed_iterator& lhs, difference_type rhs) {
         const_fixed_iterator tmp{lhs};
-        tmp.m_data += (sizeof(value_type) * rhs);
+        tmp.m_data -= (sizeof(value_type) * rhs);
         return tmp;
     }
 
     friend difference_type operator-(const const_fixed_iterator& lhs, const const_fixed_iterator& rhs) {
-        return static_cast<difference_type>(lhs.m_data - rhs.m_data) / sizeof(T);
+        return static_cast<difference_type>(lhs.m_data - rhs.m_data) / static_cast<difference_type>(sizeof(T));
     }
 
     reference operator[](difference_type n) const {

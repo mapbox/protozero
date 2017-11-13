@@ -47,6 +47,26 @@ TEST_CASE("read repeated packed double field") {
             REQUIRE(*it++ == std::numeric_limits<double>::min());
             REQUIRE(*it++ == std::numeric_limits<double>::max());
             REQUIRE(it == it_range.end());
+
+            it = it_range.begin();
+            auto it2 = it + 1;
+            REQUIRE(it2 > it);
+            REQUIRE(it < it2);
+            REQUIRE(it <= it_range.begin());
+            REQUIRE(it >= it_range.begin());
+            REQUIRE(*it2 == 0.0);
+            auto it3 = 1 + it;
+            REQUIRE(*it3 == 0.0);
+            auto it4 = it2 - 1;
+            REQUIRE(*it4 == 17.34);
+            it4 += 2;
+            REQUIRE(*it4 == 1.0);
+            it4 -= 2;
+            REQUIRE(*it4 == 17.34);
+            REQUIRE(std::distance(it_range.begin(), it_range.end()) == 5);
+            REQUIRE(it_range.end() - it_range.begin() == 5);
+            REQUIRE(it_range.begin() - it_range.end() == -5);
+
         }
 
         SECTION("end_of_buffer") {
