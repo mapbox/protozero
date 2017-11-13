@@ -164,14 +164,15 @@ class const_fixed_iterator {
 
 public:
 
-    using iterator_category = std::forward_iterator_tag;
+    //using iterator_category = std::forward_iterator_tag;
+    using iterator_category = std::random_access_iterator_tag;
     using value_type        = T;
     using difference_type   = std::ptrdiff_t;
     using pointer           = value_type*;
     using reference         = value_type&;
 
     static std::size_t range_size(const const_fixed_iterator& begin, const const_fixed_iterator& end) noexcept {
-        return static_cast<std::size_t>(end.m_data - begin.m_data) / sizeof(T);
+        return static_cast<std::size_t>(std::distance(begin, end));
     }
 
     const_fixed_iterator() noexcept = default;
@@ -216,7 +217,72 @@ public:
         return !(*this == rhs);
     }
 
+    const_fixed_iterator& operator--() {
+        m_data -= sizeof(value_type);
+        return *this;
+    }
+
+    const_fixed_iterator operator--(int) {
+        const const_fixed_iterator tmp{*this};
+        --(*this);
+        return tmp;
+    }
+    
+    friend bool operator<(const const_fixed_iterator& lhs, const const_fixed_iterator& rhs) {
+        return (lhs.m_data - rhs.m_data) > 0;
+    }
+
+    friend bool operator>(const const_fixed_iterator& lhs, const const_fixed_iterator& rhs) {
+        return rhs < lhs;
+    }
+
+    friend bool operator<=(const const_fixed_iterator& lhs, const const_fixed_iterator& rhs) {
+        return !(lhs > rhs);
+    }
+
+    friend bool operator>=(const const_fixed_iterator& lhs, const const_fixed_iterator& rhs) {
+        return !(lhs < rhs);
+
+    }
+
+    const_fixed_iterator& operator+=(difference_type val) {
+        m_data += (sizeof(value_type) * val);
+        return *this;
+    }
+
+    friend const_fixed_iterator operator+(const const_fixed_iterator& lhs, difference_type rhs) {
+        const_fixed_iterator tmp{lhs};
+        tmp.m_data += (sizeof(value_type) * rhs);
+        return tmp;
+    }
+
+    friend const_fixed_iterator operator+(difference_type lhs, const const_fixed_iterator& rhs) {
+        const_fixed_iterator tmp{rhs};
+        tmp.m_data += (sizeof(value_type) * lhs);
+        return tmp;
+    }
+
+    const_fixed_iterator& operator-=(difference_type val) {
+        m_data -= (sizeof(value_type) * val);
+        return *this;
+    }
+
+    friend const_fixed_iterator operator-(const const_fixed_iterator& lhs, difference_type rhs) {
+        const_fixed_iterator tmp{lhs};
+        tmp.m_data += (sizeof(value_type) * rhs);
+        return tmp;
+    }
+
+    friend difference_type operator-(const const_fixed_iterator& lhs, const const_fixed_iterator& rhs) {
+        return static_cast<difference_type>(lhs.m_data - rhs.m_data) / sizeof(T);
+    }
+
+    reference operator[](difference_type n) const {
+        return *(*this + n);
+    }
+
 }; // class const_fixed_iterator
+
 
 /**
  * A forward iterator used for accessing packed repeated varint fields
