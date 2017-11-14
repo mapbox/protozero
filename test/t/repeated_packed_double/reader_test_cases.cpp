@@ -28,7 +28,7 @@ TEST_CASE("read repeated packed double field") {
             const auto it_range = item.get_packed_double();
             REQUIRE_FALSE(item.next());
 
-            REQUIRE(*it_range.begin() == 17.34);
+            REQUIRE(*it_range.begin() == Approx(17.34));
             REQUIRE(std::next(it_range.begin()) == it_range.end());
         }
 
@@ -41,9 +41,9 @@ TEST_CASE("read repeated packed double field") {
             REQUIRE_FALSE(item.next());
 
             auto it = it_range.begin();
-            REQUIRE(*it++ == 17.34);
-            REQUIRE(*it++ ==   0.0);
-            REQUIRE(*it++ ==   1.0);
+            REQUIRE(*it++ == Approx(17.34));
+            REQUIRE(*it++ == Approx( 0.0));
+            REQUIRE(*it++ == Approx( 1.0));
             REQUIRE(*it++ == std::numeric_limits<double>::min());
             REQUIRE(*it++ == std::numeric_limits<double>::max());
             REQUIRE(it == it_range.end());

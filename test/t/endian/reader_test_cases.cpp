@@ -59,7 +59,7 @@ TEST_CASE("byte swap double") {
     protozero::detail::byteswap_inplace(&a);
     protozero::detail::byteswap_inplace(&a);
 
-    REQUIRE(1.1 == a);
+    REQUIRE(a == Approx(1.1));
 }
 
 TEST_CASE("byte swap float") {
@@ -67,6 +67,6 @@ TEST_CASE("byte swap float") {
     protozero::detail::byteswap_inplace(&a);
     protozero::detail::byteswap_inplace(&a);
 
-    REQUIRE(1.1f == a);
+    REQUIRE(a == Approx(1.1f));
 }
 

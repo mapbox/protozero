@@ -28,7 +28,7 @@ TEST_CASE("read repeated packed float field") {
             auto it_range = item.get_packed_float();
             REQUIRE_FALSE(item.next());
 
-            REQUIRE(*it_range.begin() == 17.34f);
+            REQUIRE(*it_range.begin() == Approx(17.34f));
             REQUIRE(std::next(it_range.begin()) == it_range.end());
         }
 
@@ -41,9 +41,9 @@ TEST_CASE("read repeated packed float field") {
             REQUIRE_FALSE(item.next());
 
             auto it = it_range.begin();
-            REQUIRE(*it++ == 17.34f);
-            REQUIRE(*it++ ==   0.0f);
-            REQUIRE(*it++ ==   1.0f);
+            REQUIRE(*it++ == Approx(17.34f));
+            REQUIRE(*it++ == Approx( 0.0f));
+            REQUIRE(*it++ == Approx( 1.0f));
             REQUIRE(*it++ == std::numeric_limits<float>::min());
             REQUIRE(*it++ == std::numeric_limits<float>::max());
             REQUIRE(it == it_range.end());
