@@ -208,11 +208,11 @@ public:
         return tmp;
     }
 
-    bool operator==(const const_fixed_iterator& rhs) const noexcept {
+    bool operator==(const const_fixed_iterator rhs) const noexcept {
         return m_data == rhs.m_data;
     }
 
-    bool operator!=(const const_fixed_iterator& rhs) const noexcept {
+    bool operator!=(const const_fixed_iterator rhs) const noexcept {
         return !(*this == rhs);
     }
 
