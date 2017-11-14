@@ -63,6 +63,13 @@ TEST_CASE("read repeated packed double field") {
             REQUIRE(*it4 == 1.0);
             it4 -= 2;
             REQUIRE(*it4 == 17.34);
+            it4 += 2;
+            REQUIRE(*it4 == 1.0);
+            REQUIRE(*it4-- == 1.0);
+            REQUIRE(*it4 == 0.0);
+            REQUIRE(*--it4 == 17.34);
+            REQUIRE(it4[0] == 17.34);
+            REQUIRE(it4[1] == 0.0);
             REQUIRE(std::distance(it_range.begin(), it_range.end()) == 5);
             REQUIRE(it_range.end() - it_range.begin() == 5);
             REQUIRE(it_range.begin() - it_range.end() == -5);
