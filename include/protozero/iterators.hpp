@@ -410,42 +410,42 @@ namespace std {
 
     template <>
     inline typename protozero::const_varint_iterator<int32_t>::difference_type
-    distance<protozero::const_varint_iterator<int32_t>>(protozero::const_varint_iterator<int32_t> first,
+    distance<protozero::const_varint_iterator<int32_t>>(protozero::const_varint_iterator<int32_t> first, // NOLINT clang-tidy: readability-inconsistent-declaration-parameter-name
                                                         protozero::const_varint_iterator<int32_t> last) {
         return protozero::const_varint_iterator<int32_t>::distance(first, last);
     }
 
     template <>
     inline typename protozero::const_varint_iterator<int64_t>::difference_type
-    distance<protozero::const_varint_iterator<int64_t>>(protozero::const_varint_iterator<int64_t> first,
+    distance<protozero::const_varint_iterator<int64_t>>(protozero::const_varint_iterator<int64_t> first, // NOLINT clang-tidy: readability-inconsistent-declaration-parameter-name
                                                         protozero::const_varint_iterator<int64_t> last) {
         return protozero::const_varint_iterator<int64_t>::distance(first, last);
     }
 
     template <>
     inline typename protozero::const_varint_iterator<uint32_t>::difference_type
-    distance<protozero::const_varint_iterator<uint32_t>>(protozero::const_varint_iterator<uint32_t> first,
+    distance<protozero::const_varint_iterator<uint32_t>>(protozero::const_varint_iterator<uint32_t> first, // NOLINT clang-tidy: readability-inconsistent-declaration-parameter-name
                                                          protozero::const_varint_iterator<uint32_t> last) {
         return protozero::const_varint_iterator<uint32_t>::distance(first, last);
     }
 
     template <>
     inline typename protozero::const_varint_iterator<uint64_t>::difference_type
-    distance<protozero::const_varint_iterator<uint64_t>>(protozero::const_varint_iterator<uint64_t> first,
+    distance<protozero::const_varint_iterator<uint64_t>>(protozero::const_varint_iterator<uint64_t> first, // NOLINT clang-tidy: readability-inconsistent-declaration-parameter-name
                                                          protozero::const_varint_iterator<uint64_t> last) {
         return protozero::const_varint_iterator<uint64_t>::distance(first, last);
     }
 
     template <>
     inline typename protozero::const_svarint_iterator<int32_t>::difference_type
-    distance<protozero::const_svarint_iterator<int32_t>>(protozero::const_svarint_iterator<int32_t> first,
+    distance<protozero::const_svarint_iterator<int32_t>>(protozero::const_svarint_iterator<int32_t> first, // NOLINT clang-tidy: readability-inconsistent-declaration-parameter-name
                                                          protozero::const_svarint_iterator<int32_t> last) {
         return protozero::const_svarint_iterator<int32_t>::distance(first, last);
     }
 
     template <>
     inline typename protozero::const_svarint_iterator<int64_t>::difference_type
-    distance<protozero::const_svarint_iterator<int64_t>>(protozero::const_svarint_iterator<int64_t> first,
+    distance<protozero::const_svarint_iterator<int64_t>>(protozero::const_svarint_iterator<int64_t> first, // NOLINT clang-tidy: readability-inconsistent-declaration-parameter-name
                                                          protozero::const_svarint_iterator<int64_t> last) {
         return protozero::const_svarint_iterator<int64_t>::distance(first, last);
     }
