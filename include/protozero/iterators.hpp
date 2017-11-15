@@ -170,7 +170,7 @@ public:
     using pointer           = value_type*;
     using reference         = value_type&;
 
-    static std::size_t range_size(const const_fixed_iterator& begin, const const_fixed_iterator& end) noexcept {
+    static std::size_t range_size(const_fixed_iterator begin, const_fixed_iterator end) noexcept {
         return static_cast<std::size_t>(std::distance(begin, end));
     }
 
@@ -208,11 +208,11 @@ public:
         return tmp;
     }
 
-    bool operator==(const const_fixed_iterator rhs) const noexcept {
+    bool operator==(const_fixed_iterator rhs) const noexcept {
         return m_data == rhs.m_data;
     }
 
-    bool operator!=(const const_fixed_iterator rhs) const noexcept {
+    bool operator!=(const_fixed_iterator rhs) const noexcept {
         return !(*this == rhs);
     }
 
@@ -226,20 +226,20 @@ public:
         --(*this);
         return tmp;
     }
-    
-    friend bool operator<(const const_fixed_iterator lhs, const const_fixed_iterator rhs) noexcept {
+
+    friend bool operator<(const_fixed_iterator lhs, const_fixed_iterator rhs) noexcept {
         return lhs.m_data < rhs.m_data;
     }
 
-    friend bool operator>(const const_fixed_iterator lhs, const const_fixed_iterator rhs) noexcept {
+    friend bool operator>(const_fixed_iterator lhs, const_fixed_iterator rhs) noexcept {
         return rhs < lhs;
     }
 
-    friend bool operator<=(const const_fixed_iterator lhs, const const_fixed_iterator rhs) noexcept {
+    friend bool operator<=(const_fixed_iterator lhs, const_fixed_iterator rhs) noexcept {
         return !(lhs > rhs);
     }
 
-    friend bool operator>=(const const_fixed_iterator lhs, const const_fixed_iterator rhs) noexcept {
+    friend bool operator>=(const_fixed_iterator lhs, const_fixed_iterator rhs) noexcept {
         return !(lhs < rhs);
 
     }
@@ -249,13 +249,13 @@ public:
         return *this;
     }
 
-    friend const_fixed_iterator operator+(const const_fixed_iterator lhs, difference_type rhs) noexcept {
+    friend const_fixed_iterator operator+(const_fixed_iterator lhs, difference_type rhs) noexcept {
         const_fixed_iterator tmp{lhs};
         tmp.m_data += (sizeof(value_type) * rhs);
         return tmp;
     }
 
-    friend const_fixed_iterator operator+(difference_type lhs, const const_fixed_iterator rhs) noexcept {
+    friend const_fixed_iterator operator+(difference_type lhs, const_fixed_iterator rhs) noexcept {
         const_fixed_iterator tmp{rhs};
         tmp.m_data += (sizeof(value_type) * lhs);
         return tmp;
@@ -266,13 +266,13 @@ public:
         return *this;
     }
 
-    friend const_fixed_iterator operator-(const const_fixed_iterator lhs, difference_type rhs) noexcept {
+    friend const_fixed_iterator operator-(const_fixed_iterator lhs, difference_type rhs) noexcept {
         const_fixed_iterator tmp{lhs};
         tmp.m_data -= (sizeof(value_type) * rhs);
         return tmp;
     }
 
-    friend difference_type operator-(const const_fixed_iterator lhs, const const_fixed_iterator rhs) noexcept {
+    friend difference_type operator-(const_fixed_iterator lhs, const_fixed_iterator rhs) noexcept {
         return static_cast<difference_type>(lhs.m_data - rhs.m_data) / static_cast<difference_type>(sizeof(T));
     }
 
