@@ -245,8 +245,7 @@ for (auto value : range) {
 It depends on the type of range how expensive the `size()` call is. For ranges
 derived from packed repeated fixed sized values the effort will be constant,
 for ranges derived from packed repeated varints, the effort will be linear, but
-still considerably cheaper than decoding the varints (for instance by calling
-`std::distance(range.begin(), range.end());`). You have to benchmark your use
-case to see whether the `reserve()` (or whatever you are using the `size()`
-for) is worth it.
+still considerably cheaper than decoding the varints. You have to benchmark
+your use case to see whether the `reserve()` (or whatever you are using the
+`size()` for) is worth it.
 
