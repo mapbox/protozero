@@ -224,6 +224,26 @@ fields.
 The function is also available in the `pbf_builder` class.
 
 
+## Internal handling of varints
+
+When varints are decoded they are always decoded as 64bit unsigned integers and
+after that casted to the type you are requesting (using `static_cast`). This
+means that if the protocol buffer message was created with a different integer
+type than what you are reading it with, you might get wrong results without any
+warning or error. This is the same behaviour as the Google Protocol Buffers
+library has.
+
+In normal use, this should never matter, because presumably you are using the
+same types to write that data as you are using to read it later. It can happen
+if the data is corrupted intentionally or unintentionally in some way. But
+this can't be used to feed you any data that it wasn't possible to feed you
+without this behaviour, so it doesn't open up any potential problems. You
+always have to check anyway that the integers are in the range you expected
+them to be in if the expected range is different than the range of the integer
+type. This is especially true for enums which protozero will return as
+`int32_t`.
+
+
 ## How many items are there in a repeated packed field?
 
 Sometimes it is useful to know how many values there are in a repeated packed
