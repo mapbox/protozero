@@ -281,11 +281,13 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
 
     REQUIRE(it_range.front() ==  1); it_range.drop_front();
     REQUIRE(it_range.front() ==  4); it_range.drop_front();
+    REQUIRE(std::distance(it_range.begin(), it_range.end()) == 3);
     REQUIRE(it_range.size() == 3);
     REQUIRE(it_range.front() ==  9); it_range.drop_front();
     REQUIRE(it_range.front() == 16); it_range.drop_front();
     REQUIRE(it_range.front() == 25); it_range.drop_front();
     REQUIRE(it_range.empty());
+    REQUIRE(std::distance(it_range.begin(), it_range.end()) == 0);
     REQUIRE(it_range.size() == 0); // NOLINT clang-tidy: readability-container-size-empty
 
     REQUIRE_THROWS_AS(it_range.front(), const assert_error&);

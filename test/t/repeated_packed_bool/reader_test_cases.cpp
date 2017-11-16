@@ -16,6 +16,7 @@ TEST_CASE("read repeated packed bool field: one") {
 
     REQUIRE(item.next());
     const auto it_range = item.get_packed_bool();
+    REQUIRE(std::distance(it_range.begin(), it_range.end()) == 1);
     REQUIRE(it_range.size() == 1);
     REQUIRE_FALSE(item.next());
 
@@ -31,6 +32,7 @@ TEST_CASE("read repeated packed bool field: many") {
 
     REQUIRE(item.next());
     const auto it_range = item.get_packed_bool();
+    REQUIRE(std::distance(it_range.begin(), it_range.end()) == 4);
     REQUIRE(it_range.size() == 4);
     REQUIRE_FALSE(item.next());
 
