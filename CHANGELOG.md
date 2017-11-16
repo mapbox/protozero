@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [unreleased] -
+
+### Added
+
+- Document internal handling of varints.
+- Add aliases for fixed iterators, too.
+
+### Changed
+
+- The `const_fixed_iterator` is now a random access iterator making code
+  using it potentially more performant (for instance when using
+  `std::distance`)
+- Overloads `std::distance` for the varint and svarint iterators. This is
+  better than the workaround with the `rage_size` function used before.
+
+### Fixed
+
+- Rename `.proto` files in some tests to be unique. This solves a problem
+  when building with newer versions of the Google Protobuf library.
+- Floating point comparisons in tests are now always correctly done using
+  `Approx()`.
+
+
 ## [1.6.0] - 2017-10-24
 
 ### Added
