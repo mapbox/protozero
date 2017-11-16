@@ -8,11 +8,11 @@ bash -lc "pacman -S --needed --noconfirm mingw-w64-x86_64-gcc mingw-w64-x86_64-c
 echo "Generating makefiles"
 mkdir build
 cd build
-cmake .. -G "MSYS Makefiles"
+cmake .. -LA -G "MSYS Makefiles"
 
 echo "Building"
-make
+make VERBOSE=1
 
 echo "Testing"
-ctest
+ctest --output-on-failure
 
