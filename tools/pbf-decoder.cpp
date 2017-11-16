@@ -246,14 +246,22 @@ int main(int argc, char* argv[]) {
     const std::string filename{argv[optind]};
 
     try {
-        const std::string buffer{filename == "-" ? read_from_stdin() :
-                                                   read_from_file(argv[optind])};
+        std::string buffer{filename == "-" ? read_from_stdin() :
+                                             read_from_file(argv[optind])};
 
-        if (length > buffer.size() - offset) {
-            length = buffer.size() - offset;
+        if (offset > buffer.size()) {
+            throw std::runtime_error{"offset is larger than file size"};
         }
 
-        std::cout << decode(buffer.data() + offset, length, "");
+        if (offset > 0) {
+            buffer.erase(0, offset);
+        }
+
+        if (length < buffer.size()) {
+            buffer.resize(length);
+        }
+
+        std::cout << decode(buffer.data(), buffer.size(), "");
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << '\n';
         return 1;
