@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "t/double/testcase.pb.h"
+#include "t/double/double_testcase.pb.h"
 
 TEST_CASE("write double field and check with libprotobuf") {
 

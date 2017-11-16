@@ -3,7 +3,7 @@
 
 #include <test.hpp> // IWYU pragma: keep
 
-#include "t/bool/testcase.pb.h"
+#include "t/bool/bool_testcase.pb.h"
 
 TEST_CASE("write bool field and check with libprotobuf") {
 

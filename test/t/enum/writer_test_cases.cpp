@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "t/enum/testcase.pb.h"
+#include "t/enum/enum_testcase.pb.h"
 
 TEST_CASE("write enum field and check with libprotobuf") {
 

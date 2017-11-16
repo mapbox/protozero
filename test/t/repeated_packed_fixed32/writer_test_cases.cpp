@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "t/repeated_packed_fixed32/testcase.pb.h"
+#include "t/repeated_packed_fixed32/repeated_packed_fixed32_testcase.pb.h"
 
 TEST_CASE("write repeated packed fixed32 field and check with libprotobuf") {
 

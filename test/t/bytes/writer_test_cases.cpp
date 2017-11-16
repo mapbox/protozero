@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include "t/bytes/testcase.pb.h"
+#include "t/bytes/bytes_testcase.pb.h"
 
 TEST_CASE("write bytes field and check with libprotobuf") {
 

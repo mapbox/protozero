@@ -77,9 +77,9 @@ if(PROTOBUF_FOUND)
         if(EXISTS "${_full_src_dir}/writer_test_cases.cpp")
             message(STATUS "  Adding ${_dir}")
             set(_full_bin_dir "${CMAKE_CURRENT_BINARY_DIR}/t/${_dir}")
-            set(_proto_file "${_full_src_dir}/testcase.proto")
-            set(_src_file "${_full_bin_dir}/testcase.pb.cc")
-            set(_hdr_file "${_full_bin_dir}/testcase.pb.h")
+            set(_proto_file "${_full_src_dir}/${_dir}_testcase.proto")
+            set(_src_file "${_full_bin_dir}/${_dir}_testcase.pb.cc")
+            set(_hdr_file "${_full_bin_dir}/${_dir}_testcase.pb.h")
 
             file(MAKE_DIRECTORY ${_full_bin_dir})
 
