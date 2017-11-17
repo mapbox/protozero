@@ -30,6 +30,7 @@ Call with --help/-h to see more options.
 #include <iostream>
 #include <limits>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 
 std::string decode(const char* data, std::size_t len, const std::string& indent);
