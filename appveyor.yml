@@ -31,9 +31,13 @@ init:
   - git config --global core.autocrlf %autocrlf%
   - git config --get core.autocrlf
 
+# The option --ask=20 is a workaround for a problem with the MSYS2 update
+# process. Without it the following error is printed and the appveyor script
+# halts: "msys2-runtime and catgets are in conflict. Remove catgets?"
+# See also: https://github.com/Alexpux/MSYS2-packages/issues/1141
 install:
   - if [%config%]==[MSYS2] (
-          C:\msys64\usr\bin\pacman --noconfirm --sync --refresh --refresh --sysupgrade --sysupgrade
+          C:\msys64\usr\bin\pacman --noconfirm --sync --refresh --refresh --sysupgrade --sysupgrade --ask=20
        && C:\msys64\usr\bin\pacman -Rc --noconfirm mingw-w64-x86_64-gcc-libs
     )
 
