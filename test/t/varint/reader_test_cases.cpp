@@ -176,10 +176,10 @@ TEST_CASE("lots of varints back and forth") {
     for (int i = 0; i < 64; ++i) {
         uint64_t n = 1ull << i;
         protozero::pbf_writer pw{buffer};
-        pw.add_int64(1, n);
+        pw.add_uint64(1, n);
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
-        REQUIRE(n == item.get_int64());
+        REQUIRE(n == item.get_uint64());
         REQUIRE_FALSE(item.next());
         buffer.clear();
     }
