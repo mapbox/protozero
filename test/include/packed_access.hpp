@@ -204,7 +204,7 @@ TEST_CASE("move repeated packed field: " PBF_TYPE_NAME) {
 
         field = std::move(field2);
 
-        REQUIRE_FALSE(field2.valid()); // NOLINT(hicpp-invalid-access-moved)
+        REQUIRE_FALSE(field2.valid()); // NOLINT(hicpp-invalid-access-moved, bugprone-use-after-move)
         REQUIRE(field.valid());
 
         field.add_element(cpp_type(17));
@@ -216,7 +216,7 @@ TEST_CASE("move repeated packed field: " PBF_TYPE_NAME) {
 
         packed_field_type field{std::move(field2)};
         REQUIRE(field.valid());
-        REQUIRE_FALSE(field2.valid()); // NOLINT(hicpp-invalid-access-moved)
+        REQUIRE_FALSE(field2.valid()); // NOLINT(hicpp-invalid-access-moved, bugprone-use-after-move)
 
         field.add_element(cpp_type(17));
     }
