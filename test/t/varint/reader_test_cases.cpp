@@ -152,7 +152,7 @@ TEST_CASE("lots of varints back and forth") {
     }
 
     for (uint32_t i = 0; i < 63; ++i) {
-        const int64_t n = static_cast<int64_t>(1ull << i);
+        const auto n = static_cast<int64_t>(1ull << i);
         protozero::pbf_writer pw{buffer};
         pw.add_int64(1, n);
         protozero::pbf_reader item{buffer};
