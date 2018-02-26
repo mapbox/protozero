@@ -1,4 +1,4 @@
-// NOLINT clang-tidy: llvm-header-guard
+// NOLINT(llvm-header-guard)
 
 #define PBF_TYPE_NAME PROTOZERO_TEST_STRING(PBF_TYPE)
 #define GET_TYPE PROTOZERO_TEST_CONCAT(get_packed_, PBF_TYPE)
@@ -204,7 +204,7 @@ TEST_CASE("move repeated packed field: " PBF_TYPE_NAME) {
 
         field = std::move(field2);
 
-        REQUIRE_FALSE(field2.valid()); // NOLINT clang-tidy: hicpp-invalid-access-moved
+        REQUIRE_FALSE(field2.valid()); // NOLINT(hicpp-invalid-access-moved)
         REQUIRE(field.valid());
 
         field.add_element(cpp_type(17));
@@ -216,7 +216,7 @@ TEST_CASE("move repeated packed field: " PBF_TYPE_NAME) {
 
         packed_field_type field{std::move(field2)};
         REQUIRE(field.valid());
-        REQUIRE_FALSE(field2.valid()); // NOLINT clang-tidy: hicpp-invalid-access-moved
+        REQUIRE_FALSE(field2.valid()); // NOLINT(hicpp-invalid-access-moved)
 
         field.add_element(cpp_type(17));
     }
@@ -288,7 +288,7 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
     REQUIRE(it_range.front() == 25); it_range.drop_front();
     REQUIRE(it_range.empty());
     REQUIRE(std::distance(it_range.begin(), it_range.end()) == 0);
-    REQUIRE(it_range.size() == 0); // NOLINT clang-tidy: readability-container-size-empty
+    REQUIRE(it_range.size() == 0); // NOLINT(readability-container-size-empty)
 
     REQUIRE_THROWS_AS(it_range.front(), const assert_error&);
     REQUIRE_THROWS_AS(it_range.drop_front(), const assert_error&);

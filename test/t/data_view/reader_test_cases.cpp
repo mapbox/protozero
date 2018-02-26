@@ -8,7 +8,7 @@
 TEST_CASE("default constructed data_view") {
     const protozero::data_view view{};
     REQUIRE(view.data() == nullptr);
-    REQUIRE(view.size() == 0); // NOLINT clang-tidy: readability-container-size-empty
+    REQUIRE(view.size() == 0); // NOLINT(readability-container-size-empty)
     REQUIRE(view.empty());
 }
 

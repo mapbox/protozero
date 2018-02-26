@@ -225,11 +225,11 @@ int main(int argc, char* argv[]) {
                 print_help();
                 return 0;
             case 'l':
-                length = std::atoll(optarg); // NOLINT clang-tidy: cert-err34-c
+                length = std::atoll(optarg); // NOLINT(cert-err34-c)
                                              // good enough for a limited-use tool
                 break;
             case 'o':
-                offset = std::atoll(optarg); // NOLINT clang-tidy: cert-err34-c
+                offset = std::atoll(optarg); // NOLINT(cert-err34-c)
                                              // good enough for a limited-use tool
                 break;
             default:

@@ -241,7 +241,7 @@ public:
      * are still fields available and to `false` if the last field has been
      * read.
      */
-    operator bool() const noexcept { // NOLINT clang-tidy: google-explicit-constructor
+    operator bool() const noexcept { // NOLINT(google-explicit-constructor, hicpp-explicit-conversions)
         return m_data < m_end;
     }
 
