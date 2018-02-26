@@ -78,8 +78,8 @@ class pbf_writer {
     }
 
     void add_field(pbf_tag_type tag, pbf_wire_type type) {
-        protozero_assert(((tag > 0 && tag < 19000) || (tag > 19999 && tag <= ((1 << 29) - 1))) && "tag out of range");
-        const uint32_t b = (tag << 3) | uint32_t(type);
+        protozero_assert(((tag > 0 && tag < 19000) || (tag > 19999 && tag <= ((1u << 29u) - 1))) && "tag out of range");
+        const uint32_t b = (tag << 3u) | uint32_t(type);
         add_varint(b);
     }
 

@@ -306,7 +306,7 @@ public:
         // significant bit not set. We can use this to quickly figure out
         // how many varints there are without actually decoding the varints.
         return std::count_if(begin.m_data, end.m_data, [](char c) noexcept {
-            return (static_cast<unsigned char>(c) & 0x80) == 0;
+            return (static_cast<unsigned char>(c) & 0x80u) == 0;
         });
     }
 
