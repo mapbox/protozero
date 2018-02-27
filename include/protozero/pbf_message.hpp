@@ -16,10 +16,10 @@ documentation.
  * @brief Contains the pbf_message template class.
  */
 
-#include <type_traits>
-
 #include <protozero/pbf_reader.hpp>
 #include <protozero/types.hpp>
+
+#include <type_traits>
 
 namespace protozero {
 

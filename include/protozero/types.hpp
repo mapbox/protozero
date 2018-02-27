@@ -16,14 +16,14 @@ documentation.
  * @brief Contains the declaration of low-level types used in the pbf format.
  */
 
+#include <protozero/config.hpp>
+
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <string>
 #include <utility>
-
-#include <protozero/config.hpp>
 
 namespace protozero {
 

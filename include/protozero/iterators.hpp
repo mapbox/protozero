@@ -16,17 +16,17 @@ documentation.
  * @brief Contains the iterators for access to packed repeated fields.
  */
 
-#include <algorithm>
-#include <cstring>
-#include <iterator>
-#include <utility>
-
 #include <protozero/config.hpp>
 #include <protozero/varint.hpp>
 
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
 # include <protozero/byteswap.hpp>
 #endif
+
+#include <algorithm>
+#include <cstring>
+#include <iterator>
+#include <utility>
 
 namespace protozero {
 

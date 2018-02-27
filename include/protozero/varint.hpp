@@ -16,9 +16,9 @@ documentation.
  * @brief Contains low-level varint and zigzag encoding and decoding functions.
  */
 
-#include <cstdint>
-
 #include <protozero/exception.hpp>
+
+#include <cstdint>
 
 namespace protozero {
 

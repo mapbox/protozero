@@ -16,12 +16,6 @@ documentation.
  * @brief Contains the pbf_reader class.
  */
 
-#include <cstddef>
-#include <cstdint>
-#include <cstring>
-#include <string>
-#include <utility>
-
 #include <protozero/config.hpp>
 #include <protozero/data_view.hpp>
 #include <protozero/exception.hpp>
@@ -32,6 +26,12 @@ documentation.
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
 # include <protozero/byteswap.hpp>
 #endif
+
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include <string>
+#include <utility>
 
 namespace protozero {
 

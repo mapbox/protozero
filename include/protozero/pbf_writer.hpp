@@ -16,15 +16,6 @@ documentation.
  * @brief Contains the pbf_writer class.
  */
 
-#include <cstddef>
-#include <cstdint>
-#include <cstring>
-#include <initializer_list>
-#include <iterator>
-#include <limits>
-#include <string>
-#include <utility>
-
 #include <protozero/config.hpp>
 #include <protozero/data_view.hpp>
 #include <protozero/types.hpp>
@@ -33,6 +24,15 @@ documentation.
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
 # include <protozero/byteswap.hpp>
 #endif
+
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include <initializer_list>
+#include <iterator>
+#include <limits>
+#include <string>
+#include <utility>
 
 namespace protozero {
 

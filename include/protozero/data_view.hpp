@@ -16,13 +16,13 @@ documentation.
  * @brief Contains the implementation of the data_view class.
  */
 
+#include <protozero/config.hpp>
+
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
 #include <string>
 #include <utility>
-
-#include <protozero/config.hpp>
 
 namespace protozero {
 

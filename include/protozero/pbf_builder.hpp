@@ -16,10 +16,10 @@ documentation.
  * @brief Contains the pbf_builder template class.
  */
 
-#include <type_traits>
-
 #include <protozero/pbf_writer.hpp>
 #include <protozero/types.hpp>
+
+#include <type_traits>
 
 namespace protozero {
 
