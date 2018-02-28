@@ -66,8 +66,8 @@ if(CLANG_TIDY)
         ${CLANG_TIDY}
         -p ${CMAKE_BINARY_DIR}
         ${CMAKE_SOURCE_DIR}/test/*.cpp
-        ${CMAKE_SOURCE_DIR}/test/t/*/reader_test_cases.cpp
-        ${CMAKE_SOURCE_DIR}/test/t/*/writer_test_cases.cpp
+        ${CMAKE_SOURCE_DIR}/test/t/*/*.cpp
+        ${CMAKE_SOURCE_DIR}/test/unit/*.cpp
         ${CMAKE_SOURCE_DIR}/tools/*.cpp
     )
     add_dependencies(clang-tidy writer_tests)
@@ -94,6 +94,7 @@ if(CPPCHECK)
         ${CMAKE_SOURCE_DIR}/test/*.cpp
         ${CMAKE_SOURCE_DIR}/test/include/*.hpp
         ${CMAKE_SOURCE_DIR}/test/t/*/*.cpp
+        ${CMAKE_SOURCE_DIR}/test/unit/*.cpp
         ${CMAKE_SOURCE_DIR}/tools/*.cpp
     )
 else()

@@ -3,8 +3,16 @@
 
 Tests are using the [Catch Unit Test Framework](https://github.com/philsquared/Catch).
 
+## Organization of the unit tests
 
-## Organization of the test cases
+Unit tests test low-level functions of the library. They are in the `unit`
+directory.
+
+
+## Organization of the reader/writer test cases
+
+The hart of the tests are the reader/writer tests checking all aspects of
+decoding and encoding protobuf files.
 
 Each test case is in its own directory under the `t` directory. Each directory
 contains (some of) the following files:

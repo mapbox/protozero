@@ -80,8 +80,8 @@ Extensive tests are included. Build them using CMake:
 
 Call `ctest` to run the tests.
 
-The reader tests are always build, the writer tests are only build if the
-Google Protobuf library is found when running CMake.
+The unit and reader tests are always build, the writer tests are only build if
+the Google Protobuf library is found when running CMake.
 
 See `test/README.md` for more details about the test.
 

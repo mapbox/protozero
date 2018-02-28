@@ -9,16 +9,14 @@
 include_directories(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/catch")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
+add_subdirectory(unit)
+
 set(TEST_DIRS alignment
-              basic
               bool
               bytes
               complex
-              data_view
               double
-              endian
               enum
-              exceptions
               fixed32
               fixed64
               float
@@ -52,10 +50,8 @@ set(TEST_DIRS alignment
               tags
               uint32
               uint64
-              varint
               vector_tile
-              wrong_type_access
-              zigzag)
+              wrong_type_access)
 
 string(REGEX REPLACE "([^;]+)" "t/\\1/reader_test_cases.cpp" _test_sources "${TEST_DIRS}")
 
