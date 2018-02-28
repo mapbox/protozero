@@ -8,6 +8,7 @@
 
 set(UNIT_TESTS data_view
                basic
+               buffer
                endian
                exceptions
                iterators

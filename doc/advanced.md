@@ -269,3 +269,72 @@ still considerably cheaper than decoding the varints. You have to benchmark
 your use case to see whether the `reserve()` (or whatever you are using the
 `size()` for) is worth it.
 
+
+## Using a different buffer than std::string
+
+Normally you are using the `pbf_writer` or `pbf_builder` classes which use a
+`std::string` that you supply as their buffer for building the actual protocol
+buffers message into. But you can use a different buffer implementation
+instead. This might be useful if you want to use a fixed-size buffer for
+instance.
+
+The `pbf_writer` and `pbf_builder` classes are actually only aliases for the
+`basic_pbf_writer` and `basic_pbf_builder` template classes:
+
+```cpp
+using pbf_writer = basic_pbf_writer<std::string>;
+
+template <typename T>
+using pbf_builder = basic_pbf_builder<std::string, T>;
+```
+
+If you want to use a different buffer type, just use the `basic_*` form of the
+class and add your class as template parameter. When instantiating the
+`basic_pbf_writer` or `basic_pbf_builder`, the only parameter to the
+constructor must always be a reference to an object of the buffer class.
+
+```cpp
+some_buffer_class buffer;
+basic_pbf_writer<some_buffer_class> writer{buffer};
+```
+
+For this to work the buffer class must support a specific interface. The
+following functions must be supported:
+
+* `std::size_t size() const noexcept`
+* `void append(const char* data, std::size_t count)`
+* `void append_zeros(std::size_t count)`
+* `void resize(std::size_t size)`
+* `void reserve_additional(std::size_t size)`
+* `void erase:range(std::size_t from, std::size_t to)`
+* `char* at_pos(std::size_t pos)`
+* `void push_back(char ch)`
+
+In addition there must be a `using value_type = char` inside the class.
+
+If your class doesn't have all of these functions, you can add template
+specializations for some free functions defined in the `buffer.hpp` header
+file which allow you to customize what functions of your class are called.
+You can have a look at the `buffer_string.hpp` header file that does this
+for the `std::string` buffer class to give you an idea how this works.
+
+From inside protozero, the functions in `buffer.hpp` are called without
+namespace, so ADL works and your specializations of those functions can be
+in your own namespace.
+
+There is an important exception: The `push_back()` function and the
+`value_type` typedef **must** be available. They are needed for
+`std::back_inserter` to work.
+
+There is a class `protozero::fixed_size_buffer` you can use as adaptor for
+any fixed-sized buffer you might have.
+
+```cpp
+#include <protozero/fixed_size_buffer.hpp>
+
+your_buffer_class some_buffer;
+using fsb = protozero::fixed_size_buffer<your_buffer_class>;
+fsb buffer_adaptor{some_buffer.data(), some_buffer.size()};
+basic_pbf_writer<fsb> writer{buffer_adaptor};
+```
+
