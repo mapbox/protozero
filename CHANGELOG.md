@@ -12,7 +12,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Update included catch.hpp to v1.12.0.
+- Move basic unit tests into their own directory (`test/unit`).
+- Improved clang-tidy config and fixed some code producing warnings.
+
 ### Fixed
+
+- Buffer overflow in pbf-decoder tool.
 
 
 ## [1.6.1] - 2017-11-16
