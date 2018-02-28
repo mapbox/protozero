@@ -148,6 +148,7 @@ details.
 * [Mapnik](https://github.com/mapbox/mapnik-vector-tile)
 * [OSRM](https://github.com/Project-OSRM/osrm-backend)
 * [Tippecanoe](https://github.com/mapbox/tippecanoe)
+* [Vtzero](https://github.com/mapbox/vtzero)
 
 Are you using Protozero? Tell us! Send a pull request with changes to this
 README.
