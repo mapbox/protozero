@@ -117,9 +117,9 @@ class pbf_reader {
         }
         m_data += len;
 
-    // In debug builds reset the tag to zero so that we can detect (some)
-    // wrong code.
 #ifndef NDEBUG
+        // In debug builds reset the tag to zero so that we can detect (some)
+        // wrong code.
         m_tag = 0;
 #endif
     }

@@ -29,7 +29,9 @@ namespace protozero {
  */
 struct exception : std::exception {
     /// Returns the explanatory string.
-    const char* what() const noexcept override { return "pbf exception"; }
+    const char* what() const noexcept override {
+        return "pbf exception";
+    }
 };
 
 /**
@@ -38,7 +40,9 @@ struct exception : std::exception {
  */
 struct varint_too_long_exception : exception {
     /// Returns the explanatory string.
-    const char* what() const noexcept override { return "varint too long exception"; }
+    const char* what() const noexcept override {
+        return "varint too long exception";
+    }
 };
 
 /**
@@ -47,7 +51,9 @@ struct varint_too_long_exception : exception {
  */
 struct unknown_pbf_wire_type_exception : exception {
     /// Returns the explanatory string.
-    const char* what() const noexcept override { return "unknown pbf field type exception"; }
+    const char* what() const noexcept override {
+        return "unknown pbf field type exception";
+    }
 };
 
 /**
@@ -60,7 +66,9 @@ struct unknown_pbf_wire_type_exception : exception {
  */
 struct end_of_buffer_exception : exception {
     /// Returns the explanatory string.
-    const char* what() const noexcept override { return "end of buffer exception"; }
+    const char* what() const noexcept override {
+        return "end of buffer exception";
+    }
 };
 
 /**
@@ -71,7 +79,9 @@ struct end_of_buffer_exception : exception {
  */
 struct invalid_tag_exception : exception {
     /// Returns the explanatory string.
-    const char* what() const noexcept override { return "invalid tag exception"; }
+    const char* what() const noexcept override {
+        return "invalid tag exception";
+    }
 };
 
 /**
@@ -81,7 +91,9 @@ struct invalid_tag_exception : exception {
  */
 struct invalid_length_exception : exception {
     /// Returns the explanatory string.
-    const char* what() const noexcept override { return "invalid length exception"; }
+    const char* what() const noexcept override {
+        return "invalid length exception";
+    }
 };
 
 } // end namespace protozero
