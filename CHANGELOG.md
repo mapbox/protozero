@@ -12,6 +12,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Fixed
+
+
+## [1.6.2] - 2018-03-09
+
+### Changed
+
 - Update included catch.hpp to v1.12.0.
 - Move basic unit tests into their own directory (`test/unit`).
 - Improved clang-tidy config and fixed some code producing warnings.
@@ -294,7 +301,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.1...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.2...HEAD
+[1.6.2]: https://github.com/osmcode/libosmium/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/osmcode/libosmium/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/osmcode/libosmium/compare/v1.5.3...v1.6.0
 [1.5.3]: https://github.com/osmcode/libosmium/compare/v1.5.2...v1.5.3
