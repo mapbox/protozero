@@ -185,3 +185,43 @@ TEST_CASE("lots of varints back and forth") {
     }
 }
 
+TEST_CASE("skip_varint with empty buffer throws") {
+    const char* buffer = "";
+    REQUIRE_THROWS_AS(protozero::skip_varint(&buffer, buffer), const protozero::end_of_buffer_exception&);
+}
+
+TEST_CASE("call skip_varint with every possible value for single byte in buffer") {
+    char buffer;
+    for (int i = 0; i <= 127; ++i) {
+        buffer = static_cast<char>(i);
+        const char* b = &buffer;
+        protozero::skip_varint(&b, &buffer + 1);
+        REQUIRE(b == &buffer + 1);
+    }
+    for (int i = 128; i <= 255; ++i) {
+        buffer = static_cast<char>(i);
+        const char* b = &buffer;
+        REQUIRE_THROWS_AS(protozero::skip_varint(&b, &buffer + 1), const protozero::end_of_buffer_exception&);
+    }
+}
+
+TEST_CASE("decode_varint with empty buffer throws") {
+    const char* buffer = "";
+    REQUIRE_THROWS_AS(protozero::decode_varint(&buffer, buffer), const protozero::end_of_buffer_exception&);
+}
+
+TEST_CASE("call decode_varint with every possible value for single byte in buffer") {
+    char buffer;
+    for (int i = 0; i <= 127; ++i) {
+        buffer = static_cast<char>(i);
+        const char* b = &buffer;
+        REQUIRE(protozero::decode_varint(&b, &buffer + 1) == i);
+        REQUIRE(b == &buffer + 1);
+    }
+    for (int i = 128; i <= 255; ++i) {
+        buffer = static_cast<char>(i);
+        const char* b = &buffer;
+        REQUIRE_THROWS_AS(protozero::decode_varint(&b, &buffer + 1), const protozero::end_of_buffer_exception&);
+    }
+}
+
