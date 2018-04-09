@@ -184,7 +184,7 @@ public:
 
     ~const_fixed_iterator() noexcept = default;
 
-    value_type operator*() const {
+    value_type operator*() const noexcept {
         value_type result;
         std::memcpy(&result, m_data, sizeof(value_type));
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
