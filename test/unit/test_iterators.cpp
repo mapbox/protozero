@@ -12,7 +12,7 @@ TEST_CASE("default constructed varint_iterators are equal") {
     REQUIRE(a == r.begin());
     REQUIRE(a == r.end());
     REQUIRE(r.empty());
-    REQUIRE(r.size() == 0);
+    REQUIRE(r.size() == 0); // NOLINT(readability-container-size-empty)
     REQUIRE(r.begin() == r.end());
 }
 
