@@ -10,6 +10,7 @@ set(UNIT_TESTS data_view
                basic
                endian
                exceptions
+               iterators
                varint
                zigzag)
 
