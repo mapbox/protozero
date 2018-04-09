@@ -302,6 +302,11 @@ public:
     using reference         = value_type&;
 
     static difference_type distance(const_varint_iterator begin, const_varint_iterator end) noexcept {
+        // The "distance" between default initialized const_varint_iterator's
+        // is always 0.
+        if (!begin.m_data) {
+            return 0;
+        }
         // We know that each varint contains exactly one byte with the most
         // significant bit not set. We can use this to quickly figure out
         // how many varints there are without actually decoding the varints.
