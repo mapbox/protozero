@@ -326,16 +326,19 @@ public:
     ~const_varint_iterator() noexcept = default;
 
     value_type operator*() const {
+        protozero_assert(m_data);
         const char* d = m_data; // will be thrown away
         return static_cast<value_type>(decode_varint(&d, m_end));
     }
 
     const_varint_iterator& operator++() {
+        protozero_assert(m_data);
         skip_varint(&m_data, m_end);
         return *this;
     }
 
     const_varint_iterator operator++(int) {
+        protozero_assert(m_data);
         const const_varint_iterator tmp{*this};
         ++(*this);
         return tmp;
@@ -383,16 +386,19 @@ public:
     ~const_svarint_iterator() = default;
 
     value_type operator*() const {
+        protozero_assert(this->m_data);
         const char* d = this->m_data; // will be thrown away
         return static_cast<value_type>(decode_zigzag64(decode_varint(&d, this->m_end)));
     }
 
     const_svarint_iterator& operator++() {
+        protozero_assert(this->m_data);
         skip_varint(&this->m_data, this->m_end);
         return *this;
     }
 
     const_svarint_iterator operator++(int) {
+        protozero_assert(this->m_data);
         const const_svarint_iterator tmp{*this};
         ++(*this);
         return tmp;
