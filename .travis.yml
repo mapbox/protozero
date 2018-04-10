@@ -142,11 +142,11 @@ matrix:
       compiler: clang
       env: BUILD='Debug'
     - os: osx
-      osx_image: xcode9.1
+      osx_image: xcode9.3
       compiler: clang
       env: BUILD='Debug'
     - os: osx
-      osx_image: xcode9.1
+      osx_image: xcode9.3
       compiler: clang
       env: BUILD='Release'
 
