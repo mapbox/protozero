@@ -153,9 +153,11 @@ matrix:
 #-----------------------------------------------------------------------------
 
 install:
-  - if [[ $(uname -s) == 'Darwin' ]]; then
-      brew update;
-      brew install protobuf;
+  - |
+    if [[ $(uname -s) == 'Darwin' ]]; then
+      brew update
+      brew install protobuf
+      true
     fi
 
 script:
