@@ -80,7 +80,7 @@ class pbf_reader {
         skip_bytes(sizeof(T));
         std::memcpy(&result, data, sizeof(T));
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
-        detail::byteswap_inplace(&result);
+        byteswap_inplace(&result);
 #endif
         return result;
     }

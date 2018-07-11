@@ -7,14 +7,14 @@
 #include <protozero/byteswap.hpp>
 
 static int32_t check_swap_4(int32_t data) noexcept {
-    protozero::detail::byteswap_inplace(&data);
-    protozero::detail::byteswap_inplace(&data);
+    protozero::byteswap_inplace(&data);
+    protozero::byteswap_inplace(&data);
     return data;
 }
 
 static int64_t check_swap_8(int64_t data) noexcept {
-    protozero::detail::byteswap_inplace(&data);
-    protozero::detail::byteswap_inplace(&data);
+    protozero::byteswap_inplace(&data);
+    protozero::byteswap_inplace(&data);
     return data;
 }
 
@@ -40,32 +40,32 @@ TEST_CASE("byte swapping") {
 
 TEST_CASE("byte swap uint32_t") {
     uint32_t a = 17;
-    protozero::detail::byteswap_inplace(&a);
-    protozero::detail::byteswap_inplace(&a);
+    protozero::byteswap_inplace(&a);
+    protozero::byteswap_inplace(&a);
 
     REQUIRE(17 == a);
 }
 
 TEST_CASE("byte swap uint64_t") {
     uint64_t a = 347529808;
-    protozero::detail::byteswap_inplace(&a);
-    protozero::detail::byteswap_inplace(&a);
+    protozero::byteswap_inplace(&a);
+    protozero::byteswap_inplace(&a);
 
     REQUIRE(347529808 == a);
 }
 
 TEST_CASE("byte swap double") {
     double a = 1.1;
-    protozero::detail::byteswap_inplace(&a);
-    protozero::detail::byteswap_inplace(&a);
+    protozero::byteswap_inplace(&a);
+    protozero::byteswap_inplace(&a);
 
     REQUIRE(a == Approx(1.1));
 }
 
 TEST_CASE("byte swap float") {
     float a = 1.1f;
-    protozero::detail::byteswap_inplace(&a);
-    protozero::detail::byteswap_inplace(&a);
+    protozero::byteswap_inplace(&a);
+    protozero::byteswap_inplace(&a);
 
     REQUIRE(a == Approx(1.1f));
 }
