@@ -15,6 +15,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [1.6.3] - 2018-07-17
+
+### Changed
+
+- Moved `byteswap_inplace` functions from detail into protozero namespace.
+  They can be useful outsize protozero.
+- More asserts and unit tests and small cleanups.
+
+
 ## [1.6.2] - 2018-03-09
 
 ### Changed
@@ -301,7 +310,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.2...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.3...HEAD
+[1.6.3]: https://github.com/osmcode/libosmium/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/osmcode/libosmium/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/osmcode/libosmium/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/osmcode/libosmium/compare/v1.5.3...v1.6.0
