@@ -130,10 +130,6 @@ matrix:
       env: BUILD='Release' CC=gcc-6 CXX=g++-6
       addons: *gcc6
     - os: osx
-      osx_image: xcode6.4
-      compiler: clang
-      env: BUILD='Debug'
-    - os: osx
       osx_image: xcode7.3
       compiler: clang
       env: BUILD='Debug'
