@@ -204,14 +204,6 @@ public:
         return tmp;
     }
 
-    bool operator==(const_fixed_iterator rhs) const noexcept {
-        return m_data == rhs.m_data;
-    }
-
-    bool operator!=(const_fixed_iterator rhs) const noexcept {
-        return !(*this == rhs);
-    }
-
     const_fixed_iterator& operator--() noexcept {
         m_data -= sizeof(value_type);
         return *this;
@@ -221,6 +213,14 @@ public:
         const const_fixed_iterator tmp{*this};
         --(*this);
         return tmp;
+    }
+
+    friend bool operator==(const_fixed_iterator lhs, const_fixed_iterator rhs) noexcept {
+        return lhs.m_data == rhs.m_data;
+    }
+
+    friend bool operator!=(const_fixed_iterator lhs, const_fixed_iterator rhs) noexcept {
+        return !(lhs == rhs);
     }
 
     friend bool operator<(const_fixed_iterator lhs, const_fixed_iterator rhs) noexcept {
@@ -237,7 +237,6 @@ public:
 
     friend bool operator>=(const_fixed_iterator lhs, const_fixed_iterator rhs) noexcept {
         return !(lhs < rhs);
-
     }
 
     const_fixed_iterator& operator+=(difference_type val) noexcept {
