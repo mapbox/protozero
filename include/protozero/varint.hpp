@@ -156,6 +156,23 @@ inline int write_varint(T data, uint64_t value) {
 }
 
 /**
+ * Get the length of the varint the specified value would produce.
+ *
+ * @param value The integer to be encoded.
+ * @returns the number of bytes the varint would have if we created it.
+ */
+inline int length_of_varint(uint64_t value) noexcept {
+    int n = 1;
+
+    while (value >= 0x80u) {
+        value >>= 7u;
+        ++n;
+    }
+
+    return n;
+}
+
+/**
  * ZigZag encodes a 32 bit integer.
  */
 inline constexpr uint32_t encode_zigzag32(int32_t value) noexcept {

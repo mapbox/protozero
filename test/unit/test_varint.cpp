@@ -213,15 +213,29 @@ TEST_CASE("decode_varint with empty buffer throws") {
 TEST_CASE("call decode_varint with every possible value for single byte in buffer") {
     char buffer;
     for (int i = 0; i <= 127; ++i) {
+        REQUIRE(protozero::length_of_varint(i) == 1);
         buffer = static_cast<char>(i);
         const char* b = &buffer;
         REQUIRE(protozero::decode_varint(&b, &buffer + 1) == i);
         REQUIRE(b == &buffer + 1);
     }
     for (int i = 128; i <= 255; ++i) {
+        REQUIRE(protozero::length_of_varint(i) == 2);
         buffer = static_cast<char>(i);
         const char* b = &buffer;
         REQUIRE_THROWS_AS(protozero::decode_varint(&b, &buffer + 1), const protozero::end_of_buffer_exception&);
     }
+}
+
+TEST_CASE("check lengths of varint") {
+    REQUIRE(protozero::length_of_varint(0) == 1);
+    REQUIRE(protozero::length_of_varint(127) == 1);
+    REQUIRE(protozero::length_of_varint(128) == 2);
+    REQUIRE(protozero::length_of_varint(16383) == 2);
+    REQUIRE(protozero::length_of_varint(16384) == 3);
+    REQUIRE(protozero::length_of_varint(2097151) == 3);
+    REQUIRE(protozero::length_of_varint(2097152) == 4);
+    REQUIRE(protozero::length_of_varint(0xffffffffull) == 5);
+    REQUIRE(protozero::length_of_varint(0xffffffffffffffffull) == 10);
 }
 
