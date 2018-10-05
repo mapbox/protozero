@@ -6,8 +6,6 @@
 
 language: generic
 
-sudo: false
-
 dist: trusty
 
 #-----------------------------------------------------------------------------
@@ -89,8 +87,6 @@ matrix:
       env: BUILD='Debug' CC=clang-5.0 CXX=clang++-5.0
            CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
            LDFLAGS="-fsanitize=address,undefined,integer"
-      # LSAN doesn't work on container-based system
-      sudo: required
       addons: *clang50
     - os: linux
       compiler: "gcc-4.7"
