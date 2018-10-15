@@ -6,9 +6,15 @@ TEST_CASE("read message field: string") {
 
     protozero::pbf_reader item{buffer};
 
+    REQUIRE(item.data().data() == buffer.data());
+    REQUIRE(item.data().size() == buffer.size());
+
     REQUIRE(item.next());
     protozero::pbf_reader subitem{item.get_message()};
     REQUIRE_FALSE(item.next());
+
+    REQUIRE(item.data().data() == buffer.data() + buffer.size());
+    REQUIRE(item.data().empty());
 
     REQUIRE(subitem.next());
     REQUIRE(subitem.get_string() == "foobar");
