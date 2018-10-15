@@ -248,6 +248,13 @@ public:
     }
 
     /**
+     * Get a view of the not yet read data.
+     */
+    data_view data() const noexcept {
+        return {m_data, m_end - m_data};
+    }
+
+    /**
      * Return the length in bytes of the current message. If you have
      * already called next() and/or any of the get_*() functions, this will
      * return the remaining length.
