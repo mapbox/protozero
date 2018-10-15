@@ -84,7 +84,6 @@ matrix:
     - os: linux
       compiler: "clang-5.0"
       env: BUILD='Debug' CC=clang-5.0 CXX=clang++-5.0
-           CLANG_TIDY=clang-tidy-5.0
       addons: *clang50
     - os: linux
       compiler: "clang-6.0"
