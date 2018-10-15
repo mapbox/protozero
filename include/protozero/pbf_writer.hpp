@@ -34,8 +34,6 @@ documentation.
 #include <string>
 #include <utility>
 
-#include <iostream>
-
 namespace protozero {
 
 namespace detail {
@@ -45,31 +43,6 @@ namespace detail {
     template <typename T> class packed_field_fixed;
 
 } // end namespace detail
-
-struct nested_msg_desc {
-    std::size_t size = 0;
-    const char* data = nullptr;
-    int depth = 0;
-    pbf_tag_type tag;
-
-    nested_msg_desc(pbf_tag_type tag_) :
-        tag(tag_) {
-    }
-
-    nested_msg_desc(pbf_tag_type tag_, const std::string& data_, int depth_ = 0) :
-        size(data_.size()),
-        data(data_.data()),
-        depth(depth_),
-        tag(tag_) {
-    }
-
-    nested_msg_desc(pbf_tag_type tag_, const data_view& view, int depth_ = 0) :
-        size(view.size()),
-        data(view.data()),
-        depth(depth_),
-        tag(tag_) {
-    }
-};
 
 /**
  * The pbf_writer is used to write PBF formatted messages into a buffer.
@@ -618,78 +591,6 @@ public:
         add_length_varint(tag, pbf_length_type(sum_size));
         m_data->reserve(m_data->size() + sum_size);
         (void)std::initializer_list<int>{(m_data->append(values.data(), values.size()), 0)...};
-    }
-
-    nested_msg_desc* calculate_sizes(nested_msg_desc* parent, nested_msg_desc* it, const nested_msg_desc* end) noexcept {
-        const int depth = parent->depth + 1;
-        std::size_t sum = 0;
-
-        std::cerr << "parent=" << parent << "\n";
-
-        while (it != end && it->depth >= depth) {
-            std::cerr << "loop " << it << " depth=" << it->depth << "\n";
-            if (it->depth == depth && it->size) {
-                std::cerr << "  ==\n";
-                sum += it->size;
-                if (it->tag != 0) {
-                    sum += length_of_varint(it->size) + length_of_varint(it->tag);
-                }
-            } else if (it->depth > depth) {
-                std::cerr << "  rec\n";
-                it = calculate_sizes(it, it + 1, end);
-            }
-            ++it;
-        }
-
-        std::cerr << "parent sum += " << sum << "\n";
-        parent->size += sum;
-        return it;
-    }
-
-    std::size_t calculate_sizes(nested_msg_desc* it, nested_msg_desc* end) noexcept {
-        const auto parent = it++;
-        assert(it != end);
-        assert(parent->size == 0);
-        it = calculate_sizes(parent, it, end);
-        assert(it == end);
-        return parent->size + length_of_varint(parent->size) + length_of_varint(parent->tag);;
-    }
-
-    void add_nested(nested_msg_desc* begin, nested_msg_desc* end) {
-        assert(begin != end);
-        std::cerr << "LIST before calculate_sizes:\n";
-        for (auto it = begin; it != end; ++it) {
-            std::cerr << "  " << it << " NMD(" << it->size <<")\n";
-        }
-        const std::size_t new_size = m_data->size() + calculate_sizes(begin, end);
-
-        std::cerr << "  old_size=" << m_data->size() << " new_size=" << new_size << "\n";
-        m_data->reserve(new_size);
-
-        std::cerr << "LIST after calculate_sizes:\n";
-        for (auto it = begin; it != end; ++it) {
-            std::cerr << "  " << it << " NMD(" << it->size << ")\n";
-        }
-
-        std::cerr << "append data\n";
-        for (auto it = begin; it != end; ++it) {
-            std::cerr << "  it=" << it << "\n";
-            if (it->size) {
-                std::cerr << "    size > 0\n";
-                if (it->tag != 0) {
-                    std::cerr << "      has tag\n";
-                    add_length_varint(it->tag, pbf_length_type(it->size));
-                }
-                if (it->data) {
-                    std::cerr << "      has data\n";
-                    m_data->append(it->data, it->size);
-                }
-            }
-        }
-        std::cerr << "append data, done.\n";
-
-        std::cerr << "  size=" << m_data->size() << " new_size=" << new_size << "\n";
-        assert(m_data->size() == new_size);
     }
 
     /**

@@ -251,7 +251,7 @@ public:
      * Get a view of the not yet read data.
      */
     data_view data() const noexcept {
-        return {m_data, static_cast<std::size_t>(m_end - m_data)};
+        return {m_data, m_end - m_data};
     }
 
     /**
