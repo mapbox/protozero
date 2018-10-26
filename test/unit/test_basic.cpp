@@ -1,6 +1,36 @@
 
 #include <test.hpp>
 
+#include <type_traits>
+
+template <typename T>
+struct movable_not_copyable {
+    constexpr static bool value = !std::is_copy_constructible<T>::value &&
+                                  !std::is_copy_assignable<T>::value    &&
+                                   std::is_nothrow_move_constructible<T>::value &&
+                                   std::is_nothrow_move_assignable<T>::value;
+};
+
+static_assert(movable_not_copyable<protozero::pbf_writer>::value, "pbf_writer should be nothrow movable, but not copyable");
+
+enum class dummy : protozero::pbf_tag_type {};
+static_assert(movable_not_copyable<protozero::pbf_builder<dummy>>::value, "pbf_builder should be nothrow movable, but not copyable");
+
+static_assert(movable_not_copyable<protozero::packed_field_bool>::value, "packed_field_bool should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_enum>::value, "packed_field_enum should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_int32>::value, "packed_field_int32 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_sint32>::value, "packed_field_sint32 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_uint32>::value, "packed_field_uint32 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_int64>::value, "packed_field_int64 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_sint64>::value, "packed_field_sint64 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_uint64>::value, "packed_field_uint64 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_fixed32>::value, "packed_field_fixed32 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_sfixed32>::value, "packed_field_sfixed32 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_fixed64>::value, "packed_field_fixed64 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_sfixed64>::value, "packed_field_sfixed64 should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_float>::value, "packed_field_float should be nothrow movable, but not copyable");
+static_assert(movable_not_copyable<protozero::packed_field_double>::value, "packed_field_double should be nothrow movable, but not copyable");
+
 TEST_CASE("default constructed pbf_reader is okay") {
     protozero::pbf_reader item;
 
