@@ -10,9 +10,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Add function `data()` to get the not yet read data from a `pbf_reader`.
+- New `add_packed_fixed()` template function for `pbf_writer`.
+- New `length_of_varint()` helper function calculates how long a varint
+  would be for a specified value.
+
 ### Changed
 
+- More consistent implementation of operators as free friend functions.
+
 ### Fixed
+
+- Fixed some zigzag encoding tests on MSVC.
+- Add extra cast so we do an xor with unsigned ints.
 
 
 ## [1.6.3] - 2018-07-17
