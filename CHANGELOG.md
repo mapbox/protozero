@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed some zigzag encoding tests on MSVC.
 - Add extra cast so we do an xor with unsigned ints.
 - No more bitwise operations on signed integers in varint decoder.
+- No more bitwise operations on signed integers in zigzag encoder/decoder.
 
 
 ## [1.6.3] - 2018-07-17

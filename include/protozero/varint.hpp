@@ -176,28 +176,28 @@ inline int length_of_varint(uint64_t value) noexcept {
  * ZigZag encodes a 32 bit integer.
  */
 inline constexpr uint32_t encode_zigzag32(int32_t value) noexcept {
-    return (static_cast<uint32_t>(value) << 1u) ^ (static_cast<uint32_t>(value >> 31u));
+    return (static_cast<uint32_t>(value) << 1u) ^ -(static_cast<uint32_t>(value) >> 31u);
 }
 
 /**
  * ZigZag encodes a 64 bit integer.
  */
 inline constexpr uint64_t encode_zigzag64(int64_t value) noexcept {
-    return (static_cast<uint64_t>(value) << 1u) ^ (static_cast<uint64_t>(value >> 63u));
+    return (static_cast<uint64_t>(value) << 1u) ^ -(static_cast<uint64_t>(value) >> 63u);
 }
 
 /**
  * Decodes a 32 bit ZigZag-encoded integer.
  */
 inline constexpr int32_t decode_zigzag32(uint32_t value) noexcept {
-    return static_cast<int32_t>((value >> 1u) ^ static_cast<uint32_t>(-static_cast<int32_t>(value & 1u)));
+    return static_cast<int32_t>((value >> 1u) ^ -(value & 1u));
 }
 
 /**
  * Decodes a 64 bit ZigZag-encoded integer.
  */
 inline constexpr int64_t decode_zigzag64(uint64_t value) noexcept {
-    return static_cast<int64_t>((value >> 1u) ^ static_cast<uint64_t>(-static_cast<int64_t>(value & 1u)));
+    return static_cast<int64_t>((value >> 1u) ^ -(value & 1u));
 }
 
 } // end namespace protozero
