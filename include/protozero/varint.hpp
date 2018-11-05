@@ -39,22 +39,22 @@ namespace detail {
         if (iend - begin >= max_varint_length) {  // fast path
             do {
                 int64_t b;
-                b = *p++; val  = uint64_t((b & 0x7fu)       ); if (b >= 0) { break; }
-                b = *p++; val |= uint64_t((b & 0x7fu) <<  7u); if (b >= 0) { break; }
-                b = *p++; val |= uint64_t((b & 0x7fu) << 14u); if (b >= 0) { break; }
-                b = *p++; val |= uint64_t((b & 0x7fu) << 21u); if (b >= 0) { break; }
-                b = *p++; val |= uint64_t((b & 0x7fu) << 28u); if (b >= 0) { break; }
-                b = *p++; val |= uint64_t((b & 0x7fu) << 35u); if (b >= 0) { break; }
-                b = *p++; val |= uint64_t((b & 0x7fu) << 42u); if (b >= 0) { break; }
-                b = *p++; val |= uint64_t((b & 0x7fu) << 49u); if (b >= 0) { break; }
-                b = *p++; val |= uint64_t((b & 0x7fu) << 56u); if (b >= 0) { break; }
-                b = *p++; val |= uint64_t((b & 0x01u) << 63u); if (b >= 0) { break; }
+                b = *p++; val  = ((uint64_t(b) & 0x7fu)       ); if (b >= 0) { break; }
+                b = *p++; val |= ((uint64_t(b) & 0x7fu) <<  7u); if (b >= 0) { break; }
+                b = *p++; val |= ((uint64_t(b) & 0x7fu) << 14u); if (b >= 0) { break; }
+                b = *p++; val |= ((uint64_t(b) & 0x7fu) << 21u); if (b >= 0) { break; }
+                b = *p++; val |= ((uint64_t(b) & 0x7fu) << 28u); if (b >= 0) { break; }
+                b = *p++; val |= ((uint64_t(b) & 0x7fu) << 35u); if (b >= 0) { break; }
+                b = *p++; val |= ((uint64_t(b) & 0x7fu) << 42u); if (b >= 0) { break; }
+                b = *p++; val |= ((uint64_t(b) & 0x7fu) << 49u); if (b >= 0) { break; }
+                b = *p++; val |= ((uint64_t(b) & 0x7fu) << 56u); if (b >= 0) { break; }
+                b = *p++; val |= ((uint64_t(b) & 0x01u) << 63u); if (b >= 0) { break; }
                 throw varint_too_long_exception{};
             } while (false);
         } else {
             unsigned int shift = 0;
             while (p != iend && *p < 0) {
-                val |= uint64_t(*p++ & 0x7fu) << shift;
+                val |= (uint64_t(*p++) & 0x7fu) << shift;
                 shift += 7;
             }
             if (p == iend) {
@@ -88,7 +88,7 @@ namespace detail {
  */
 inline uint64_t decode_varint(const char** data, const char* end) {
     // If this is a one-byte varint, decode it here.
-    if (end != *data && ((**data & 0x80u) == 0)) {
+    if (end != *data && ((static_cast<uint64_t>(**data) & 0x80u) == 0)) {
         const auto val = static_cast<uint64_t>(**data);
         ++(*data);
         return val;
