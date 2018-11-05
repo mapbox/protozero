@@ -164,6 +164,8 @@ class const_fixed_iterator {
 
 public:
 
+    /// @cond usual iterator functions not documented
+
     using iterator_category = std::random_access_iterator_tag;
     using value_type        = T;
     using difference_type   = std::ptrdiff_t;
@@ -275,6 +277,8 @@ public:
         return *(*this + n);
     }
 
+    /// @endcond
+
 }; // class const_fixed_iterator
 
 /**
@@ -293,6 +297,8 @@ protected:
     const char* m_end = nullptr;
 
 public:
+
+    /// @cond usual iterator functions not documented
 
     using iterator_category = std::forward_iterator_tag;
     using value_type        = T;
@@ -356,6 +362,8 @@ public:
         return !(*this == rhs);
     }
 
+    /// @endcond
+
 }; // class const_varint_iterator
 
 /**
@@ -366,6 +374,8 @@ template <typename T>
 class const_svarint_iterator : public const_varint_iterator<T> {
 
 public:
+
+    /// @cond usual iterator functions not documented
 
     using iterator_category = std::forward_iterator_tag;
     using value_type        = T;
@@ -408,6 +418,8 @@ public:
         return tmp;
     }
 
+    /// @endcond
+
 }; // class const_svarint_iterator
 
 } // end namespace protozero
@@ -417,6 +429,8 @@ namespace std {
     // Specialize std::distance for all the protozero iterators. Because
     // functions can't be partially specialized, we have to do this for
     // every value_type we are using.
+
+    /// @cond individual overloads do not need to be documented
 
     template <>
     inline typename protozero::const_varint_iterator<int32_t>::difference_type
@@ -459,6 +473,8 @@ namespace std {
                                                          protozero::const_svarint_iterator<int64_t> last) {
         return protozero::const_svarint_iterator<int64_t>::distance(first, last);
     }
+
+    /// @endcond
 
 } // end namespace std
 
