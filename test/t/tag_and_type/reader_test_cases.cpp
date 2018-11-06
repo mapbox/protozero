@@ -28,7 +28,7 @@ inline std::vector<uint32_t> read_data(const std::string& data) {
                 }
                 break;
             default:
-                message.skip();
+                REQUIRE(false); // should never be here
         }
     }
 
