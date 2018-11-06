@@ -460,10 +460,6 @@ TEST_CASE("write complex data using pbf_writer: all") {
                 REQUIRE(sum == 5);
                 break;
             }
-            case 8: {
-                REQUIRE(item.get_string() == "optionalstring");
-                break;
-            }
             default: {
                 REQUIRE(false); // should not be here
                 break;
@@ -619,10 +615,6 @@ TEST_CASE("write complex data using pbf_builder: all") {
                     sum += val;
                 }
                 REQUIRE(sum == 5);
-                break;
-            }
-            case 8: {
-                REQUIRE(item.get_string() == "optionalstring");
                 break;
             }
             default: {
