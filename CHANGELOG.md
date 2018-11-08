@@ -10,6 +10,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+### Changed
+
+### Fixed
+
+
+## [1.6.4] - 2018-11-08
+
+### Added
+
 - Add function `data()` to get the not yet read data from a `pbf_reader`.
 - New `add_packed_fixed()` template function for `pbf_writer`.
 - New `length_of_varint()` helper function calculates how long a varint
@@ -322,7 +331,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.3...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.4...HEAD
+[1.6.4]: https://github.com/osmcode/libosmium/compare/v1.6.3...v1.6.4
 [1.6.3]: https://github.com/osmcode/libosmium/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/osmcode/libosmium/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/osmcode/libosmium/compare/v1.6.0...v1.6.1
