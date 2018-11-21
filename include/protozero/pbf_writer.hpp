@@ -227,7 +227,7 @@ public:
      * doesn't have to be empty. The pbf_writer will just append data.
      */
     explicit pbf_writer(std::string& data) noexcept :
-        m_data(&data) {
+        m_data{&data} {
     }
 
     /**
@@ -247,8 +247,8 @@ public:
      *        a few very specific cases.
      */
     pbf_writer(pbf_writer& parent_writer, pbf_tag_type tag, std::size_t size=0) :
-        m_data(parent_writer.m_data),
-        m_parent_writer(&parent_writer) {
+        m_data{parent_writer.m_data},
+        m_parent_writer{&parent_writer} {
         m_parent_writer->open_submessage(tag, size);
     }
 
@@ -263,10 +263,10 @@ public:
      * be invalid.
      */
     pbf_writer(pbf_writer&& other) noexcept :
-        m_data(other.m_data),
-        m_parent_writer(other.m_parent_writer),
-        m_rollback_pos(other.m_rollback_pos),
-        m_pos(other.m_pos) {
+        m_data{other.m_data},
+        m_parent_writer{other.m_parent_writer},
+        m_rollback_pos{other.m_rollback_pos},
+        m_pos{other.m_pos} {
         other.m_data = nullptr;
         other.m_parent_writer = nullptr;
         other.m_rollback_pos = 0;
@@ -941,11 +941,11 @@ namespace detail {
         packed_field() = default;
 
         packed_field(pbf_writer& parent_writer, pbf_tag_type tag) :
-            m_writer(parent_writer, tag) {
+            m_writer{parent_writer, tag} {
         }
 
         packed_field(pbf_writer& parent_writer, pbf_tag_type tag, std::size_t size) :
-            m_writer(parent_writer, tag, size) {
+            m_writer{parent_writer, tag, size} {
         }
 
         ~packed_field() noexcept = default;
@@ -970,17 +970,17 @@ namespace detail {
     public:
 
         packed_field_fixed() :
-            packed_field() {
+            packed_field{} {
         }
 
         template <typename P>
         packed_field_fixed(pbf_writer& parent_writer, P tag) :
-            packed_field(parent_writer, static_cast<pbf_tag_type>(tag)) {
+            packed_field{parent_writer, static_cast<pbf_tag_type>(tag)} {
         }
 
         template <typename P>
         packed_field_fixed(pbf_writer& parent_writer, P tag, std::size_t size) :
-            packed_field(parent_writer, static_cast<pbf_tag_type>(tag), size * sizeof(T)) {
+            packed_field{parent_writer, static_cast<pbf_tag_type>(tag), size * sizeof(T)} {
         }
 
         void add_element(T value) {
@@ -995,12 +995,12 @@ namespace detail {
     public:
 
         packed_field_varint() :
-            packed_field() {
+            packed_field{} {
         }
 
         template <typename P>
         packed_field_varint(pbf_writer& parent_writer, P tag) :
-            packed_field(parent_writer, static_cast<pbf_tag_type>(tag)) {
+            packed_field{parent_writer, static_cast<pbf_tag_type>(tag)} {
         }
 
         void add_element(T value) {
@@ -1015,12 +1015,12 @@ namespace detail {
     public:
 
         packed_field_svarint() :
-            packed_field() {
+            packed_field{} {
         }
 
         template <typename P>
         packed_field_svarint(pbf_writer& parent_writer, P tag) :
-            packed_field(parent_writer, static_cast<pbf_tag_type>(tag)) {
+            packed_field{parent_writer, static_cast<pbf_tag_type>(tag)} {
         }
 
         void add_element(T value) {

@@ -153,8 +153,8 @@ public:
      * @post There is no current field.
      */
     explicit pbf_reader(const data_view& view) noexcept
-        : m_data(view.data()),
-          m_end(view.data() + view.size()) {
+        : m_data{view.data()},
+          m_end{view.data() + view.size()} {
     }
 
     /**
@@ -168,8 +168,8 @@ public:
      * @post There is no current field.
      */
     pbf_reader(const char* data, std::size_t size) noexcept
-        : m_data(data),
-          m_end(data + size) {
+        : m_data{data},
+          m_end{data + size} {
     }
 
 #ifndef PROTOZERO_STRICT_API
@@ -185,8 +185,8 @@ public:
      * @deprecated Use one of the other constructors.
      */
     explicit pbf_reader(const std::pair<const char*, std::size_t>& data) noexcept
-        : m_data(data.first),
-          m_end(data.first + data.second) {
+        : m_data{data.first},
+          m_end{data.first + data.second} {
     }
 #endif
 
@@ -201,8 +201,8 @@ public:
      * @post There is no current field.
      */
     explicit pbf_reader(const std::string& data) noexcept
-        : m_data(data.data()),
-          m_end(data.data() + data.size()) {
+        : m_data{data.data()},
+          m_end{data.data() + data.size()} {
     }
 
     /**

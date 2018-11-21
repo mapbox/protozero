@@ -56,7 +56,7 @@ public:
      * Default constructor. Create empty iterator_range.
      */
     constexpr iterator_range() :
-        P(iterator{}, iterator{}) {
+        P{iterator{}, iterator{}} {
     }
 
     /**
@@ -66,8 +66,8 @@ public:
      * @param last_iterator Iterator to end of range.
      */
     constexpr iterator_range(iterator&& first_iterator, iterator&& last_iterator) :
-        P(std::forward<iterator>(first_iterator),
-          std::forward<iterator>(last_iterator)) {
+        P{std::forward<iterator>(first_iterator),
+          std::forward<iterator>(last_iterator)} {
     }
 
     /// Return iterator to beginning of range.
@@ -175,7 +175,7 @@ public:
     const_fixed_iterator() noexcept = default;
 
     explicit const_fixed_iterator(const char* data) noexcept :
-        m_data(data) {
+        m_data{data} {
     }
 
     const_fixed_iterator(const const_fixed_iterator&) noexcept = default;
@@ -323,8 +323,8 @@ public:
     const_varint_iterator() noexcept = default;
 
     const_varint_iterator(const char* data, const char* end) noexcept :
-        m_data(data),
-        m_end(end) {
+        m_data{data},
+        m_end{end} {
     }
 
     const_varint_iterator(const const_varint_iterator&) noexcept = default;
@@ -384,11 +384,11 @@ public:
     using reference         = value_type&;
 
     const_svarint_iterator() noexcept :
-        const_varint_iterator<T>() {
+        const_varint_iterator<T>{} {
     }
 
     const_svarint_iterator(const char* data, const char* end) noexcept :
-        const_varint_iterator<T>(data, end) {
+        const_varint_iterator<T>{data, end} {
     }
 
     const_svarint_iterator(const const_svarint_iterator&) = default;
