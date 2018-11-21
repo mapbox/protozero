@@ -6,7 +6,7 @@
 
 language: generic
 
-dist: trusty
+dist: xenial
 
 #-----------------------------------------------------------------------------
 
@@ -18,23 +18,21 @@ addons_shortcuts:
       packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-3.5' ]
   addons_clang38: &clang38
     apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-3.8' ]
       packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-3.8' ]
   addons_clang39: &clang39
     apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-3.9' ]
       packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-3.9' ]
   addons_clang40: &clang40
     apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-4.0' ]
+      sources: [ 'ubuntu-toolchain-r-test' ]
       packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-4.0' ]
   addons_clang50: &clang50
     apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0' ]
+      sources: [ 'ubuntu-toolchain-r-test' ]
       packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-5.0' ]
   addons_clang60: &clang60
     apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-6.0' ]
+      sources: [ 'ubuntu-toolchain-r-test' ]
       packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-6.0', 'clang-tidy-6.0' ]
   addons_gcc47: &gcc47
     apt:
@@ -68,97 +66,118 @@ matrix:
     - os: linux
       compiler: "clang-3.5"
       env: BUILD='Debug' CC=clang-3.5 CXX=clang++-3.5
+      dist: trusty
       addons: *clang35
+
     - os: linux
       compiler: "clang-3.8"
       env: BUILD='Debug' CC=clang-3.8 CXX=clang++-3.8
       addons: *clang38
+
     - os: linux
       compiler: "clang-3.9"
       env: BUILD='Debug' CC=clang-3.9 CXX=clang++-3.9
       addons: *clang39
+
     - os: linux
       compiler: "clang-4.0"
       env: BUILD='Debug' CC=clang-4.0 CXX=clang++-4.0
       addons: *clang40
+
     - os: linux
       compiler: "clang-5.0"
       env: BUILD='Debug' CC=clang-5.0 CXX=clang++-5.0
       addons: *clang50
+
     - os: linux
       compiler: "clang-6.0"
       env: BUILD='Debug' CC=clang-6.0 CXX=clang++-6.0
            CLANG_TIDY=clang-tidy-6.0
       addons: *clang60
-    - os: linux
-      compiler: "clang-6.0"
-      env: BUILD='Release' CC=clang-6.0 CXX=clang++-6.0
-      addons: *clang60
+
     - os: linux
       compiler: "clang-6.0"
       env: BUILD='Debug' CC=clang-6.0 CXX=clang++-6.0
            CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
            LDFLAGS="-fsanitize=address,undefined,integer"
       addons: *clang60
+
+    - os: linux
+      compiler: "clang-6.0"
+      env: BUILD='Release' CC=clang-6.0 CXX=clang++-6.0
+      addons: *clang60
+
     - os: linux
       compiler: "gcc-4.7"
       env: BUILD='Debug' CC=gcc-4.7 CXX=g++-4.7
+      dist: trusty
       addons: *gcc47
+
     - os: linux
       compiler: "gcc-4.8"
       env: BUILD='Debug' CC=gcc-4.8 CXX=g++-4.8
+      dist: trusty
       addons: *gcc48
+
     - os: linux
       compiler: "gcc-4.9"
       env: BUILD='Debug' CC=gcc-4.9 CXX=g++-4.9
-           COVERAGE=gcov-4.9
-           CXXFLAGS="--coverage" LDFLAGS="--coverage"
+      dist: trusty
       addons: *gcc49
+
     - os: linux
       compiler: "gcc-5"
       env: BUILD='Debug' CC=gcc-5 CXX=g++-5
            CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
+      dist: trusty
       addons: *gcc5
+
     - os: linux
       compiler: "gcc-5"
       env: BUILD='Debug' CC=gcc-5 CXX=g++-5
            CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
       addons: *gcc5
+
     - os: linux
       compiler: "gcc-6"
       env: BUILD='Debug' CC=gcc-6 CXX=g++-6
       addons: *gcc6
-    - os: linux
-      compiler: "gcc-6"
-      env: BUILD='Debug' CC=gcc-6 CXX=g++-6
-           PROTOZERO_DATA_VIEW=std::experimental::string_view
-      addons: *gcc6
-    - os: linux
-      compiler: "gcc-6"
-      env: BUILD='Release' CC=gcc-6 CXX=g++-6
-      addons: *gcc6
+
     - os: linux
       compiler: "gcc-7"
       env: BUILD='Debug' CC=gcc-7 CXX=g++-7
+           COVERAGE=gcov-7
+           CXXFLAGS="--coverage" LDFLAGS="--coverage"
       addons: *gcc7
-    - os: osx
-      osx_image: xcode7.3
-      compiler: clang
-      env: BUILD='Debug'
+
+    - os: linux
+      compiler: "gcc-7"
+      env: BUILD='Debug' CC=gcc-7 CXX=g++-7
+           PROTOZERO_DATA_VIEW=std::experimental::string_view
+      addons: *gcc7
+
+    - os: linux
+      compiler: "gcc-7"
+      env: BUILD='Release' CC=gcc-7 CXX=g++-7
+      addons: *gcc7
+
     - os: osx
       osx_image: xcode8.3
       compiler: clang
       env: BUILD='Debug'
+
     - os: osx
       osx_image: xcode9.4
       compiler: clang
       env: BUILD='Debug'
+
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode10.1
       compiler: clang
-      env: BUILD='Release'
+      env: BUILD='Debug'
+
     - os: osx
-      osx_image: xcode10
+      osx_image: xcode10.1
       compiler: clang
       env: BUILD='Release'
 
