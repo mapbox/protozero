@@ -13,7 +13,7 @@ Check the protozero builds and tests for a variety of Linux flavours.
 
 * REPO build from specified from git repository
 * MIRROR use Ubuntu package mirror
-  * Australia: `http://au.archive.ubuntu.com/ubuntu/
+  * Australia: `http://au.archive.ubuntu.com/ubuntu/`
 
 For example:
 
