@@ -22,4 +22,3 @@ For example:
 ## Notes
 
 * Ubuntu 12.04 Precise does not support C++11 required for protozero
-* 
