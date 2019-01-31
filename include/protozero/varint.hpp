@@ -118,7 +118,7 @@ inline void skip_varint(const char** data, const char* end) {
         ++p;
     }
 
-    if (p >= begin + max_varint_length) {
+    if (p - begin >= max_varint_length) {
         throw varint_too_long_exception{};
     }
 
