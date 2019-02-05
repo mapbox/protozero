@@ -15,6 +15,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [1.6.5] - 2018-02-05
+
+### Fixed
+
+- Avoid UB: Do not calculate pointer outside array bounds.
+- Specify proto2 syntax in .proto files to appease protoc.
+
+
 ## [1.6.4] - 2018-11-08
 
 ### Added
@@ -331,7 +339,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.4...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.5...HEAD
+[1.6.5]: https://github.com/osmcode/libosmium/compare/v1.6.4...v1.6.5
 [1.6.4]: https://github.com/osmcode/libosmium/compare/v1.6.3...v1.6.4
 [1.6.3]: https://github.com/osmcode/libosmium/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/osmcode/libosmium/compare/v1.6.1...v1.6.2
