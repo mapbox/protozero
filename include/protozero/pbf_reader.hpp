@@ -99,7 +99,7 @@ class pbf_reader {
     template <typename T>
     T get_varint() {
         const auto val = static_cast<T>(decode_varint(&m_data, m_end));
-        assert(m_data <= m_end);
+        assert((m_end - m_data) >= 0);
         return val;
     }
 
@@ -114,7 +114,7 @@ class pbf_reader {
     }
 
     void skip_bytes(pbf_length_type len) {
-        if (m_data + len > m_end) {
+        if (m_end - m_data < len) {
             throw end_of_buffer_exception{};
         }
         m_data += len;
@@ -244,7 +244,7 @@ public:
      * read.
      */
     operator bool() const noexcept { // NOLINT(google-explicit-constructor, hicpp-explicit-conversions)
-        return m_data < m_end;
+        return (m_end - m_data) > 0;
     }
 
     /**
@@ -478,7 +478,7 @@ public:
             default:
                 break;
         }
-        assert(m_data <= m_end);
+        assert((m_end - m_data) >= 0);
     }
 
     ///@{

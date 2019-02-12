@@ -49,10 +49,10 @@ TEST_CASE("empty buffer in pbf_reader is okay") {
 }
 
 TEST_CASE("check every possible value for single byte in buffer") {
-    char buffer;
+    char buffer[1];
     for (int i = 0; i <= 255; ++i) {
-        buffer = static_cast<char>(i);
-        protozero::pbf_reader item{&buffer, 1};
+        buffer[0] = static_cast<char>(i);
+        protozero::pbf_reader item{buffer, 1};
 
         REQUIRE(item.length() == 1);
         REQUIRE_FALSE(!item); // test operator bool()
@@ -61,9 +61,9 @@ TEST_CASE("check every possible value for single byte in buffer") {
 }
 
 TEST_CASE("next() should throw when illegal wire type is encountered") {
-    const char buffer = 1u << 3u | 7u;
+    const char buffer[1] = {1u << 3u | 7u};
 
-    protozero::pbf_reader item{&buffer, 1};
+    protozero::pbf_reader item{buffer, 1};
     REQUIRE_THROWS_AS(item.next(), const protozero::unknown_pbf_wire_type_exception&);
 }
 
