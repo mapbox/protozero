@@ -99,7 +99,6 @@ class pbf_reader {
     template <typename T>
     T get_varint() {
         const auto val = static_cast<T>(decode_varint(&m_data, m_end));
-        assert((m_end - m_data) >= 0);
         return val;
     }
 
@@ -244,7 +243,7 @@ public:
      * read.
      */
     operator bool() const noexcept { // NOLINT(google-explicit-constructor, hicpp-explicit-conversions)
-        return (m_end - m_data) > 0;
+        return m_data != m_end;
     }
 
     /**
@@ -478,7 +477,6 @@ public:
             default:
                 break;
         }
-        assert((m_end - m_data) >= 0);
     }
 
     ///@{
