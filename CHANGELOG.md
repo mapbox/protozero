@@ -15,6 +15,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [1.6.6] - 2018-02-20
+
+### Fixed
+
+- Fixed several place with possible undefined behaviour.
+
+
 ## [1.6.5] - 2018-02-05
 
 ### Fixed
@@ -339,7 +346,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.5...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.6...HEAD
+[1.6.5]: https://github.com/osmcode/libosmium/compare/v1.6.5...v1.6.6
 [1.6.5]: https://github.com/osmcode/libosmium/compare/v1.6.4...v1.6.5
 [1.6.4]: https://github.com/osmcode/libosmium/compare/v1.6.3...v1.6.4
 [1.6.3]: https://github.com/osmcode/libosmium/compare/v1.6.2...v1.6.3
