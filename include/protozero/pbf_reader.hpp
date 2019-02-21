@@ -113,7 +113,7 @@ class pbf_reader {
     }
 
     void skip_bytes(pbf_length_type len) {
-        if (m_end - m_data < len) {
+        if (m_end - m_data < static_cast<ptrdiff_t>(len)) {
             throw end_of_buffer_exception{};
         }
         m_data += len;

@@ -15,6 +15,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 
+## [unreleased] -
+
+### Fixed
+
+- Signed-unsigned comparison on 32 bit systems.
+
+
 ## [1.6.6] - 2018-02-20
 
 ### Fixed
