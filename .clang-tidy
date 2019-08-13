@@ -1,5 +1,5 @@
 ---
-Checks: '*,-cert-dcl21-cpp,-cert-err60-cpp,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-type-reinterpret-cast,-fuchsia-*,-google-runtime-references,-hicpp-no-array-decay,-modernize-use-trailing-return-type,-readability-implicit-bool-conversion,-readability-magic-numbers'
+Checks: '*,-cert-dcl21-cpp,-cert-err60-cpp,-cppcoreguidelines-avoid-c-arrays,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-type-reinterpret-cast,-fuchsia-*,-google-runtime-references,-hicpp-avoid-c-arrays,-hicpp-no-array-decay,-modernize-avoid-c-arrays,-modernize-use-trailing-return-type,-readability-implicit-bool-conversion,-readability-magic-numbers'
 #
 #  Disabled checks:
 #
@@ -8,6 +8,12 @@ Checks: '*,-cert-dcl21-cpp,-cert-err60-cpp,-cppcoreguidelines-avoid-magic-number
 #
 #  cert-err60-cpp
 #    Reports std::runtime_error as broken which we can't do anything about.
+#
+#  cppcoreguidelines-avoid-c-arrays
+#  hicpp-avoid-c-arrays
+#  modernize-avoid-c-arrays
+#    Makes sense for some array, but especially for char arrays using
+#    std::array isn't a good solution.
 #
 #  cppcoreguidelines-avoid-magic-numbers
 #  readability-magic-numbers
