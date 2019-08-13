@@ -141,7 +141,7 @@ public:
      *
      * @pre Must not be default constructed data_view.
      */
-    int compare(data_view other) const {
+    int compare(data_view other) const noexcept {
         protozero_assert(m_data && other.m_data);
         const int cmp = std::memcmp(data(), other.data(),
                                     std::min(size(), other.size()));
