@@ -33,7 +33,10 @@ addons_shortcuts:
   addons_clang60: &clang60
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-6.0', 'clang-tidy-6.0' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-6.0' ]
+  addons_clang7: &clang7
+    apt:
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'clang-7', 'clang-tidy-7' ]
   addons_gcc47: &gcc47
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
@@ -56,8 +59,7 @@ addons_shortcuts:
       packages: [ 'libprotobuf-dev','protobuf-compiler', 'g++-6', 'gcc-6' ]
   addons_gcc7: &gcc7
     apt:
-      sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'libprotobuf-dev','protobuf-compiler', 'g++-7', 'gcc-7' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler' ]
 
 #-----------------------------------------------------------------------------
 
@@ -92,20 +94,28 @@ matrix:
     - os: linux
       compiler: "clang-6.0"
       env: BUILD='Debug' CC=clang-6.0 CXX=clang++-6.0
-           CLANG_TIDY=clang-tidy-6.0
       addons: *clang60
 
     - os: linux
-      compiler: "clang-6.0"
-      env: BUILD='Debug' CC=clang-6.0 CXX=clang++-6.0
+      compiler: "clang-7"
+      env: BUILD='Debug' CC=clang-7 CXX=clang++-7
+           CLANG_TIDY=clang-tidy-7
+      dist: bionic
+      addons: *clang7
+
+    - os: linux
+      compiler: "clang-7"
+      env: BUILD='Debug' CC=clang-7 CXX=clang++-7
            CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
            LDFLAGS="-fsanitize=address,undefined,integer"
-      addons: *clang60
+      dist: bionic
+      addons: *clang7
 
     - os: linux
-      compiler: "clang-6.0"
-      env: BUILD='Release' CC=clang-6.0 CXX=clang++-6.0
-      addons: *clang60
+      compiler: "clang-7"
+      env: BUILD='Release' CC=clang-7 CXX=clang++-7
+      dist: bionic
+      addons: *clang7
 
     - os: linux
       compiler: "gcc-4.7"
@@ -148,17 +158,20 @@ matrix:
       env: BUILD='Debug' CC=gcc-7 CXX=g++-7
            COVERAGE=gcov-7
            CXXFLAGS="--coverage" LDFLAGS="--coverage"
+      dist: bionic
       addons: *gcc7
 
     - os: linux
       compiler: "gcc-7"
       env: BUILD='Debug' CC=gcc-7 CXX=g++-7
            PROTOZERO_DATA_VIEW=std::experimental::string_view
+      dist: bionic
       addons: *gcc7
 
     - os: linux
       compiler: "gcc-7"
       env: BUILD='Release' CC=gcc-7 CXX=g++-7
+      dist: bionic
       addons: *gcc7
 
     - os: osx
@@ -172,12 +185,17 @@ matrix:
       env: BUILD='Debug'
 
     - os: osx
-      osx_image: xcode10.1
+      osx_image: xcode10.2
       compiler: clang
       env: BUILD='Debug'
 
     - os: osx
-      osx_image: xcode10.1
+      osx_image: xcode11
+      compiler: clang
+      env: BUILD='Debug'
+
+    - os: osx
+      osx_image: xcode11
       compiler: clang
       env: BUILD='Release'
 
