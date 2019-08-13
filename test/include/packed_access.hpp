@@ -114,14 +114,20 @@ TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
     }
 
     SECTION("one") {
-        cpp_type data[] = { 17 };
+        std::array<cpp_type, 1> data = {{ 17 }};
         pw.ADD_TYPE(1, std::begin(data), std::end(data));
 
         REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-one"));
     }
 
     SECTION("many") {
-        cpp_type data[] = {
+        std::array<cpp_type,
+#if PBF_TYPE_IS_SIGNED
+                   8
+#else
+                   5
+#endif
+        > data = {{
                17
             , 200
             ,   0
@@ -132,7 +138,7 @@ TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
             ,  -1
             ,std::numeric_limits<cpp_type>::min()
 #endif
-        };
+        }};
         pw.ADD_TYPE(1, std::begin(data), std::end(data));
 
         REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-many"));
