@@ -1,5 +1,7 @@
 // NOLINT(llvm-header-guard)
 
+#include <array>
+
 #define PBF_TYPE_NAME PROTOZERO_TEST_STRING(PBF_TYPE)
 #define GET_TYPE PROTOZERO_TEST_CONCAT(get_packed_, PBF_TYPE)
 #define ADD_TYPE PROTOZERO_TEST_CONCAT(add_packed_, PBF_TYPE)
@@ -105,7 +107,7 @@ TEST_CASE("write repeated packed field: " PBF_TYPE_NAME) {
     protozero::pbf_writer pw{buffer};
 
     SECTION("empty") {
-        cpp_type data[] = { 17 };
+        std::array<cpp_type, 1> data = {{ 17 }};
         pw.ADD_TYPE(1, std::begin(data), std::begin(data) /* !!!! */);
 
         REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-empty"));
@@ -246,9 +248,9 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
 
     SECTION("from uint16_t") {
 #if PBF_TYPE_IS_SIGNED
-        const  int16_t data[] = { 1, 4, 9, 16, 25 };
+        const std::array< int16_t, 5> data = {{ 1, 4, 9, 16, 25 }};
 #else
-        const uint16_t data[] = { 1, 4, 9, 16, 25 };
+        const std::array<uint16_t, 5> data = {{ 1, 4, 9, 16, 25 }};
 #endif
 
         pw.ADD_TYPE(1, std::begin(data), std::end(data));

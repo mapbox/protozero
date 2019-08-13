@@ -1,6 +1,8 @@
 
 #include <test.hpp>
 
+#include <array>
+
 namespace TestComplex {
 
 enum class Test : protozero::pbf_tag_type {
@@ -416,7 +418,7 @@ TEST_CASE("write complex data using pbf_writer: all") {
     pw.add_uint32(4, 66);
     pw.add_uint32(4, 66);
 
-    const int32_t d[] = { -17, 22 };
+    const std::array<int32_t, 2> d = {{ -17, 22 }};
     pw.add_packed_sint32(7, std::begin(d), std::end(d));
 
     pw.add_int64(3, 555555555);
@@ -573,7 +575,7 @@ TEST_CASE("write complex data using pbf_builder: all") {
     pw.add_uint32(TestComplex::Test::repeated_uint32_u, 66);
     pw.add_uint32(TestComplex::Test::repeated_uint32_u, 66);
 
-    const int32_t d[] = { -17, 22 };
+    const std::array<int32_t, 2> d = {{ -17, 22 }};
     pw.add_packed_sint32(TestComplex::Test::packed_sint32_d, std::begin(d), std::end(d));
 
     pw.add_int64(TestComplex::Test::optional_int64_j, 555555555);

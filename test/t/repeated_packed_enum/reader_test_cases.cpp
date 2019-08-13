@@ -1,6 +1,8 @@
 
 #include <test.hpp>
 
+#include <array>
+
 TEST_CASE("read repeated packed enum field: empty") {
     const std::string buffer = load_data("repeated_packed_enum/data-empty");
 
@@ -55,21 +57,21 @@ TEST_CASE("write repeated packed enum field") {
     protozero::pbf_writer pw{buffer};
 
     SECTION("empty") {
-        const int32_t data[] = { 0 /* BLACK */ };
+        const std::array<int32_t, 1> data = {{ 0 /* BLACK */ }};
         pw.add_packed_enum(1, std::begin(data), std::begin(data) /* !!!! */);
 
         REQUIRE(buffer == load_data("repeated_packed_enum/data-empty"));
     }
 
     SECTION("one") {
-        const int32_t data[] = { 0 /* BLACK */ };
+        const std::array<int32_t, 1> data = {{ 0 /* BLACK */ }};
         pw.add_packed_enum(1, std::begin(data), std::end(data));
 
         REQUIRE(buffer == load_data("repeated_packed_enum/data-one"));
     }
 
     SECTION("many") {
-        const int32_t data[] = { 0 /* BLACK */, 3 /* BLUE */, 2 /* GREEN */ };
+        const std::array<int32_t, 3> data = {{ 0 /* BLACK */, 3 /* BLUE */, 2 /* GREEN */ }};
         pw.add_packed_enum(1, std::begin(data), std::end(data));
 
         REQUIRE(buffer == load_data("repeated_packed_enum/data-many"));

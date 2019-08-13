@@ -1,6 +1,8 @@
 
 #include <test.hpp>
 
+#include <array>
+
 TEST_CASE("read repeated packed float field") {
     // Run these tests twice, the second time we basically move the data
     // one byte down in the buffer. It doesn't matter how the data or buffer
@@ -66,21 +68,21 @@ TEST_CASE("write repeated packed float field") {
     protozero::pbf_writer pw{buffer};
 
     SECTION("empty") {
-        float data[] = { 17.34f };
+        const std::array<float, 1> data = {{ 17.34f }};
         pw.add_packed_float(1, std::begin(data), std::begin(data) /* !!!! */);
 
         REQUIRE(buffer == load_data("repeated_packed_float/data-empty"));
     }
 
     SECTION("one") {
-        float data[] = { 17.34f };
+        const std::array<float, 1> data = {{ 17.34f }};
         pw.add_packed_float(1, std::begin(data), std::end(data));
 
         REQUIRE(buffer == load_data("repeated_packed_float/data-one"));
     }
 
     SECTION("many") {
-        float data[] = { 17.34f, 0.0f, 1.0f, std::numeric_limits<float>::min(), std::numeric_limits<float>::max() };
+        const std::array<float, 5> data = {{ 17.34f, 0.0f, 1.0f, std::numeric_limits<float>::min(), std::numeric_limits<float>::max() }};
         pw.add_packed_float(1, std::begin(data), std::end(data));
 
         REQUIRE(buffer == load_data("repeated_packed_float/data-many"));
