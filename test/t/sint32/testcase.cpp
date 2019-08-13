@@ -1,5 +1,6 @@
 
 #include <testcase.hpp>
+
 #include "testcase.pb.h"
 
 int main(int c, char *argv[]) {
