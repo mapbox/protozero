@@ -928,7 +928,7 @@ namespace detail {
 
     protected:
 
-        pbf_writer m_writer{};
+        pbf_writer m_writer{}; // NOLINT(misc-non-private-member-variables-in-classes)
 
     public:
 

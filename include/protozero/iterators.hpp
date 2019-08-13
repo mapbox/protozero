@@ -291,10 +291,10 @@ class const_varint_iterator {
 protected:
 
     /// Pointer to current iterator position
-    const char* m_data = nullptr;
+    const char* m_data = nullptr; // NOLINT(misc-non-private-member-variables-in-classes)
 
     /// Pointer to end iterator position
-    const char* m_end = nullptr;
+    const char* m_end = nullptr; // NOLINT(misc-non-private-member-variables-in-classes)
 
 public:
 
