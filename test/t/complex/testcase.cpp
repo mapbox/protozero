@@ -3,7 +3,7 @@
 
 #include "testcase.pb.h"
 
-int main(int c, char *argv[]) {
+int main() {
     TestComplex::Test msg;
 
     msg.set_f(12345678);

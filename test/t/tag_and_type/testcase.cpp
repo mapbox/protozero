@@ -3,7 +3,7 @@
 
 #include "testcase.pb.h"
 
-int main(int c, char *argv[]) {
+int main() {
 
     std::string out;
 

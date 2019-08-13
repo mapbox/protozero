@@ -3,7 +3,7 @@
 
 #include "testcase.pb.h"
 
-int main(int c, char *argv[]) {
+int main() {
     TestFloat::Test msg;
 
     msg.set_x(0.0);

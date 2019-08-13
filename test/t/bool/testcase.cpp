@@ -3,7 +3,7 @@
 
 #include "testcase.pb.h"
 
-int main(int c, char *argv[]) {
+int main() {
     TestBoolean::Test msg;
 
     msg.set_b(0);

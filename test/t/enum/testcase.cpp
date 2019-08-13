@@ -3,7 +3,7 @@
 
 #include "testcase.pb.h"
 
-int main(int c, char *argv[]) {
+int main() {
     TestEnum::Test msg;
 
     msg.set_color(TestEnum::BLACK);

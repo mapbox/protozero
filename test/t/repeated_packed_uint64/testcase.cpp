@@ -3,7 +3,7 @@
 
 #include "testcase.pb.h"
 
-int main(int c, char *argv[]) {
+int main() {
     TestRepeatedPackedUInt64::Test msg;
 
     write_to_file(msg, "data-empty.pbf");
