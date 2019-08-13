@@ -291,10 +291,10 @@ class const_varint_iterator {
 protected:
 
     /// Pointer to current iterator position
-    const char* m_data = nullptr; // NOLINT(misc-non-private-member-variables-in-classes)
+    const char* m_data = nullptr; // NOLINT(misc-non-private-member-variables-in-classes, cppcoreguidelines-non-private-member-variables-in-classes,-warnings-as-errors)
 
     /// Pointer to end iterator position
-    const char* m_end = nullptr; // NOLINT(misc-non-private-member-variables-in-classes)
+    const char* m_end = nullptr; // NOLINT(misc-non-private-member-variables-in-classes, cppcoreguidelines-non-private-member-variables-in-classes,-warnings-as-errors)
 
 public:
 

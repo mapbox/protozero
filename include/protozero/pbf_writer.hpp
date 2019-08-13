@@ -935,7 +935,7 @@ namespace detail {
 
     protected:
 
-        pbf_writer m_writer{}; // NOLINT(misc-non-private-member-variables-in-classes)
+        pbf_writer m_writer{}; // NOLINT(misc-non-private-member-variables-in-classes, cppcoreguidelines-non-private-member-variables-in-classes,-warnings-as-errors)
 
     public:
 
