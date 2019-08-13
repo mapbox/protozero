@@ -1,7 +1,7 @@
 
 #include <testcase.hpp>
 
-#include "testcase.pb.h" // NOLINT(clang-diagnostic-error)
+#include "testcase.pb.h"
 
 int main() {
     TestSInt64::Test msg;
