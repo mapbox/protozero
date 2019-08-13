@@ -63,6 +63,14 @@ addons_shortcuts:
 
 #-----------------------------------------------------------------------------
 
+addons:
+  homebrew:
+    packages:
+      - protobuf
+    update: true
+
+#-----------------------------------------------------------------------------
+
 matrix:
   include:
     - os: linux
@@ -200,14 +208,6 @@ matrix:
       env: BUILD='Release'
 
 #-----------------------------------------------------------------------------
-
-install:
-  - |
-    if [[ $(uname -s) == 'Darwin' ]]; then
-      brew update
-      brew install protobuf
-      true
-    fi
 
 script:
   - mkdir build
