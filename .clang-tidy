@@ -1,5 +1,5 @@
 ---
-Checks: '*,-cert-dcl21-cpp,-cert-err60-cpp,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-type-reinterpret-cast,-fuchsia-*,-google-runtime-references,-hicpp-no-array-decay,-readability-implicit-bool-conversion'
+Checks: '*,-cert-dcl21-cpp,-cert-err60-cpp,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-type-reinterpret-cast,-fuchsia-*,-google-runtime-references,-hicpp-no-array-decay,-modernize-use-trailing-return-type,-readability-implicit-bool-conversion,-readability-magic-numbers'
 #
 #  Disabled checks:
 #
@@ -8,6 +8,13 @@ Checks: '*,-cert-dcl21-cpp,-cert-err60-cpp,-cppcoreguidelines-pro-bounds-pointer
 #
 #  cert-err60-cpp
 #    Reports std::runtime_error as broken which we can't do anything about.
+#
+#  cppcoreguidelines-avoid-magic-numbers
+#  readability-magic-numbers
+#    Good idea, but it goes too far to force this everywhere.
+#
+#  cppcoreguidelines-macro-usage
+#    There are cases where macros are simply needed.
 #
 #  cppcoreguidelines-pro-bounds-array-to-pointer-decay
 #    Limited use and many false positives including for all asserts.
@@ -27,6 +34,9 @@ Checks: '*,-cert-dcl21-cpp,-cert-err60-cpp,-cppcoreguidelines-pro-bounds-pointer
 #
 #  hicpp-no-array-decay
 #    Limited use and many false positives including for all asserts.
+#
+#  modernize-use-trailing-return-type
+#    We are not quite that modern.
 #
 #  readability-implicit-bool-conversion
 #    Not necessarily more readable.
