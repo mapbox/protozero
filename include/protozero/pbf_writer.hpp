@@ -289,9 +289,16 @@ public:
         return *this;
     }
 
-    ~pbf_writer() {
-        if (m_parent_writer != nullptr) {
-            m_parent_writer->close_submessage();
+    ~pbf_writer() noexcept {
+        try {
+            if (m_parent_writer != nullptr) {
+                m_parent_writer->close_submessage();
+            }
+        } catch (...) {
+            // This try/catch is used to make the destructor formally noexcept.
+            // close_submessage() is not noexcept, but will not throw the way
+            // it is called here, so we are good. But to be paranoid, call...
+            std::terminate();
         }
     }
 
