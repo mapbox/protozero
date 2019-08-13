@@ -26,12 +26,12 @@ TEST_CASE("varint") {
     }
 
     SECTION("encode/decode uint32") {
-        pw.add_uint32(1, 17u);
+        pw.add_uint32(1, 17U);
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
 
         SECTION("get") {
-            REQUIRE(17u == item.get_uint32());
+            REQUIRE(17U == item.get_uint32());
         }
 
         SECTION("skip") {
@@ -42,12 +42,12 @@ TEST_CASE("varint") {
     }
 
     SECTION("encode/decode uint64") {
-        pw.add_uint64(1, (1ull << 40u));
+        pw.add_uint64(1, (1ULL << 40U));
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
 
         SECTION("get") {
-            REQUIRE((1ull << 40u) == item.get_uint64());
+            REQUIRE((1ULL << 40U) == item.get_uint64());
         }
 
         SECTION("skip") {
@@ -58,7 +58,7 @@ TEST_CASE("varint") {
     }
 
     SECTION("short buffer while parsing varint") {
-        pw.add_uint64(1, (1ull << 40u));
+        pw.add_uint64(1, (1ULL << 40U));
         buffer.resize(buffer.size() - 1); // "remove" last byte from buffer
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
@@ -73,7 +73,7 @@ TEST_CASE("varint") {
     }
 
     SECTION("data corruption in buffer while parsing varint)") {
-        pw.add_uint64(1, (1ull << 20u));
+        pw.add_uint64(1, (1ULL << 20U));
         buffer[buffer.size() - 1] += 0x80; // pretend the varint goes on
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
@@ -107,9 +107,9 @@ TEST_CASE("10-byte varint") {
     std::string buffer;
     protozero::pbf_writer pw{buffer};
     pw.add_uint64(1, 1);
-    buffer.back() = static_cast<char>(0xffu);
+    buffer.back() = static_cast<char>(0xffU);
     for (int i = 0; i < 9; ++i) {
-        buffer.push_back(static_cast<char>(0xffu));
+        buffer.push_back(static_cast<char>(0xffU));
     }
     buffer.push_back(0x02);
 
@@ -152,7 +152,7 @@ TEST_CASE("lots of varints back and forth") {
     }
 
     for (uint32_t i = 0; i < 63; ++i) {
-        const auto n = static_cast<int64_t>(1ull << i);
+        const auto n = static_cast<int64_t>(1ULL << i);
         protozero::pbf_writer pw{buffer};
         pw.add_int64(1, n);
         protozero::pbf_reader item{buffer};
@@ -163,7 +163,7 @@ TEST_CASE("lots of varints back and forth") {
     }
 
     for (uint32_t i = 0; i < 63; ++i) {
-        const int64_t n = - static_cast<int64_t>(1ull << i);
+        const int64_t n = - static_cast<int64_t>(1ULL << i);
         protozero::pbf_writer pw{buffer};
         pw.add_int64(1, n);
         protozero::pbf_reader item{buffer};
@@ -174,7 +174,7 @@ TEST_CASE("lots of varints back and forth") {
     }
 
     for (uint32_t i = 0; i < 64; ++i) {
-        const uint64_t n = 1ull << i;
+        const uint64_t n = 1ULL << i;
         protozero::pbf_writer pw{buffer};
         pw.add_uint64(1, n);
         protozero::pbf_reader item{buffer};
@@ -235,7 +235,7 @@ TEST_CASE("check lengths of varint") {
     REQUIRE(protozero::length_of_varint(16384) == 3);
     REQUIRE(protozero::length_of_varint(2097151) == 3);
     REQUIRE(protozero::length_of_varint(2097152) == 4);
-    REQUIRE(protozero::length_of_varint(0xffffffffull) == 5);
-    REQUIRE(protozero::length_of_varint(0xffffffffffffffffull) == 10);
+    REQUIRE(protozero::length_of_varint(0xffffffffULL) == 5);
+    REQUIRE(protozero::length_of_varint(0xffffffffffffffffULL) == 10);
 }
 

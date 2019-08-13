@@ -30,7 +30,7 @@ TEST_CASE("read repeated packed float field") {
             auto it_range = item.get_packed_float();
             REQUIRE_FALSE(item.next());
 
-            REQUIRE(*it_range.begin() == Approx(17.34f));
+            REQUIRE(*it_range.begin() == Approx(17.34F));
             REQUIRE(std::next(it_range.begin()) == it_range.end());
         }
 
@@ -43,9 +43,9 @@ TEST_CASE("read repeated packed float field") {
             REQUIRE_FALSE(item.next());
 
             auto it = it_range.begin();
-            REQUIRE(*it++ == Approx(17.34f));
-            REQUIRE(*it++ == Approx( 0.0f));
-            REQUIRE(*it++ == Approx( 1.0f));
+            REQUIRE(*it++ == Approx(17.34F));
+            REQUIRE(*it++ == Approx( 0.0F));
+            REQUIRE(*it++ == Approx( 1.0F));
             REQUIRE(*it++ == std::numeric_limits<float>::min());
             REQUIRE(*it++ == std::numeric_limits<float>::max());
             REQUIRE(it == it_range.end());
@@ -68,21 +68,21 @@ TEST_CASE("write repeated packed float field") {
     protozero::pbf_writer pw{buffer};
 
     SECTION("empty") {
-        const std::array<float, 1> data = {{ 17.34f }};
+        const std::array<float, 1> data = {{ 17.34F }};
         pw.add_packed_float(1, std::begin(data), std::begin(data) /* !!!! */);
 
         REQUIRE(buffer == load_data("repeated_packed_float/data-empty"));
     }
 
     SECTION("one") {
-        const std::array<float, 1> data = {{ 17.34f }};
+        const std::array<float, 1> data = {{ 17.34F }};
         pw.add_packed_float(1, std::begin(data), std::end(data));
 
         REQUIRE(buffer == load_data("repeated_packed_float/data-one"));
     }
 
     SECTION("many") {
-        const std::array<float, 5> data = {{ 17.34f, 0.0f, 1.0f, std::numeric_limits<float>::min(), std::numeric_limits<float>::max() }};
+        const std::array<float, 5> data = {{ 17.34F, 0.0F, 1.0F, std::numeric_limits<float>::min(), std::numeric_limits<float>::max() }};
         pw.add_packed_float(1, std::begin(data), std::end(data));
 
         REQUIRE(buffer == load_data("repeated_packed_float/data-many"));

@@ -57,17 +57,17 @@ TEST_CASE("write float field") {
     protozero::pbf_writer pw{buffer};
 
     SECTION("zero") {
-        pw.add_float(1, 0.0f);
+        pw.add_float(1, 0.0F);
         REQUIRE(buffer == load_data("float/data-zero"));
     }
 
     SECTION("positive") {
-        pw.add_float(1, 5.34f);
+        pw.add_float(1, 5.34F);
         REQUIRE(buffer == load_data("float/data-pos"));
     }
 
     SECTION("negative") {
-        pw.add_float(1, -1.71f);
+        pw.add_float(1, -1.71F);
         REQUIRE(buffer == load_data("float/data-neg"));
     }
 }

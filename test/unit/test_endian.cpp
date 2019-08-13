@@ -30,10 +30,10 @@ TEST_CASE("byte swapping") {
     REQUIRE(0 == check_swap_8(0));
     REQUIRE(1 == check_swap_8(1));
     REQUIRE(-1 == check_swap_8(-1));
-    REQUIRE(395503ll == check_swap_8(395503ll));
-    REQUIRE(-804022ll == check_swap_8(-804022ll));
-    REQUIRE(3280329805ll == check_swap_8(3280329805ll));
-    REQUIRE(-2489204041ll == check_swap_8(-2489204041ll));
+    REQUIRE(395503LL == check_swap_8(395503LL));
+    REQUIRE(-804022LL == check_swap_8(-804022LL));
+    REQUIRE(3280329805LL == check_swap_8(3280329805LL));
+    REQUIRE(-2489204041LL == check_swap_8(-2489204041LL));
     REQUIRE(std::numeric_limits<int64_t>::max() == check_swap_8(std::numeric_limits<int64_t>::max()));
     REQUIRE(std::numeric_limits<int64_t>::min() == check_swap_8(std::numeric_limits<int64_t>::min()));
 }
@@ -63,10 +63,10 @@ TEST_CASE("byte swap double") {
 }
 
 TEST_CASE("byte swap float") {
-    float a = 1.1f;
+    float a = 1.1F;
     protozero::byteswap_inplace(&a);
     protozero::byteswap_inplace(&a);
 
-    REQUIRE(a == Approx(1.1f));
+    REQUIRE(a == Approx(1.1F));
 }
 
