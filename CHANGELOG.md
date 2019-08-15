@@ -12,11 +12,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+### Fixed
+
+
+## [1.6.8] - 2019-08-15
+
+### Changed
+
 - Various code cleanups due to clang-tidy warnings.
 
 ### Fixed
 
-- Made data_view::compare noexcept.
+- Made `data_view::compare` noexcept.
 
 
 ## [1.6.7] - 2018-02-21
@@ -357,8 +364,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.6...HEAD
-[1.6.5]: https://github.com/osmcode/libosmium/compare/v1.6.5...v1.6.6
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.6.8...HEAD
+[1.6.8]: https://github.com/osmcode/libosmium/compare/v1.6.7...v1.6.8
+[1.6.7]: https://github.com/osmcode/libosmium/compare/v1.6.6...v1.6.7
+[1.6.6]: https://github.com/osmcode/libosmium/compare/v1.6.5...v1.6.6
 [1.6.5]: https://github.com/osmcode/libosmium/compare/v1.6.4...v1.6.5
 [1.6.4]: https://github.com/osmcode/libosmium/compare/v1.6.3...v1.6.4
 [1.6.3]: https://github.com/osmcode/libosmium/compare/v1.6.2...v1.6.3
