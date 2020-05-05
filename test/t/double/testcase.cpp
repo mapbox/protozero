@@ -4,7 +4,7 @@
 #include "testcase.pb.h"
 
 int main() {
-    TestDouble::Test msg;
+    TestDouble::Test msg{};
 
     msg.set_x(0.0);
     write_to_file(msg, "data-zero.pbf");

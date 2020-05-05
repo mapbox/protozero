@@ -4,7 +4,7 @@
 #include "testcase.pb.h"
 
 int main() {
-    TestRepeatedPackedSInt32::Test msg;
+    TestRepeatedPackedSInt32::Test msg{};
 
     write_to_file(msg, "data-empty.pbf");
 

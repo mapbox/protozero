@@ -4,7 +4,7 @@
 #include "testcase.pb.h"
 
 int main() {
-    TestFloat::Test msg;
+    TestFloat::Test msg{};
 
     msg.set_x(0.0);
     write_to_file(msg, "data-zero.pbf");

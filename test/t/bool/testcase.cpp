@@ -4,7 +4,7 @@
 #include "testcase.pb.h"
 
 int main() {
-    TestBoolean::Test msg;
+    TestBoolean::Test msg{};
 
     msg.set_b(0);
     write_to_file(msg, "data-false.pbf");

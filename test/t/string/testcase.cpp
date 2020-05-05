@@ -4,7 +4,7 @@
 #include "testcase.pb.h"
 
 int main() {
-    TestString::Test msg;
+    TestString::Test msg{};
 
     msg.set_s("");
     write_to_file(msg, "data-empty.pbf");
