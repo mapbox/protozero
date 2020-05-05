@@ -2,6 +2,7 @@
 #include <test.hpp>
 
 #include <array>
+#include <numeric>
 
 namespace TestComplex {
 
@@ -122,11 +123,7 @@ TEST_CASE("read complex data using pbf_reader: all") {
             }
             case 7: {
                 const auto pi = item.get_packed_sint32();
-                int32_t sum = 0;
-                for (auto val : pi) {
-                    sum += val;
-                }
-                REQUIRE(sum == 5);
+                REQUIRE(std::accumulate(pi.cbegin(), pi.cend(), 0) == 5);
                 break;
             }
             case 8: {
@@ -267,11 +264,7 @@ TEST_CASE("read complex data using pbf_message: all") {
             }
             case TestComplex::Test::packed_sint32_d: {
                 const auto pi = item.get_packed_sint32();
-                int32_t sum = 0;
-                for (auto val : pi) {
-                    sum += val;
-                }
-                REQUIRE(sum == 5);
+                REQUIRE(std::accumulate(pi.cbegin(), pi.cend(), 0) == 5);
                 break;
             }
             case TestComplex::Test::optional_string_s: {
@@ -455,11 +448,7 @@ TEST_CASE("write complex data using pbf_writer: all") {
             }
             case 7: {
                 const auto pi = item.get_packed_sint32();
-                int32_t sum = 0;
-                for (auto val : pi) {
-                    sum += val;
-                }
-                REQUIRE(sum == 5);
+                REQUIRE(std::accumulate(pi.cbegin(), pi.cend(), 0) == 5);
                 break;
             }
             default: {
@@ -612,11 +601,7 @@ TEST_CASE("write complex data using pbf_builder: all") {
             }
             case 7: {
                 const auto pi = item.get_packed_sint32();
-                int32_t sum = 0;
-                for (auto val : pi) {
-                    sum += val;
-                }
-                REQUIRE(sum == 5);
+                REQUIRE(std::accumulate(pi.cbegin(), pi.cend(), 0) == 5);
                 break;
             }
             default: {
