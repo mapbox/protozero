@@ -60,6 +60,9 @@ addons_shortcuts:
   addons_gcc7: &gcc7
     apt:
       packages: [ 'libprotobuf-dev','protobuf-compiler' ]
+  addons_gcc8: &gcc8
+    apt:
+      packages: [ 'libprotobuf-dev','protobuf-compiler' ]
 
 #-----------------------------------------------------------------------------
 
@@ -181,6 +184,12 @@ matrix:
       env: BUILD='Release' CC=gcc-7 CXX=g++-7
       dist: bionic
       addons: *gcc7
+
+    - os: linux
+      compiler: "gcc-8"
+      env: BUILD='Debug' CC=gcc-8 CXX=g++-8
+      dist: bionic
+      addons: *gcc8
 
     - os: osx
       osx_image: xcode9.4
