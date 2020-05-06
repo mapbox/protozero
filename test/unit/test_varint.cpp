@@ -212,14 +212,14 @@ TEST_CASE("decode_varint with empty buffer throws") {
 
 TEST_CASE("call decode_varint with every possible value for single byte in buffer") {
     char buffer[1];
-    for (int i = 0; i <= 127; ++i) {
+    for (unsigned int i = 0; i <= 127; ++i) {
         REQUIRE(protozero::length_of_varint(i) == 1);
         buffer[0] = static_cast<char>(i);
         const char* b = buffer;
         REQUIRE(protozero::decode_varint(&b, buffer + 1) == i);
         REQUIRE(b == buffer + 1);
     }
-    for (int i = 128; i <= 255; ++i) {
+    for (unsigned int i = 128; i <= 255; ++i) {
         REQUIRE(protozero::length_of_varint(i) == 2);
         buffer[0] = static_cast<char>(i);
         const char* b = buffer;
