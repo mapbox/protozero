@@ -1619,7 +1619,7 @@ namespace Catch {
     struct StringMaker {
         template <typename Fake = T>
         static
-        typename std::enable_if< ::Catch::Detail::IsStreamInsertable<Fake>::value, std::string>::type
+        typename std::enable_if<::Catch::Detail::IsStreamInsertable<Fake>::value, std::string>::type
             convert(const Fake& value) {
                 ReusableStringStream rss;
                 // NB: call using the function-like syntax to avoid ambiguity with
