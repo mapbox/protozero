@@ -70,7 +70,7 @@ addons:
   homebrew:
     packages:
       - protobuf
-    update: true
+    update: false
 
 #-----------------------------------------------------------------------------
 
