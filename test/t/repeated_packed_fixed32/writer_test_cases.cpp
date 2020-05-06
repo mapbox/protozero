@@ -2,6 +2,7 @@
 #include <test.hpp>
 
 #include <array>
+#include <sstream>
 
 #include "t/repeated_packed_fixed32/repeated_packed_fixed32_testcase.pb.h"
 
