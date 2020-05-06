@@ -8,7 +8,7 @@ int main() {
     std::string out;
 
     {
-        TestTagAndType::TestNotPacked msg{};
+        TestTagAndType::TestNotPacked msg;
         for (uint32_t x = 10; x < 13; ++x) {
             msg.add_x(x);
         }
@@ -17,7 +17,7 @@ int main() {
     }
 
     {
-        TestTagAndType::TestPacked msg{};
+        TestTagAndType::TestPacked msg;
         for (uint32_t x = 20; x < 23; ++x) {
             msg.add_x(x);
         }
@@ -26,7 +26,7 @@ int main() {
     }
 
     {
-        TestTagAndType::TestNotPacked msg{};
+        TestTagAndType::TestNotPacked msg;
         for (uint32_t x = 30; x < 33; ++x) {
             msg.add_x(x);
         }

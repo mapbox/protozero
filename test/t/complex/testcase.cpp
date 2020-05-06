@@ -4,7 +4,7 @@
 #include "testcase.pb.h"
 
 int main() {
-    TestComplex::Test msg{};
+    TestComplex::Test msg;
 
     msg.set_f(12345678);
     TestComplex::Sub* submsg = msg.mutable_submessage();

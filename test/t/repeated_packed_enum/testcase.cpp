@@ -4,7 +4,7 @@
 #include "testcase.pb.h"
 
 int main() {
-    TestRepeatedPackedEnum::Test msg{};
+    TestRepeatedPackedEnum::Test msg;
 
     write_to_file(msg, "data-empty.pbf");
 

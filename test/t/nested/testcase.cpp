@@ -4,7 +4,7 @@
 #include "testcase.pb.h"
 
 int main() {
-    TestNested::Test msg{};
+    TestNested::Test msg;
     msg.set_i(77);
 
     TestNested::Sub* sub = msg.mutable_sub();

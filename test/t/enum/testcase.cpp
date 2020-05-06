@@ -4,7 +4,7 @@
 #include "testcase.pb.h"
 
 int main() {
-    TestEnum::Test msg{};
+    TestEnum::Test msg;
 
     msg.set_color(TestEnum::BLACK);
     write_to_file(msg, "data-black.pbf");
