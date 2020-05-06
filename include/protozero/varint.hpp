@@ -38,8 +38,8 @@ namespace detail {
 
         if (iend - begin >= max_varint_length) {  // fast path
             do {
-                int64_t b;
-                b = *p++; val  = ((uint64_t(b) & 0x7fU)       ); if (b >= 0) { break; }
+                int64_t b = *p++;
+                          val  = ((uint64_t(b) & 0x7fU)       ); if (b >= 0) { break; }
                 b = *p++; val |= ((uint64_t(b) & 0x7fU) <<  7U); if (b >= 0) { break; }
                 b = *p++; val |= ((uint64_t(b) & 0x7fU) << 14U); if (b >= 0) { break; }
                 b = *p++; val |= ((uint64_t(b) & 0x7fU) << 21U); if (b >= 0) { break; }
