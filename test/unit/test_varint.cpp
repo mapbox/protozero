@@ -64,11 +64,11 @@ TEST_CASE("varint") {
         REQUIRE(item.next());
 
         SECTION("get") {
-            REQUIRE_THROWS_AS(item.get_uint64(), const protozero::end_of_buffer_exception&);
+            REQUIRE_THROWS_AS(item.get_uint64(), protozero::end_of_buffer_exception);
         }
 
         SECTION("skip") {
-            REQUIRE_THROWS_AS(item.skip(), const protozero::end_of_buffer_exception&);
+            REQUIRE_THROWS_AS(item.skip(), protozero::end_of_buffer_exception);
         }
     }
 
@@ -79,11 +79,11 @@ TEST_CASE("varint") {
         REQUIRE(item.next());
 
         SECTION("get") {
-            REQUIRE_THROWS_AS(item.get_uint64(), const protozero::end_of_buffer_exception&);
+            REQUIRE_THROWS_AS(item.get_uint64(), protozero::end_of_buffer_exception);
         }
 
         SECTION("skip") {
-            REQUIRE_THROWS_AS(item.skip(), const protozero::end_of_buffer_exception&);
+            REQUIRE_THROWS_AS(item.skip(), protozero::end_of_buffer_exception);
         }
     }
 
@@ -94,11 +94,11 @@ TEST_CASE("varint") {
         REQUIRE(item.next());
 
         SECTION("get") {
-            REQUIRE_THROWS_AS(item.get_uint64(), const protozero::varint_too_long_exception&);
+            REQUIRE_THROWS_AS(item.get_uint64(), protozero::varint_too_long_exception);
         }
 
         SECTION("skip") {
-            REQUIRE_THROWS_AS(item.skip(), const protozero::varint_too_long_exception&);
+            REQUIRE_THROWS_AS(item.skip(), protozero::varint_too_long_exception);
         }
     }
 }
@@ -115,7 +115,7 @@ TEST_CASE("10-byte varint") {
 
     protozero::pbf_reader item{buffer};
     REQUIRE(item.next());
-    REQUIRE_THROWS_AS(item.get_uint64(), const protozero::varint_too_long_exception&);
+    REQUIRE_THROWS_AS(item.get_uint64(), protozero::varint_too_long_exception);
 }
 
 TEST_CASE("lots of varints back and forth") {
@@ -187,7 +187,7 @@ TEST_CASE("lots of varints back and forth") {
 
 TEST_CASE("skip_varint with empty buffer throws") {
     const char* buffer = "";
-    REQUIRE_THROWS_AS(protozero::skip_varint(&buffer, buffer), const protozero::end_of_buffer_exception&);
+    REQUIRE_THROWS_AS(protozero::skip_varint(&buffer, buffer), protozero::end_of_buffer_exception);
 }
 
 TEST_CASE("call skip_varint with every possible value for single byte in buffer") {
@@ -201,13 +201,13 @@ TEST_CASE("call skip_varint with every possible value for single byte in buffer"
     for (int i = 128; i <= 255; ++i) {
         buffer[0] = static_cast<char>(i);
         const char* b = buffer;
-        REQUIRE_THROWS_AS(protozero::skip_varint(&b, buffer + 1), const protozero::end_of_buffer_exception&);
+        REQUIRE_THROWS_AS(protozero::skip_varint(&b, buffer + 1), protozero::end_of_buffer_exception);
     }
 }
 
 TEST_CASE("decode_varint with empty buffer throws") {
     const char* buffer = "";
-    REQUIRE_THROWS_AS(protozero::decode_varint(&buffer, buffer), const protozero::end_of_buffer_exception&);
+    REQUIRE_THROWS_AS(protozero::decode_varint(&buffer, buffer), protozero::end_of_buffer_exception);
 }
 
 TEST_CASE("call decode_varint with every possible value for single byte in buffer") {
@@ -223,7 +223,7 @@ TEST_CASE("call decode_varint with every possible value for single byte in buffe
         REQUIRE(protozero::length_of_varint(i) == 2);
         buffer[0] = static_cast<char>(i);
         const char* b = buffer;
-        REQUIRE_THROWS_AS(protozero::decode_varint(&b, buffer + 1), const protozero::end_of_buffer_exception&);
+        REQUIRE_THROWS_AS(protozero::decode_varint(&b, buffer + 1), protozero::end_of_buffer_exception);
     }
 }
 

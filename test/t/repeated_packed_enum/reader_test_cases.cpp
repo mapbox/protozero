@@ -48,7 +48,7 @@ TEST_CASE("read repeated packed enum field: end of buffer") {
     for (std::string::size_type i = 1; i < buffer.size(); ++i) {
         protozero::pbf_reader item{buffer.data(), i};
         REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.get_packed_enum(), const protozero::end_of_buffer_exception&);
+        REQUIRE_THROWS_AS(item.get_packed_enum(), protozero::end_of_buffer_exception);
     }
 }
 

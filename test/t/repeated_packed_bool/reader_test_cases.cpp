@@ -53,7 +53,7 @@ TEST_CASE("read repeated packed bool field: end of buffer") {
     for (std::string::size_type i = 1; i < buffer.size(); ++i) {
         protozero::pbf_reader item{buffer.data(), i};
         REQUIRE(item.next());
-        REQUIRE_THROWS_AS(item.get_packed_bool(), const protozero::end_of_buffer_exception&);
+        REQUIRE_THROWS_AS(item.get_packed_bool(), protozero::end_of_buffer_exception);
     }
 }
 
