@@ -62,7 +62,7 @@ addons_shortcuts:
       packages: [ 'libprotobuf-dev','protobuf-compiler' ]
   addons_gcc8: &gcc8
     apt:
-      packages: [ 'libprotobuf-dev','protobuf-compiler' ]
+      packages: [ 'libprotobuf-dev','protobuf-compiler', 'g++-8', 'gcc-8' ]
 
 #-----------------------------------------------------------------------------
 
@@ -74,7 +74,7 @@ addons:
 
 #-----------------------------------------------------------------------------
 
-matrix:
+jobs:
   include:
     - os: linux
       compiler: "clang-3.5"
