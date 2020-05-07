@@ -5,17 +5,18 @@
 
 #include "t/bool/bool_testcase.pb.h"
 
-TEST_CASE("write bool field and check with libprotobuf") {
+TEMPLATE_TEST_CASE("write bool field and check with libprotobuf", "",
+    test_type_dynamic_buffer, test_type_static_buffer) {
 
-    std::string buffer;
-    protozero::pbf_writer pw{buffer};
+    TestType buffer;
+    typename TestType::writer_type pw{buffer.buffer()};
 
     TestBoolean::Test msg;
 
     SECTION("false") {
         pw.add_bool(1, false);
 
-        msg.ParseFromString(buffer);
+        msg.ParseFromArray(buffer.data(), buffer.size());
 
         REQUIRE_FALSE(msg.b());
     }
@@ -23,7 +24,7 @@ TEST_CASE("write bool field and check with libprotobuf") {
     SECTION("true") {
         pw.add_bool(1, true);
 
-        msg.ParseFromString(buffer);
+        msg.ParseFromArray(buffer.data(), buffer.size());
 
         REQUIRE(msg.b());
     }

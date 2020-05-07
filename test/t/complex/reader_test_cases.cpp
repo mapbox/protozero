@@ -3,6 +3,7 @@
 
 #include <protozero/fixed_size_buffer_adaptor.hpp>
 
+#include <algorithm>
 #include <array>
 #include <numeric>
 
@@ -723,11 +724,7 @@ TEST_CASE("write complex data using basic_pbf_writer<fixed_size_buffer_adaptor>:
             }
             case 7: {
                 const auto pi = item.get_packed_sint32();
-                int32_t sum = 0;
-                for (auto val : pi) {
-                    sum += val;
-                }
-                REQUIRE(sum == 5);
+                REQUIRE(std::accumulate(pi.cbegin(), pi.cend(), 0) == 5);
                 break;
             }
             case 8: {

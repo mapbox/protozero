@@ -5,6 +5,7 @@
 #include <protozero/fixed_size_buffer_adaptor.hpp>
 
 #include <algorithm>
+#include <array>
 #include <stdexcept>
 #include <type_traits>
 
@@ -55,16 +56,14 @@ TEST_CASE("Use std::string as buffer") {
     run_test(&buffer);
 }
 
-TEST_CASE("Use fixed_size_buffer as buffer") {
-    std::string data;
-    data.resize(1024);
-    protozero::fixed_size_buffer buffer{&*data.begin(), data.size()};
-    run_test(&buffer);
+TEST_CASE("Use fixed_size_buffer_adaptor") {
+    std::array<char, 1024> data{};
+    protozero::fixed_size_buffer_adaptor fsba{&*data.begin(), data.size()};
+    run_test(&fsba);
 }
 
-TEST_CASE("fixed_size_buffer has limited size") {
-    std::string data;
-    data.resize(5);
-    protozero::fixed_size_buffer buffer{&*data.begin(), data.size()};
-    REQUIRE_THROWS_AS(protozero::buffer_append(&buffer, "0123456789", 10), std::length_error);
+TEST_CASE("fixed_size_buffer_adaptor has limited size") {
+    std::array<char, 5> data{};
+    protozero::fixed_size_buffer_adaptor fsba{&*data.begin(), data.size()};
+    REQUIRE_THROWS_AS(protozero::buffer_append(&fsba, "0123456789", 10), std::length_error);
 }

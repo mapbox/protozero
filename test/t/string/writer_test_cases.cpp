@@ -3,17 +3,18 @@
 
 #include "t/string/string_testcase.pb.h"
 
-TEST_CASE("write string field and check with libprotobuf") {
+TEMPLATE_TEST_CASE("write string field and check with libprotobuf", "",
+    test_type_dynamic_buffer, test_type_static_buffer) {
 
-    std::string buffer;
-    protozero::pbf_writer pw{buffer};
+    TestType buffer;
+    typename TestType::writer_type pw{buffer.buffer()};
 
     TestString::Test msg;
 
     SECTION("empty") {
         pw.add_string(1, "");
 
-        msg.ParseFromString(buffer);
+        msg.ParseFromArray(buffer.data(), buffer.size());
 
         REQUIRE(msg.s().empty());
     }
@@ -21,7 +22,7 @@ TEST_CASE("write string field and check with libprotobuf") {
     SECTION("one") {
         pw.add_string(1, "x");
 
-        msg.ParseFromString(buffer);
+        msg.ParseFromArray(buffer.data(), buffer.size());
 
         REQUIRE(msg.s() == "x");
     }
@@ -29,7 +30,7 @@ TEST_CASE("write string field and check with libprotobuf") {
     SECTION("string") {
         pw.add_string(1, "foobar");
 
-        msg.ParseFromString(buffer);
+        msg.ParseFromArray(buffer.data(), buffer.size());
 
         REQUIRE(msg.s() == "foobar");
     }
