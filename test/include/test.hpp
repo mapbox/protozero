@@ -32,11 +32,14 @@ extern std::string load_data(const std::string& filename);
 // to test a dynamically sized buffer based on std::string and a statically
 // sized buffer based on std::array.
 
-struct test_type_dynamic_buffer {
-    using type = std::string;
-    using writer_type = protozero::pbf_writer; // == protozero::basic_pbf_writer<type>;
+class test_type_dynamic_buffer {
 
     std::string m_buffer;
+
+public:
+
+    using type = std::string;
+    using writer_type = protozero::pbf_writer; // == protozero::basic_pbf_writer<type>;
 
     type& buffer() noexcept {
         return m_buffer;
@@ -51,12 +54,12 @@ struct test_type_dynamic_buffer {
     }
 };
 
-struct test_type_static_buffer {
+class test_type_static_buffer {
+
+public:
+
     using type = protozero::fixed_size_buffer_adaptor;
     using writer_type = protozero::basic_pbf_writer<type>;
-
-    std::array<char, 1024> m_buffer = {{0}};
-    type adaptor{m_buffer.data(), m_buffer.size()};
 
     type& buffer() noexcept {
         return adaptor;
@@ -69,5 +72,11 @@ struct test_type_static_buffer {
     std::size_t size() const noexcept {
         return adaptor.size();
     }
+
+private:
+
+    std::array<char, 1024> m_buffer = {{0}};
+    type adaptor{m_buffer.data(), m_buffer.size()};
+
 };
 #endif // TEST_HPP
