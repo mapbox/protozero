@@ -74,7 +74,7 @@ TEST_CASE("varint") {
 
     SECTION("data corruption in buffer while parsing varint)") {
         pw.add_uint64(1, (1ULL << 20U));
-        buffer[buffer.size() - 1] += 0x80; // pretend the varint goes on
+        buffer[buffer.size() - 1] += static_cast<char>(0x80); // pretend the varint goes on
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
 
@@ -89,7 +89,7 @@ TEST_CASE("varint") {
 
     SECTION("data corruption in buffer while parsing varint (max length varint)") {
         pw.add_uint64(1, std::numeric_limits<uint64_t>::max());
-        buffer[buffer.size() - 1] += 0x80; // pretend the varint goes on
+        buffer[buffer.size() - 1] += static_cast<char>(0x80); // pretend the varint goes on
         protozero::pbf_reader item{buffer};
         REQUIRE(item.next());
 
