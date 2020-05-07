@@ -55,7 +55,7 @@ struct test_type_static_buffer {
     using type = protozero::fixed_size_buffer_adaptor;
     using writer_type = protozero::basic_pbf_writer<type>;
 
-    std::array<char, 1024> m_buffer{};
+    std::array<char, 1024> m_buffer = {{0}};
     type adaptor{m_buffer.data(), m_buffer.size()};
 
     type& buffer() noexcept {

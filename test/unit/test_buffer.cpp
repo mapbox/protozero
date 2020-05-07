@@ -57,13 +57,13 @@ TEST_CASE("Use std::string as buffer") {
 }
 
 TEST_CASE("Use fixed_size_buffer_adaptor") {
-    std::array<char, 1024> data{};
+    std::array<char, 1024> data = {{0}};
     protozero::fixed_size_buffer_adaptor fsba{&*data.begin(), data.size()};
     run_test(&fsba);
 }
 
 TEST_CASE("fixed_size_buffer_adaptor has limited size") {
-    std::array<char, 5> data{};
+    std::array<char, 5> data = {{0}};
     protozero::fixed_size_buffer_adaptor fsba{&*data.begin(), data.size()};
     REQUIRE_THROWS_AS(protozero::buffer_append(&fsba, "0123456789", 10), std::length_error);
 }
