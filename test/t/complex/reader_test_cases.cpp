@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include <protozero/fixed_size_buffer.hpp>
+#include <protozero/fixed_size_buffer_adaptor.hpp>
 
 #include <array>
 #include <numeric>
@@ -665,17 +665,17 @@ TEST_CASE("write complex with subwriter using pbf_builder") {
     check_message(buffer_test);
 }
 
-TEST_CASE("write complex data using basic_pbf_writer<fixed_size_buffer>: all") {
+TEST_CASE("write complex data using basic_pbf_writer<fixed_size_buffer_adaptor>: all") {
     std::string data;
     data.resize(10240);
-    protozero::fixed_size_buffer buffer{&*data.begin(), data.size()};
-    protozero::basic_pbf_writer<protozero::fixed_size_buffer> pw{buffer};
+    protozero::fixed_size_buffer_adaptor buffer{&*data.begin(), data.size()};
+    protozero::basic_pbf_writer<protozero::fixed_size_buffer_adaptor> pw{buffer};
     pw.add_fixed32(1, 12345678);
 
     std::string sdata;
     sdata.resize(10240);
-    protozero::fixed_size_buffer submessage{&*sdata.begin(), sdata.size()};
-    protozero::basic_pbf_writer<protozero::fixed_size_buffer> pws{submessage};
+    protozero::fixed_size_buffer_adaptor submessage{&*sdata.begin(), sdata.size()};
+    protozero::basic_pbf_writer<protozero::fixed_size_buffer_adaptor> pws{submessage};
     pws.add_string(1, "foobar");
     pw.add_message(5, submessage.data(), submessage.size());
 

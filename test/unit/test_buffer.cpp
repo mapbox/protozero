@@ -2,7 +2,7 @@
 #include <test.hpp>
 
 #include <protozero/buffer_string.hpp>
-#include <protozero/fixed_size_buffer.hpp>
+#include <protozero/fixed_size_buffer_adaptor.hpp>
 
 #include <algorithm>
 #include <stdexcept>

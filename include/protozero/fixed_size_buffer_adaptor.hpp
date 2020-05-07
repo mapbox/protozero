@@ -1,5 +1,5 @@
-#ifndef PROTOZERO_FIXED_SIZE_BUFFER_HPP
-#define PROTOZERO_FIXED_SIZE_BUFFER_HPP
+#ifndef PROTOZERO_FIXED_SIZE_BUFFER_ADAPTOR_HPP
+#define PROTOZERO_FIXED_SIZE_BUFFER_ADAPTOR_HPP
 
 /*****************************************************************************
 
@@ -11,9 +11,9 @@ documentation.
 *****************************************************************************/
 
 /**
- * @file fixed_size_buffer.hpp
+ * @file fixed_size_buffer_adaptor.hpp
  *
- * @brief Contains the fixed_size_buffer class.
+ * @brief Contains the fixed_size_buffer_adaptor class.
  */
 
 #include <protozero/config.hpp>
@@ -34,7 +34,7 @@ namespace protozero {
  * constructor, the use of everything else is for the protozero library
  * only.
  */
-class fixed_size_buffer {
+class fixed_size_buffer_adaptor {
 
     char* m_data;
     std::size_t m_capacity;
@@ -48,7 +48,7 @@ public:
      * @param data Pointer to some memory allocated for the buffer.
      * @param size Number of bytes available.
      */
-    fixed_size_buffer(char* data, std::size_t size) :
+    fixed_size_buffer_adaptor(char* data, std::size_t size) :
         m_data(data),
         m_capacity(size),
         m_size(0) {
@@ -117,8 +117,8 @@ public:
     }
 /// @endcond
 
-}; // class fixed_size_buffer
+}; // class fixed_size_buffer_adaptor
 
 } // namespace protozero
 
-#endif // PROTOZERO_FIXED_SIZE_BUFFER_HPP
+#endif // PROTOZERO_FIXED_SIZE_BUFFER_ADAPTOR_HPP

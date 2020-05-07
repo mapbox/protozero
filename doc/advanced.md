@@ -326,15 +326,15 @@ There is an important exception: The `push_back()` function and the
 `value_type` typedef **must** be available. They are needed for
 `std::back_inserter` to work.
 
-There is a class `protozero::fixed_size_buffer` you can use as adaptor for
-any fixed-sized buffer you might have.
+There is a class `protozero::fixed_size_buffer_adaptor` you can use as adaptor
+for any fixed-sized buffer you might have.
 
 ```cpp
-#include <protozero/fixed_size_buffer.hpp>
+#include <protozero/fixed_size_buffer_adaptor.hpp>
 
 your_buffer_class some_buffer;
-using fsb = protozero::fixed_size_buffer<your_buffer_class>;
-fsb buffer_adaptor{some_buffer.data(), some_buffer.size()};
+using fsba_type = protozero::fixed_size_buffer_adaptor<your_buffer_class>;
+fsba_type buffer_adaptor{some_buffer.data(), some_buffer.size()};
 basic_pbf_writer<fsb> writer{buffer_adaptor};
 ```
 
