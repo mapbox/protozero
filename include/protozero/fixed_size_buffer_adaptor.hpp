@@ -61,7 +61,7 @@ public:
      *        data() and size().
      */
     template <typename T>
-    fixed_size_buffer_adaptor(T& container) :
+    explicit fixed_size_buffer_adaptor(T& container) :
         m_data(container.data()),
         m_capacity(container.size()),
         m_size(0) {
