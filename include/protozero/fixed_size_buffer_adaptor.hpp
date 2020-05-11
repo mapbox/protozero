@@ -54,6 +54,19 @@ public:
         m_size(0) {
     }
 
+    /**
+     * Constructor.
+     *
+     * @param container Some container class supporting the member functions
+     *        data() and size().
+     */
+    template <typename T>
+    fixed_size_buffer_adaptor(T& container) :
+        m_data(container.data()),
+        m_capacity(container.size()),
+        m_size(0) {
+    }
+
 /// @cond INTERNAL
     using value_type = char;
 
