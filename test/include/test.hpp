@@ -32,7 +32,7 @@ extern std::string load_data(const std::string& filename);
 // to test a dynamically sized buffer based on std::string and a statically
 // sized buffer based on std::array.
 
-class test_type_dynamic_buffer {
+class test_type_string_buffer {
 
     std::string m_buffer;
 
@@ -54,7 +54,7 @@ public:
     }
 };
 
-class test_type_static_buffer {
+class test_type_array_buffer {
 
 public:
 

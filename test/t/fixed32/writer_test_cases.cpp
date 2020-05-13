@@ -4,7 +4,7 @@
 #include "t/fixed32/fixed32_testcase.pb.h"
 
 TEMPLATE_TEST_CASE("write fixed32 field and check with libprotobuf", "",
-    test_type_dynamic_buffer, test_type_static_buffer) {
+    test_type_string_buffer, test_type_array_buffer) {
 
     TestType buffer;
     typename TestType::writer_type pw{buffer.buffer()};

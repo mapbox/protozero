@@ -6,7 +6,7 @@
 #include "t/bool/bool_testcase.pb.h"
 
 TEMPLATE_TEST_CASE("write bool field and check with libprotobuf", "",
-    test_type_dynamic_buffer, test_type_static_buffer) {
+    test_type_string_buffer, test_type_array_buffer) {
 
     TestType buffer;
     typename TestType::writer_type pw{buffer.buffer()};
