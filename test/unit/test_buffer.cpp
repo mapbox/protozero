@@ -9,10 +9,12 @@
 #include <stdexcept>
 #include <type_traits>
 
-template <typename TBuffer>
-void run_test(TBuffer* buffer) {
+TEMPLATE_TEST_CASE("Use various buffer types", "", test_type_static_buffer, test_type_dynamic_buffer) {
     // this is needed for std::back_inserter() to work
-    static_assert(std::is_same<typename TBuffer::value_type, char>::value, "Buffer types used must have value_type char");
+    static_assert(std::is_same<typename TestType::type::value_type, char>::value, "Buffer types used must have value_type char");
+
+    TestType tt;
+    auto* buffer = &tt.buffer();
 
     using protozero::buffer_size;
     using protozero::buffer_append;
@@ -49,17 +51,6 @@ void run_test(TBuffer* buffer) {
     REQUIRE(std::equal(buffer_at_pos(buffer, 0),
                        buffer_at_pos(buffer, buffer_size(buffer)),
                        "abc ghi jkl xy"));
-}
-
-TEST_CASE("Use std::string as buffer") {
-    std::string buffer;
-    run_test(&buffer);
-}
-
-TEST_CASE("Use fixed_size_buffer_adaptor") {
-    std::array<char, 1024> data = {{0}};
-    protozero::fixed_size_buffer_adaptor fsba{&*data.begin(), data.size()};
-    run_test(&fsba);
 }
 
 TEST_CASE("fixed_size_buffer_adaptor has limited size") {
