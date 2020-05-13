@@ -4,6 +4,7 @@
 #include <catch.hpp>
 
 #include <array>
+#include <vector>
 
 #include <stdexcept>
 // Define protozero_assert() to throw this error. This allows the tests to
@@ -14,6 +15,8 @@ struct assert_error : public std::runtime_error {
 };
 #define protozero_assert(x) if (!(x)) { throw assert_error{#x}; }
 
+#include <protozero/buffer_string.hpp>
+#include <protozero/buffer_vector.hpp>
 #include <protozero/fixed_size_buffer_adaptor.hpp>
 #include <protozero/pbf_builder.hpp>
 #include <protozero/pbf_message.hpp>
@@ -52,12 +55,33 @@ public:
     std::size_t size() const noexcept {
         return m_buffer.size();
     }
-};
+}; // class test_type_string_buffer
+
+class test_type_vector_buffer {
+
+    std::vector<char> m_buffer;
+
+public:
+
+    using type = std::vector<char>;
+    using writer_type = protozero::basic_pbf_writer<type>;
+
+    type& buffer() noexcept {
+        return m_buffer;
+    }
+
+    const char *data() const noexcept {
+        return m_buffer.data();
+    }
+
+    std::size_t size() const noexcept {
+        return m_buffer.size();
+    }
+}; // class test_type_vector_buffer
 
 class test_type_array_buffer {
 
 public:
-
     using type = protozero::fixed_size_buffer_adaptor;
     using writer_type = protozero::basic_pbf_writer<type>;
 
@@ -78,5 +102,6 @@ private:
     std::array<char, 1024> m_buffer = {{0}};
     type adaptor{m_buffer.data(), m_buffer.size()};
 
-};
+}; // class test_type_array_buffer
+
 #endif // TEST_HPP

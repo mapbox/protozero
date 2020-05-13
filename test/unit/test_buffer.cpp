@@ -2,6 +2,7 @@
 #include <test.hpp>
 
 #include <protozero/buffer_string.hpp>
+#include <protozero/buffer_vector.hpp>
 #include <protozero/fixed_size_buffer_adaptor.hpp>
 
 #include <algorithm>
@@ -9,7 +10,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-TEMPLATE_TEST_CASE("Use various buffer types", "", test_type_array_buffer, test_type_string_buffer) {
+TEMPLATE_TEST_CASE("Use various buffer types", "", test_type_string_buffer, test_type_vector_buffer, test_type_array_buffer) {
     // this is needed for std::back_inserter() to work
     static_assert(std::is_same<typename TestType::type::value_type, char>::value, "Buffer types used must have value_type char");
 

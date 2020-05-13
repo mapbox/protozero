@@ -313,10 +313,11 @@ following functions must be supported:
 In addition there must be a `using value_type = char` inside the class.
 
 If your class doesn't have all of these functions, you can add template
-specializations for some free functions defined in the `buffer.hpp` header
-file which allow you to customize what functions of your class are called.
-You can have a look at the `buffer_string.hpp` header file that does this
-for the `std::string` buffer class to give you an idea how this works.
+specializations for some free functions defined in the `buffer.hpp` header file
+which allow you to customize what functions of your class are called. You can
+have a look at the `buffer_string.hpp` and `buffer_vector.hpp` header files
+that do this for the `std::string` and `std::vector<char>` buffer classes,
+respectively, to give you an idea how this works.
 
 From inside protozero, the functions in `buffer.hpp` are called without
 namespace, so ADL works and your specializations of those functions can be

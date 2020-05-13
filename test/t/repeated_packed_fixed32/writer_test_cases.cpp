@@ -7,7 +7,7 @@
 #include "t/repeated_packed_fixed32/repeated_packed_fixed32_testcase.pb.h"
 
 TEMPLATE_TEST_CASE("write repeated packed fixed32 field and check with libprotobuf", "",
-    test_type_string_buffer, test_type_array_buffer) {
+    test_type_string_buffer, test_type_vector_buffer, test_type_array_buffer) {
 
     TestType buffer;
     typename TestType::writer_type pw{buffer.buffer()};
@@ -44,7 +44,7 @@ TEMPLATE_TEST_CASE("write repeated packed fixed32 field and check with libprotob
 }
 
 TEMPLATE_TEST_CASE("write from different types of iterators and check with libprotobuf", "",
-    test_type_string_buffer, test_type_array_buffer) {
+    test_type_string_buffer, test_type_vector_buffer, test_type_array_buffer) {
 
     TestType buffer;
     typename TestType::writer_type pw{buffer.buffer()};

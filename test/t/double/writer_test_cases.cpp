@@ -4,7 +4,7 @@
 #include "t/double/double_testcase.pb.h"
 
 TEMPLATE_TEST_CASE("write double field and check with libprotobuf", "",
-    test_type_string_buffer, test_type_array_buffer) {
+    test_type_string_buffer, test_type_vector_buffer, test_type_array_buffer) {
 
     TestType buffer;
     typename TestType::writer_type pw{buffer.buffer()};
