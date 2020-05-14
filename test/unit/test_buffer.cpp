@@ -11,9 +11,6 @@
 #include <type_traits>
 
 TEMPLATE_TEST_CASE("Use various buffer types", "", buffer_test_string, buffer_test_vector, buffer_test_array, buffer_test_external) {
-    // this is needed for std::back_inserter() to work
-    static_assert(std::is_same<typename TestType::type::value_type, char>::value, "Buffer types used must have value_type char");
-
     TestType tt;
     auto* buffer = &tt.buffer();
 

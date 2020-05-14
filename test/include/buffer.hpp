@@ -43,6 +43,9 @@ namespace test_external {
         return (&*buffer->begin()) + pos;
     }
 
+    inline void buffer_push_back(ext_buffer* buffer, char ch) {
+        buffer->push_back(ch);
+    }
 }; // namespace test_external
 
 // The following structs are used in many tests using TEMPLATE_TEST_CASE() to

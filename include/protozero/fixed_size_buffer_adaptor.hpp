@@ -68,8 +68,6 @@ public:
     }
 
 /// @cond INTERNAL
-    using value_type = char;
-
     const char* data() const noexcept {
         return m_data;
     }
@@ -156,6 +154,10 @@ inline void buffer_erase_range(fixed_size_buffer_adaptor* buffer, std::size_t fr
 
 inline char* buffer_at_pos(fixed_size_buffer_adaptor* buffer, std::size_t pos) {
     return buffer->at_pos(pos);
+}
+
+inline void buffer_push_back(fixed_size_buffer_adaptor* buffer, char ch) {
+    buffer->push_back(ch);
 }
 /// @endcond
 

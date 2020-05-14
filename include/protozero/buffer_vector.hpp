@@ -58,6 +58,10 @@ inline char* buffer_at_pos(std::vector<char>* buffer, std::size_t pos) {
     protozero_assert(pos <= buffer->size());
     return (&*buffer->begin()) + pos;
 }
+
+inline void buffer_push_back(std::vector<char>* buffer, char ch) {
+    buffer->push_back(ch);
+}
 /// @endcond
 
 } // namespace protozero

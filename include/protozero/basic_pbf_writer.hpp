@@ -57,8 +57,8 @@ namespace detail {
 template <typename TBuffer>
 class basic_pbf_writer {
 
-    // A pointer to a string buffer holding the data already written to the
-    // PBF message. For default constructed writers or writers that have been
+    // A pointer to a buffer holding the data already written to the PBF
+    // message. For default constructed writers or writers that have been
     // rolled back, this is a nullptr.
     TBuffer* m_data = nullptr;
 
@@ -79,7 +79,7 @@ class basic_pbf_writer {
     void add_varint(uint64_t value) {
         protozero_assert(m_pos == 0 && "you can't add fields to a parent basic_pbf_writer if there is an existing basic_pbf_writer for a submessage");
         protozero_assert(m_data);
-        write_varint(std::back_inserter(*m_data), value);
+        add_varint_to_buffer(m_data, value);
     }
 
     void add_field(pbf_tag_type tag, pbf_wire_type type) {
@@ -201,7 +201,7 @@ class basic_pbf_writer {
         const auto length = pbf_length_type(buffer_size(m_data) - m_pos);
 
         protozero_assert(buffer_size(m_data) >= m_pos - reserve_bytes);
-        const auto n = write_varint(buffer_at_pos(m_data, m_pos - reserve_bytes), length);
+        const auto n = add_varint_to_buffer(buffer_at_pos(m_data, m_pos - reserve_bytes), length);
 
         buffer_erase_range(m_data, m_pos - reserve_bytes + n, m_pos);
         m_pos = 0;

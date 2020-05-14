@@ -270,7 +270,7 @@ your use case to see whether the `reserve()` (or whatever you are using the
 `size()` for) is worth it.
 
 
-## Using a different buffer than std::string
+## Using a different buffer class than std::string
 
 Normally you are using the `pbf_writer` or `pbf_builder` classes which use a
 `std::string` that you supply as their buffer for building the actual protocol
@@ -288,8 +288,8 @@ template <typename T>
 using pbf_builder = basic_pbf_builder<std::string, T>;
 ```
 
-If you want to use a different buffer type, just use the `basic_*` form of the
-class and use your class as template parameter. When instantiating the
+If you want to use a different buffer type, use the `basic_*` form of the
+class and use the buffer class as template parameter. When instantiating the
 `basic_pbf_writer` or `basic_pbf_builder`, the only parameter to the
 constructor must always be a reference to an object of the buffer class.
 
@@ -371,13 +371,15 @@ void buffer_erase_range(TBuffer* buffer, std::size_t from, std::size_t to);
  * @pre pos <= size of the buffer
  */
 char* buffer_at_pos(TBuffer* buffer, std::size_t pos);
-```
 
-In addition there must be a `using value_type = char` inside the class and the
-class must support the member function `void push_back(char c)` adding a single
-character to the buffer. This is needed for `std::back_inserter` to work. If
-your class doesn't have these, you need to provide an adaptor class wrapping
-your buffer class.
+/**
+ * Add a char to the buffer incrementing the number of chars in the buffer.
+ *
+ * @param buffer Pointer to the buffer.
+ * @param ch The character to add.
+ */
+void buffer_push_back(TBuffer* buffer, char ch);
+```
 
 You can have a look at the `buffer_string.hpp` and `buffer_vector.hpp` header
 files that do this for the `std::string` and `std::vector<char>` buffer
@@ -392,6 +394,6 @@ for any fixed-sized buffer you might have.
 your_buffer_class some_buffer;
 using fsba_type = protozero::fixed_size_buffer_adaptor<your_buffer_class>;
 fsba_type buffer_adaptor{some_buffer.data(), some_buffer.size()};
-basic_pbf_writer<fsb> writer{buffer_adaptor};
+basic_pbf_writer<fsba_type> writer{buffer_adaptor};
 ```
 

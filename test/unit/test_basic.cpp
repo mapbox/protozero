@@ -69,56 +69,56 @@ TEST_CASE("next() should throw when illegal wire type is encountered") {
 
 TEST_CASE("next() should throw when illegal tag 0 is encountered") {
     std::string data;
-    protozero::write_varint(std::back_inserter(data), 0U << 3U | 1U);
+    protozero::add_varint_to_buffer(&data, 0U << 3U | 1U);
     protozero::pbf_reader item{data};
     REQUIRE_THROWS_AS(item.next(), protozero::invalid_tag_exception);
 }
 
 TEST_CASE("next() should throw when illegal tag 19000 is encountered") {
     std::string data;
-    protozero::write_varint(std::back_inserter(data), 19000U << 3U | 1U);
+    protozero::add_varint_to_buffer(&data, 19000U << 3U | 1U);
     protozero::pbf_reader item{data};
     REQUIRE_THROWS_AS(item.next(), protozero::invalid_tag_exception);
 }
 
 TEST_CASE("next() should throw when illegal tag 19001 is encountered") {
     std::string data;
-    protozero::write_varint(std::back_inserter(data), 19001U << 3U | 1U);
+    protozero::add_varint_to_buffer(&data, 19001U << 3U | 1U);
     protozero::pbf_reader item{data};
     REQUIRE_THROWS_AS(item.next(), protozero::invalid_tag_exception);
 }
 
 TEST_CASE("next() should throw when illegal tag 19999 is encountered") {
     std::string data;
-    protozero::write_varint(std::back_inserter(data), 19999U << 3U | 1U);
+    protozero::add_varint_to_buffer(&data, 19999U << 3U | 1U);
     protozero::pbf_reader item{data};
     REQUIRE_THROWS_AS(item.next(), protozero::invalid_tag_exception);
 }
 
 TEST_CASE("next() works when legal tag 1 is encountered") {
     std::string data;
-    protozero::write_varint(std::back_inserter(data), 1U << 3U | 1U);
+    protozero::add_varint_to_buffer(&data, 1U << 3U | 1U);
     protozero::pbf_reader item{data};
     REQUIRE(item.next());
 }
 
 TEST_CASE("next() works when legal tag 18999 is encountered") {
     std::string data;
-    protozero::write_varint(std::back_inserter(data), 18999U << 3U | 1U);
+    protozero::add_varint_to_buffer(&data, 18999U << 3U | 1U);
     protozero::pbf_reader item{data};
     REQUIRE(item.next());
 }
 
 TEST_CASE("next() works when legal tag 20000 is encountered") {
     std::string data;
-    protozero::write_varint(std::back_inserter(data), 20000U << 3U | 1U);
+    protozero::add_varint_to_buffer(&data, 20000U << 3U | 1U);
     protozero::pbf_reader item{data};
     REQUIRE(item.next());
 }
 
 TEST_CASE("next() works when legal tag 1^29 - 1 is encountered") {
     std::string data;
-    protozero::write_varint(std::back_inserter(data), ((1UL << 29U) - 1U) << 3U | 1U);
+    protozero::add_varint_to_buffer(&data, ((1UL << 29U) - 1U) << 3U | 1U);
     protozero::pbf_reader item{data};
     REQUIRE(item.next());
 }

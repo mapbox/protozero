@@ -140,9 +140,48 @@ inline void skip_varint(const char** data, const char* end) {
  * @param value The integer that will be encoded.
  * @returns the number of bytes written
  * @throws Any exception thrown by increment or dereference operator on data.
+ * @deprecated Use add_varint_to_buffer() instead.
  */
 template <typename T>
 inline int write_varint(T data, uint64_t value) {
+    int n = 1;
+
+    while (value >= 0x80U) {
+        *data++ = char((value & 0x7fU) | 0x80U);
+        value >>= 7U;
+        ++n;
+    }
+    *data++ = char(value);
+
+    return n;
+}
+
+/**
+ * Varint encode a 64 bit integer.
+ *
+ * @tparam TBuffer A buffer type.
+ * @param buffer Output buffer the varint will be written to.
+ * @param value The integer that will be encoded.
+ * @returns the number of bytes written
+ * @throws Any exception thrown by calling the buffer_push_back() function.
+ */
+template <typename TBuffer>
+inline void add_varint_to_buffer(TBuffer* buffer, uint64_t value) {
+    while (value >= 0x80U) {
+        buffer_push_back(buffer, char((value & 0x7fU) | 0x80U));
+        value >>= 7U;
+    }
+    buffer_push_back(buffer, char(value));
+}
+
+/**
+ * Varint encode a 64 bit integer.
+ *
+ * @param data Where to add the varint. There must be enough space available!
+ * @param value The integer that will be encoded.
+ * @returns the number of bytes written
+ */
+inline int add_varint_to_buffer(char* data, uint64_t value) noexcept {
     int n = 1;
 
     while (value >= 0x80U) {
