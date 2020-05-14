@@ -151,7 +151,7 @@ inline int write_varint(T data, uint64_t value) {
         value >>= 7U;
         ++n;
     }
-    *data++ = char(value);
+    *data = char(value);
 
     return n;
 }
@@ -189,7 +189,7 @@ inline int add_varint_to_buffer(char* data, uint64_t value) noexcept {
         value >>= 7U;
         ++n;
     }
-    *data++ = char(value);
+    *data = char(value);
 
     return n;
 }
