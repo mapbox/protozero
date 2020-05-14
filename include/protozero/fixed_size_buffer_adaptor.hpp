@@ -99,14 +99,11 @@ public:
     }
 
     void resize(std::size_t size) {
+        protozero_assert(size < m_size);
         if (size > m_capacity) {
             throw std::length_error{"fixed size data store exhausted"};
         }
         m_size = size;
-    }
-
-    void reserve_additional(std::size_t /*count*/) {
-        // noop
     }
 
     void erase_range(std::size_t from, std::size_t to) {
@@ -131,6 +128,36 @@ public:
 /// @endcond
 
 }; // class fixed_size_buffer_adaptor
+
+/// @cond INTERNAL
+inline std::size_t buffer_size(const fixed_size_buffer_adaptor* buffer) noexcept {
+    return buffer->size();
+}
+
+inline void buffer_append(fixed_size_buffer_adaptor* buffer, const char* data, std::size_t count) {
+    buffer->append(data, count);
+}
+
+inline void buffer_append_zeros(fixed_size_buffer_adaptor* buffer, std::size_t count) {
+    buffer->append_zeros(count);
+}
+
+inline void buffer_resize(fixed_size_buffer_adaptor* buffer, std::size_t size) {
+    buffer->resize(size);
+}
+
+inline void buffer_reserve_additional(fixed_size_buffer_adaptor* /*buffer*/, std::size_t /*size*/) {
+    /* nothing to be done for fixed-size buffers */
+}
+
+inline void buffer_erase_range(fixed_size_buffer_adaptor* buffer, std::size_t from, std::size_t to) {
+    buffer->erase_range(from, to);
+}
+
+inline char* buffer_at_pos(fixed_size_buffer_adaptor* buffer, std::size_t pos) {
+    return buffer->at_pos(pos);
+}
+/// @endcond
 
 } // namespace protozero
 

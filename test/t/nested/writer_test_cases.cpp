@@ -1,10 +1,10 @@
 
-#include <test.hpp>
+#include <buffer.hpp>
 
 #include "t/nested/nested_testcase.pb.h"
 
 TEMPLATE_TEST_CASE("write nested message fields and check with libprotobuf", "",
-    test_type_string_buffer, test_type_vector_buffer, test_type_array_buffer) {
+    buffer_test_string, buffer_test_vector, buffer_test_array, buffer_test_external) {
 
     TestType buffer;
     typename TestType::writer_type pw{buffer.buffer()};

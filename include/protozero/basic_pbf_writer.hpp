@@ -16,7 +16,6 @@ documentation.
  * @brief Contains the basic_pbf_writer template class.
  */
 
-#include <protozero/buffer.hpp>
 #include <protozero/config.hpp>
 #include <protozero/data_view.hpp>
 #include <protozero/types.hpp>

@@ -289,7 +289,7 @@ using pbf_builder = basic_pbf_builder<std::string, T>;
 ```
 
 If you want to use a different buffer type, just use the `basic_*` form of the
-class and add your class as template parameter. When instantiating the
+class and use your class as template parameter. When instantiating the
 `basic_pbf_writer` or `basic_pbf_builder`, the only parameter to the
 constructor must always be a reference to an object of the buffer class.
 
@@ -298,34 +298,90 @@ some_buffer_class buffer;
 basic_pbf_writer<some_buffer_class> writer{buffer};
 ```
 
-For this to work the buffer class must support a specific interface. The
-following functions must be supported:
+For this to work you must supply the following free functions in your
+namespace (Protozero will use ADL to find them). Use your class name instead
+of `TBuffer`.
 
-* `std::size_t size() const noexcept`
-* `void append(const char* data, std::size_t count)`
-* `void append_zeros(std::size_t count)`
-* `void resize(std::size_t size)`
-* `void reserve_additional(std::size_t size)`
-* `void erase:range(std::size_t from, std::size_t to)`
-* `char* at_pos(std::size_t pos)`
-* `void push_back(char ch)`
+```
+/**
+ * Get the number of bytes currently used in the buffer.
+ *
+ * @param buffer Pointer to the buffer.
+ * @returns number of bytes used in the buffer.
+ */
+std::size_t buffer_size(const TBuffer* buffer);
 
-In addition there must be a `using value_type = char` inside the class.
+/**
+ * Append count bytes from data to the buffer.
+ *
+ * @param buffer Pointer to the buffer.
+ * @param data Pointer to the data.
+ * @param count Number of bytes to be added to the buffer.
+ */
+void buffer_append(TBuffer* buffer, const char* data, std::size_t count);
 
-If your class doesn't have all of these functions, you can add template
-specializations for some free functions defined in the `buffer.hpp` header file
-which allow you to customize what functions of your class are called. You can
-have a look at the `buffer_string.hpp` and `buffer_vector.hpp` header files
-that do this for the `std::string` and `std::vector<char>` buffer classes,
-respectively, to give you an idea how this works.
+/**
+ * Append count zero bytes to the buffer.
+ *
+ * @param buffer Pointer to the buffer.
+ * @param count Number of bytes to be added to the buffer.
+ */
+void buffer_append_zeros(TBuffer* buffer, std::size_t count);
 
-From inside protozero, the functions in `buffer.hpp` are called without
-namespace, so ADL works and your specializations of those functions can be
-in your own namespace.
+/**
+ * Shrink the buffer to the specified size. The new size will always be smaller
+ * than the current size.
+ *
+ * @param buffer Pointer to the buffer.
+ * @param size New size of the buffer.
+ *
+ * @pre size < current size of buffer
+ */
+void buffer_resize(TBuffer* buffer, std::size_t size);
 
-There is an important exception: The `push_back()` function and the
-`value_type` typedef **must** be available. They are needed for
-`std::back_inserter` to work.
+/**
+ * Reserve an additional size bytes for use in the buffer. This is used for
+ * variable-sized buffers to tell the buffer implementation that soon more
+ * memory will be used. The implementation can ignore this.
+ *
+ * @param buffer Pointer to the buffer.
+ * @param size Number of bytes to reserve.
+ */
+void buffer_reserve_additional(TBuffer* buffer, std::size_t size);
+
+/**
+ * Delete data from the buffer. This must move back the data after the
+ * part being deleted and resize the buffer accordingly.
+ *
+ * @param buffer Pointer to the buffer.
+ * @param from Offset into the buffer where we want to erase from.
+ * @param to Offset into the buffer one past the last byte we want to erase.
+ *
+ * @pre from, to <= size of the buffer, from < to
+ */
+void buffer_erase_range(TBuffer* buffer, std::size_t from, std::size_t to);
+
+/**
+ * Return a pointer to the memory at the specified position in the buffer.
+ *
+ * @param buffer Pointer to the buffer.
+ * @param pos The position in the buffer.
+ * @returns pointer to the memory in the buffer at the specified position.
+ *
+ * @pre pos <= size of the buffer
+ */
+char* buffer_at_pos(TBuffer* buffer, std::size_t pos);
+```
+
+In addition there must be a `using value_type = char` inside the class and the
+class must support the member function `void push_back(char c)` adding a single
+character to the buffer. This is needed for `std::back_inserter` to work. If
+your class doesn't have these, you need to provide an adaptor class wrapping
+your buffer class.
+
+You can have a look at the `buffer_string.hpp` and `buffer_vector.hpp` header
+files that do this for the `std::string` and `std::vector<char>` buffer
+classes, respectively, to give you an idea how this works.
 
 There is a class `protozero::fixed_size_buffer_adaptor` you can use as adaptor
 for any fixed-sized buffer you might have.
