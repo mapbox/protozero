@@ -16,6 +16,7 @@ documentation.
  * @brief Contains low-level varint and zigzag encoding and decoding functions.
  */
 
+#include <protozero/buffer_tmpl.hpp>
 #include <protozero/exception.hpp>
 
 #include <cstdint>
@@ -168,10 +169,10 @@ inline int write_varint(T data, uint64_t value) {
 template <typename TBuffer>
 inline void add_varint_to_buffer(TBuffer* buffer, uint64_t value) {
     while (value >= 0x80U) {
-        buffer_push_back(buffer, char((value & 0x7fU) | 0x80U));
+        buffer_customization<TBuffer>::push_back(buffer, char((value & 0x7fU) | 0x80U));
         value >>= 7U;
     }
-    buffer_push_back(buffer, char(value));
+    buffer_customization<TBuffer>::push_back(buffer, char(value));
 }
 
 /**

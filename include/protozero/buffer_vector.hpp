@@ -17,6 +17,8 @@ documentation.
  *        on std::vector<char>
  */
 
+#include <protozero/buffer_tmpl.hpp>
+
 #include <cstddef>
 #include <iterator>
 #include <vector>
@@ -26,42 +28,47 @@ namespace protozero {
 // Implementation of buffer customizations points for std::vector<char>
 
 /// @cond INTERNAL
-inline std::size_t buffer_size(const std::vector<char>* buffer) noexcept {
-    return buffer->size();
-}
+template <>
+struct buffer_customization<std::vector<char>> {
 
-inline void buffer_append(std::vector<char>* buffer, const char* data, std::size_t count) {
-    buffer->insert(buffer->end(), data, data + count);
-}
+    static std::size_t size(const std::vector<char>* buffer) noexcept {
+        return buffer->size();
+    }
 
-inline void buffer_append_zeros(std::vector<char>* buffer, std::size_t count) {
-    buffer->insert(buffer->end(), count, '\0');
-}
+    static void append(std::vector<char>* buffer, const char* data, std::size_t count) {
+        buffer->insert(buffer->end(), data, data + count);
+    }
 
-inline void buffer_resize(std::vector<char>* buffer, std::size_t size) {
-    protozero_assert(size < buffer_size(buffer));
-    buffer->resize(size);
-}
+    static void append_zeros(std::vector<char>* buffer, std::size_t count) {
+        buffer->insert(buffer->end(), count, '\0');
+    }
 
-inline void buffer_reserve_additional(std::vector<char>* buffer, std::size_t size) {
-    buffer->reserve(buffer->size() + size);
-}
+    static void resize(std::vector<char>* buffer, std::size_t size) {
+        protozero_assert(size < buffer->size());
+        buffer->resize(size);
+    }
 
-inline void buffer_erase_range(std::vector<char>* buffer, std::size_t from, std::size_t to) {
-    protozero_assert(from <= buffer->size());
-    protozero_assert(to <= buffer->size());
-    protozero_assert(from <= to);
-    buffer->erase(std::next(buffer->begin(), from), std::next(buffer->begin(), to));
-}
+    static void reserve_additional(std::vector<char>* buffer, std::size_t size) {
+        buffer->reserve(buffer->size() + size);
+    }
 
-inline char* buffer_at_pos(std::vector<char>* buffer, std::size_t pos) {
-    protozero_assert(pos <= buffer->size());
-    return (&*buffer->begin()) + pos;
-}
+    static void erase_range(std::vector<char>* buffer, std::size_t from, std::size_t to) {
+        protozero_assert(from <= buffer->size());
+        protozero_assert(to <= buffer->size());
+        protozero_assert(from <= to);
+        buffer->erase(std::next(buffer->begin(), from), std::next(buffer->begin(), to));
+    }
 
-inline void buffer_push_back(std::vector<char>* buffer, char ch) {
-    buffer->push_back(ch);
-}
+    static char* at_pos(std::vector<char>* buffer, std::size_t pos) {
+        protozero_assert(pos <= buffer->size());
+        return (&*buffer->begin()) + pos;
+    }
+
+    static void push_back(std::vector<char>* buffer, char ch) {
+        buffer->push_back(ch);
+    }
+
+};
 /// @endcond
 
 } // namespace protozero

@@ -15,9 +15,6 @@ struct assert_error : public std::runtime_error {
 };
 #define protozero_assert(x) if (!(x)) { throw assert_error{#x}; }
 
-#include <protozero/buffer_string.hpp>
-#include <protozero/buffer_vector.hpp>
-#include <protozero/fixed_size_buffer_adaptor.hpp>
 #include <protozero/pbf_builder.hpp>
 #include <protozero/pbf_message.hpp>
 #include <protozero/pbf_reader.hpp>

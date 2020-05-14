@@ -16,6 +16,7 @@ documentation.
  * @brief Contains the fixed_size_buffer_adaptor class.
  */
 
+#include <protozero/buffer_tmpl.hpp>
 #include <protozero/config.hpp>
 
 #include <algorithm>
@@ -128,37 +129,42 @@ public:
 }; // class fixed_size_buffer_adaptor
 
 /// @cond INTERNAL
-inline std::size_t buffer_size(const fixed_size_buffer_adaptor* buffer) noexcept {
-    return buffer->size();
-}
+template <>
+struct buffer_customization<fixed_size_buffer_adaptor> {
 
-inline void buffer_append(fixed_size_buffer_adaptor* buffer, const char* data, std::size_t count) {
-    buffer->append(data, count);
-}
+    static std::size_t size(const fixed_size_buffer_adaptor* buffer) noexcept {
+        return buffer->size();
+    }
 
-inline void buffer_append_zeros(fixed_size_buffer_adaptor* buffer, std::size_t count) {
-    buffer->append_zeros(count);
-}
+    static void append(fixed_size_buffer_adaptor* buffer, const char* data, std::size_t count) {
+        buffer->append(data, count);
+    }
 
-inline void buffer_resize(fixed_size_buffer_adaptor* buffer, std::size_t size) {
-    buffer->resize(size);
-}
+    static void append_zeros(fixed_size_buffer_adaptor* buffer, std::size_t count) {
+        buffer->append_zeros(count);
+    }
 
-inline void buffer_reserve_additional(fixed_size_buffer_adaptor* /*buffer*/, std::size_t /*size*/) {
-    /* nothing to be done for fixed-size buffers */
-}
+    static void resize(fixed_size_buffer_adaptor* buffer, std::size_t size) {
+        buffer->resize(size);
+    }
 
-inline void buffer_erase_range(fixed_size_buffer_adaptor* buffer, std::size_t from, std::size_t to) {
-    buffer->erase_range(from, to);
-}
+    static void reserve_additional(fixed_size_buffer_adaptor* /*buffer*/, std::size_t /*size*/) {
+        /* nothing to be done for fixed-size buffers */
+    }
 
-inline char* buffer_at_pos(fixed_size_buffer_adaptor* buffer, std::size_t pos) {
-    return buffer->at_pos(pos);
-}
+    static void erase_range(fixed_size_buffer_adaptor* buffer, std::size_t from, std::size_t to) {
+        buffer->erase_range(from, to);
+    }
 
-inline void buffer_push_back(fixed_size_buffer_adaptor* buffer, char ch) {
-    buffer->push_back(ch);
-}
+    static char* at_pos(fixed_size_buffer_adaptor* buffer, std::size_t pos) {
+        return buffer->at_pos(pos);
+    }
+
+    static void push_back(fixed_size_buffer_adaptor* buffer, char ch) {
+        buffer->push_back(ch);
+    }
+
+};
 /// @endcond
 
 } // namespace protozero

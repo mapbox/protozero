@@ -3,50 +3,62 @@
 
 #include "test.hpp"
 
+#include <protozero/buffer_string.hpp>
+#include <protozero/buffer_vector.hpp>
+#include <protozero/fixed_size_buffer_adaptor.hpp>
+
 // This "simulates" an externally defined buffer type to make sure our
 // buffer adaptor functions do the right thing.
 namespace test_external {
-
     class ext_buffer : public std::string {
     };
+} // namespace test_external
 
-    inline std::size_t buffer_size(const ext_buffer* buffer) noexcept {
-        return buffer->size();
-    }
+namespace protozero {
 
-    inline void buffer_append(ext_buffer* buffer, const char* data, std::size_t count) {
-        buffer->append(data, count);
-    }
+    template <>
+    struct buffer_customization<test_external::ext_buffer> {
 
-    inline void buffer_append_zeros(ext_buffer* buffer, std::size_t count) {
-        buffer->append(count, '\0');
-    }
+        static std::size_t size(const test_external::ext_buffer* buffer) noexcept {
+            return buffer->size();
+        }
 
-    inline void buffer_resize(ext_buffer* buffer, std::size_t size) {
-        protozero_assert(size < buffer_size(buffer));
-        buffer->resize(size);
-    }
+        static void append(test_external::ext_buffer* buffer, const char* data, std::size_t count) {
+            buffer->append(data, count);
+        }
 
-    inline void buffer_reserve_additional(ext_buffer* buffer, std::size_t size) {
-        buffer->reserve(buffer->size() + size);
-    }
+        static void append_zeros(test_external::ext_buffer* buffer, std::size_t count) {
+            buffer->append(count, '\0');
+        }
 
-    inline void buffer_erase_range(ext_buffer* buffer, std::size_t from, std::size_t to) {
-        protozero_assert(from <= buffer->size());
-        protozero_assert(to <= buffer->size());
-        protozero_assert(from <= to);
-        buffer->erase(std::next(buffer->begin(), from), std::next(buffer->begin(), to));
-    }
+        static void resize(test_external::ext_buffer* buffer, std::size_t size) {
+            protozero_assert(size < buffer->size());
+            buffer->resize(size);
+        }
 
-    inline char* buffer_at_pos(ext_buffer* buffer, std::size_t pos) {
-        protozero_assert(pos <= buffer->size());
-        return (&*buffer->begin()) + pos;
-    }
+        static void reserve_additional(test_external::ext_buffer* buffer, std::size_t size) {
+            buffer->reserve(buffer->size() + size);
+        }
 
-    inline void buffer_push_back(ext_buffer* buffer, char ch) {
-        buffer->push_back(ch);
-    }
-}; // namespace test_external
+        static void erase_range(test_external::ext_buffer* buffer, std::size_t from, std::size_t to) {
+            protozero_assert(from <= buffer->size());
+            protozero_assert(to <= buffer->size());
+            protozero_assert(from <= to);
+            buffer->erase(std::next(buffer->begin(), from), std::next(buffer->begin(), to));
+        }
+
+        static char* at_pos(test_external::ext_buffer* buffer, std::size_t pos) {
+            protozero_assert(pos <= buffer->size());
+            return (&*buffer->begin()) + pos;
+        }
+
+        static void push_back(test_external::ext_buffer* buffer, char ch) {
+            buffer->push_back(ch);
+        }
+
+    };
+
+}; // namespace protozero
 
 // The following structs are used in many tests using TEMPLATE_TEST_CASE() to
 // test the different buffer types:

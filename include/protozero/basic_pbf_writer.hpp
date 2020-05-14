@@ -16,6 +16,7 @@ documentation.
  * @brief Contains the basic_pbf_writer template class.
  */
 
+#include <protozero/buffer_tmpl.hpp>
 #include <protozero/config.hpp>
 #include <protozero/data_view.hpp>
 #include <protozero/types.hpp>
@@ -100,7 +101,7 @@ class basic_pbf_writer {
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
         byteswap_inplace(&value);
 #endif
-        buffer_append(m_data, reinterpret_cast<const char*>(&value), sizeof(T));
+        buffer_customization<TBuffer>::append(m_data, reinterpret_cast<const char*>(&value), sizeof(T));
     }
 
     template <typename T, typename It>
@@ -175,22 +176,22 @@ class basic_pbf_writer {
         protozero_assert(m_pos == 0);
         protozero_assert(m_data);
         if (size == 0) {
-            m_rollback_pos = buffer_size(m_data);
+            m_rollback_pos = buffer_customization<TBuffer>::size(m_data);
             add_field(tag, pbf_wire_type::length_delimited);
-            buffer_append_zeros(m_data, std::size_t(reserve_bytes));
+            buffer_customization<TBuffer>::append_zeros(m_data, std::size_t(reserve_bytes));
         } else {
             m_rollback_pos = size_is_known;
             add_length_varint(tag, pbf_length_type(size));
             reserve(size);
         }
-        m_pos = buffer_size(m_data);
+        m_pos = buffer_customization<TBuffer>::size(m_data);
     }
 
     void rollback_submessage() {
         protozero_assert(m_pos != 0);
         protozero_assert(m_rollback_pos != size_is_known);
         protozero_assert(m_data);
-        buffer_resize(m_data, m_rollback_pos);
+        buffer_customization<TBuffer>::resize(m_data, m_rollback_pos);
         m_pos = 0;
     }
 
@@ -198,12 +199,12 @@ class basic_pbf_writer {
         protozero_assert(m_pos != 0);
         protozero_assert(m_rollback_pos != size_is_known);
         protozero_assert(m_data);
-        const auto length = pbf_length_type(buffer_size(m_data) - m_pos);
+        const auto length = pbf_length_type(buffer_customization<TBuffer>::size(m_data) - m_pos);
 
-        protozero_assert(buffer_size(m_data) >= m_pos - reserve_bytes);
-        const auto n = add_varint_to_buffer(buffer_at_pos(m_data, m_pos - reserve_bytes), length);
+        protozero_assert(buffer_customization<TBuffer>::size(m_data) >= m_pos - reserve_bytes);
+        const auto n = add_varint_to_buffer(buffer_customization<TBuffer>::at_pos(m_data, m_pos - reserve_bytes), length);
 
-        buffer_erase_range(m_data, m_pos - reserve_bytes + n, m_pos);
+        buffer_customization<TBuffer>::erase_range(m_data, m_pos - reserve_bytes + n, m_pos);
         m_pos = 0;
     }
 
@@ -212,7 +213,7 @@ class basic_pbf_writer {
         if (m_pos == 0 || m_rollback_pos == size_is_known) {
             return;
         }
-        if (buffer_size(m_data) - m_pos == 0) {
+        if (buffer_customization<TBuffer>::size(m_data) - m_pos == 0) {
             rollback_submessage();
         } else {
             commit_submessage();
@@ -340,7 +341,7 @@ public:
      */
     void reserve(std::size_t size) {
         protozero_assert(m_data);
-        buffer_reserve_additional(m_data, size);
+        buffer_customization<TBuffer>::reserve_additional(m_data, size);
     }
 
     /**
@@ -541,7 +542,7 @@ public:
         protozero_assert(m_data);
         protozero_assert(size <= std::numeric_limits<pbf_length_type>::max());
         add_length_varint(tag, pbf_length_type(size));
-        buffer_append(m_data, value, size);
+        buffer_customization<TBuffer>::append(m_data, value, size);
     }
 
     /**
@@ -602,8 +603,8 @@ public:
         (void)std::initializer_list<size_t>{sum_size += values.size()...};
         protozero_assert(sum_size <= std::numeric_limits<pbf_length_type>::max());
         add_length_varint(tag, pbf_length_type(sum_size));
-        buffer_reserve_additional(m_data, sum_size);
-        (void)std::initializer_list<int>{(buffer_append(m_data, values.data(), values.size()), 0)...};
+        buffer_customization<TBuffer>::reserve_additional(m_data, sum_size);
+        (void)std::initializer_list<int>{(buffer_customization<TBuffer>::append(m_data, values.data(), values.size()), 0)...};
     }
 
     /**
