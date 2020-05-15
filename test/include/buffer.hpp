@@ -58,7 +58,7 @@ namespace protozero {
 
     };
 
-}; // namespace protozero
+} // namespace protozero
 
 // The following structs are used in many tests using TEMPLATE_TEST_CASE() to
 // test the different buffer types:
