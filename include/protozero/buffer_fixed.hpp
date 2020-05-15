@@ -63,9 +63,7 @@ public:
      */
     template <typename T>
     explicit fixed_size_buffer_adaptor(T& container) :
-        m_data(container.data()),
-        m_capacity(container.size()),
-        m_size(0) {
+        fixed_size_buffer_adaptor(container.data(), container.size()) {
     }
 
     /// Returns a pointer to the data in the buffer.

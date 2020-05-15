@@ -133,7 +133,7 @@ public:
 private:
 
     std::array<char, 1024> m_buffer = {{0}};
-    type adaptor{m_buffer.data(), m_buffer.size()};
+    type adaptor{m_buffer};
 
 }; // class buffer_test_array
 
