@@ -193,7 +193,7 @@ jobs:
       dist: bionic
       compiler: "gcc-8"
       env: BUILD='Debug' CC=gcc-8 CXX=g++-8
-           PROTOZERO_DATA_VIEW=std::experimental::string_view
+           PROTOZERO_DATA_VIEW=std::string_view
       addons: *gcc8
 
     - os: linux
