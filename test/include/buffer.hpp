@@ -3,9 +3,9 @@
 
 #include "test.hpp"
 
+#include <protozero/buffer_fixed.hpp>
 #include <protozero/buffer_string.hpp>
 #include <protozero/buffer_vector.hpp>
-#include <protozero/fixed_size_buffer_adaptor.hpp>
 
 // This "simulates" an externally defined buffer type to make sure our
 // buffer adaptor functions do the right thing.

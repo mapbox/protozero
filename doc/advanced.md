@@ -302,15 +302,16 @@ For this to work you must supply template specializations for some static
 functions in the `protozero::buffer_customization` struct, see
 `buffer_tmpl.hpp` for details.
 
-You can have a look at the `buffer_string.hpp` and `buffer_vector.hpp` header
-files that do this for the `std::string` and `std::vector<char>` buffer
-classes, respectively, to give you an idea how this works.
+Protozero already supports two buffer types:
+* `std::string` (to use include `protozero/buffer_string.hpp`)
+* `std::vector<char>` (to use include `protozero/buffer_vector.hpp`)
 
 There is a class `protozero::fixed_size_buffer_adaptor` you can use as adaptor
-for any fixed-sized buffer you might have.
+for any fixed-sized buffer you might have. Include `protozero/buffer_fixed.hpp`
+to use it:
 
 ```cpp
-#include <protozero/fixed_size_buffer_adaptor.hpp>
+#include <protozero/buffer_fixed.hpp>
 
 your_buffer_class some_buffer;
 using fsba_type = protozero::fixed_size_buffer_adaptor<your_buffer_class>;

@@ -1,7 +1,7 @@
 
 #include <test.hpp>
 
-#include <protozero/fixed_size_buffer_adaptor.hpp>
+#include <protozero/buffer_fixed.hpp>
 
 #include <algorithm>
 #include <array>

@@ -1,5 +1,5 @@
-#ifndef PROTOZERO_FIXED_SIZE_BUFFER_ADAPTOR_HPP
-#define PROTOZERO_FIXED_SIZE_BUFFER_ADAPTOR_HPP
+#ifndef PROTOZERO_BUFFER_FIXED_HPP
+#define PROTOZERO_BUFFER_FIXED_HPP
 
 /*****************************************************************************
 
@@ -11,7 +11,7 @@ documentation.
 *****************************************************************************/
 
 /**
- * @file fixed_size_buffer_adaptor.hpp
+ * @file buffer_fixed.hpp
  *
  * @brief Contains the fixed_size_buffer_adaptor class.
  */
@@ -32,8 +32,8 @@ namespace protozero {
  * than is available will fail with a std::length_error exception.
  *
  * As user of this class you should not rely on anything here beyond the
- * constructor, the use of everything else is for the protozero library
- * only.
+ * constructors and the data(), size(), and capacity() member functions.
+ * The use of everything else is for the protozero library only.
  */
 class fixed_size_buffer_adaptor {
 
@@ -47,11 +47,11 @@ public:
      * Constructor.
      *
      * @param data Pointer to some memory allocated for the buffer.
-     * @param size Number of bytes available.
+     * @param capacity Number of bytes available.
      */
-    fixed_size_buffer_adaptor(char* data, std::size_t size) :
+    fixed_size_buffer_adaptor(char* data, std::size_t capacity) :
         m_data(data),
-        m_capacity(size),
+        m_capacity(capacity),
         m_size(0) {
     }
 
@@ -68,19 +68,27 @@ public:
         m_size(0) {
     }
 
-/// @cond INTERNAL
+    /// Returns a pointer to the data in the buffer.
     const char* data() const noexcept {
         return m_data;
     }
 
+    /// Returns a pointer to the data in the buffer.
+    char* data() noexcept {
+        return m_data;
+    }
+
+    /// The capacity this buffer was created with.
     std::size_t capacity() const noexcept {
         return m_capacity;
     }
 
+    /// The number of bytes used in the buffer. Always <= capacity().
     std::size_t size() const noexcept {
         return m_size;
     }
 
+/// @cond INTERNAL
     void append(const char* data, std::size_t count) {
         if (m_size + count > m_capacity) {
             throw std::length_error{"fixed size data store exhausted"};
@@ -169,4 +177,4 @@ struct buffer_customization<fixed_size_buffer_adaptor> {
 
 } // namespace protozero
 
-#endif // PROTOZERO_FIXED_SIZE_BUFFER_ADAPTOR_HPP
+#endif // PROTOZERO_BUFFER_FIXED_HPP
