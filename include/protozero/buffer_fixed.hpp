@@ -39,7 +39,7 @@ class fixed_size_buffer_adaptor {
 
     char* m_data;
     std::size_t m_capacity;
-    std::size_t m_size;
+    std::size_t m_size = 0;
 
 public:
 
@@ -49,10 +49,9 @@ public:
      * @param data Pointer to some memory allocated for the buffer.
      * @param capacity Number of bytes available.
      */
-    fixed_size_buffer_adaptor(char* data, std::size_t capacity) :
+    fixed_size_buffer_adaptor(char* data, std::size_t capacity) noexcept :
         m_data(data),
-        m_capacity(capacity),
-        m_size(0) {
+        m_capacity(capacity) {
     }
 
     /**
@@ -63,7 +62,8 @@ public:
      */
     template <typename T>
     explicit fixed_size_buffer_adaptor(T& container) :
-        fixed_size_buffer_adaptor(container.data(), container.size()) {
+        m_data(container.data()),
+        m_capacity(container.size()) {
     }
 
     /// Returns a pointer to the data in the buffer.
