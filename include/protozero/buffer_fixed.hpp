@@ -30,10 +30,6 @@ namespace protozero {
  * This class can be used instead of std::string if you want to create a
  * vector tile in a fixed-size buffer. Any operation that needs more space
  * than is available will fail with a std::length_error exception.
- *
- * As user of this class you should not rely on anything here beyond the
- * constructors and the data(), size(), and capacity() member functions.
- * The use of everything else is for the protozero library only.
  */
 class fixed_size_buffer_adaptor {
 
@@ -42,6 +38,21 @@ class fixed_size_buffer_adaptor {
     std::size_t m_size = 0;
 
 public:
+
+    /// @cond usual container typedefs not documented
+
+    using size_type = std::size_t;
+
+    using value_type = char;
+    using reference = value_type&;
+    using const_reference = const value_type&;
+    using pointer = value_type*;
+    using const_pointer = const value_type*;
+
+    using iterator = pointer;
+    using const_iterator = const_pointer;
+
+    /// @endcond
 
     /**
      * Constructor.
@@ -86,7 +97,40 @@ public:
         return m_size;
     }
 
+    /// Return iterator to beginning of data.
+    char* begin() noexcept {
+        return m_data;
+    }
+
+    /// Return iterator to beginning of data.
+    const char* begin() const noexcept {
+        return m_data;
+    }
+
+    /// Return iterator to beginning of data.
+    const char* cbegin() const noexcept {
+        return m_data;
+    }
+
+    /// Return iterator to end of data.
+    char* end() noexcept {
+        return m_data + m_size;
+    }
+
+    /// Return iterator to end of data.
+    const char* end() const noexcept {
+        return m_data + m_size;
+    }
+
+    /// Return iterator to end of data.
+    const char* cend() const noexcept {
+        return m_data + m_size;
+    }
+
 /// @cond INTERNAL
+
+    // Do not rely on anything beyond this point
+
     void append(const char* data, std::size_t count) {
         if (m_size + count > m_capacity) {
             throw std::length_error{"fixed size data store exhausted"};

@@ -39,6 +39,8 @@ TEMPLATE_TEST_CASE("Use various buffer types", "", buffer_test_string, buffer_te
     REQUIRE(std::equal(bc::at_pos(buffer, 0),
                        bc::at_pos(buffer, bc::size(buffer)),
                        "abc ghi jkl xy"));
+
+    REQUIRE(std::equal(buffer->cbegin(), buffer->cend(), "abc ghi jkl xy"));
 }
 
 TEST_CASE("fixed_size_buffer_adaptor has limited size") {
