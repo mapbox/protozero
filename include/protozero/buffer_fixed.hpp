@@ -16,8 +16,8 @@ documentation.
  * @brief Contains the fixed_size_buffer_adaptor class.
  */
 
-#include <protozero/buffer_tmpl.hpp>
-#include <protozero/config.hpp>
+#include "buffer_tmpl.hpp"
+#include "config.hpp"
 
 #include <algorithm>
 #include <cstddef>

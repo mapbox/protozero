@@ -16,7 +16,7 @@ documentation.
  * @brief Contains functions to swap bytes in values (for different endianness).
  */
 
-#include <protozero/config.hpp>
+#include "config.hpp"
 
 #include <cstdint>
 

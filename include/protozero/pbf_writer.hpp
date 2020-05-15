@@ -16,8 +16,8 @@ documentation.
  * @brief Contains the pbf_writer class.
  */
 
-#include <protozero/basic_pbf_writer.hpp>
-#include <protozero/buffer_string.hpp>
+#include "basic_pbf_writer.hpp"
+#include "buffer_string.hpp"
 
 #include <cstdint>
 #include <string>

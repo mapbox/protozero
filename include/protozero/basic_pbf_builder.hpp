@@ -16,8 +16,8 @@ documentation.
  * @brief Contains the basic_pbf_builder template class.
  */
 
-#include <protozero/basic_pbf_writer.hpp>
-#include <protozero/types.hpp>
+#include "basic_pbf_writer.hpp"
+#include "types.hpp"
 
 #include <type_traits>
 

@@ -16,8 +16,8 @@ documentation.
  * @brief Contains low-level varint and zigzag encoding and decoding functions.
  */
 
-#include <protozero/buffer_tmpl.hpp>
-#include <protozero/exception.hpp>
+#include "buffer_tmpl.hpp"
+#include "exception.hpp"
 
 #include <cstdint>
 

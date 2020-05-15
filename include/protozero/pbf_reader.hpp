@@ -16,12 +16,12 @@ documentation.
  * @brief Contains the pbf_reader class.
  */
 
-#include <protozero/config.hpp>
-#include <protozero/data_view.hpp>
-#include <protozero/exception.hpp>
-#include <protozero/iterators.hpp>
-#include <protozero/types.hpp>
-#include <protozero/varint.hpp>
+#include "config.hpp"
+#include "data_view.hpp"
+#include "exception.hpp"
+#include "iterators.hpp"
+#include "types.hpp"
+#include "varint.hpp"
 
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
 # include <protozero/byteswap.hpp>

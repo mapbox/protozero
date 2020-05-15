@@ -17,7 +17,7 @@ documentation.
  *        on std::vector<char>
  */
 
-#include <protozero/buffer_tmpl.hpp>
+#include "buffer_tmpl.hpp"
 
 #include <cstddef>
 #include <iterator>

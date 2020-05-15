@@ -16,11 +16,11 @@ documentation.
  * @brief Contains the basic_pbf_writer template class.
  */
 
-#include <protozero/buffer_tmpl.hpp>
-#include <protozero/config.hpp>
-#include <protozero/data_view.hpp>
-#include <protozero/types.hpp>
-#include <protozero/varint.hpp>
+#include "buffer_tmpl.hpp"
+#include "config.hpp"
+#include "data_view.hpp"
+#include "types.hpp"
+#include "varint.hpp"
 
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
 # include <protozero/byteswap.hpp>
