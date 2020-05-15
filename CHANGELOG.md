@@ -10,9 +10,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Support for buffer types other that `std::string`. `pbf_writer` is now
+  just a typedef for `basic_pbf_writer<std::string>`. Other buffer types
+  can be used with `basic_pbf_writer`. See `doc/advanced.md` for details.
+
 ### Changed
 
+- Switched to *catch2* for testing.
+- Some minor tweaks.
+
 ### Fixed
+
+- Removed some undefined behaviour.
 
 
 ## [1.6.8] - 2019-08-15
