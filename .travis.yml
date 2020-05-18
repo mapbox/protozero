@@ -71,62 +71,62 @@ jobs:
     - os: linux
       dist: trusty
       compiler: "clang-3.5"
-      env: BUILD='Debug' CC=clang-3.5 CXX=clang++-3.5
+      env: BUILD=Debug CC=clang-3.5 CXX=clang++-3.5
       addons: *clang35
 
     - os: linux
       dist: xenial
       compiler: "clang-3.8"
-      env: BUILD='Debug' CC=clang-3.8 CXX=clang++-3.8
+      env: BUILD=Debug CC=clang-3.8 CXX=clang++-3.8
       addons: *clang38
 
     - os: linux
       dist: xenial
       compiler: "clang-3.9"
-      env: BUILD='Debug' CC=clang-3.9 CXX=clang++-3.9
+      env: BUILD=Debug CC=clang-3.9 CXX=clang++-3.9
       addons: *clang39
 
     - os: linux
       dist: xenial
       compiler: "clang-4.0"
-      env: BUILD='Debug' CC=clang-4.0 CXX=clang++-4.0
+      env: BUILD=Debug CC=clang-4.0 CXX=clang++-4.0
       addons: *clang40
 
     - os: linux
       dist: xenial
       compiler: "clang-5.0"
-      env: BUILD='Debug' CC=clang-5.0 CXX=clang++-5.0
+      env: BUILD=Debug CC=clang-5.0 CXX=clang++-5.0
       addons: *clang50
 
     - os: linux
       dist: xenial
       compiler: "clang-6.0"
-      env: BUILD='Debug' CC=clang-6.0 CXX=clang++-6.0
+      env: BUILD=Debug CC=clang-6.0 CXX=clang++-6.0
       addons: *clang60
 
     - os: linux
       dist: bionic
       compiler: "clang-7"
-      env: BUILD='Debug' CC=clang-7 CXX=clang++-7
+      env: BUILD=Debug CC=clang-7 CXX=clang++-7
       addons: *clang7
 
     - os: linux
       dist: bionic
       compiler: "clang-8"
-      env: BUILD='Debug' CC=clang-8 CXX=clang++-8
+      env: BUILD=Debug CC=clang-8 CXX=clang++-8
       addons: *clang8
 
     - os: linux
       dist: bionic
       compiler: "clang-9"
-      env: BUILD='Debug' CC=clang-9 CXX=clang++-9
+      env: BUILD=Debug CC=clang-9 CXX=clang++-9
            CLANG_TIDY=clang-tidy-9
       addons: *clang9
 
     - os: linux
       dist: bionic
       compiler: "clang-9"
-      env: BUILD='Debug' CC=clang-9 CXX=clang++-9
+      env: BUILD=Debug CC=clang-9 CXX=clang++-9
            CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
            LDFLAGS="-fsanitize=address,undefined,integer"
       addons: *clang9
@@ -134,57 +134,84 @@ jobs:
     - os: linux
       dist: bionic
       compiler: "clang-9"
-      env: BUILD='Release' CC=clang-9 CXX=clang++-9
+      env: BUILD=Release CC=clang-9 CXX=clang++-9
+      addons: *clang9
+
+    - os: linux
+      arch: arm64
+      dist: bionic
+      compiler: "clang-9"
+      env: BUILD=Debug CC=clang-9 CXX=clang++-9
+           CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
+           LDFLAGS="-fsanitize=address,undefined,integer"
+      addons: *clang9
+
+    - os: linux
+      arch: ppc64le
+      dist: bionic
+      compiler: "clang-9"
+      env: BUILD=Debug CC=clang-9 CXX=clang++-9
+           CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
+           LDFLAGS="-fsanitize=address,undefined,integer"
+      addons: *clang9
+
+    - os: linux
+      arch: s390x
+      dist: bionic
+      compiler: "clang-9"
+      env: BUILD=Debug CC=clang-9 CXX=clang++-9
+           CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
+           LDFLAGS="-fsanitize=address,undefined,integer"
       addons: *clang9
 
     - os: linux
       dist: trusty
       compiler: "gcc-4.8"
-      env: BUILD='Debug' CC=gcc-4.8 CXX=g++-4.8
+      env: BUILD=Debug CC=gcc-4.8 CXX=g++-4.8
       addons: *gcc48
 
     - os: linux
       dist: trusty
       compiler: "gcc-4.9"
-      env: BUILD='Debug' CC=gcc-4.9 CXX=g++-4.9
+      env: BUILD=Debug CC=gcc-4.9 CXX=g++-4.9
       addons: *gcc49
 
     - os: linux
       dist: trusty
       compiler: "gcc-5"
-      env: BUILD='Debug' CC=gcc-5 CXX=g++-5
+      env: BUILD=Debug CC=gcc-5 CXX=g++-5
            CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0"
       addons: *gcc5
 
     - os: linux
       dist: xenial
       compiler: "gcc-5"
-      env: BUILD='Debug' CC=gcc-5 CXX=g++-5
+      env: BUILD=Debug CC=gcc-5 CXX=g++-5
            CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
       addons: *gcc5
 
     - os: linux
       dist: xenial
       compiler: "gcc-6"
-      env: BUILD='Debug' CC=gcc-6 CXX=g++-6
+      env: BUILD=Debug CC=gcc-6 CXX=g++-6
       addons: *gcc6
 
     - os: linux
       dist: bionic
       compiler: "gcc-7"
-      env: BUILD='Debug' CC=gcc-7 CXX=g++-7
+      env: BUILD=Debug CC=gcc-7 CXX=g++-7
       addons: *gcc7
 
     - os: linux
       dist: bionic
       compiler: "gcc-8"
-      env: BUILD='Debug' CC=gcc-8 CXX=g++-8
+      env: BUILD=Debug CC=gcc-8 CXX=g++-8
       addons: *gcc8
 
     - os: linux
       dist: bionic
       compiler: "gcc-8"
-      env: BUILD='Debug' CC=gcc-8 CXX=g++-8
+      env: BUILD=Debug CC=gcc-8 CXX=g++-8
            COVERAGE=gcov-8
            CXXFLAGS="--coverage" LDFLAGS="--coverage"
       addons: *gcc8
@@ -192,35 +219,56 @@ jobs:
     - os: linux
       dist: bionic
       compiler: "gcc-8"
-      env: BUILD='Debug' CC=gcc-8 CXX=g++-8
+      env: BUILD=Debug CC=gcc-8 CXX=g++-8
            PROTOZERO_DATA_VIEW=std::string_view
       addons: *gcc8
 
     - os: linux
       dist: bionic
       compiler: "gcc-8"
-      env: BUILD='Release' CC=gcc-8 CXX=g++-8
+      env: BUILD=Release CC=gcc-8 CXX=g++-8
+      addons: *gcc8
+
+    - os: linux
+      arch: arm64
+      dist: bionic
+      compiler: "gcc-8"
+      env: BUILD=Debug CC=gcc-8 CXX=g++-8
+      addons: *gcc8
+
+    - os: linux
+      arch: ppc64le
+      dist: bionic
+      compiler: "gcc-8"
+      env: BUILD=Debug CC=gcc-8 CXX=g++-8
+      addons: *gcc8
+
+    - os: linux
+      arch: s390x
+      dist: bionic
+      compiler: "gcc-8"
+      env: BUILD=Debug CC=gcc-8 CXX=g++-8
       addons: *gcc8
 
     - os: osx
       osx_image: xcode9.4
       compiler: clang
-      env: BUILD='Debug'
+      env: BUILD=Debug
 
     - os: osx
       osx_image: xcode10.3
       compiler: clang
-      env: BUILD='Debug'
+      env: BUILD=Debug
 
     - os: osx
       osx_image: xcode11.4
       compiler: clang
-      env: BUILD='Debug'
+      env: BUILD=Debug
 
     - os: osx
       osx_image: xcode11.4
       compiler: clang
-      env: BUILD='Release'
+      env: BUILD=Release
 
 #-----------------------------------------------------------------------------
 
