@@ -314,8 +314,13 @@ to use it:
 #include <protozero/buffer_fixed.hpp>
 
 your_buffer_class some_buffer;
-using fsba_type = protozero::fixed_size_buffer_adaptor<your_buffer_class>;
-fsba_type buffer_adaptor{some_buffer.data(), some_buffer.size()};
-basic_pbf_writer<fsba_type> writer{buffer_adaptor};
+protozero::fixed_size_buffer_adaptor buffer_adaptor{some_buffer.data(), some_buffer.size()};
+basic_pbf_writer<protozero::fixed_size_buffer_adaptor> writer{buffer_adaptor};
 ```
 
+The buffer adaptor can be initialized with any container if it supports the
+`data()` and `size()` member functions:
+
+```cpp
+protozero::fixed_size_buffer_adaptor buffer_adaptor{some_buffer};
+```
