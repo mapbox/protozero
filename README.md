@@ -11,7 +11,7 @@ changing frequently or lazy decoding is not critical for your application then
 this approach offers no value: just use the C++ API that can be generated with
 the Google Protobufs `protoc` program.
 
-[![Travis Build Status](https://travis-ci.org/mapbox/protozero.svg?branch=master)](https://travis-ci.org/mapbox/protozero)
+[![Travis Build Status](https://travis-ci.com/mapbox/protozero.svg?branch=master)](https://travis-ci.com/mapbox/protozero)
 [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/mapbox/protozero?svg=true)](https://ci.appveyor.com/project/Mapbox/protozero)
 [![Coverage Status](https://codecov.io/gh/mapbox/protozero/branch/master/graph/badge.svg)](https://codecov.io/gh/mapbox/protozero)
 [![Packaging status](https://repology.org/badge/tiny-repos/protozero.svg)](https://repology.org/metapackage/protozero)
