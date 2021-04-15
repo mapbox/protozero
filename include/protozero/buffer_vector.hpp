@@ -18,6 +18,7 @@ documentation.
  */
 
 #include "buffer_tmpl.hpp"
+#include "config.hpp"
 
 #include <cstddef>
 #include <iterator>
