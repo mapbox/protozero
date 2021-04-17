@@ -23,6 +23,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #-----------------------------------------------------------------------------
 
+option(BUILD_TESTING "Build tests" ON)
 option(WERROR "Add -Werror flag to build (turns warnings into errors)" ON)
 
 if(MSVC)
@@ -134,13 +135,13 @@ install(DIRECTORY include/protozero DESTINATION include)
 
 #-----------------------------------------------------------------------------
 
-enable_testing()
-
 add_subdirectory(doc)
 
 add_subdirectory(tools)
 
-add_subdirectory(test)
-
+if(BUILD_TESTING)
+    enable_testing()
+    add_subdirectory(test)
+endif()
 
 #-----------------------------------------------------------------------------
