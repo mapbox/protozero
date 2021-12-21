@@ -123,7 +123,7 @@ You might have to set `CLANG_TIDY` in CMake config.
 
 ## Cppcheck
 
-For extra checks with [Cppcheck](http://cppcheck.sourceforge.net/) you can,
+For extra checks with [Cppcheck](https://cppcheck.sourceforge.io/) you can,
 after the CMake step, call
 
     make cppcheck
