@@ -130,11 +130,11 @@ install(DIRECTORY include/protozero DESTINATION include)
 
 add_subdirectory(doc)
 
-add_subdirectory(tools)
-
 if(BUILD_TESTING)
     enable_testing()
     add_subdirectory(test)
 endif()
+
+add_subdirectory(tools)
 
 #-----------------------------------------------------------------------------
