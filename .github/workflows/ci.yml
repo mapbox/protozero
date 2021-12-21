@@ -158,8 +158,8 @@ jobs:
     steps:
       - run: |
           vcpkg install \
-            protobuf \
-            protobuf-c
+            protobuf:x64-windows \
+            protobuf-c:x64-windows
         shell: bash
       - uses: actions/checkout@v2
         with:
