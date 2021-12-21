@@ -54,7 +54,7 @@ find_package(Protobuf)
 message(STATUS "Looking for clang-tidy")
 find_program(CLANG_TIDY NAMES clang-tidy clang-tidy-14 clang-tidy-13 clang-tidy-12 clang-tidy-11)
 
-if(CLANG_TIDY)
+if(CLANG_TIDY AND PROTOBUF_FOUND)
     message(STATUS "Looking for clang-tidy - found ${CLANG_TIDY}")
     add_custom_target(clang-tidy
         ${CLANG_TIDY}
