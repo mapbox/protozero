@@ -16,6 +16,15 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #-----------------------------------------------------------------------------
 
+if (NOT "${CMAKE_CXX_STANDARD}")
+    set(CMAKE_CXX_STANDARD 11)
+endif()
+message(STATUS "Building in C++${CMAKE_CXX_STANDARD} mode")
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#-----------------------------------------------------------------------------
+
 option(BUILD_TESTING "Build tests" ON)
 option(WERROR "Add -Werror flag to build (turns warnings into errors)" ON)
 
@@ -23,7 +32,7 @@ if(MSVC)
     add_compile_options(/W3)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
 else()
-    add_compile_options(-std=c++11 -Wall -Wextra -pedantic -Wsign-compare -Wunused-parameter -Wno-float-equal -Wno-covered-switch-default)
+    add_compile_options(-Wall -Wextra -pedantic -Wsign-compare -Wunused-parameter -Wno-float-equal -Wno-covered-switch-default)
     if(WERROR)
         add_compile_options(-Werror)
     endif()

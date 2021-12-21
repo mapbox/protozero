@@ -22,20 +22,26 @@ jobs:
           - "fedora:35"           # gcc 11.2.1, clang 13.0.0, cmake 3.22.0
         build_type: [Debug]
         cpp_compiler: [g++]
-        cpp_version: [c++11]
+        cpp_version: [11]
         include:
           - image: "debian:bullseye"
-            cpp_version: c++17
+            cpp_version: 14
           - image: "debian:bullseye"
-            cpp_version: c++20
+            cpp_version: 17
           - image: "debian:bullseye"
-            c_compiler: clang
-            cpp_compiler: clang++
-            cpp_version: c++17
+            cpp_version: 20
           - image: "debian:bullseye"
             c_compiler: clang
             cpp_compiler: clang++
-            cpp_version: c++20
+            cpp_version: 14
+          - image: "debian:bullseye"
+            c_compiler: clang
+            cpp_compiler: clang++
+            cpp_version: 17
+          - image: "debian:bullseye"
+            c_compiler: clang
+            cpp_compiler: clang++
+            cpp_version: 20
           - image: "debian:bullseye"
             build_type: Release
           - image: "debian:bullseye"
