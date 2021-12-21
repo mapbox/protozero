@@ -78,7 +78,7 @@ inline void byteswap_inplace(int64_t* ptr) noexcept {
 inline void byteswap_inplace(float* ptr) noexcept {
     static_assert(sizeof(float) == 4, "Expecting four byte float");
 
-    uint32_t tmp;
+    uint32_t tmp = 0;
     std::memcpy(&tmp, ptr, 4);
     tmp = detail::byteswap_impl(tmp); // uint32 overload
     std::memcpy(ptr, &tmp, 4);
@@ -88,7 +88,7 @@ inline void byteswap_inplace(float* ptr) noexcept {
 inline void byteswap_inplace(double* ptr) noexcept {
     static_assert(sizeof(double) == 8, "Expecting eight byte double");
 
-    uint64_t tmp;
+    uint64_t tmp = 0;
     std::memcpy(&tmp, ptr, 8);
     tmp = detail::byteswap_impl(tmp); // uint64 overload
     std::memcpy(ptr, &tmp, 8);
