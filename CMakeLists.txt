@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
 
 #-----------------------------------------------------------------------------
 
-project(protozero VERSION 1.7.0 LANGUAGES CXX C)
+project(protozero VERSION 1.7.1 LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

@@ -11,6 +11,13 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+### Fixed
+
+
+## [1.7.1] - 2022-01-10
+
+### Changed
+
 - Don't build tests if the standard CMake `BUILD_TESTING` variable is set to
   off.
 - Now needs CMake 3.5.0 or greater.
@@ -392,7 +399,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.7.0...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.7.1...HEAD
+[1.7.1]: https://github.com/osmcode/libosmium/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/osmcode/libosmium/compare/v1.6.8...v1.7.0
 [1.6.8]: https://github.com/osmcode/libosmium/compare/v1.6.7...v1.6.8
 [1.6.7]: https://github.com/osmcode/libosmium/compare/v1.6.6...v1.6.7
