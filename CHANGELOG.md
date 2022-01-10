@@ -14,7 +14,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Don't build tests if the standard CMake `BUILD_TESTING` variable is set to
   off.
 - Now needs CMake 3.5.0 or greater.
-- Update included catch2 framework to current version v2.13.7.
+- Update included catch2 framework to current version v2.13.8.
 - Only enable clang-tidy make target if protobuf was found.
 - Allow setting C++ version to compile with in CMake config.
 
