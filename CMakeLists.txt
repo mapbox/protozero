@@ -74,7 +74,9 @@ if(CLANG_TIDY AND PROTOBUF_FOUND)
         ${CMAKE_SOURCE_DIR}/test/unit/*.cpp
         ${CMAKE_SOURCE_DIR}/tools/*.cpp
     )
-    add_dependencies(clang-tidy writer_tests)
+    if(BUILD_TESTING)
+        add_dependencies(clang-tidy writer_tests)
+    endif()
 else()
     message(STATUS "Looking for clang-tidy - not found")
     message(STATUS "  Build target 'clang-tidy' will not be available.")
