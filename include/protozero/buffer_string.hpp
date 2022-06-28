@@ -57,8 +57,8 @@ struct buffer_customization<std::string> {
         protozero_assert(from <= buffer->size());
         protozero_assert(to <= buffer->size());
         protozero_assert(from <= to);
-        buffer->erase(std::advance(buffer->begin(), from),
-                      std::advance(buffer->begin(), to));
+        buffer->erase(buffer->begin() + from,
+                      buffer->begin() + to);
     }
 
     static char* at_pos(std::string* buffer, std::size_t pos) {
