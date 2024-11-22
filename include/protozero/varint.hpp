@@ -163,7 +163,6 @@ inline int write_varint(T data, uint64_t value) {
  * @tparam TBuffer A buffer type.
  * @param buffer Output buffer the varint will be written to.
  * @param value The integer that will be encoded.
- * @returns the number of bytes written
  * @throws Any exception thrown by calling the buffer_push_back() function.
  */
 template <typename TBuffer>

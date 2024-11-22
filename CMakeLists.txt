@@ -6,7 +6,7 @@
 #
 #-----------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10.0 FATAL_ERROR)
 
 #-----------------------------------------------------------------------------
 
@@ -17,7 +17,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #-----------------------------------------------------------------------------
 
 if (NOT "${CMAKE_CXX_STANDARD}")
-    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 14)
 endif()
 message(STATUS "Building in C++${CMAKE_CXX_STANDARD} mode")
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -52,6 +52,14 @@ endif()
 #
 #-----------------------------------------------------------------------------
 
+# This is needed for the protobuf_generate_cpp() function to work on newer
+# versions of the Protobuf CMake config.
+set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
+
+# This is needed so that we pick up the (more modern) CONFIG mode cmake file
+# before the (older) MODULE mode cmake config file. Seems to be needed on macOS.
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+
 find_package(Protobuf)
 
 
@@ -61,7 +69,7 @@ find_package(Protobuf)
 #
 #-----------------------------------------------------------------------------
 message(STATUS "Looking for clang-tidy")
-find_program(CLANG_TIDY NAMES clang-tidy clang-tidy-14 clang-tidy-13 clang-tidy-12 clang-tidy-11)
+find_program(CLANG_TIDY NAMES clang-tidy-20 clang-tidy-19 clang-tidy-18 clang-tidy-17 clang-tidy-16 clang-tidy-15)
 
 if(CLANG_TIDY AND PROTOBUF_FOUND)
     message(STATUS "Looking for clang-tidy - found ${CLANG_TIDY}")
@@ -95,7 +103,7 @@ if(CPPCHECK)
     message(STATUS "Looking for cppcheck - found")
     add_custom_target(cppcheck
         ${CPPCHECK}
-        -Uassert --std=c++11 --enable=all
+        -Uassert --std=c++14 --enable=all
         ${CMAKE_SOURCE_DIR}/include/protozero/*.hpp
         ${CMAKE_SOURCE_DIR}/test/*.cpp
         ${CMAKE_SOURCE_DIR}/test/include/*.hpp
