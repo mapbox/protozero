@@ -1,10 +1,10 @@
 #ifndef TEST_HPP
 #define TEST_HPP
 
-#include <catch.hpp>
+#include <catch.hpp> // IWYU pragma: export
 
-#include <array>
-#include <vector>
+#include <array> // IWYU pragma: export
+#include <vector> // IWYU pragma: export
 
 #include <stdexcept>
 // Define protozero_assert() to throw this error. This allows the tests to
@@ -15,10 +15,10 @@ struct assert_error : public std::runtime_error {
 };
 #define protozero_assert(x) if (!(x)) { throw assert_error{#x}; } // NOLINT(readability-simplify-boolean-expr)
 
-#include <protozero/pbf_builder.hpp>
-#include <protozero/pbf_message.hpp>
-#include <protozero/pbf_reader.hpp>
-#include <protozero/pbf_writer.hpp>
+#include <protozero/pbf_builder.hpp> // IWYU pragma: export
+#include <protozero/pbf_message.hpp> // IWYU pragma: export
+#include <protozero/pbf_reader.hpp> // IWYU pragma: export
+#include <protozero/pbf_writer.hpp> // IWYU pragma: export
 
 extern std::string load_data(const std::string& filename);
 
