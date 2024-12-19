@@ -67,7 +67,7 @@ TEST_CASE("write message field") {
     }
 
     SECTION("string with subwriter with reserved size") {
-        std::string str{"foobar"};
+        const std::string str{"foobar"};
         const auto size = 1 /* tag */ + 1 /* length field */ + str.size();
         protozero::pbf_writer pbf_submessage{pbf_test, 1, size};
         pbf_submessage.add_string(1, "foobar");

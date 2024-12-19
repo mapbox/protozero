@@ -78,7 +78,7 @@ TEST_CASE("reading vector tiles") {
         int n_geomtype = 0;
         while (item.next(3)) { // repeated message Layer
             protozero::pbf_reader layer{item.get_message()};
-            std::string name = get_name(layer);
+            const std::string name = get_name(layer);
             if (name == "road") {
                 while (layer.next(2)) { // repeated Feature
                     ++n;
@@ -118,7 +118,7 @@ TEST_CASE("reading vector tiles") {
         int n_geomtype = 0;
         while (item.next(3)) { // repeated message Layer
             protozero::pbf_reader layer{item.get_message()};
-            std::string name = get_name(layer);
+            const std::string name = get_name(layer);
             if (name == "road") {
                 while (layer.next(2)) { // repeated Feature
                     ++n;
