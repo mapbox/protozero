@@ -52,16 +52,17 @@ endif()
 #
 #-----------------------------------------------------------------------------
 
-# This is needed for the protobuf_generate_cpp() function to work on newer
-# versions of the Protobuf CMake config.
-set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
+if(BUILD_TESTING)
+    # This is needed for the protobuf_generate_cpp() function to work on newer
+    # versions of the Protobuf CMake config.
+    set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
 
-# This is needed so that we pick up the (more modern) CONFIG mode cmake file
-# before the (older) MODULE mode cmake config file. Seems to be needed on macOS.
-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+    # This is needed so that we pick up the (more modern) CONFIG mode cmake file
+    # before the (older) MODULE mode cmake config file. Seems to be needed on macOS.
+    set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 
-find_package(Protobuf)
-
+    find_package(Protobuf)
+endif()
 
 #-----------------------------------------------------------------------------
 #
