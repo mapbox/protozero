@@ -67,7 +67,7 @@ bool decode_printable_string(std::stringstream& out, const protozero::data_view 
 bool decode_string(std::stringstream& out, const protozero::data_view view) {
     static constexpr const std::size_t max_string_length = 60;
 
-    std::string str{view.data(), std::min(view.size(), max_string_length)};
+    const std::string str{view.data(), std::min(view.size(), max_string_length)};
     out << '"';
 
     for (const auto c : str) {
@@ -193,7 +193,7 @@ void print_help() {
 }
 
 std::string read_from_file(const char* filename) {
-    std::ifstream file{filename, std::ios::binary};
+    const std::ifstream file{filename, std::ios::binary};
     return std::string{std::istreambuf_iterator<char>(file.rdbuf()),
                        std::istreambuf_iterator<char>()};
 }

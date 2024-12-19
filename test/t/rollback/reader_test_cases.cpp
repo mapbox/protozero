@@ -10,7 +10,7 @@ TEST_CASE("rollback when using packed_field functions") {
 
     SECTION("empty - should do rollback") {
         {
-            protozero::packed_field_sint64 field{pw, 1};
+            const protozero::packed_field_sint64 field{pw, 1};
         }
 
         pw.add_int32(4, 123);
@@ -197,7 +197,7 @@ TEST_CASE("rollback on message is not allowed if there is a nested submessage") 
     {
         protozero::pbf_writer pws{pw, 1};
         pws.add_string(1, "foobar");
-        protozero::pbf_writer pws2{pws, 1};
+        const protozero::pbf_writer pws2{pws, 1};
         REQUIRE_THROWS_AS(pws.rollback(), assert_error);
     }
 }

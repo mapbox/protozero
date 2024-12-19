@@ -90,7 +90,7 @@ TEST_CASE("write repeated packed bool field using packed_field_bool") {
 
     SECTION("empty - should do rollback") {
         {
-            protozero::packed_field_bool field{pw, 1};
+            const protozero::packed_field_bool field{pw, 1};
         }
 
         REQUIRE(buffer == load_data("repeated_packed_bool/data-empty"));
@@ -128,7 +128,7 @@ TEST_CASE("write repeated packed bool field using packed_field_bool with pbf_bui
 
     SECTION("empty - should do rollback") {
         {
-            protozero::packed_field_bool field{pw, msg::f};
+            const protozero::packed_field_bool field{pw, msg::f};
         }
 
         REQUIRE(buffer == load_data("repeated_packed_bool/data-empty"));
