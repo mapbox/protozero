@@ -18,7 +18,7 @@ the Google Protobufs `protoc` program.
 
 ## Depends
 
-* C++11 compiler
+* C++14 compiler
 * CMake
 * Some tests depend on the Google Protobuf library, but use of Protozero
   doesn't need it
