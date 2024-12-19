@@ -39,13 +39,17 @@ static_assert(protozero::decode_zigzag64(0xfffffffffffffffdULL) == -0x7fffffffff
 static_assert(protozero::decode_zigzag64(2 * static_cast<uint64_t>(std::numeric_limits<int64_t>::max())    ) ==  std::numeric_limits<int64_t>::max(), "test constexpr zigzag functions");
 static_assert(protozero::decode_zigzag64(2 * static_cast<uint64_t>(std::numeric_limits<int64_t>::max()) - 1) == -std::numeric_limits<int64_t>::max(), "test constexpr zigzag functions");
 
-inline constexpr int32_t zz32(int32_t val) noexcept {
+namespace {
+
+constexpr int32_t zz32(int32_t val) noexcept {
     return protozero::decode_zigzag32(protozero::encode_zigzag32(val));
 }
 
-inline constexpr int64_t zz64(int64_t val) noexcept {
+constexpr int64_t zz64(int64_t val) noexcept {
     return protozero::decode_zigzag64(protozero::encode_zigzag64(val));
 }
+
+} // anonymous namespace
 
 TEST_CASE("zigzag encode some 32 bit values") {
     REQUIRE(protozero::encode_zigzag32( 0L) == 0UL);

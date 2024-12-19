@@ -6,17 +6,21 @@
 
 #include <protozero/byteswap.hpp>
 
-static int32_t check_swap_4(int32_t data) noexcept {
+namespace {
+
+int32_t check_swap_4(int32_t data) noexcept {
     protozero::byteswap_inplace(&data);
     protozero::byteswap_inplace(&data);
     return data;
 }
 
-static int64_t check_swap_8(int64_t data) noexcept {
+int64_t check_swap_8(int64_t data) noexcept {
     protozero::byteswap_inplace(&data);
     protozero::byteswap_inplace(&data);
     return data;
 }
+
+} // anonymous namespace
 
 TEST_CASE("byte swapping") {
     REQUIRE(0 == check_swap_4(0));

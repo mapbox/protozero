@@ -1,7 +1,9 @@
 
 #include <test.hpp>
 
-inline void check_subsub(protozero::pbf_reader message) {
+namespace {
+
+void check_subsub(protozero::pbf_reader message) {
     while (message.next()) {
         switch (message.tag()) {
             case 1: {
@@ -20,7 +22,7 @@ inline void check_subsub(protozero::pbf_reader message) {
     }
 }
 
-inline void check_sub(protozero::pbf_reader message) {
+void check_sub(protozero::pbf_reader message) {
     while (message.next()) {
         switch (message.tag()) {
             case 1: {
@@ -39,7 +41,7 @@ inline void check_sub(protozero::pbf_reader message) {
     }
 }
 
-inline void check(protozero::pbf_reader message) {
+void check(protozero::pbf_reader message) {
     while (message.next()) {
         switch (message.tag()) {
             case 1: {
@@ -58,7 +60,7 @@ inline void check(protozero::pbf_reader message) {
     }
 }
 
-inline void check_empty(protozero::pbf_reader message) {
+void check_empty(protozero::pbf_reader message) {
     while (message.next()) {
         switch (message.tag()) {
             case 1: {
@@ -76,6 +78,8 @@ inline void check_empty(protozero::pbf_reader message) {
         }
     }
 }
+
+} // anonymous namespace
 
 TEST_CASE("read nested message fields: string") {
     const std::string buffer = load_data("nested/data-message");

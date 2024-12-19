@@ -4,16 +4,20 @@
 #include <string>
 #include <vector>
 
+namespace {
+
 // Input data.vector is encoded according to
 // https://github.com/mapbox/mapnik-vector-tile/blob/master/proto/vector_tile.proto
 
-static std::string get_name(protozero::pbf_reader layer) { // copy!
+std::string get_name(protozero::pbf_reader layer) { // copy!
     while (layer.next(1)) { // required string name
         return layer.get_string();
     }
     REQUIRE(false); // should never be here
     return "";
 }
+
+} // anonymous namespace
 
 TEST_CASE("reading vector tiles") {
     static const std::vector<std::string> expected_layer_names = {

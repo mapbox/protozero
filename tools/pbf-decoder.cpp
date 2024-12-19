@@ -33,6 +33,8 @@ Call with --help/-h to see more options.
 #include <stdexcept>
 #include <string>
 
+namespace {
+
 std::string decode(const char* data, std::size_t len, const std::string& indent);
 
 // Try decoding as a nested message
@@ -202,6 +204,8 @@ std::string read_from_stdin() {
     return std::string{std::istreambuf_iterator<char>(std::cin.rdbuf()),
                        std::istreambuf_iterator<char>()};
 }
+
+} // anonymous namespace
 
 int main(int argc, char* argv[]) {
     static struct option long_options[] = {
