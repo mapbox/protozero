@@ -67,7 +67,7 @@ public:
      * @param tag Tag of the field that will be written
      */
     template <typename P>
-    basic_pbf_builder(basic_pbf_writer<TBuffer>& parent_writer, P tag) noexcept :
+    basic_pbf_builder(basic_pbf_writer<TBuffer>& parent_writer, P tag) :
         basic_pbf_writer<TBuffer>{parent_writer, pbf_tag_type(tag)} {
     }
 

@@ -58,11 +58,11 @@ TEMPLATE_TEST_CASE("write from different types of iterators and check with libpr
     }
 
     SECTION("from string") {
-        std::string data = "1 4 9 16 25";
+        const std::string data = "1 4 9 16 25";
         std::stringstream sdata(data);
 
-        std::istream_iterator<uint32_t> eod;
-        std::istream_iterator<uint32_t> it(sdata);
+        const std::istream_iterator<uint32_t> eod;
+        const std::istream_iterator<uint32_t> it(sdata);
 
         pw.template add_packed_fixed<uint32_t>(1, it, eod);
     }

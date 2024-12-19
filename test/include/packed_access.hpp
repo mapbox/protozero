@@ -153,7 +153,7 @@ TEST_CASE("write repeated packed field using packed field: " PBF_TYPE_NAME) {
 
     SECTION("empty - should do rollback") {
         {
-            packed_field_type field{pw, 1};
+            const packed_field_type field{pw, 1};
         }
 
         REQUIRE(buffer == load_data("repeated_packed_" PBF_TYPE_NAME "/data-empty"));
@@ -264,7 +264,7 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
     }
 
     SECTION("from string") {
-        std::string data{"1 4 9 16 25"};
+        const std::string data{"1 4 9 16 25"};
         std::stringstream sdata{data};
 
 #if PBF_TYPE_IS_SIGNED
@@ -273,8 +273,8 @@ TEST_CASE("write from different types of iterators: " PBF_TYPE_NAME) {
         using test_type = uint32_t;
 #endif
 
-        std::istream_iterator<test_type> eod;
-        std::istream_iterator<test_type> it(sdata);
+        const std::istream_iterator<test_type> eod;
+        const std::istream_iterator<test_type> it(sdata);
 
         pw.ADD_TYPE(1, it, eod);
     }
