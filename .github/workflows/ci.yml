@@ -63,9 +63,11 @@ jobs:
           - image: "debian:testing"
             c_compiler: clang
             cpp_compiler: clang++
+            CXXFLAGS: -Wno-c++20-extensions
           - image: "debian:experimental"
             c_compiler: clang
             cpp_compiler: clang++
+            CXXFLAGS: -Wno-c++20-extensions
     container:
       image: ${{ matrix.image }}
       env:
@@ -173,4 +175,3 @@ jobs:
       - uses: ./.github/actions/cmake-windows
       - uses: ./.github/actions/build-windows
       - uses: ./.github/actions/ctest-windows
-
