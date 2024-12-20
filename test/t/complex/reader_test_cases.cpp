@@ -616,7 +616,9 @@ TEST_CASE("write complex data using pbf_builder: all") {
     REQUIRE(number_of_u == 5);
 }
 
-static void check_message(const std::string& buffer) {
+namespace {
+
+void check_message(const std::string& buffer) {
     protozero::pbf_reader item{buffer};
 
     while (item.next()) {
@@ -639,6 +641,8 @@ static void check_message(const std::string& buffer) {
         }
     }
 }
+
+} // anonymous namespace
 
 TEST_CASE("write complex with subwriter using pbf_writer") {
     std::string buffer_test;

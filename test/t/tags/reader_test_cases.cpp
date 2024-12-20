@@ -1,7 +1,9 @@
 
 #include <test.hpp>
 
-inline void check_tag(const std::string& buffer, protozero::pbf_tag_type tag) {
+namespace {
+
+void check_tag(const std::string& buffer, protozero::pbf_tag_type tag) {
     protozero::pbf_reader item{buffer};
 
     REQUIRE(item.next());
@@ -9,6 +11,8 @@ inline void check_tag(const std::string& buffer, protozero::pbf_tag_type tag) {
     REQUIRE(item.get_int32() == 333L);
     REQUIRE_FALSE(item.next());
 }
+
+} // anonymous namespace
 
 TEST_CASE("read tag: 1") {
     check_tag(load_data("tags/data-tag-1"), 1UL);

@@ -7,11 +7,13 @@
 
 #include <test.hpp>
 
+namespace {
+
 enum class ExampleMsg : protozero::pbf_tag_type {
     repeated_uint32_x = 1
 };
 
-inline std::vector<uint32_t> read_data(const std::string& data) {
+std::vector<uint32_t> read_data(const std::string& data) {
     std::vector<uint32_t> values;
 
     protozero::pbf_message<ExampleMsg> message{data};
@@ -35,7 +37,7 @@ inline std::vector<uint32_t> read_data(const std::string& data) {
     return values;
 }
 
-inline std::vector<uint32_t> read_data_packed(const std::string& data) {
+std::vector<uint32_t> read_data_packed(const std::string& data) {
     std::vector<uint32_t> values;
 
     protozero::pbf_message<ExampleMsg> message{data};
@@ -46,6 +48,8 @@ inline std::vector<uint32_t> read_data_packed(const std::string& data) {
 
     return values;
 }
+
+} // anonymous namespace
 
 TEST_CASE("read not packed repeated field with tag_and_type") {
     const auto values = read_data(load_data("tag_and_type/data-not-packed"));
