@@ -37,18 +37,18 @@ TEMPLATE_TEST_CASE("write bytes field and check with libprotobuf", "",
 
     SECTION("binary") {
         std::string data;
-        data.append(1, char(1));
-        data.append(1, char(2));
-        data.append(1, char(3));
+        data.append(1, static_cast<char>(1));
+        data.append(1, static_cast<char>(2));
+        data.append(1, static_cast<char>(3));
 
         pw.add_string(1, data);
 
         msg.ParseFromArray(buffer.data(), buffer.size());
 
         REQUIRE(msg.s().size() == 3);
-        REQUIRE(msg.s()[1] == char(2));
-        REQUIRE(msg.s()[2] == char(3));
-        REQUIRE(msg.s()[2] == char(3));
+        REQUIRE(msg.s()[1] == static_cast<char>(2));
+        REQUIRE(msg.s()[2] == static_cast<char>(3));
+        REQUIRE(msg.s()[2] == static_cast<char>(3));
     }
 
 }

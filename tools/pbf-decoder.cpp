@@ -43,7 +43,7 @@ bool decode_message(std::stringstream& out, const std::string& indent, const pro
         const auto nested = decode(view.data(), view.size(), indent + "  ");
         out << '\n' << nested;
         return true;
-    } catch (const protozero::exception&) {
+    } catch (const protozero::exception&) { // NOLINT(bugprone-empty-catch)
     }
     return false;
 }
@@ -108,7 +108,7 @@ bool decode_packed_double(std::stringstream& out, std::size_t size, protozero::p
     try {
         print_number_range(out, message.get_packed_double());
         return true;
-    } catch (const protozero::exception&) {
+    } catch (const protozero::exception&) { // NOLINT(bugprone-empty-catch)
     }
 
     return false;
@@ -122,7 +122,7 @@ bool decode_packed_float(std::stringstream& out, std::size_t size, protozero::pb
     try {
         print_number_range(out, message.get_packed_float());
         return true;
-    } catch (const protozero::exception&) {
+    } catch (const protozero::exception&) { // NOLINT(bugprone-empty-catch)
     }
 
     return false;
@@ -133,7 +133,7 @@ bool decode_packed_varint(std::stringstream& out, protozero::pbf_reader& message
     try {
         print_number_range(out, message.get_packed_int64());
         return true;
-    } catch (const protozero::exception&) {
+    } catch (const protozero::exception&) { // NOLINT(bugprone-empty-catch)
     }
 
     return false;

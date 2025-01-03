@@ -76,9 +76,9 @@ TEST_CASE("write bytes field") {
 
     SECTION("binary") {
         std::string data;
-        data.append(1, char(1));
-        data.append(1, char(2));
-        data.append(1, char(3));
+        data.append(1, static_cast<char>(1));
+        data.append(1, static_cast<char>(2));
+        data.append(1, static_cast<char>(3));
 
         pw.add_string(1, data);
 

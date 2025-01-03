@@ -4,6 +4,8 @@
 #include <catch.hpp> // IWYU pragma: export
 
 #include <array> // IWYU pragma: export
+#include <limits> // IWYU pragma: export
+#include <string> // IWYU pragma: export
 #include <vector> // IWYU pragma: export
 
 #include <stdexcept>
