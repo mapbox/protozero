@@ -11,7 +11,18 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Switched to C++14 as minimum requirement. Modernised the code accordingly.
+- Only the tests need the Protobuf library when building.
+- Improve compatibility with various STL flavors.
+- Change license formatting to get recognized by license scanning tools.
+- Add lots of `const` in places where we can. Also fix some other issues
+  reported by clang-tidy.
+- Various other code cleanups.
+- Modernize documentation config, CMake config and CI workflows.
+
 ### Fixed
+
+- `basic_pbf_builder` constructor can not be noexcept.
 
 
 ## [1.7.1] - 2022-01-10
