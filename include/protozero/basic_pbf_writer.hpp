@@ -105,7 +105,7 @@ class basic_pbf_writer {
     }
 
     template <typename T, typename It>
-    void add_packed_fixed(pbf_tag_type tag, It first, It last, std::input_iterator_tag /*unused*/) {
+    void add_packed_fixed(pbf_tag_type tag, It first, It last, std::input_iterator_tag /*unused*/) { // NOLINT(performance-unnecessary-value-param)
         if (first == last) {
             return;
         }
@@ -118,7 +118,7 @@ class basic_pbf_writer {
     }
 
     template <typename T, typename It>
-    void add_packed_fixed(pbf_tag_type tag, It first, It last, std::forward_iterator_tag /*unused*/) {
+    void add_packed_fixed(pbf_tag_type tag, It first, It last, std::forward_iterator_tag /*unused*/) { // NOLINT(performance-unnecessary-value-param)
         if (first == last) {
             return;
         }
@@ -133,7 +133,7 @@ class basic_pbf_writer {
     }
 
     template <typename It>
-    void add_packed_varint(pbf_tag_type tag, It first, It last) {
+    void add_packed_varint(pbf_tag_type tag, It first, It last) { // NOLINT(performance-unnecessary-value-param)
         if (first == last) {
             return;
         }
@@ -146,7 +146,7 @@ class basic_pbf_writer {
     }
 
     template <typename It>
-    void add_packed_svarint(pbf_tag_type tag, It first, It last) {
+    void add_packed_svarint(pbf_tag_type tag, It first, It last) { // NOLINT(performance-unnecessary-value-param)
         if (first == last) {
             return;
         }
@@ -697,7 +697,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_bool(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_bool(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_varint(tag, first, last);
     }
 
@@ -711,7 +711,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_enum(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_enum(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_varint(tag, first, last);
     }
 
@@ -725,7 +725,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_int32(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_int32(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_varint(tag, first, last);
     }
 
@@ -739,7 +739,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_sint32(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_sint32(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_svarint(tag, first, last);
     }
 
@@ -753,7 +753,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_uint32(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_uint32(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_varint(tag, first, last);
     }
 
@@ -767,7 +767,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_int64(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_int64(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_varint(tag, first, last);
     }
 
@@ -781,7 +781,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_sint64(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_sint64(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_svarint(tag, first, last);
     }
 
@@ -795,7 +795,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_uint64(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_uint64(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_varint(tag, first, last);
     }
 
@@ -817,7 +817,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename ValueType, typename InputIterator>
-    void add_packed_fixed(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_fixed(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         static_assert(std::is_same<ValueType, uint32_t>::value ||
                       std::is_same<ValueType, int32_t>::value ||
                       std::is_same<ValueType, int64_t>::value ||
@@ -838,7 +838,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_fixed32(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_fixed32(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_fixed<uint32_t, InputIterator>(tag, first, last,
             typename std::iterator_traits<InputIterator>::iterator_category{});
     }
@@ -853,7 +853,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_sfixed32(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_sfixed32(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_fixed<int32_t, InputIterator>(tag, first, last,
             typename std::iterator_traits<InputIterator>::iterator_category{});
     }
@@ -868,7 +868,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_fixed64(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_fixed64(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_fixed<uint64_t, InputIterator>(tag, first, last,
             typename std::iterator_traits<InputIterator>::iterator_category{});
     }
@@ -883,7 +883,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_sfixed64(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_sfixed64(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_fixed<int64_t, InputIterator>(tag, first, last,
             typename std::iterator_traits<InputIterator>::iterator_category{});
     }
@@ -898,7 +898,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_float(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_float(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_fixed<float, InputIterator>(tag, first, last,
             typename std::iterator_traits<InputIterator>::iterator_category{});
     }
@@ -913,7 +913,7 @@ public:
      * @param last Iterator pointing one past the end of data
      */
     template <typename InputIterator>
-    void add_packed_double(pbf_tag_type tag, InputIterator first, InputIterator last) {
+    void add_packed_double(pbf_tag_type tag, InputIterator first, InputIterator last) { // NOLINT(performance-unnecessary-value-param)
         add_packed_fixed<double, InputIterator>(tag, first, last,
             typename std::iterator_traits<InputIterator>::iterator_category{});
     }
