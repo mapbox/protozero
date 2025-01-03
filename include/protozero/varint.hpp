@@ -26,7 +26,7 @@ namespace protozero {
 /**
  * The maximum length of a 64 bit varint.
  */
-constexpr const int8_t max_varint_length = sizeof(uint64_t) * 8 / 7 + 1;
+constexpr const int8_t max_varint_length = (sizeof(uint64_t) * 8 / 7) + 1;
 
 namespace detail {
 

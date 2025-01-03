@@ -162,7 +162,7 @@ class basic_pbf_writer {
     // a length-delimited field. The length has to fit into pbf_length_type,
     // and a varint needs 8 bit for every 7 bit.
     enum : int {
-        reserve_bytes = sizeof(pbf_length_type) * 8 / 7 + 1
+        reserve_bytes = (sizeof(pbf_length_type) * 8 / 7) + 1
     };
 
     // If m_rollpack_pos is set to this special value, it means that when
