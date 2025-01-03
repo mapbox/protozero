@@ -85,7 +85,7 @@ class basic_pbf_writer {
 
     void add_field(pbf_tag_type tag, pbf_wire_type type) {
         protozero_assert(((tag > 0 && tag < 19000) || (tag > 19999 && tag <= ((1U << 29U) - 1))) && "tag out of range");
-        const uint32_t b = (tag << 3U) | uint32_t(type);
+        const uint32_t b = (tag << 3U) | static_cast<uint32_t>(type);
         add_varint(b);
     }
 
@@ -181,7 +181,7 @@ class basic_pbf_writer {
             buffer_customization<TBuffer>::append_zeros(m_data, std::size_t(reserve_bytes));
         } else {
             m_rollback_pos = size_is_known;
-            add_length_varint(tag, pbf_length_type(size));
+            add_length_varint(tag, static_cast<pbf_length_type>(size));
             reserve(size);
         }
         m_pos = buffer_customization<TBuffer>::size(m_data);
@@ -391,7 +391,7 @@ public:
         add_field(tag, pbf_wire_type::varint);
         protozero_assert(m_pos == 0 && "you can't add fields to a parent basic_pbf_writer if there is an existing basic_pbf_writer for a submessage");
         protozero_assert(m_data);
-        m_data->push_back(char(value));
+        m_data->push_back(static_cast<char>(value));
     }
 
     /**
@@ -401,7 +401,7 @@ public:
      * @param value Value to be written
      */
     void add_enum(pbf_tag_type tag, int32_t value) {
-        add_tagged_varint(tag, uint64_t(value));
+        add_tagged_varint(tag, static_cast<uint64_t>(value));
     }
 
     /**
@@ -411,7 +411,7 @@ public:
      * @param value Value to be written
      */
     void add_int32(pbf_tag_type tag, int32_t value) {
-        add_tagged_varint(tag, uint64_t(value));
+        add_tagged_varint(tag, static_cast<uint64_t>(value));
     }
 
     /**
@@ -441,7 +441,7 @@ public:
      * @param value Value to be written
      */
     void add_int64(pbf_tag_type tag, int64_t value) {
-        add_tagged_varint(tag, uint64_t(value));
+        add_tagged_varint(tag, static_cast<uint64_t>(value));
     }
 
     /**
@@ -541,7 +541,7 @@ public:
         protozero_assert(m_pos == 0 && "you can't add fields to a parent basic_pbf_writer if there is an existing basic_pbf_writer for a submessage");
         protozero_assert(m_data);
         protozero_assert(size <= std::numeric_limits<pbf_length_type>::max());
-        add_length_varint(tag, pbf_length_type(size));
+        add_length_varint(tag, static_cast<pbf_length_type>(size));
         buffer_customization<TBuffer>::append(m_data, value, size);
     }
 
@@ -602,7 +602,7 @@ public:
         size_t sum_size = 0;
         (void)std::initializer_list<size_t>{sum_size += values.size()...};
         protozero_assert(sum_size <= std::numeric_limits<pbf_length_type>::max());
-        add_length_varint(tag, pbf_length_type(sum_size));
+        add_length_varint(tag, static_cast<pbf_length_type>(sum_size));
         buffer_customization<TBuffer>::reserve_additional(m_data, sum_size);
         (void)std::initializer_list<int>{(buffer_customization<TBuffer>::append(m_data, values.data(), values.size()), 0)...};
     }

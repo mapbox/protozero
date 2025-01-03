@@ -40,28 +40,28 @@ namespace detail {
         if (iend - begin >= max_varint_length) {  // fast path
             do {
                 int64_t b = *p++;
-                          val  = ((uint64_t(b) & 0x7fU)       ); if (b >= 0) { break; }
-                b = *p++; val |= ((uint64_t(b) & 0x7fU) <<  7U); if (b >= 0) { break; }
-                b = *p++; val |= ((uint64_t(b) & 0x7fU) << 14U); if (b >= 0) { break; }
-                b = *p++; val |= ((uint64_t(b) & 0x7fU) << 21U); if (b >= 0) { break; }
-                b = *p++; val |= ((uint64_t(b) & 0x7fU) << 28U); if (b >= 0) { break; }
-                b = *p++; val |= ((uint64_t(b) & 0x7fU) << 35U); if (b >= 0) { break; }
-                b = *p++; val |= ((uint64_t(b) & 0x7fU) << 42U); if (b >= 0) { break; }
-                b = *p++; val |= ((uint64_t(b) & 0x7fU) << 49U); if (b >= 0) { break; }
-                b = *p++; val |= ((uint64_t(b) & 0x7fU) << 56U); if (b >= 0) { break; }
-                b = *p++; val |= ((uint64_t(b) & 0x01U) << 63U); if (b >= 0) { break; }
+                          val  = ((static_cast<uint64_t>(b) & 0x7fU)       ); if (b >= 0) { break; }
+                b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) <<  7U); if (b >= 0) { break; }
+                b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 14U); if (b >= 0) { break; }
+                b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 21U); if (b >= 0) { break; }
+                b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 28U); if (b >= 0) { break; }
+                b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 35U); if (b >= 0) { break; }
+                b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 42U); if (b >= 0) { break; }
+                b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 49U); if (b >= 0) { break; }
+                b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 56U); if (b >= 0) { break; }
+                b = *p++; val |= ((static_cast<uint64_t>(b) & 0x01U) << 63U); if (b >= 0) { break; }
                 throw varint_too_long_exception{};
             } while (false);
         } else {
             unsigned int shift = 0;
             while (p != iend && *p < 0) {
-                val |= (uint64_t(*p++) & 0x7fU) << shift;
+                val |= (static_cast<uint64_t>(*p++) & 0x7fU) << shift;
                 shift += 7;
             }
             if (p == iend) {
                 throw end_of_buffer_exception{};
             }
-            val |= uint64_t(*p++) << shift;
+            val |= static_cast<uint64_t>(*p++) << shift;
         }
 
         *data = reinterpret_cast<const char*>(p);
@@ -148,11 +148,11 @@ inline int write_varint(T data, uint64_t value) {
     int n = 1;
 
     while (value >= 0x80U) {
-        *data++ = char((value & 0x7fU) | 0x80U);
+        *data++ = static_cast<char>((value & 0x7fU) | 0x80U);
         value >>= 7U;
         ++n;
     }
-    *data = char(value);
+    *data = static_cast<char>(value);
 
     return n;
 }
@@ -168,10 +168,10 @@ inline int write_varint(T data, uint64_t value) {
 template <typename TBuffer>
 inline void add_varint_to_buffer(TBuffer* buffer, uint64_t value) {
     while (value >= 0x80U) {
-        buffer_customization<TBuffer>::push_back(buffer, char((value & 0x7fU) | 0x80U));
+        buffer_customization<TBuffer>::push_back(buffer, static_cast<char>((value & 0x7fU) | 0x80U));
         value >>= 7U;
     }
-    buffer_customization<TBuffer>::push_back(buffer, char(value));
+    buffer_customization<TBuffer>::push_back(buffer, static_cast<char>(value));
 }
 
 /**
@@ -185,11 +185,11 @@ inline int add_varint_to_buffer(char* data, uint64_t value) noexcept {
     int n = 1;
 
     while (value >= 0x80U) {
-        *data++ = char((value & 0x7fU) | 0x80U);
+        *data++ = static_cast<char>((value & 0x7fU) | 0x80U);
         value >>= 7U;
         ++n;
     }
-    *data = char(value);
+    *data = static_cast<char>(value);
 
     return n;
 }
