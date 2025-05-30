@@ -136,7 +136,7 @@ jobs:
       CXX: clang++
       BUILD_TYPE: ${{ matrix.build_type }}
     steps:
-      - run: brew install protobuf
+      - run: brew install doxygen graphviz protobuf
       - uses: actions/checkout@v4
       - uses: ./.github/actions/cmake
       - uses: ./.github/actions/build
@@ -149,8 +149,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - windows-2019
           - windows-2022
+          - windows-2025
     steps:
       - run: |
           vcpkg install \
