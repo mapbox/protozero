@@ -51,6 +51,7 @@ jobs:
           - image: "debian:bookworm"
             c_compiler: clang
             cpp_compiler: clang++
+            cpp_version: 17
             data_view: std::string_view
           - image: "debian:testing"
             c_compiler: clang

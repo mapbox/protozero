@@ -40,9 +40,13 @@ endif()
 
 include_directories("${CMAKE_SOURCE_DIR}/include")
 
+# Used for testing
 set(PROTOZERO_DATA_VIEW "" CACHE STRING "Type used for protozero::data_view")
 if(NOT PROTOZERO_DATA_VIEW STREQUAL "")
-    add_definitions(-DPROTOZERO_DATA_VIEW=${PROTOZERO_DATA_VIEW})
+    message(STATUS "Using ${PROTOZERO_DATA_VIEW} as data_view")
+    add_definitions(-DPROTOZERO_USE_VIEW=${PROTOZERO_DATA_VIEW})
+else()
+    message(STATUS "Using built-in data_view")
 endif()
 
 
