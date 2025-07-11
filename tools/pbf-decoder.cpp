@@ -32,6 +32,7 @@ Call with --help/-h to see more options.
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace {
 
@@ -194,15 +195,15 @@ void print_help() {
               << "  -o, --offset=OFFSET  Start reading from OFFSET bytes\n";
 }
 
-std::string read_from_file(const char* filename) {
+std::vector<char> read_from_file(const char* filename) {
     const std::ifstream file{filename, std::ios::binary};
-    return std::string{std::istreambuf_iterator<char>(file.rdbuf()),
-                       std::istreambuf_iterator<char>()};
+    return std::vector<char>{std::istreambuf_iterator<char>(file.rdbuf()),
+                             std::istreambuf_iterator<char>()};
 }
 
-std::string read_from_stdin() {
-    return std::string{std::istreambuf_iterator<char>(std::cin.rdbuf()),
-                       std::istreambuf_iterator<char>()};
+std::vector<char> read_from_stdin() {
+    return std::vector<char>{std::istreambuf_iterator<char>(std::cin.rdbuf()),
+                             std::istreambuf_iterator<char>()};
 }
 
 } // anonymous namespace
@@ -251,15 +252,15 @@ int main(int argc, char* argv[]) {
     const std::string filename{argv[optind]};
 
     try {
-        std::string buffer{filename == "-" ? read_from_stdin() :
-                                             read_from_file(argv[optind])};
+        std::vector<char> buffer{filename == "-" ? read_from_stdin() :
+                                                   read_from_file(argv[optind])};
 
         if (offset > buffer.size()) {
             throw std::runtime_error{"offset is larger than file size"};
         }
 
         if (offset > 0) {
-            buffer.erase(0, offset);
+            buffer.erase(buffer.begin(), buffer.begin() + offset);
         }
 
         if (length < buffer.size()) {
