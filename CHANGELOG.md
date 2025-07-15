@@ -14,7 +14,15 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ### Fixed
 
 
-## [1.8.0] - 2024-01-13
+## [1.8.1] - 2025-07-15
+
+### Fixed
+
+- Fix buffer overrun in `get_bool()`
+- Fix test that checks that protozero also works with `std::string_view`
+
+
+## [1.8.0] - 2025-01-13
 
 ### Changed
 
