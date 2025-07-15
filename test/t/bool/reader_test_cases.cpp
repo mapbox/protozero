@@ -139,3 +139,11 @@ TEST_CASE("write bool field using moved pbf_builder") {
     }
 }
 
+TEST_CASE("read bool from using pbf_reader: truncated message") {
+    std::vector<char> buffer = { 0x08 };
+
+    protozero::pbf_reader item{buffer.data(), buffer.size()};
+
+    REQUIRE(item.next());
+    REQUIRE_THROWS_AS(item.get_bool(), protozero::end_of_buffer_exception);
+}
