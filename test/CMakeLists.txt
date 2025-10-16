@@ -102,7 +102,7 @@ if(PROTOBUF_FOUND)
     target_link_libraries(writer_tests PRIVATE protobuf::libprotobuf-lite)
 
     if(NOT MSVC)
-        set_target_properties(writer_tests PROPERTIES COMPILE_FLAGS "-pthread")
+        set_target_properties(writer_tests PROPERTIES COMPILE_FLAGS "-pthread -Wno-nullability-extension")
         if(NOT APPLE)
             set_target_properties(writer_tests PROPERTIES LINK_FLAGS "-pthread")
         endif()

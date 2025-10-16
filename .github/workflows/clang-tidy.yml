@@ -15,7 +15,7 @@ jobs:
           - image: "debian:testing"
             clang: 19
           - image: "debian:experimental"
-            clang: 20
+            clang: 22
     container:
       image: ${{ matrix.image }}
       env:
@@ -33,6 +33,7 @@ jobs:
           apt-get install -yq \
             clang-${{ matrix.clang }} \
             clang-tidy-${{ matrix.clang }} \
+            libstdc++-12-dev \
             cmake \
             libprotobuf-dev \
             make \

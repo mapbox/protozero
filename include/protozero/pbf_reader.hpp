@@ -30,6 +30,7 @@ documentation.
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <limits>
 #include <string>
 #include <utility>
 
@@ -139,6 +140,20 @@ class pbf_reader {
                 T{m_data, m_data}};
     }
 
+    // Adds size to ptr safely, and returning ptr if overflow would occur.
+    const char* safe_ptr_add(const char* ptr, size_t length) {
+#if defined __has_builtin
+#if __has_builtin(__builtin_add_overflow)
+        uintptr_t result;
+        return __builtin_add_overflow(reinterpret_cast<uintptr_t>(ptr), length, &result) ? ptr : reinterpret_cast<const char*>(result);
+#endif
+#endif
+        if (length > std::numeric_limits<uintptr_t>::max() - reinterpret_cast<uintptr_t>(ptr)) {
+            return ptr;
+        }
+        return ptr + length;
+    }
+
 public:
 
     /**
@@ -153,7 +168,7 @@ public:
      */
     explicit pbf_reader(const data_view& view) noexcept
         : m_data{view.data()},
-          m_end{view.data() + view.size()} {
+          m_end{safe_ptr_add(view.data(), view.size())} {
     }
 
     /**
@@ -168,7 +183,7 @@ public:
      */
     pbf_reader(const char* data, std::size_t size) noexcept
         : m_data{data},
-          m_end{data + size} {
+          m_end{safe_ptr_add(data, size)} {
     }
 
 #ifndef PROTOZERO_STRICT_API
@@ -185,7 +200,7 @@ public:
      */
     explicit pbf_reader(const std::pair<const char*, std::size_t>& data) noexcept
         : m_data{data.first},
-          m_end{data.first + data.second} {
+          m_end{safe_ptr_add(data.first, data.second)} {
     }
 #endif
 
@@ -201,7 +216,7 @@ public:
      */
     explicit pbf_reader(const std::string& data) noexcept
         : m_data{data.data()},
-          m_end{data.data() + data.size()} {
+          m_end{safe_ptr_add(data.data(), data.size())} {
     }
 
     /**

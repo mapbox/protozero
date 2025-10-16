@@ -32,13 +32,15 @@ namespace detail {
 
     // from https://github.com/facebook/folly/blob/master/folly/Varint.h
     inline uint64_t decode_varint_impl(const char** data, const char* end) {
-        const auto* begin = reinterpret_cast<const int8_t*>(*data);
-        const auto* iend = reinterpret_cast<const int8_t*>(end);
-        const int8_t* p = begin;
+        const int8_t* p = reinterpret_cast<const int8_t*>(*data);
+        const int8_t* const iend = reinterpret_cast<const int8_t*>(end);
         uint64_t val = 0;
 
-        if (iend - begin >= max_varint_length) {  // fast path
+        if (iend - p >= max_varint_length) {  // fast path
             do {
+// GCC 12 has trouble understanding that we're not actually taking this branch for short buffers.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
                 int64_t b = *p++;
                           val  = ((static_cast<uint64_t>(b) & 0x7fU)       ); if (b >= 0) { break; }
                 b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) <<  7U); if (b >= 0) { break; }
@@ -50,6 +52,7 @@ namespace detail {
                 b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 49U); if (b >= 0) { break; }
                 b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 56U); if (b >= 0) { break; }
                 b = *p++; val |= ((static_cast<uint64_t>(b) & 0x01U) << 63U); if (b >= 0) { break; }
+#pragma GCC diagnostic pop
                 throw varint_too_long_exception{};
             } while (false);
         } else {

@@ -48,6 +48,20 @@ TEST_CASE("empty buffer in pbf_reader is okay") {
     REQUIRE_FALSE(item.next());
 }
 
+TEST_CASE("buffer that overflows address space") {
+    const char buffer[1] = {0};
+    // Create a pbf_reader with a length that overflows address space.
+    // This should be handled gracefully.
+    // We use a length of size_t(-1) which is the largest possible length.
+    // This should not cause any reads or writes outside of the provided buffer.
+    // The pbf_reader should behave as if the buffer is empty.
+    protozero::pbf_reader item{buffer, size_t(-1)};
+
+    REQUIRE(item.length() == 0);
+    REQUIRE_FALSE(item); // test operator bool()
+    REQUIRE_FALSE(item.next());
+}
+
 TEST_CASE("check every possible value for single byte in buffer") {
     char buffer[1];
     for (int i = 0; i <= 255; ++i) {
