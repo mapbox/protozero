@@ -15,11 +15,12 @@ jobs:
           - "ubuntu:24.04"        # gcc 14.2.0, clang 18.1.3, cmake 3.28.3
           - "debian:bullseye"     # gcc 10.2.1, clang 11.0.1, cmake 3.18.4
           - "debian:bookworm"     # gcc 12.2.0, clang 15.0.6, cmake 3.25.1
+          - "debian:trixie"
           - "debian:testing"
           - "debian:experimental"
-          - "fedora:39"
-          - "fedora:40"
-          - "fedora:41"
+          - "fedora:42"
+          - "fedora:43"
+          - "fedora:44"
         build_type: [Debug]
         cpp_compiler: [g++]
         cpp_version: [14]
@@ -53,6 +54,9 @@ jobs:
             cpp_compiler: clang++
             cpp_version: 17
             data_view: std::string_view
+          - image: "debian:trixie"
+            cpp_compiler: clang++
+            CXXFLAGS: -Wno-c++20-extensions
           - image: "debian:testing"
             c_compiler: clang
             cpp_compiler: clang++
@@ -100,7 +104,7 @@ jobs:
             make \
             protobuf-lite-devel \
             protobuf-lite
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/cmake
       - uses: ./.github/actions/build
       - uses: ./.github/actions/ctest
@@ -113,7 +117,7 @@ jobs:
       CXX: clang++-18
       BUILD_TYPE: Debug
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/install-ubuntu
       - uses: ./.github/actions/cmake
       - uses: ./.github/actions/build
@@ -128,6 +132,7 @@ jobs:
         os:
           - macos-14
           - macos-15
+          - macos-26
         build_type: [Debug]
         include:
           - os: macos-15
@@ -139,7 +144,7 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
     steps:
       - run: brew install doxygen graphviz protobuf
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/cmake
       - uses: ./.github/actions/build
       - uses: ./.github/actions/ctest
@@ -159,7 +164,7 @@ jobs:
             protobuf:x64-windows \
             protobuf-c:x64-windows
         shell: bash
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/cmake-windows
       - uses: ./.github/actions/build-windows
       - uses: ./.github/actions/ctest-windows
