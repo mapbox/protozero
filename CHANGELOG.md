@@ -12,7 +12,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ### Changed
 
 ### Fixed
-
+- `add_bool` now appends data through `buffer_customization<TBuffer>::push_back`.
 
 ## [1.8.1] - 2025-07-15
 
