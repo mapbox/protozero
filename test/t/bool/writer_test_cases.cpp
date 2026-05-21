@@ -16,7 +16,7 @@ TEMPLATE_TEST_CASE("write bool field and check with libprotobuf", "",
     SECTION("false") {
         pw.add_bool(1, false);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE_FALSE(msg.b());
     }
@@ -24,7 +24,7 @@ TEMPLATE_TEST_CASE("write bool field and check with libprotobuf", "",
     SECTION("true") {
         pw.add_bool(1, true);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.b());
     }

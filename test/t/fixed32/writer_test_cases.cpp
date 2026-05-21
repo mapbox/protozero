@@ -14,7 +14,7 @@ TEMPLATE_TEST_CASE("write fixed32 field and check with libprotobuf", "",
     SECTION("zero") {
         pw.add_fixed32(1, 0);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i() == 0);
     }
@@ -22,7 +22,7 @@ TEMPLATE_TEST_CASE("write fixed32 field and check with libprotobuf", "",
     SECTION("max") {
         pw.add_fixed32(1, std::numeric_limits<uint32_t>::max());
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i() == std::numeric_limits<uint32_t>::max());
     }
@@ -30,7 +30,7 @@ TEMPLATE_TEST_CASE("write fixed32 field and check with libprotobuf", "",
     SECTION("min") {
         pw.add_fixed32(1, std::numeric_limits<uint32_t>::min());
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i() == std::numeric_limits<uint32_t>::min());
     }

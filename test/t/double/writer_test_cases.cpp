@@ -14,7 +14,7 @@ TEMPLATE_TEST_CASE("write double field and check with libprotobuf", "",
     SECTION("zero") {
         pw.add_double(1, 0.0);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.x() == Approx(0.0));
     }
@@ -22,7 +22,7 @@ TEMPLATE_TEST_CASE("write double field and check with libprotobuf", "",
     SECTION("positive") {
         pw.add_double(1, 4.893);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.x() == Approx(4.893));
     }
@@ -30,7 +30,7 @@ TEMPLATE_TEST_CASE("write double field and check with libprotobuf", "",
     SECTION("negative") {
         pw.add_double(1, -9232.33);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.x() == Approx(-9232.33));
     }

@@ -14,7 +14,7 @@ TEMPLATE_TEST_CASE("write repeated fields and check with libprotobuf", "",
     SECTION("one") {
         pw.add_int32(1, 0L);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i().size() == 1);
         REQUIRE(msg.i(0) == 0L);
@@ -27,7 +27,7 @@ TEMPLATE_TEST_CASE("write repeated fields and check with libprotobuf", "",
         pw.add_int32(1, std::numeric_limits<int32_t>::max());
         pw.add_int32(1, std::numeric_limits<int32_t>::min());
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i().size() == 5);
         REQUIRE(msg.i(0) == 0L);

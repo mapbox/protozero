@@ -23,7 +23,7 @@ TEMPLATE_TEST_CASE("write message field and check with libprotobuf", "",
     }
 
     TestMessage::Test msg;
-    msg.ParseFromArray(buffer.data(), buffer.size());
+    REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
     REQUIRE(msg.submessage().s() == "foobar");
 
 }
