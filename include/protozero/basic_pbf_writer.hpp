@@ -391,7 +391,7 @@ public:
         add_field(tag, pbf_wire_type::varint);
         protozero_assert(m_pos == 0 && "you can't add fields to a parent basic_pbf_writer if there is an existing basic_pbf_writer for a submessage");
         protozero_assert(m_data);
-        m_data->push_back(static_cast<char>(value));
+        buffer_customization<TBuffer>::push_back(m_data, static_cast<char>(value));
     }
 
     /**
