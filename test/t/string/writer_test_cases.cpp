@@ -14,7 +14,7 @@ TEMPLATE_TEST_CASE("write string field and check with libprotobuf", "",
     SECTION("empty") {
         pw.add_string(1, "");
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.s().empty());
     }
@@ -22,7 +22,7 @@ TEMPLATE_TEST_CASE("write string field and check with libprotobuf", "",
     SECTION("one") {
         pw.add_string(1, "x");
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.s() == "x");
     }
@@ -30,7 +30,7 @@ TEMPLATE_TEST_CASE("write string field and check with libprotobuf", "",
     SECTION("string") {
         pw.add_string(1, "foobar");
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.s() == "foobar");
     }

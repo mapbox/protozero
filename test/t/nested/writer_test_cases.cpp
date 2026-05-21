@@ -36,7 +36,7 @@ TEMPLATE_TEST_CASE("write nested message fields and check with libprotobuf", "",
     pw.add_int32(2, 77);
 
     TestNested::Test msg;
-    msg.ParseFromArray(buffer.data(), buffer.size());
+    REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
     REQUIRE(msg.i() == 77);
     REQUIRE(msg.sub().i() == 88);

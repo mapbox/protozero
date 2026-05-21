@@ -23,7 +23,7 @@ TEMPLATE_TEST_CASE("write repeated packed fixed32 field and check with libprotob
         const std::array<uint32_t, 1> data = {{ 17UL }};
         pw.add_packed_fixed32(1, std::begin(data), std::end(data));
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i().size() == 1);
         REQUIRE(msg.i(0) == 17UL);
@@ -33,7 +33,7 @@ TEMPLATE_TEST_CASE("write repeated packed fixed32 field and check with libprotob
         const std::array<uint32_t, 4> data = {{ 17UL, 0UL, 1UL, std::numeric_limits<uint32_t>::max() }};
         pw.add_packed_fixed32(1, std::begin(data), std::end(data));
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i().size() == 4);
         REQUIRE(msg.i(0) == 17UL);
@@ -67,7 +67,7 @@ TEMPLATE_TEST_CASE("write from different types of iterators and check with libpr
         pw.template add_packed_fixed<uint32_t>(1, it, eod);
     }
 
-    msg.ParseFromArray(buffer.data(), buffer.size());
+    REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
     REQUIRE(msg.i().size() == 5);
     REQUIRE(msg.i(0) ==  1);

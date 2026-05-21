@@ -14,7 +14,7 @@ TEMPLATE_TEST_CASE("write int32 field and check with libprotobuf", "",
     SECTION("zero") {
         pw.add_int32(1, 0L);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i() == 0L);
     }
@@ -22,7 +22,7 @@ TEMPLATE_TEST_CASE("write int32 field and check with libprotobuf", "",
     SECTION("positive") {
         pw.add_int32(1, 1L);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i() == 1L);
     }
@@ -30,7 +30,7 @@ TEMPLATE_TEST_CASE("write int32 field and check with libprotobuf", "",
     SECTION("negative") {
         pw.add_int32(1, -1L);
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i() == -1L);
     }
@@ -38,7 +38,7 @@ TEMPLATE_TEST_CASE("write int32 field and check with libprotobuf", "",
     SECTION("max") {
         pw.add_int32(1, std::numeric_limits<int32_t>::max());
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i() == std::numeric_limits<int32_t>::max());
     }
@@ -46,7 +46,7 @@ TEMPLATE_TEST_CASE("write int32 field and check with libprotobuf", "",
     SECTION("min") {
         pw.add_int32(1, std::numeric_limits<int32_t>::min());
 
-        msg.ParseFromArray(buffer.data(), buffer.size());
+        REQUIRE(msg.ParseFromArray(buffer.data(), buffer.size()));
 
         REQUIRE(msg.i() == std::numeric_limits<int32_t>::min());
     }
