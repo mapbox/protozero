@@ -8,10 +8,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ["debian:bookworm", "debian:testing", "debian:experimental"]
+        image: ["debian:trixie", "debian:testing", "debian:experimental"]
         include:
-          - image: "debian:bookworm"
-            clang: 15
+          - image: "debian:trixie"
+            clang: 19
           - image: "debian:testing"
             clang: 19
           - image: "debian:experimental"
@@ -38,14 +38,14 @@ jobs:
             make \
             protobuf-compiler
         shell: bash
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/cmake
       - name: Run clang-tidy
         run: make clang-tidy | tee protozero-${{ github.sha }}-clang-tidy-${{ matrix.clang }}.log
         shell: bash
         working-directory: build
       - name: Upload clang-tidy log
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: protozero-${{ github.sha }}-clang-tidy-${{ matrix.clang }}-log
