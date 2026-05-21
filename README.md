@@ -12,7 +12,6 @@ this approach offers no value: just use the C++ API that can be generated with
 the Google Protobufs `protoc` program.
 
 [![Github Build Status](https://github.com/mapbox/protozero/actions/workflows/ci.yml/badge.svg)](https://github.com/mapbox/protozero/actions/workflows/ci.yml)
-[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/mapbox/protozero?svg=true)](https://ci.appveyor.com/project/Mapbox/protozero)
 [![Packaging status](https://repology.org/badge/tiny-repos/protozero.svg)](https://repology.org/metapackage/protozero)
 
 ## Depends
