@@ -5,7 +5,7 @@
 To release a new protozero version:
 
  - Make sure all tests are passing locally and on Github Actions
- - Make sure "make doc" builds
+ - Make sure `cmake --build build --target doc` builds
  - Update version number in
    - include/protozero/version.hpp (two places)
    - CMakeLists.txt (one place)

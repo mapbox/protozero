@@ -71,12 +71,10 @@ tell us about your system.
 
 Extensive tests are included. Build them using CMake:
 
-    mkdir build
-    cd build
-    cmake ..
-    make
+    cmake -Bbuild
+    cmake --build build
 
-Call `ctest` to run the tests.
+Call `ctest -test-dir build` to run the tests.
 
 The unit and reader tests are always build, the writer tests are only build if
 the Google Protobuf library is found when running CMake.
@@ -88,9 +86,9 @@ See `test/README.md` for more details about the test.
 
 To get a coverage report set `CXXFLAGS` and `LDFLAGS` before calling CMake:
 
-    CXXFLAGS="--coverage" LDFLAGS="--coverage" cmake ..
+    CXXFLAGS="--coverage" LDFLAGS="--coverage" cmake -Bbuild
 
-Then call `make` as usual and run the tests using `ctest`.
+Then call `cmake --build build` as usual and run the tests using `ctest -test-dir build`.
 
 If you are using `g++` use `gcov` to generate a report (results are in `*.gcov`
 files):
@@ -113,7 +111,7 @@ Open `coverage/index.html` in your browser to see the report.
 
 After the CMake step, run
 
-    make clang-tidy
+    cmake --build build --target clang-tidy
 
 to check the code with [clang-tidy](https://clang.llvm.org/extra/clang-tidy/).
 You might have to set `CLANG_TIDY` in CMake config.
@@ -124,12 +122,20 @@ You might have to set `CLANG_TIDY` in CMake config.
 For extra checks with [Cppcheck](https://cppcheck.sourceforge.io/) you can,
 after the CMake step, call
 
-    make cppcheck
+    cmake --build build --target cppcheck
+
+
+## Include What You Use
+
+For checking `#include` hygiene with [include-what-you-use](https://include-what-you-use.org/)
+you can, after the CMake step, call
+
+    cmake --build build --target iwyu
 
 
 ## Installation
 
-After the CMake step, call `make install` to install the include files in
+After the CMake step, call `cmake --build build --target install` to install the include files in
 `/usr/local/include/protozero`.
 
 If you are using CMake to build your own software, you can copy the file

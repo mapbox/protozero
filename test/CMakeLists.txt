@@ -96,6 +96,11 @@ if(PROTOBUF_FOUND)
         endif()
     endforeach()
 
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        # Google Protobuf library adds non-standard _Nonnull to Abseil macros
+        set_source_files_properties(${PROTO_SRCS} PROPERTIES COMPILE_FLAGS "-Wno-nullability-extension")
+    endif()
+
     add_executable(writer_tests writer_tests.cpp ${SOURCES} ${PROTO_SRCS} ${PROTO_HDRS})
 
     target_compile_features(writer_tests PUBLIC cxx_std_14)
