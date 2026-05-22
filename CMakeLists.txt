@@ -74,7 +74,7 @@ endif()
 #
 #-----------------------------------------------------------------------------
 message(STATUS "Looking for clang-tidy")
-find_program(CLANG_TIDY NAMES clang-tidy-20 clang-tidy-19 clang-tidy-18 clang-tidy-17 clang-tidy-16 clang-tidy-15)
+find_program(CLANG_TIDY NAMES clang-tidy-20 clang-tidy-19 clang-tidy-18 clang-tidy-17 clang-tidy-16 clang-tidy-15 clang-tidy)
 
 if(CLANG_TIDY AND PROTOBUF_FOUND)
     message(STATUS "Looking for clang-tidy - found ${CLANG_TIDY}")
@@ -93,6 +93,10 @@ if(CLANG_TIDY AND PROTOBUF_FOUND)
 else()
     message(STATUS "Looking for clang-tidy - not found")
     message(STATUS "  Build target 'clang-tidy' will not be available.")
+    add_custom_target(clang-tidy
+        COMMAND ${CMAKE_COMMAND} -E echo "ERROR: clang-tidy not found. Install it and re-run cmake."
+        COMMAND false
+        VERBATIM)
 endif()
 
 
@@ -118,7 +122,10 @@ if(CPPCHECK)
     )
 else()
     message(STATUS "Looking for cppcheck - not found")
-    message(STATUS "  Build target 'cppcheck' will not be available.")
+    add_custom_target(cppcheck
+        COMMAND ${CMAKE_COMMAND} -E echo "ERROR: cppcheck not found. Install it and re-run cmake."
+        COMMAND false
+        VERBATIM)
 endif()
 
 
@@ -128,16 +135,27 @@ endif()
 #
 #-----------------------------------------------------------------------------
 message(STATUS "Looking for iwyu")
-find_program(IWYU_TOOL NAMES iwyu_tool)
+find_program(IWYU_TOOL NAMES iwyu_tool iwyu_tool.py)
 
 if(IWYU_TOOL)
     message(STATUS "Looking for iwyu - found")
+    set(IWYU_EXTRA_ARGS)
+    if(APPLE)
+        execute_process(COMMAND xcrun --show-sdk-path
+            OUTPUT_VARIABLE IWYU_SDK_PATH
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+        list(APPEND IWYU_EXTRA_ARGS -isysroot ${IWYU_SDK_PATH} -Wno-c2y-extensions)
+    endif()
     add_custom_target(iwyu
-        ${IWYU_TOOL} -p ${CMAKE_BINARY_DIR}
+        ${IWYU_TOOL} -p ${CMAKE_BINARY_DIR} -- ${IWYU_EXTRA_ARGS}
     )
 else()
     message(STATUS "Looking for iwyu - not found")
     message(STATUS "  Build target 'iwyu' will not be available.")
+    add_custom_target(iwyu
+        COMMAND ${CMAKE_COMMAND} -E echo "ERROR: iwyu not found. Install it and re-run cmake."
+        COMMAND false
+        VERBATIM)
 endif()
 
 

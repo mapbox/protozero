@@ -28,6 +28,10 @@ if(DOXYGEN_FOUND AND DOXYGEN_DOT_FOUND)
 else()
     message(STATUS "Looking for doxygen - not found")
     message(STATUS "  Disabled making of documentation.")
+    add_custom_target(doc
+        COMMAND ${CMAKE_COMMAND} -E echo "ERROR: doxygen (or graphviz/dot) not found. Install them and re-run cmake."
+        COMMAND false
+        VERBATIM)
 endif()
 
 #-----------------------------------------------------------------------------

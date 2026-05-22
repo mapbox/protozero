@@ -169,7 +169,7 @@ decode_zigzag32()
 decode_zigzag64()
 ```
 
-See the reference documentation created by `make doc` for details.
+See the reference documentation created by `cmake --build build --target doc` for details.
 
 
 ## Vectored input for length-delimited fields
