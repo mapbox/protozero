@@ -205,6 +205,16 @@ TEST_CASE("call skip_varint with every possible value for single byte in buffer"
     }
 }
 
+TEST_CASE("call skip_varint_unchecked with every possible value of terminal varints in buffer") {
+    char buffer[1];
+    for (int i = 0; i <= 127; ++i) {
+        buffer[0] = static_cast<char>(i);
+        const char* b = buffer;
+        protozero::skip_varint_unchecked(&b);
+        REQUIRE(b == buffer + 1);
+    }
+}
+
 TEST_CASE("decode_varint with empty buffer throws") {
     const char* buffer = "";
     REQUIRE_THROWS_AS(protozero::decode_varint(&buffer, buffer), protozero::end_of_buffer_exception);
@@ -224,6 +234,17 @@ TEST_CASE("call decode_varint with every possible value for single byte in buffe
         buffer[0] = static_cast<char>(i);
         const char* b = buffer;
         REQUIRE_THROWS_AS(protozero::decode_varint(&b, buffer + 1), protozero::end_of_buffer_exception);
+    }
+}
+
+TEST_CASE("call decode_varint_unchecked with every possible value of terminal varints in buffer") {
+    char buffer[1];
+    for (unsigned int i = 0; i <= 127; ++i) {
+        REQUIRE(protozero::length_of_varint(i) == 1);
+        buffer[0] = static_cast<char>(i);
+        const char* b = buffer;
+        REQUIRE(protozero::decode_varint_unchecked(&b) == i);
+        REQUIRE(b == buffer + 1);
     }
 }
 
