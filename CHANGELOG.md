@@ -12,6 +12,11 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ### Changed
 
 ### Fixed
+
+## [1.8.2] - 2026-06-30
+
+### Fixed
+
 - `add_bool` now appends data through `buffer_customization<TBuffer>::push_back`.
 
 ## [1.8.1] - 2025-07-15
@@ -425,7 +430,9 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Make pbf reader and writer code endianess-aware.
 
 
-[unreleased]: https://github.com/osmcode/libosmium/compare/v1.8.0...HEAD
+[unreleased]: https://github.com/osmcode/libosmium/compare/v1.8.2...HEAD
+[1.8.2]: https://github.com/osmcode/libosmium/compare/v1.8.1...v1.8.2
+[1.8.1]: https://github.com/osmcode/libosmium/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/osmcode/libosmium/compare/v1.7.1...v1.8.0
 [1.7.1]: https://github.com/osmcode/libosmium/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/osmcode/libosmium/compare/v1.6.8...v1.7.0
