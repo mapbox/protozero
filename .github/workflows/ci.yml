@@ -107,7 +107,7 @@ jobs:
             make \
             protobuf-lite-devel \
             protobuf-lite
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/cmake
       - uses: ./.github/actions/build
       - uses: ./.github/actions/ctest
@@ -120,7 +120,7 @@ jobs:
       CXX: clang++-18
       BUILD_TYPE: Debug
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/install-ubuntu
       - uses: ./.github/actions/cmake
       - uses: ./.github/actions/build
@@ -147,7 +147,7 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
     steps:
       - run: brew install doxygen graphviz protobuf
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/cmake
       - uses: ./.github/actions/build
       - uses: ./.github/actions/ctest
@@ -167,7 +167,7 @@ jobs:
             protobuf:x64-windows \
             protobuf-c:x64-windows
         shell: bash
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/cmake-windows
       - uses: ./.github/actions/build-windows
       - uses: ./.github/actions/ctest-windows
