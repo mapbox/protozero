@@ -127,6 +127,14 @@ after the CMake step, call
     make cppcheck
 
 
+## Include What You Use
+
+For checking `#include` hygiene with [include-what-you-use](https://include-what-you-use.org/)
+you can, after the CMake step, call
+
+    make iwyu
+
+
 ## Installation
 
 After the CMake step, call `make install` to install the include files in
