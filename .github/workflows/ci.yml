@@ -143,7 +143,6 @@ jobs:
     env:
       CC: clang
       CXX: clang++
-      CXXFLAGS: -Wno-nullability-extension
       BUILD_TYPE: ${{ matrix.build_type }}
     steps:
       - run: brew install doxygen graphviz protobuf
