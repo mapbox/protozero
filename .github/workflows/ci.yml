@@ -112,6 +112,41 @@ jobs:
       - uses: ./.github/actions/build
       - uses: ./.github/actions/ctest
 
+  big-endian:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: s390x
+      - name: Build and test on s390x (big-endian)
+        run: |
+          docker run --rm --platform linux/s390x \
+            -v "${{ github.workspace }}:/src" \
+            -w /src \
+            -e DEBIAN_FRONTEND=noninteractive \
+            debian:bookworm \
+            bash -exc '
+              apt-get update -qq
+              apt-get install -y \
+                cmake \
+                g++ \
+                libprotobuf-dev \
+                make \
+                protobuf-compiler \
+                python3-minimal
+              python3 -c "import sys; assert sys.byteorder == \"big\""
+              mkdir -p build
+              cd build
+              cmake -LA .. \
+                -DCMAKE_BUILD_TYPE=Debug \
+                -DCMAKE_CXX_STANDARD=14
+              cmake --build . --parallel 2
+              ctest --output-on-failure --parallel 2
+            '
+
   ubuntu-latest:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
