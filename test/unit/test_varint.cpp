@@ -1,6 +1,32 @@
 
 #include <test.hpp>
 
+namespace {
+
+struct checked_varint_decoder {
+    static uint64_t decode(const char** data, const char* end) {
+        return protozero::decode_varint(data, end);
+    }
+
+    static void skip(const char** data, const char* end) {
+        protozero::skip_varint(data, end);
+    }
+};
+
+struct unchecked_varint_decoder {
+    static uint64_t decode(const char** data, const char* end) {
+        (void)end;
+        return protozero::decode_varint_unchecked(data);
+    }
+
+    static void skip(const char** data, const char* end) {
+        (void)end;
+        protozero::skip_varint_unchecked(data);
+    }
+};
+
+} // namespace
+
 TEST_CASE("max varint length") {
     REQUIRE(protozero::max_varint_length == 10);
 }
@@ -245,6 +271,124 @@ TEST_CASE("call decode_varint_unchecked with every possible value of terminal va
         const char* b = buffer;
         REQUIRE(protozero::decode_varint_unchecked(&b) == i);
         REQUIRE(b == buffer + 1);
+    }
+}
+
+template <typename Decoder>
+void test_decode_various_lengths() {
+    const std::vector<uint64_t> values{
+        0,
+        127,
+        128,
+        16383,
+        16384,
+        2097151,
+        2097152,
+        0xffffffffULL,
+        0xffffffffffffffffULL,
+        1ULL << 40U,
+    };
+
+    for (const auto value : values) {
+        std::string buffer;
+        protozero::add_varint_to_buffer(&buffer, value);
+        const char* b = buffer.data();
+        const char* const end = buffer.data() + buffer.size();
+        REQUIRE(Decoder::decode(&b, end) == value);
+        REQUIRE(b == end);
+    }
+}
+
+TEST_CASE("decode_varint with varints of various lengths") {
+    SECTION("checked") {
+        test_decode_various_lengths<checked_varint_decoder>();
+    }
+
+    SECTION("unchecked") {
+        test_decode_various_lengths<unchecked_varint_decoder>();
+    }
+}
+
+template <typename Decoder>
+void test_skip_various_lengths() {
+    const std::vector<uint64_t> values{
+        0,
+        127,
+        128,
+        16383,
+        16384,
+        2097151,
+        2097152,
+        0xffffffffULL,
+        0xffffffffffffffffULL,
+        1ULL << 40U,
+    };
+
+    for (const auto value : values) {
+        std::string buffer;
+        protozero::add_varint_to_buffer(&buffer, value);
+        const char* b = buffer.data();
+        const char* const end = buffer.data() + buffer.size();
+        Decoder::skip(&b, end);
+        REQUIRE(b == end);
+    }
+}
+
+TEST_CASE("skip_varint with varints of various lengths") {
+    SECTION("checked") {
+        test_skip_various_lengths<checked_varint_decoder>();
+    }
+
+    SECTION("unchecked") {
+        test_skip_various_lengths<unchecked_varint_decoder>();
+    }
+}
+
+template <typename Decoder>
+void test_decode_multiple_varints_in_sequence() {
+    std::string buffer;
+    protozero::add_varint_to_buffer(&buffer, 5);
+    protozero::add_varint_to_buffer(&buffer, 1);
+    protozero::add_varint_to_buffer(&buffer, 300);
+
+    const char* b = buffer.data();
+    const char* const end = buffer.data() + buffer.size();
+    REQUIRE(Decoder::decode(&b, end) == 5);
+    REQUIRE(Decoder::decode(&b, end) == 1);
+    REQUIRE(Decoder::decode(&b, end) == 300);
+    REQUIRE(b == end);
+}
+
+TEST_CASE("decode multiple varints in sequence") {
+    SECTION("checked") {
+        test_decode_multiple_varints_in_sequence<checked_varint_decoder>();
+    }
+
+    SECTION("unchecked") {
+        test_decode_multiple_varints_in_sequence<unchecked_varint_decoder>();
+    }
+}
+
+template <typename Decoder>
+void test_overlong_varint_throws() {
+    std::string buffer(10, static_cast<char>(0xffU));
+    const char* b = buffer.data();
+    const char* const end = buffer.data() + buffer.size();
+    REQUIRE_THROWS_AS(Decoder::decode(&b, end), protozero::varint_too_long_exception);
+    REQUIRE(b == buffer.data());
+
+    b = buffer.data();
+    REQUIRE_THROWS_AS([&]() { Decoder::skip(&b, end); }(), protozero::varint_too_long_exception);
+    REQUIRE(b == buffer.data());
+}
+
+TEST_CASE("overlong varint throws varint_too_long_exception") {
+    SECTION("checked") {
+        test_overlong_varint_throws<checked_varint_decoder>();
+    }
+
+    SECTION("unchecked") {
+        test_overlong_varint_throws<unchecked_varint_decoder>();
     }
 }
 
