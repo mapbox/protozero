@@ -133,6 +133,75 @@ inline void skip_varint(const char** data, const char* end) {
 }
 
 /**
+ * Decode a 64 bit varint *without* checking against an end pointer.
+ *
+ * This is only safe to call when it is guaranteed that the byte sequence
+ * contains a complete varint, ie. that the last byte of the region being
+ * iterated over has its most significant (continuation) bit not set. Under
+ * that invariant the scan always terminates at-or-before that final byte, so
+ * no end pointer is needed. This is used by the packed varint iterators which
+ * validate this invariant once when they are created. Overlong varints (longer
+ * than the maximum length that fits into a 64 bit integer) are still detected.
+ *
+ * Strong exception guarantee: if there is an exception the data pointer will
+ * not be changed.
+ *
+ * @param[in,out] data Pointer to pointer to the input data. After the function
+ *        returns this will point to the next data to be read.
+ * @returns The decoded integer
+ * @throws varint_too_long_exception if the varint is longer then the maximum
+ *         length that would fit in a 64 bit int.
+ */
+inline uint64_t decode_varint_unchecked(const char** data) {
+    const auto* p = reinterpret_cast<const int8_t*>(*data);
+    uint64_t val = 0;
+    int64_t b = 0;
+
+    do {
+        b = *p++; val  = ((static_cast<uint64_t>(b) & 0x7fU)       ); if (b >= 0) { break; }
+        b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) <<  7U); if (b >= 0) { break; }
+        b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 14U); if (b >= 0) { break; }
+        b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 21U); if (b >= 0) { break; }
+        b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 28U); if (b >= 0) { break; }
+        b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 35U); if (b >= 0) { break; }
+        b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 42U); if (b >= 0) { break; }
+        b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 49U); if (b >= 0) { break; }
+        b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) << 56U); if (b >= 0) { break; }
+        b = *p++; val |= ((static_cast<uint64_t>(b) & 0x01U) << 63U); if (b >= 0) { break; }
+        throw varint_too_long_exception{};
+    } while (false);
+
+    *data = reinterpret_cast<const char*>(p);
+    return val;
+}
+
+/**
+ * Skip over a varint *without* checking against an end pointer.
+ *
+ * See decode_varint_unchecked() for the invariant that makes this safe.
+ *
+ * Strong exception guarantee: if there is an exception the data pointer will
+ * not be changed.
+ *
+ * @param[in,out] data Pointer to pointer to the input data. After the function
+ *        returns this will point to the next data to be read.
+ * @throws varint_too_long_exception if the varint is longer then the maximum
+ *         length that would fit in a 64 bit int.
+ */
+inline void skip_varint_unchecked(const char** data) {
+    const auto* p = reinterpret_cast<const int8_t*>(*data);
+
+    for (int8_t i = 0; i < max_varint_length; ++i) {
+        if (*p++ >= 0) {
+            *data = reinterpret_cast<const char*>(p);
+            return;
+        }
+    }
+
+    throw varint_too_long_exception{};
+}
+
+/**
  * Varint encode a 64 bit integer.
  *
  * @tparam T An output iterator type.

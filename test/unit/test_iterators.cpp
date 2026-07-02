@@ -16,3 +16,27 @@ TEST_CASE("default constructed varint_iterators are equal") {
     REQUIRE(r.begin() == r.end());
 }
 
+TEST_CASE("get_packed varint reads a well-formed region") {
+    // field 1, wire type 2 (length-delimited); length 2; varints 5 and 1.
+    const std::string buffer{"\x0a\x02\x05\x01", 4};
+    protozero::pbf_reader item{buffer};
+
+    REQUIRE(item.next());
+    const auto range = item.get_packed_uint64();
+    auto it = range.begin();
+    REQUIRE(*it++ == 5);
+    REQUIRE(*it++ == 1);
+    REQUIRE(it == range.end());
+}
+
+TEST_CASE("get_packed varint rejects a truncated trailing varint") {
+    // field 1, wire type 2; length 1; single byte 0x80 with the continuation
+    // bit set and no terminating byte: the region does not end on a varint
+    // boundary, so this must be rejected when the range is created.
+    const std::string buffer{"\x0a\x01\x80", 3};
+    protozero::pbf_reader item{buffer};
+
+    REQUIRE(item.next());
+    REQUIRE_THROWS_AS(item.get_packed_uint64(), protozero::end_of_buffer_exception);
+}
+
