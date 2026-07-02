@@ -9,7 +9,11 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `decode_varint_unchecked()` and `skip_varint_unchecked()` low-level helpers in `varint.hpp`.
+
 ### Changed
+
+- The packed varint iterators (`const_varint_iterator`, `const_svarint_iterator`) now only store a single pointer instead of two, which speeds up decoding by 30-150%, depending on varint length. The  constructor now validates once that the byte range ends on a varint boundary and stores only the data pointer. A packed field whose last byte still has its continuation bit set (i.e. a truncated trailing varint, which is illegal) now throws `end_of_buffer_exception` when the iterator range is created (from `get_packed_*()`) rather than later during iteration.
 
 ### Fixed
 

@@ -17,6 +17,7 @@ documentation.
  */
 
 #include "config.hpp"
+#include "exception.hpp"
 #include "varint.hpp"
 
 #if PROTOZERO_BYTE_ORDER != PROTOZERO_LITTLE_ENDIAN
@@ -293,9 +294,6 @@ protected:
     /// Pointer to current iterator position
     const char* m_data = nullptr; // NOLINT(misc-non-private-member-variables-in-classes, cppcoreguidelines-non-private-member-variables-in-classes,-warnings-as-errors)
 
-    /// Pointer to end iterator position
-    const char* m_end = nullptr; // NOLINT(misc-non-private-member-variables-in-classes, cppcoreguidelines-non-private-member-variables-in-classes,-warnings-as-errors)
-
 public:
 
     /// @cond usual iterator functions not documented
@@ -322,9 +320,14 @@ public:
 
     const_varint_iterator() noexcept = default;
 
-    const_varint_iterator(const char* data, const char* end) noexcept :
-        m_data{data},
-        m_end{end} {
+    const_varint_iterator(const char* data, const char* end) :
+        m_data{data} {
+        // The decoders used by this iterator run without an explicit end
+        // pointer. This is only safe if the region ends exactly on a varint
+        // boundary, i.e. the last byte does not have its continuation bit set.
+        if (data != end && (static_cast<unsigned char>(*(end - 1)) & 0x80U) != 0) {
+            throw end_of_buffer_exception{};
+        }
     }
 
     const_varint_iterator(const const_varint_iterator&) noexcept = default;
@@ -338,12 +341,12 @@ public:
     value_type operator*() const {
         protozero_assert(m_data);
         const char* d = m_data; // will be thrown away
-        return static_cast<value_type>(decode_varint(&d, m_end));
+        return static_cast<value_type>(decode_varint_unchecked(&d));
     }
 
     const_varint_iterator& operator++() {
         protozero_assert(m_data);
-        skip_varint(&m_data, m_end);
+        skip_varint_unchecked(&m_data);
         return *this;
     }
 
@@ -355,7 +358,7 @@ public:
     }
 
     bool operator==(const const_varint_iterator& rhs) const noexcept {
-        return m_data == rhs.m_data && m_end == rhs.m_end;
+        return m_data == rhs.m_data;
     }
 
     bool operator!=(const const_varint_iterator& rhs) const noexcept {
@@ -387,7 +390,7 @@ public:
         const_varint_iterator<T>{} {
     }
 
-    const_svarint_iterator(const char* data, const char* end) noexcept :
+    const_svarint_iterator(const char* data, const char* end) :
         const_varint_iterator<T>{data, end} {
     }
 
@@ -402,12 +405,12 @@ public:
     value_type operator*() const {
         protozero_assert(this->m_data);
         const char* d = this->m_data; // will be thrown away
-        return static_cast<value_type>(decode_zigzag64(decode_varint(&d, this->m_end)));
+        return static_cast<value_type>(decode_zigzag64(decode_varint_unchecked(&d)));
     }
 
     const_svarint_iterator& operator++() {
         protozero_assert(this->m_data);
-        skip_varint(&this->m_data, this->m_end);
+        skip_varint_unchecked(&this->m_data);
         return *this;
     }
 
