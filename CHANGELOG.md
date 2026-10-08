@@ -17,6 +17,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- Fix `-Wsign-conversion` warning in `basic_pbf_writer::commit_submessage()`.
+
 ## [1.8.2] - 2026-06-30
 
 ### Fixed
