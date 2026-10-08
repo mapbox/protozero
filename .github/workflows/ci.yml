@@ -16,7 +16,6 @@ jobs:
           - "ubuntu:20.04"        # gcc  9.3.0, clang 10.0.0, cmake 3.16.3
           - "ubuntu:22.04"        # gcc 12.2.0, clang 15.0.7, cmake 3.24.2
           - "ubuntu:24.04"        # gcc 14.2.0, clang 18.1.3, cmake 3.28.3
-          - "debian:bullseye"     # gcc 10.2.1, clang 11.0.1, cmake 3.18.4
           - "debian:bookworm"     # gcc 12.2.0, clang 15.0.6, cmake 3.25.1
           - "debian:trixie"
           - "debian:testing"
@@ -43,13 +42,6 @@ jobs:
             c_compiler: clang
             cpp_compiler: clang++
             cpp_version: 20
-# Disabled because it fails due to a bug in the protobuf library
-# See https://github.com/protocolbuffers/protobuf/issues/7224
-#          - image: "debian:bullseye"
-#            c_compiler: clang
-#            cpp_compiler: clang++
-#            CXXFLAGS: "-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
-#            LDFLAGS: "-fsanitize=address,undefined,integer"
           - image: "debian:bookworm"
             build_type: Release
           - image: "debian:bookworm"
@@ -127,7 +119,7 @@ jobs:
             -v "${{ github.workspace }}:/src" \
             -w /src \
             -e DEBIAN_FRONTEND=noninteractive \
-            debian:bookworm \
+            debian:trixie \
             bash -exc '
               apt-get update -qq
               apt-get install -y \
