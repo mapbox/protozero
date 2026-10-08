@@ -74,7 +74,7 @@ endif()
 #
 #-----------------------------------------------------------------------------
 message(STATUS "Looking for clang-tidy")
-find_program(CLANG_TIDY NAMES clang-tidy clang-tidy-20 clang-tidy-19 clang-tidy-18 clang-tidy-17 clang-tidy-16 clang-tidy-15)
+find_program(CLANG_TIDY NAMES clang-tidy clang-tidy-24 clang-tidy-23 clang-tidy-22 clang-tidy-21 clang-tidy-20 clang-tidy-19 clang-tidy-18 clang-tidy-17 clang-tidy-16 clang-tidy-15)
 
 if(CLANG_TIDY AND PROTOBUF_FOUND)
     message(STATUS "Looking for clang-tidy - found ${CLANG_TIDY}")
