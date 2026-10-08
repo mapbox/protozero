@@ -622,5 +622,15 @@ instantiated using the same `enum class` described above and used exactly
 like the `pbf_writer` class but using the values of the enum instead of bare
 integers.
 
+When creating a `pbf_builder` for a submessage from a parent `pbf_builder`,
+the tag must be a value of the parent's enum type. Using a tag from a different
+enum or a plain integer will not compile:
+
+```cpp
+protozero::pbf_builder<Outer> outer{buffer};
+protozero::pbf_builder<Inner> inner{outer, Outer::sub}; // ok
+protozero::pbf_builder<Inner> wrong{outer, Inner::x};   // compile error
+```
+
 See the `test/t/complex` test case for a complete example using this interface.
 
