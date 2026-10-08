@@ -204,7 +204,7 @@ class basic_pbf_writer {
         protozero_assert(buffer_customization<TBuffer>::size(m_data) >= m_pos - reserve_bytes);
         const auto n = add_varint_to_buffer(buffer_customization<TBuffer>::at_pos(m_data, m_pos - reserve_bytes), length);
 
-        buffer_customization<TBuffer>::erase_range(m_data, m_pos - reserve_bytes + n, m_pos);
+        buffer_customization<TBuffer>::erase_range(m_data, m_pos - reserve_bytes + static_cast<std::size_t>(n), m_pos);
         m_pos = 0;
     }
 
