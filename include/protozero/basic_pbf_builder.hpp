@@ -60,15 +60,30 @@ public:
     }
 
     /**
-     * Construct a pbf_builder for a submessage from the pbf_message or
-     * pbf_writer of the parent message.
+     * Construct a pbf_builder for a submessage from the pbf_writer of the
+     * parent message.
      *
-     * @param parent_writer The parent pbf_message or pbf_writer
+     * @param parent_writer The parent pbf_writer
      * @param tag Tag of the field that will be written
      */
     template <typename P>
     basic_pbf_builder(basic_pbf_writer<TBuffer>& parent_writer, P tag) :
         basic_pbf_writer<TBuffer>{parent_writer, pbf_tag_type(tag)} {
+    }
+
+    /**
+     * Construct a pbf_builder for a submessage from the pbf_builder of the
+     * parent message. The tag must be of the enum type of the parent
+     * pbf_builder, otherwise this will not compile.
+     *
+     * @param parent_builder The parent pbf_builder
+     * @param tag Tag of the field that will be written
+     */
+    template <typename P, typename Q>
+    basic_pbf_builder(basic_pbf_builder<TBuffer, P>& parent_builder, Q tag) :
+        basic_pbf_writer<TBuffer>{parent_builder, pbf_tag_type(tag)} {
+        static_assert(std::is_same<P, Q>::value,
+                      "tag must be of the parent builder's enum type");
     }
 
 /// @cond INTERNAL
