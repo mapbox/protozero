@@ -1,5 +1,5 @@
 ---
-Checks: '*,-altera-*,-boost-use-ranges,-bugprone-chained-comparison,-bugprone-easily-swappable-parameters,-bugprone-signed-char-misuse,-cert-dcl21-cpp,-cert-err58-cpp,-cert-err60-cpp,-cppcoreguidelines-avoid-c-arrays,-cppcoreguidelines-avoid-non-const-global-variables,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-type-reinterpret-cast,-fuchsia-*,-google-runtime-references,-hicpp-avoid-c-arrays,-hicpp-no-array-decay,-hicpp-vararg,-llvmlibc-*,-misc-no-recursion,-modernize-avoid-c-arrays,-modernize-use-trailing-return-type,-readability-function-cognitive-complexity,-readability-identifier-length,-readability-implicit-bool-conversion,-readability-magic-numbers'
+Checks: '*,-altera-*,-boost-use-ranges,-bugprone-chained-comparison,-bugprone-easily-swappable-parameters,-bugprone-signed-char-misuse,-cert-dcl21-cpp,-cert-err58-cpp,-cert-err60-cpp,-cppcoreguidelines-avoid-c-arrays,-cppcoreguidelines-avoid-non-const-global-variables,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-macro-usage,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-type-reinterpret-cast,-fuchsia-*,-google-runtime-references,-hicpp-avoid-c-arrays,-hicpp-no-array-decay,-hicpp-vararg,-llvmlibc-*,-llvm-prefer-static-over-anonymous-namespace,-llvm-use-ranges,-misc-include-cleaner,-misc-no-recursion,-modernize-avoid-c-arrays,-modernize-use-trailing-return-type,-readability-function-cognitive-complexity,-readability-identifier-length,-readability-implicit-bool-conversion,-readability-magic-numbers,-readability-trailing-comma,-zircon-*'
 #
 #  Disabled checks:
 #
@@ -66,6 +66,15 @@ Checks: '*,-altera-*,-boost-use-ranges,-bugprone-chained-comparison,-bugprone-ea
 #  llvmlibc-*
 #    Doesn't apply.
 #
+#  llvm-prefer-static-over-anonymous-namespace
+#    Not our style.
+#
+#  llvm-use-ranges
+#    Not using the llvm library.
+#
+#  misc-include-cleaner
+#    Doesn't work well enough in practice.
+#
 #  misc-no-recursion
 #    Nothing wrong with recursion.
 #
@@ -80,6 +89,12 @@ Checks: '*,-altera-*,-boost-use-ranges,-bugprone-chained-comparison,-bugprone-ea
 #
 #  readability-implicit-bool-conversion
 #    Not necessarily more readable.
+#
+#  readability-trailing-comma
+#    Not our style.
+#
+#  zircon-*
+#    Does not apply.
 #
 #WarningsAsErrors: '*'
 HeaderFilterRegex: '\/include\/'
