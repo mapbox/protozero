@@ -88,11 +88,12 @@ class pbf_reader {
     template <typename T>
     iterator_range<const_fixed_iterator<T>> packed_fixed() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
-        const auto len = get_len_and_skip();
-        if (len % sizeof(T) != 0) {
+        const auto view = peek_length_delimited();
+        if (view.size() % sizeof(T) != 0) {
             throw invalid_length_exception{};
         }
-        return {const_fixed_iterator<T>(m_data - len),
+        consume_until(view.data() + view.size());
+        return {const_fixed_iterator<T>(view.data()),
                 const_fixed_iterator<T>(m_data)};
     }
 
@@ -108,15 +109,30 @@ class pbf_reader {
         return static_cast<T>(decode_zigzag64(decode_varint(&m_data, m_end)));
     }
 
-    pbf_length_type get_length() {
-        return get_varint<pbf_length_type>();
+    // Decode the length of the current length-delimited field and return a
+    // view of its data. This does not change the reader, so callers can do
+    // further checks before calling consume_until() to keep the strong
+    // exception guarantee.
+    data_view peek_length_delimited() const {
+        const char* data = m_data;
+        const auto len = static_cast<pbf_length_type>(decode_varint(&data, m_end));
+        if (m_end - data < static_cast<ptrdiff_t>(len)) {
+            throw end_of_buffer_exception{};
+        }
+        return {data, len};
     }
 
     void skip_bytes(pbf_length_type len) {
         if (m_end - m_data < static_cast<ptrdiff_t>(len)) {
             throw end_of_buffer_exception{};
         }
-        m_data += len;
+        consume_until(m_data + len);
+    }
+
+    // Mark all data up to (but not including) pos as consumed.
+    void consume_until(const char* pos) {
+        protozero_assert(pos >= m_data && pos <= m_end && "position outside of data");
+        m_data = pos;
 
 #ifndef NDEBUG
         // In debug builds reset the tag to zero so that we can detect (some)
@@ -126,17 +142,19 @@ class pbf_reader {
     }
 
     pbf_length_type get_len_and_skip() {
-        const auto len = get_length();
-        skip_bytes(len);
-        return len;
+        const auto view = peek_length_delimited();
+        consume_until(view.data() + view.size());
+        return static_cast<pbf_length_type>(view.size());
     }
 
     template <typename T>
     iterator_range<T> get_packed() {
         protozero_assert(tag() != 0 && "call next() before accessing field value");
-        const auto len = get_len_and_skip();
-        return {T{m_data - len, m_data},
-                T{m_data, m_data}};
+        const auto view = peek_length_delimited();
+        const char* end = view.data() + view.size();
+        iterator_range<T> range{T{view.data(), end}, T{end, end}};
+        consume_until(end);
+        return range;
     }
 
 public:
@@ -286,17 +304,18 @@ public:
             return false;
         }
 
-        const auto value = get_varint<uint32_t>();
-        m_tag = static_cast<pbf_tag_type>(value >> 3U);
+        const char* data = m_data;
+        const auto value = static_cast<uint32_t>(decode_varint(&data, m_end));
+        const auto new_tag = static_cast<pbf_tag_type>(value >> 3U);
 
         // tags 0 and 19000 to 19999 are not allowed as per
         // https://developers.google.com/protocol-buffers/docs/proto#assigning-tags
-        if (m_tag == 0 || (m_tag >= 19000 && m_tag <= 19999)) {
+        if (new_tag == 0 || (new_tag >= 19000 && new_tag <= 19999)) {
             throw invalid_tag_exception{};
         }
 
-        m_wire_type = pbf_wire_type(value & 0x07U);
-        switch (m_wire_type) {
+        const auto new_wire_type = pbf_wire_type(value & 0x07U);
+        switch (new_wire_type) {
             case pbf_wire_type::varint:
             case pbf_wire_type::fixed64:
             case pbf_wire_type::length_delimited:
@@ -306,6 +325,9 @@ public:
                 throw unknown_pbf_wire_type_exception{};
         }
 
+        m_data = data;
+        m_tag = new_tag;
+        m_wire_type = new_wire_type;
         return true;
     }
 
@@ -341,12 +363,17 @@ public:
      * @post If it returns `true` there is a current field now with the given tag.
      */
     bool next(pbf_tag_type next_tag) {
-        while (next()) {
-            if (m_tag == next_tag) {
+        // Work on a copy, so that the reader is unchanged if skipping one
+        // of the fields throws.
+        pbf_reader reader{*this};
+        while (reader.next()) {
+            if (reader.m_tag == next_tag) {
+                *this = reader;
                 return true;
             }
-            skip();
+            reader.skip();
         }
+        *this = reader;
         return false;
     }
 
@@ -380,12 +407,17 @@ public:
      * @post If it returns `true` there is a current field now with the given tag.
      */
     bool next(pbf_tag_type next_tag, pbf_wire_type type) {
-        while (next()) {
-            if (m_tag == next_tag && m_wire_type == type) {
+        // Work on a copy, so that the reader is unchanged if skipping one
+        // of the fields throws.
+        pbf_reader reader{*this};
+        while (reader.next()) {
+            if (reader.m_tag == next_tag && reader.m_wire_type == type) {
+                *this = reader;
                 return true;
             }
-            skip();
+            reader.skip();
         }
+        *this = reader;
         return false;
     }
 
@@ -478,7 +510,7 @@ public:
                 skip_bytes(8);
                 break;
             case pbf_wire_type::length_delimited:
-                skip_bytes(get_length());
+                get_len_and_skip();
                 break;
             case pbf_wire_type::fixed32:
                 skip_bytes(4);
