@@ -16,16 +16,16 @@ jobs:
           - image: "debian:trixie"
             clang: 19
           - image: "debian:testing"
-            clang: 19
+            clang: 22
           - image: "debian:experimental"
-            clang: 20
+            clang: 24
     container:
       image: ${{ matrix.image }}
       env:
         BUILD_TYPE: Debug
         CC: clang-${{ matrix.clang }}
         CXX: clang++-${{ matrix.clang }}
-        CXXFLAGS: -Wno-c++20-extensions
+        CXXFLAGS: -Wno-c++20-extensions -Wno-c2y-extensions
         CPP_VERSION: 14
         APT_LISTCHANGES_FRONTEND: none
         DEBIAN_FRONTEND: noninteractive
@@ -37,6 +37,7 @@ jobs:
             clang-${{ matrix.clang }} \
             clang-tidy-${{ matrix.clang }} \
             cmake \
+            g++ \
             libprotobuf-dev \
             make \
             protobuf-compiler
