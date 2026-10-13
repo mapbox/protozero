@@ -311,27 +311,30 @@ public:
 
     /**
      * Set next field with given tag in the message as the current field.
-     * Fields with other tags are skipped. This is usually called in a while
-     * loop for repeated fields:
+     * Fields with other tags are skipped.
+     *
+     * Note that this will not check the wire type. The input data can
+     * contain a field with this tag but an unexpected wire type, so check
+     * the wire type before calling an accessor function. This is useful
+     * for repeated scalar fields which can be encoded packed or not packed:
      *
      * @code
      *    pbf_reader message{...};
      *    while (message.next(17)) {
-     *        // handle field
+     *        if (message.wire_type() == pbf_wire_type::length_delimited) {
+     *            auto range = message.get_packed_uint32();
+     *            // handle packed values
+     *        } else if (message.wire_type() == pbf_wire_type::varint) {
+     *            auto value = message.get_uint32();
+     *            // handle single value
+     *        } else {
+     *            message.skip();
+     *        }
      *    }
      * @endcode
      *
-     * or you can call it just once to get the one field with this tag:
-     *
-     * @code
-     *    pbf_reader message{...};
-     *    if (message.next(17)) {
-     *        // handle field
-     *    }
-     * @endcode
-     *
-     * Note that this will not check the wire type. The two-argument version
-     * of this function will also check the wire type.
+     * Use the two-argument version next(tag, type) if you only accept one
+     * wire type.
      *
      * @returns `true` if there is a next field with this tag.
      * @pre There must be no current field.
@@ -349,8 +352,8 @@ public:
 
     /**
      * Set next field with given tag and wire type in the message as the
-     * current field. Fields with other tags are skipped. This is usually
-     * called in a while loop for repeated fields:
+     * current field. Fields with other tags or other wire types are skipped.
+     * This is usually called in a while loop for repeated fields:
      *
      * @code
      *    pbf_reader message{...};
@@ -368,8 +371,9 @@ public:
      *    }
      * @endcode
      *
-     * Note that this will also check the wire type. The one-argument version
-     * of this function will not check the wire type.
+     * Note that repeated scalar fields can be encoded packed (wire type
+     * `length_delimited`) or not packed and a reader must accept both. Use
+     * tag_and_type() if you need to handle both encodings.
      *
      * @returns `true` if there is a next field with this tag.
      * @pre There must be no current field.
@@ -390,6 +394,11 @@ public:
      * description in the .proto file.
      *
      * Call next() before calling this function to set the current field.
+     *
+     * If you want to decide which accessor function to call based on the
+     * tag, use tag_and_type() instead. It also checks the wire type, so
+     * fields with the expected tag but an unexpected wire type in the input
+     * data will not be misinterpreted.
      *
      * @returns tag of the current field.
      * @pre There must be a current field (ie. next() must have returned `true`).

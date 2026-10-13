@@ -75,8 +75,9 @@ for you.
 
 The `tag_and_type()` free function and the method of the same name on the
 `pbf_reader` and `pbf_message` classes can be used to access both packed and
-unpacked repeated fields. (It can also be used to check that you have the
-right type of encoding for other fields.)
+unpacked repeated fields. It should also be used to check that you have the
+right type of encoding for all other fields, because input data can contain
+fields with the expected tag but a different wire type.
 
 Here is the outline:
 

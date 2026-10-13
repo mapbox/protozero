@@ -89,3 +89,37 @@ TEST_CASE("read combined packed and not-packed repeated field with tag_and_type"
     REQUIRE(values == result);
 }
 
+
+TEST_CASE("next(tag) returns fields with any wire type") {
+    const std::string buffer = load_data("tag_and_type/data-combined");
+
+    int count_packed = 0;
+    int count_not_packed = 0;
+
+    SECTION("pbf_reader") {
+        protozero::pbf_reader message{buffer};
+        while (message.next(1)) {
+            if (message.wire_type() == protozero::pbf_wire_type::length_delimited) {
+                ++count_packed;
+            } else {
+                ++count_not_packed;
+            }
+            message.skip();
+        }
+    }
+
+    SECTION("pbf_message") {
+        protozero::pbf_message<ExampleMsg> message{buffer};
+        while (message.next(ExampleMsg::repeated_uint32_x)) {
+            if (message.wire_type() == protozero::pbf_wire_type::length_delimited) {
+                ++count_packed;
+            } else {
+                ++count_not_packed;
+            }
+            message.skip();
+        }
+    }
+
+    REQUIRE(count_packed == 1);
+    REQUIRE(count_not_packed == 6);
+}
