@@ -21,7 +21,7 @@ and [the cheat sheet](cheatsheet.md) if you are getting lost.
 
 ## Prerequisites
 
-You need a C++11-capable compiler for Protozero to work. Copy the files in the
+You need a C++14-capable compiler for Protozero to work. Copy the files in the
 `include/protozero` directory somewhere where your build system can find them.
 Keep the `protozero` directory and include the files in the form
 
@@ -71,22 +71,24 @@ protozero::pbf_reader message{input};
 // iterate over fields in the message
 while (message.next()) {
 
-    // switch depending on the field tag (the field name is not available)
-    switch (message.tag()) {
-        case 1:
+    // switch depending on the field tag and wire type (the field name is not
+    // available)
+    switch (message.tag_and_type()) {
+        case protozero::tag_and_type(1, protozero::pbf_wire_type::varint):
             // get data for tag 1 (in this case an uint32)
             auto x = message.get_uint32();
             break;
-        case 2:
+        case protozero::tag_and_type(2, protozero::pbf_wire_type::length_delimited):
             // get data for tag 2 (in this case a string)
             std::string s = message.get_string();
             break;
-        case 17:
+        case protozero::tag_and_type(17, protozero::pbf_wire_type::fixed64):
             // ignore data for tag 17
             message.skip();
             break;
         default:
             // ignore data for unknown tags to allow for future extensions
+            // and fields with unexpected wire types
             message.skip();
     }
 }
@@ -100,8 +102,16 @@ twice in a row or any if the accessor or skip functions twice in a row.
 Because the `pbf_reader` class doesn't know the `.proto` file it doesn't know
 which field names or tags there are and it doesn't known the types of the
 fields. You have to make sure to call the right `get_...()` function for each
-tag. Some `assert()s` are done to check you are calling the right functions,
-but not all errors can be detected.
+tag.
+
+Always check the tag *and* the wire type of a field before calling an
+accessor function, for instance using `tag_and_type()` as in the example
+above. Don't switch on `tag()` alone. The input data might contain a field
+with the tag you expect but with a different wire type, either because the
+data is corrupted or because it was crafted maliciously. If you call an
+accessor function for the wrong wire type, the bytes of the field will be
+misinterpreted: In debug builds an `assert()` will fire, in release builds you
+will get wrong values or an exception later.
 
 Note that it doesn't matter whether a field is defined as `required`,
 `optional`, or `repeated`. You always have to be prepared to get zero, one, or
@@ -113,13 +123,14 @@ field.
 ### If you only need a single field
 
 If, out of a protocol buffer message, you only need the value of a single
-field, you can use the version of the `next()` function with a parameter:
+field, you can use the version of the `next()` function with parameters for
+the tag and wire type:
 
 ```cpp
 // same .proto file and initialization as above
 
-// get all fields with tag 17, skip all others
-while (message.next(17)) {
+// get all fields with tag 17 and wire type fixed64, skip all others
+while (message.next(17, protozero::pbf_wire_type::fixed64)) {
     auto r = message.get_fixed64();
     std::cout << r << "\n";
 }
@@ -159,15 +170,16 @@ You can get to the data like this:
 ```cpp
 protozero::pbf_reader message{input.data(), input.size()};
 
-// set current field
-message.next(1);
+// iterate over all fields with tag 1
+while (message.next(1, protozero::pbf_wire_type::length_delimited)) {
 
-// get an iterator range
-auto pi = message.get_packed_sint32();
+    // get an iterator range
+    auto pi = message.get_packed_sint32();
 
-// iterate to get to all values
-for (auto it = pi.begin(); it != pi.end(); ++it) {
-    std::cout << *it << '\n';
+    // iterate to get to all values
+    for (auto it = pi.begin(); it != pi.end(); ++it) {
+        std::cout << *it << '\n';
+    }
 }
 ```
 
@@ -183,7 +195,10 @@ So you are getting a pair of normal forward iterators wrapped in an iterator
 range object. The iterators can be used with any STL algorithms etc.
 
 Note that the previous only applies to repeated **packed** fields, normal
-repeated fields are handled in the usual way for scalar fields.
+repeated fields are handled in the usual way for scalar fields. The Protocol
+Buffers specification requires that readers accept both the packed and the
+not-packed encoding for repeated scalar fields. See the section about
+`tag_and_type()` in the [advanced topics](advanced.md) on how to do that.
 
 
 ### Handling embedded messages
@@ -207,15 +222,15 @@ you can parse with this code:
 ```cpp
 protozero::pbf_reader message{input};
 
-while (message.next(10)) {
+while (message.next(10, protozero::pbf_wire_type::length_delimited)) {
     protozero::pbf_reader point = message.get_message();
     double x, y;
     while (point.next()) {
-        switch (point.tag()) {
-            case 1:
+        switch (point.tag_and_type()) {
+            case protozero::tag_and_type(1, protozero::pbf_wire_type::fixed64):
                 x = point.get_double();
                 break;
-            case 2:
+            case protozero::tag_and_type(2, protozero::pbf_wire_type::fixed64):
                 y = point.get_double();
                 break;
             default:
@@ -257,8 +272,9 @@ All exceptions thrown by the reader side derive from `protozero::exception`.
 
 Note that all exceptions can also happen if you are expecting a data field of
 a certain type in your code but the field actually has a different type. In
-that case the `pbf_reader` class might interpret the bytes in the buffer in
-the wrong way and anything can happen.
+that case the `pbf_reader` class will interpret the bytes in the buffer in the
+wrong way. It will not read outside the buffer, but you can get wrong values
+or exceptions. Check the tag and wire type together (see above) to avoid this.
 
 #### `end_of_buffer_exception`
 
@@ -354,19 +370,21 @@ protozero::pbf_message<Example1> message{input};
 // iterate over fields in the message
 while (message.next()) {
 
-    // switch depending on the field tag (the field name is not available)
-    switch (message.tag()) {
-        case Example1::required_uint32_x:
+    // switch depending on the field tag and wire type (the field name is not
+    // available)
+    switch (message.tag_and_type()) {
+        case protozero::tag_and_type(Example1::required_uint32_x, protozero::pbf_wire_type::varint):
             auto x = message.get_uint32();
             break;
-        case Example1::optional_string_s:
+        case protozero::tag_and_type(Example1::optional_string_s, protozero::pbf_wire_type::length_delimited):
             std::string s = message.get_string();
             break;
-        case Example1::repeated_fixed64_r:
+        case protozero::tag_and_type(Example1::repeated_fixed64_r, protozero::pbf_wire_type::fixed64):
             message.skip();
             break;
         default:
             // ignore data for unknown tags to allow for future extensions
+            // and fields with unexpected wire types
             message.skip();
     }
 }
