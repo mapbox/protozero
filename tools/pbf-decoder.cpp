@@ -90,7 +90,7 @@ bool decode_string(std::stringstream& out, const protozero::data_view view) {
 template <typename TRange>
 void print_number_range(std::stringstream& out, const TRange& range) {
     bool first = true;
-    for (auto val : range) {
+    for (const auto val : range) {
         if (first) {
             first = false;
         } else {
