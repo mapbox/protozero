@@ -371,7 +371,7 @@ TEST_CASE("decode multiple varints in sequence") {
 
 template <typename Decoder>
 void test_overlong_varint_throws() {
-    std::string buffer(10, static_cast<char>(0xffU));
+    const std::string buffer(10, static_cast<char>(0xffU));
     const char* b = buffer.data();
     const char* const end = buffer.data() + buffer.size();
     REQUIRE_THROWS_AS(Decoder::decode(&b, end), protozero::varint_too_long_exception);

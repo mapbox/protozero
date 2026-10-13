@@ -51,13 +51,13 @@ TEST_CASE("read repeated packed double field") {
             REQUIRE(it == it_range.end());
 
             it = it_range.begin();
-            auto it2 = it + 1;
+            const auto it2 = it + 1;
             REQUIRE(it2 > it);
             REQUIRE(it < it2);
             REQUIRE(it <= it_range.begin());
             REQUIRE(it >= it_range.begin());
             REQUIRE(*it2 == Approx(0.0));
-            auto it3 = 1 + it;
+            const auto it3 = 1 + it;
             REQUIRE(*it3 == Approx(0.0));
             auto it4 = it2 - 1;
             REQUIRE(*it4 == Approx(17.34));

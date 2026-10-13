@@ -27,7 +27,7 @@ TEST_CASE("read repeated packed float field") {
             protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
-            auto it_range = item.get_packed_float();
+            const auto it_range = item.get_packed_float();
             REQUIRE_FALSE(item.next());
 
             REQUIRE(*it_range.begin() == Approx(17.34F));
@@ -39,7 +39,7 @@ TEST_CASE("read repeated packed float field") {
             protozero::pbf_reader item{abuffer.data() + n, abuffer.size() - n};
 
             REQUIRE(item.next());
-            auto it_range = item.get_packed_float();
+            const auto it_range = item.get_packed_float();
             REQUIRE_FALSE(item.next());
 
             auto it = it_range.begin();
