@@ -10,6 +10,7 @@ include_directories(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/catch")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_subdirectory(unit)
+add_subdirectory(compile_fail)
 
 set(TEST_DIRS alignment
               bool
