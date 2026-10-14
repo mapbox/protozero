@@ -121,6 +121,32 @@ TEST_CASE("write bytes field using vectored approach") {
         pw.add_bytes_vectored(1, d1, d2, d3);
     }
 
+    SECTION("using non-const strings") {
+        // Deliberately not const to check that they are accepted
+        std::string d1{"foo"}; // NOLINT(misc-const-correctness)
+        std::string d2{"bar"}; // NOLINT(misc-const-correctness)
+
+        pw.add_bytes_vectored(1, d1, d2);
+    }
+
+    SECTION("using temporaries") {
+        pw.add_bytes_vectored(1, std::string{"foo"}, protozero::data_view{"bar", 3});
+    }
+
+    SECTION("using type with non-const data() and size()") {
+        class non_const_data {
+            std::string m_s;
+        public:
+            explicit non_const_data(const char* s) : m_s{s} {}
+            const char* data() { return m_s.data(); } // NOLINT(readability-make-member-function-const)
+            std::size_t size() { return m_s.size(); } // NOLINT(readability-make-member-function-const)
+        };
+        non_const_data d1{"foo"};
+        non_const_data d2{"bar"};
+
+        pw.add_bytes_vectored(1, d1, d2);
+    }
+
     REQUIRE(buffer == load_data("bytes/data-string"));
 }
 
@@ -129,10 +155,16 @@ TEST_CASE("write bytes field using vectored approach with builder") {
     std::string buffer;
     protozero::pbf_builder<foo> pw{buffer};
 
-    const std::string d1{"foo"};
-    const std::string d2{"bar"};
+    SECTION("using const strings") {
+        const std::string d1{"foo"};
+        const std::string d2{"bar"};
 
-    pw.add_bytes_vectored(foo::bar, d1, d2);
+        pw.add_bytes_vectored(foo::bar, d1, d2);
+    }
+
+    SECTION("using temporaries") {
+        pw.add_bytes_vectored(foo::bar, std::string{"foo"}, protozero::data_view{"bar", 3});
+    }
 
     REQUIRE(buffer == load_data("bytes/data-string"));
 }

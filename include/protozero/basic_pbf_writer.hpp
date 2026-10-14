@@ -596,7 +596,7 @@ public:
      * @param values List of objects of types Ts with data to be appended.
      */
     template <typename... Ts>
-    void add_bytes_vectored(pbf_tag_type tag, Ts&&... values) {
+    void add_bytes_vectored(pbf_tag_type tag, Ts&&... values) { // NOLINT(cppcoreguidelines-missing-std-forward)
         protozero_assert(m_pos == 0 && "you can't add fields to a parent basic_pbf_writer if there is an existing basic_pbf_writer for a submessage");
         protozero_assert(m_data);
         size_t sum_size = 0;
