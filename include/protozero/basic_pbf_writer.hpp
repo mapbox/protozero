@@ -75,6 +75,8 @@ class basic_pbf_writer {
 
     // This is usually 0. If there is an open submessage, this is set in the
     // parent to the position where the data of the submessage is written to.
+    // If the size of the submessage was known when it was opened, this is
+    // set to the position where the data of the submessage must end instead.
     std::size_t m_pos = 0;
 
     void add_varint(uint64_t value) {
@@ -179,12 +181,13 @@ class basic_pbf_writer {
             m_rollback_pos = buffer_customization<TBuffer>::size(m_data);
             add_field(tag, pbf_wire_type::length_delimited);
             buffer_customization<TBuffer>::append_zeros(m_data, std::size_t(reserve_bytes));
+            m_pos = buffer_customization<TBuffer>::size(m_data);
         } else {
             m_rollback_pos = size_is_known;
             add_length_varint(tag, static_cast<pbf_length_type>(size));
             reserve(size);
+            m_pos = buffer_customization<TBuffer>::size(m_data) + size;
         }
-        m_pos = buffer_customization<TBuffer>::size(m_data);
     }
 
     void rollback_submessage() {
@@ -210,7 +213,14 @@ class basic_pbf_writer {
 
     void close_submessage() {
         protozero_assert(m_data);
-        if (m_pos == 0 || m_rollback_pos == size_is_known) {
+        if (m_pos == 0) {
+            return;
+        }
+        if (m_rollback_pos == size_is_known) {
+            const auto end_pos = m_pos;
+            m_pos = 0;
+            protozero_assert(buffer_customization<TBuffer>::size(m_data) == end_pos && "submessage with known size must have exactly that many bytes written");
+            (void)end_pos;
             return;
         }
         if (buffer_customization<TBuffer>::size(m_data) - m_pos == 0) {
