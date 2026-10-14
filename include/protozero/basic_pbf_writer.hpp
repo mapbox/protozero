@@ -282,17 +282,15 @@ public:
 
     /**
      * A basic_pbf_writer object can be moved. After this the other
-     * basic_pbf_writer will be invalid.
+     * basic_pbf_writer will be invalid. If this basic_pbf_writer is for an
+     * open submessage, that submessage is closed first, the same way the
+     * destructor does.
      */
     basic_pbf_writer& operator=(basic_pbf_writer&& other) noexcept {
-        m_data = other.m_data;
-        m_parent_writer = other.m_parent_writer;
-        m_rollback_pos = other.m_rollback_pos;
-        m_pos = other.m_pos;
-        other.m_data = nullptr;
-        other.m_parent_writer = nullptr;
-        other.m_rollback_pos = 0;
-        other.m_pos = 0;
+        // The temporary takes over the old state of *this and closes its
+        // submessage (if any) when it is destructed.
+        basic_pbf_writer tmp{std::move(other)};
+        swap(tmp);
         return *this;
     }
 
