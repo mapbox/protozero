@@ -260,7 +260,7 @@ int main(int argc, char* argv[]) {
         }
 
         if (offset > 0) {
-            buffer.erase(buffer.begin(), buffer.begin() + offset);
+            buffer.erase(buffer.begin(), buffer.begin() + static_cast<std::ptrdiff_t>(offset));
         }
 
         if (length < buffer.size()) {

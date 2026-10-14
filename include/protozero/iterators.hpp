@@ -67,8 +67,8 @@ public:
      * @param last_iterator Iterator to end of range.
      */
     constexpr iterator_range(iterator&& first_iterator, iterator&& last_iterator) :
-        P{std::forward<iterator>(first_iterator),
-          std::forward<iterator>(last_iterator)} {
+        P{std::move(first_iterator),
+          std::move(last_iterator)} {
     }
 
     /// Return iterator to beginning of range.

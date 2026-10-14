@@ -1,5 +1,7 @@
 #include <protozero/pbf_reader.hpp>
 
+namespace {
+
 // From Google Benchmark library.
 // See https://github.com/google/benchmark/blob/main/LICENSE
 template <class Tp>
@@ -13,17 +15,17 @@ int read_packed(protozero::iterator_range<T> range) {
         for (const auto& item : range) {
             DoNotOptimize(item);
         }
-    } catch (const protozero::exception&) {
+    } catch (const protozero::exception&) { // NOLINT(bugprone-empty-catch)
         // no-op. This is probably not a packed field of that type.
     }
     return 0;
 }
 
 template <typename Fn>
-void try_field(const protozero::pbf_reader& reader, Fn&& fn) {
+void try_field(const protozero::pbf_reader& reader, const Fn& fn) {
     try {
         DoNotOptimize(fn(reader));
-    } catch (const protozero::exception&) {
+    } catch (const protozero::exception&) { // NOLINT(bugprone-empty-catch)
         // no-op. This is probably not a field of that type.
     }
 }
@@ -72,12 +74,14 @@ int try_message(protozero::pbf_reader reader) {
 
             reader.skip();
         }
-    } catch (const protozero::exception&) {
+    } catch (const protozero::exception&) { // NOLINT(bugprone-empty-catch)
         // no-op. This is probably not a valid message.
     }
 
     return 0;
 }
+
+} // namespace
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     try_message(protozero::pbf_reader{reinterpret_cast<const char*>(data), size});

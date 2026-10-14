@@ -8,6 +8,8 @@ permissions:
 jobs:
   clang-tidy:
     runs-on: ubuntu-latest
+    # Newer clang-tidy versions add checks, so only the stable one may fail CI
+    continue-on-error: ${{ matrix.experimental == true }}
     strategy:
       fail-fast: false
       matrix:
@@ -17,8 +19,10 @@ jobs:
             clang: 19
           - image: "debian:testing"
             clang: 22
+            experimental: true
           - image: "debian:experimental"
             clang: 24
+            experimental: true
     container:
       image: ${{ matrix.image }}
       env:

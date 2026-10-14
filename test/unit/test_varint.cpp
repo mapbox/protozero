@@ -274,6 +274,8 @@ TEST_CASE("call decode_varint_unchecked with every possible value of terminal va
     }
 }
 
+namespace {
+
 template <typename Decoder>
 void test_decode_various_lengths() {
     const std::vector<uint64_t> values{
@@ -299,6 +301,8 @@ void test_decode_various_lengths() {
     }
 }
 
+} // namespace
+
 TEST_CASE("decode_varint with varints of various lengths") {
     SECTION("checked") {
         test_decode_various_lengths<checked_varint_decoder>();
@@ -308,6 +312,8 @@ TEST_CASE("decode_varint with varints of various lengths") {
         test_decode_various_lengths<unchecked_varint_decoder>();
     }
 }
+
+namespace {
 
 template <typename Decoder>
 void test_skip_various_lengths() {
@@ -334,6 +340,8 @@ void test_skip_various_lengths() {
     }
 }
 
+} // namespace
+
 TEST_CASE("skip_varint with varints of various lengths") {
     SECTION("checked") {
         test_skip_various_lengths<checked_varint_decoder>();
@@ -343,6 +351,8 @@ TEST_CASE("skip_varint with varints of various lengths") {
         test_skip_various_lengths<unchecked_varint_decoder>();
     }
 }
+
+namespace {
 
 template <typename Decoder>
 void test_decode_multiple_varints_in_sequence() {
@@ -359,6 +369,8 @@ void test_decode_multiple_varints_in_sequence() {
     REQUIRE(b == end);
 }
 
+} // namespace
+
 TEST_CASE("decode multiple varints in sequence") {
     SECTION("checked") {
         test_decode_multiple_varints_in_sequence<checked_varint_decoder>();
@@ -368,6 +380,8 @@ TEST_CASE("decode multiple varints in sequence") {
         test_decode_multiple_varints_in_sequence<unchecked_varint_decoder>();
     }
 }
+
+namespace {
 
 template <typename Decoder>
 void test_overlong_varint_throws() {
@@ -381,6 +395,8 @@ void test_overlong_varint_throws() {
     REQUIRE_THROWS_AS([&]() { Decoder::skip(&b, end); }(), protozero::varint_too_long_exception);
     REQUIRE(b == buffer.data());
 }
+
+} // namespace
 
 TEST_CASE("overlong varint throws varint_too_long_exception") {
     SECTION("checked") {

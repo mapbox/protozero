@@ -37,7 +37,7 @@ static_assert(protozero::decode_zigzag64(4ULL) ==  2LL, "test constexpr zigzag f
 static_assert(protozero::decode_zigzag64(0xfffffffffffffffeULL) ==  0x7fffffffffffffffLL, "test constexpr zigzag functions");
 static_assert(protozero::decode_zigzag64(0xfffffffffffffffdULL) == -0x7fffffffffffffffLL, "test constexpr zigzag functions");
 static_assert(protozero::decode_zigzag64(2 * static_cast<uint64_t>(std::numeric_limits<int64_t>::max())    ) ==  std::numeric_limits<int64_t>::max(), "test constexpr zigzag functions");
-static_assert(protozero::decode_zigzag64(2 * static_cast<uint64_t>(std::numeric_limits<int64_t>::max()) - 1) == -std::numeric_limits<int64_t>::max(), "test constexpr zigzag functions");
+static_assert(protozero::decode_zigzag64((2 * static_cast<uint64_t>(std::numeric_limits<int64_t>::max())) - 1) == -std::numeric_limits<int64_t>::max(), "test constexpr zigzag functions");
 
 namespace {
 
@@ -58,7 +58,7 @@ TEST_CASE("zigzag encode some 32 bit values") {
     REQUIRE(protozero::encode_zigzag32(-2L) == 3UL);
     REQUIRE(protozero::encode_zigzag32( 2L) == 4UL);
     REQUIRE(protozero::encode_zigzag32( std::numeric_limits<int32_t>::max()) == 2 * static_cast<uint32_t>(std::numeric_limits<int32_t>::max()));
-    REQUIRE(protozero::encode_zigzag32(-std::numeric_limits<int32_t>::max()) == 2 * static_cast<uint32_t>(std::numeric_limits<int32_t>::max()) - 1);
+    REQUIRE(protozero::encode_zigzag32(-std::numeric_limits<int32_t>::max()) == (2 * static_cast<uint32_t>(std::numeric_limits<int32_t>::max())) - 1);
 }
 
 TEST_CASE("zigzag encode some 64 bit values") {
@@ -68,7 +68,7 @@ TEST_CASE("zigzag encode some 64 bit values") {
     REQUIRE(protozero::encode_zigzag64(-2LL) == 3ULL);
     REQUIRE(protozero::encode_zigzag64( 2LL) == 4ULL);
     REQUIRE(protozero::encode_zigzag64( std::numeric_limits<int64_t>::max()) == 2 * static_cast<uint64_t>(std::numeric_limits<int64_t>::max()));
-    REQUIRE(protozero::encode_zigzag64(-std::numeric_limits<int64_t>::max()) == 2 * static_cast<uint64_t>(std::numeric_limits<int64_t>::max()) - 1);
+    REQUIRE(protozero::encode_zigzag64(-std::numeric_limits<int64_t>::max()) == (2 * static_cast<uint64_t>(std::numeric_limits<int64_t>::max())) - 1);
 }
 
 TEST_CASE("zigzag and back - 32bit") {

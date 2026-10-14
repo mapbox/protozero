@@ -38,6 +38,10 @@ namespace detail {
         uint64_t val = 0;
 
         if (iend - begin >= max_varint_length) {  // fast path
+            // The bytes are deliberately read as signed, so that b >= 0
+            // checks that the continuation bit is not set. The sign
+            // extension is masked off.
+            // NOLINTBEGIN(bugprone-signed-char-misuse,cert-str34-c,cppcoreguidelines-avoid-do-while)
             do {
                 int64_t b = *p++;
                           val  = ((static_cast<uint64_t>(b) & 0x7fU)       ); if (b >= 0) { break; }
@@ -52,6 +56,7 @@ namespace detail {
                 b = *p++; val |= ((static_cast<uint64_t>(b) & 0x01U) << 63U); if (b >= 0) { break; }
                 throw varint_too_long_exception{};
             } while (false);
+            // NOLINTEND(bugprone-signed-char-misuse,cert-str34-c,cppcoreguidelines-avoid-do-while)
         } else {
             unsigned int shift = 0;
             while (p != iend && *p < 0) {
@@ -89,8 +94,8 @@ namespace detail {
  */
 inline uint64_t decode_varint(const char** data, const char* end) {
     // If this is a one-byte varint, decode it here.
-    if (end != *data && ((static_cast<uint64_t>(**data) & 0x80U) == 0)) {
-        const auto val = static_cast<uint64_t>(**data);
+    if (end != *data && ((static_cast<unsigned char>(**data) & 0x80U) == 0)) {
+        const auto val = static_cast<uint64_t>(static_cast<unsigned char>(**data));
         ++(*data);
         return val;
     }
@@ -157,6 +162,9 @@ inline uint64_t decode_varint_unchecked(const char** data) {
     uint64_t val = 0;
     int64_t b = 0;
 
+    // The bytes are deliberately read as signed, so that b >= 0 checks that
+    // the continuation bit is not set. The sign extension is masked off.
+    // NOLINTBEGIN(bugprone-signed-char-misuse,cert-str34-c,cppcoreguidelines-avoid-do-while)
     do {
         b = *p++; val  = ((static_cast<uint64_t>(b) & 0x7fU)       ); if (b >= 0) { break; }
         b = *p++; val |= ((static_cast<uint64_t>(b) & 0x7fU) <<  7U); if (b >= 0) { break; }
@@ -170,6 +178,7 @@ inline uint64_t decode_varint_unchecked(const char** data) {
         b = *p++; val |= ((static_cast<uint64_t>(b) & 0x01U) << 63U); if (b >= 0) { break; }
         throw varint_too_long_exception{};
     } while (false);
+    // NOLINTEND(bugprone-signed-char-misuse,cert-str34-c,cppcoreguidelines-avoid-do-while)
 
     *data = reinterpret_cast<const char*>(p);
     return val;
