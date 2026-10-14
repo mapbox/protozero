@@ -133,3 +133,48 @@ TEST_CASE("write optional message field") {
     }
 }
 
+
+TEST_CASE("move-assigning onto an open subwriter closes its submessage") {
+    std::string buffer;
+    protozero::pbf_writer pbf_test{buffer};
+
+    protozero::pbf_writer pbf_submessage{pbf_test, 1};
+    pbf_submessage.add_string(1, "foobar");
+
+    SECTION("move-assign default constructed writer") {
+        pbf_submessage = protozero::pbf_writer{};
+        REQUIRE_FALSE(pbf_submessage.valid());
+        REQUIRE(buffer == load_data("message/data-message"));
+    }
+
+    SECTION("move-assign subwriter of another parent") {
+        std::string other_buffer;
+        protozero::pbf_writer other_pbf{other_buffer};
+        protozero::pbf_writer other_submessage{other_pbf, 1};
+        other_submessage.add_string(1, "foobar");
+
+        pbf_submessage = std::move(other_submessage);
+        REQUIRE(pbf_submessage.valid());
+        REQUIRE(buffer == load_data("message/data-message"));
+
+        pbf_submessage.commit();
+        REQUIRE(other_buffer == load_data("message/data-message"));
+    }
+
+    // The parent must be usable again after the submessage was closed.
+    REQUIRE_NOTHROW(pbf_test.add_string(2, "x"));
+}
+
+TEST_CASE("self-move-assigning an open subwriter keeps it open") {
+    std::string buffer;
+    protozero::pbf_writer pbf_test{buffer};
+
+    protozero::pbf_writer pbf_submessage{pbf_test, 1};
+    auto& alias = pbf_submessage;
+    pbf_submessage = std::move(alias);
+    REQUIRE(pbf_submessage.valid());
+
+    pbf_submessage.add_string(1, "foobar");
+    pbf_submessage.commit();
+    REQUIRE(buffer == load_data("message/data-message"));
+}
