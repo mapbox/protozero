@@ -40,3 +40,31 @@ TEST_CASE("get_packed varint rejects a truncated trailing varint") {
     REQUIRE_THROWS_AS(item.get_packed_uint64(), protozero::end_of_buffer_exception);
 }
 
+
+TEST_CASE("fixed_iterator supports negative offsets") {
+    // field 1, wire type 2; length 12; fixed32 values 1, 2 and 3.
+    const std::string buffer{"\x0a\x0c\x01\x00\x00\x00\x02\x00\x00\x00\x03\x00\x00\x00", 14};
+    protozero::pbf_reader item{buffer};
+
+    REQUIRE(item.next());
+    const auto range = item.get_packed_fixed32();
+    const auto end = range.end();
+
+    REQUIRE(*std::prev(end) == 3);
+    REQUIRE(end[-1] == 3);
+    REQUIRE(end[-3] == 1);
+    REQUIRE(*(end + -2) == 2);
+    REQUIRE(*(-2 + end) == 2);
+    REQUIRE(*(end - 2) == 2);
+    REQUIRE(*(range.begin() - -1) == 2);
+
+    auto it = end;
+    it += -1;
+    REQUIRE(*it == 3);
+    it -= 1;
+    REQUIRE(*it == 2);
+    it -= -1;
+    REQUIRE(*it == 3);
+    REQUIRE(it - end == -1);
+    REQUIRE(range.begin() - end == -3);
+}

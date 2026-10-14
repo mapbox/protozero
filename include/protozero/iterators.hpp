@@ -243,30 +243,30 @@ public:
     }
 
     const_fixed_iterator& operator+=(difference_type val) noexcept {
-        m_data += (sizeof(value_type) * val);
+        m_data += (static_cast<difference_type>(sizeof(value_type)) * val);
         return *this;
     }
 
     friend const_fixed_iterator operator+(const_fixed_iterator lhs, difference_type rhs) noexcept {
         const_fixed_iterator tmp{lhs};
-        tmp.m_data += (sizeof(value_type) * rhs);
+        tmp.m_data += (static_cast<difference_type>(sizeof(value_type)) * rhs);
         return tmp;
     }
 
     friend const_fixed_iterator operator+(difference_type lhs, const_fixed_iterator rhs) noexcept {
         const_fixed_iterator tmp{rhs};
-        tmp.m_data += (sizeof(value_type) * lhs);
+        tmp.m_data += (static_cast<difference_type>(sizeof(value_type)) * lhs);
         return tmp;
     }
 
     const_fixed_iterator& operator-=(difference_type val) noexcept {
-        m_data -= (sizeof(value_type) * val);
+        m_data -= (static_cast<difference_type>(sizeof(value_type)) * val);
         return *this;
     }
 
     friend const_fixed_iterator operator-(const_fixed_iterator lhs, difference_type rhs) noexcept {
         const_fixed_iterator tmp{lhs};
-        tmp.m_data -= (sizeof(value_type) * rhs);
+        tmp.m_data -= (static_cast<difference_type>(sizeof(value_type)) * rhs);
         return tmp;
     }
 
