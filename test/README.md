@@ -9,6 +9,11 @@ Unit tests test low-level functions of the library. They are in the `unit`
 directory.
 
 
+## Assert tests
+
+Most tests check for failed asserts with `REQUIRE_THROWS_AS(..., assert_error)`, because `test.hpp` defines `protozero_assert()` to throw. That doesn't work for asserts in `noexcept` functions, where the exception would call `std::terminate()`. Those are tested in `assert_tests.cpp`, where a failed assert ends the process, so CMake runs every test case in its own process. When adding a test case there, also add its name to the list in `CMakeLists.txt`. Tests checking that something does *not* assert go with the other tests. See the comment at the top of `assert_tests.cpp` for details.
+
+
 ## Organization of the reader/writer test cases
 
 The hart of the tests are the reader/writer tests checking all aspects of

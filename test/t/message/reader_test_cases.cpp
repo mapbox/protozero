@@ -178,3 +178,26 @@ TEST_CASE("self-move-assigning an open subwriter keeps it open") {
     pbf_submessage.commit();
     REQUIRE(buffer == load_data("message/data-message"));
 }
+
+TEST_CASE("moving and swapping writers without open submessage doesn't assert") {
+    std::string buffer;
+    protozero::pbf_writer pbf_test{buffer};
+    {
+        protozero::pbf_writer pbf_submessage{pbf_test, 1};
+        pbf_submessage.add_string(1, "foobar");
+        protozero::pbf_writer sub2{std::move(pbf_submessage)};
+        protozero::pbf_writer sub3;
+        sub3 = std::move(sub2);
+        sub3.swap(sub2);
+        REQUIRE(sub2.valid());
+        REQUIRE_FALSE(sub3.valid());
+    }
+    protozero::pbf_writer pbf_test2{std::move(pbf_test)};
+    pbf_test = std::move(pbf_test2);
+    pbf_test.swap(pbf_test2);
+    REQUIRE_FALSE(pbf_test.valid());
+    REQUIRE(pbf_test2.valid());
+    pbf_test2.add_string(2, "x");
+
+    REQUIRE(buffer == load_data("message/data-message") + "\x12\x01x");
+}
