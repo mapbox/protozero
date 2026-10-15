@@ -4,7 +4,7 @@
 // See https://github.com/google/benchmark/blob/main/LICENSE
 template <class Tp>
 inline __attribute__((always_inline)) void DoNotOptimize(Tp const& value) {
-    asm volatile("" : : "r,m"(value) : "memory"); // NOLINT(portability-no-assembler)
+    asm volatile("" : : "r,m"(value) : "memory"); // NOLINT(hicpp-no-assembler,portability-no-assembler)
 }
 
 template <typename T>
