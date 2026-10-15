@@ -10,6 +10,7 @@ set(UNIT_TESTS data_view
                basic
                buffer
                endian
+               exception_guarantee
                exceptions
                iterators
                varint
