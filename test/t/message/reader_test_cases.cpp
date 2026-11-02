@@ -76,6 +76,22 @@ TEST_CASE("write message field") {
     REQUIRE(buffer == load_data("message/data-message"));
 }
 
+// Closing a submessage with known size must reset the parent writer so it
+// can be written to again.
+TEST_CASE("write message field with reserved size followed by another field") {
+    std::string buffer;
+    protozero::pbf_writer pbf_test{buffer};
+
+    {
+        protozero::pbf_writer pbf_submessage{pbf_test, 1, 2};
+        pbf_submessage.add_uint32(1, 5);
+    }
+    pbf_test.add_uint32(2, 5);
+
+    // field 1, length 2, containing field 1 = 5; then field 2 = 5
+    REQUIRE(buffer == std::string{"\x0a\x02\x08\x05\x10\x05", 6});
+}
+
 TEST_CASE("write message field into non-empty buffer") {
     std::string buffer{"some data already in here"};
     protozero::pbf_writer pbf_test{buffer};

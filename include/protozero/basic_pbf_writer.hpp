@@ -166,8 +166,8 @@ class basic_pbf_writer {
     };
 
     // If m_rollpack_pos is set to this special value, it means that when
-    // the submessage is closed, nothing needs to be done, because the length
-    // of the submessage has already been written correctly.
+    // the submessage is closed, only m_pos needs to be reset, because the
+    // length of the submessage has already been written correctly.
     enum : std::size_t {
         size_is_known = std::numeric_limits<std::size_t>::max()
     };
@@ -211,6 +211,7 @@ class basic_pbf_writer {
     void close_submessage() {
         protozero_assert(m_data);
         if (m_pos == 0 || m_rollback_pos == size_is_known) {
+            m_pos = 0;
             return;
         }
         if (buffer_customization<TBuffer>::size(m_data) - m_pos == 0) {
