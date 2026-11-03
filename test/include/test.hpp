@@ -15,7 +15,15 @@ struct assert_error : public std::runtime_error {
     explicit assert_error(const char* what_arg) : std::runtime_error(what_arg) {
     }
 };
-#define protozero_assert(x) if (!(x)) { throw assert_error{#x}; } // NOLINT(readability-simplify-boolean-expr)
+
+// Throw from a separate function, so that the compiler doesn't complain about
+// asserts in noexcept functions. Those asserts can't be checked with this
+// (it would call std::terminate()), use assert_tests.cpp for them instead.
+[[noreturn]] inline void throw_assert_error(const char* what_arg) {
+    throw assert_error{what_arg};
+}
+
+#define protozero_assert(x) if (!(x)) { throw_assert_error(#x); } // NOLINT(readability-simplify-boolean-expr)
 
 #include <protozero/pbf_builder.hpp> // IWYU pragma: export
 #include <protozero/pbf_message.hpp> // IWYU pragma: export

@@ -61,6 +61,17 @@ add_test(NAME reader_tests COMMAND reader_tests)
 
 set_tests_properties(reader_tests PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
+# See assert_tests.cpp for why every test case needs its own process.
+add_executable(assert_tests assert_tests.cpp unit/main.cpp)
+
+foreach(_test_case IN ITEMS "move construct parent with open child"
+                            "move assign from parent with open child"
+                            "move assign onto parent with open child"
+                            "swap parent with open child")
+    string(REPLACE " " "_" _test_name "assert_tests_${_test_case}")
+    add_test(NAME ${_test_name} COMMAND assert_tests -w NoTests "${_test_case}")
+endforeach()
+
 if(PROTOBUF_FOUND)
     message(STATUS "Found protobuf libraries: Adding writer tests...")
 
