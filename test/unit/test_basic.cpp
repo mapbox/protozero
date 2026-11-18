@@ -31,6 +31,13 @@ static_assert(movable_not_copyable<protozero::packed_field_sfixed64>::value, "pa
 static_assert(movable_not_copyable<protozero::packed_field_float>::value, "packed_field_float should be nothrow movable, but not copyable");
 static_assert(movable_not_copyable<protozero::packed_field_double>::value, "packed_field_double should be nothrow movable, but not copyable");
 
+static_assert(std::is_constructible<protozero::pbf_reader, const std::string&>::value, "pbf_reader should be constructible from a std::string");
+static_assert(!std::is_constructible<protozero::pbf_reader, std::string&&>::value, "pbf_reader should not be constructible from a temporary std::string");
+static_assert(!std::is_constructible<protozero::pbf_reader, const std::string&&>::value, "pbf_reader should not be constructible from a temporary std::string");
+static_assert(std::is_constructible<protozero::pbf_message<dummy>, const std::string&>::value, "pbf_message should be constructible from a std::string");
+static_assert(!std::is_constructible<protozero::pbf_message<dummy>, std::string&&>::value, "pbf_message should not be constructible from a temporary std::string");
+static_assert(!std::is_constructible<protozero::pbf_message<dummy>, const std::string&&>::value, "pbf_message should not be constructible from a temporary std::string");
+
 TEST_CASE("default constructed pbf_reader is okay") {
     protozero::pbf_reader item;
 
