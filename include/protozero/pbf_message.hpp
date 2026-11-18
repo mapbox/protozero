@@ -76,7 +76,8 @@ public:
      * Construct a pbf_message. All arguments are forwarded to the pbf_reader
      * parent class.
      */
-    template <typename... Args>
+    template <typename... Args,
+              std::enable_if_t<std::is_constructible<pbf_reader, Args&&...>::value, int> = 0>
     pbf_message(Args&&... args) noexcept : // NOLINT(google-explicit-constructor, hicpp-explicit-conversions)
         pbf_reader{std::forward<Args>(args)...} {
     }

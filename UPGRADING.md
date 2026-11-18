@@ -13,6 +13,13 @@ macro `PROTOZERO_STRICT_API` in which case Protozero will compile without the
 code used for backwards compatibilty. You will then get compile errors for
 older API usages.
 
+## Upgrading from *v1.8* to *v1.9*
+
+* `pbf_reader` and `pbf_message` can no longer be constructed from a
+  temporary `std::string`, because the reader would point to freed memory.
+  If this doesn't compile any more, store the string in a variable that
+  outlives the reader.
+
 ## Upgrading from *v1.6* to *v1.7*
 
 * The `pbf_writer` class is now a typedef for `basic_pbf_writer<std::string>`

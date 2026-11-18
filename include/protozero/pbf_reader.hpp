@@ -223,6 +223,12 @@ public:
     }
 
     /**
+     * A pbf_reader can not be constructed from a temporary std::string,
+     * because it would point to the string's data after it was destroyed.
+     */
+    explicit pbf_reader(const std::string&& data) = delete;
+
+    /**
      * pbf_reader can be default constructed and behaves like it has an empty
      * buffer.
      */
