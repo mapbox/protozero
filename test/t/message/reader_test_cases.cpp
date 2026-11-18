@@ -92,6 +92,32 @@ TEST_CASE("write message field with reserved size followed by another field") {
     REQUIRE(buffer == std::string{"\x0a\x02\x08\x05\x10\x05", 6});
 }
 
+TEST_CASE("rollback message field with reserved size") {
+    std::string buffer;
+    protozero::pbf_writer pbf_test{buffer};
+    pbf_test.add_uint32(2, 5);
+
+    {
+        protozero::pbf_writer pbf_submessage{pbf_test, 1, 2};
+        pbf_submessage.add_uint32(1, 5);
+        pbf_submessage.rollback();
+    }
+    pbf_test.add_uint32(2, 5);
+
+    REQUIRE(buffer == std::string{"\x10\x05\x10\x05", 4});
+}
+
+TEST_CASE("commit message field with reserved size but wrong length asserts") {
+    std::string buffer;
+    protozero::pbf_writer pbf_test{buffer};
+
+    protozero::pbf_writer pbf_submessage{pbf_test, 1, 3};
+    pbf_submessage.add_uint32(1, 5);
+    REQUIRE_THROWS_AS(pbf_submessage.commit(), assert_error);
+    pbf_submessage.rollback();
+    REQUIRE(buffer.empty());
+}
+
 TEST_CASE("write message field into non-empty buffer") {
     std::string buffer{"some data already in here"};
     protozero::pbf_writer pbf_test{buffer};

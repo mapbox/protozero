@@ -70,11 +70,16 @@ class basic_pbf_writer {
     // This is usually 0. If there is an open submessage, this is set in the
     // parent to the rollback position, ie. the last position before the
     // submessage was started. This is the position where the header of the
-    // submessage starts.
+    // submessage starts. If the size of the submessage was known when it was
+    // opened, the known_size_flag bit is set in addition.
     std::size_t m_rollback_pos = 0;
 
     // This is usually 0. If there is an open submessage, this is set in the
     // parent to the position where the data of the submessage is written to.
+    // If the size of the submessage was known when it was opened, the length
+    // has already been written and this position isn't needed any more, so
+    // this is set to the position where the data of the submessage must end
+    // instead.
     std::size_t m_pos = 0;
 
     void add_varint(uint64_t value) {
@@ -165,39 +170,44 @@ class basic_pbf_writer {
         reserve_bytes = (sizeof(pbf_length_type) * 8 / 7) + 1
     };
 
-    // If m_rollpack_pos is set to this special value, it means that when
-    // the submessage is closed, only m_pos needs to be reset, because the
-    // length of the submessage has already been written correctly.
-    enum : std::size_t {
-        size_is_known = std::numeric_limits<std::size_t>::max()
-    };
+    // This bit is set in m_rollback_pos if the size of the open submessage
+    // was known when it was opened. Buffer positions never get this large.
+    static constexpr std::size_t known_size_flag = std::size_t(1) << (std::numeric_limits<std::size_t>::digits - 1);
+
+    bool submessage_has_known_size() const noexcept {
+        return (m_rollback_pos & known_size_flag) != 0;
+    }
 
     void open_submessage(pbf_tag_type tag, std::size_t size) {
         protozero_assert(m_pos == 0);
         protozero_assert(m_data);
+        const auto rollback_pos = buffer_customization<TBuffer>::size(m_data);
+        protozero_assert((rollback_pos & known_size_flag) == 0);
         if (size == 0) {
-            m_rollback_pos = buffer_customization<TBuffer>::size(m_data);
             add_field(tag, pbf_wire_type::length_delimited);
             buffer_customization<TBuffer>::append_zeros(m_data, std::size_t(reserve_bytes));
+            m_rollback_pos = rollback_pos;
+            m_pos = buffer_customization<TBuffer>::size(m_data);
         } else {
-            m_rollback_pos = size_is_known;
+            protozero_assert(size <= std::numeric_limits<pbf_length_type>::max());
             add_length_varint(tag, static_cast<pbf_length_type>(size));
             reserve(size);
+            m_rollback_pos = rollback_pos | known_size_flag;
+            m_pos = buffer_customization<TBuffer>::size(m_data) + size;
         }
-        m_pos = buffer_customization<TBuffer>::size(m_data);
     }
 
     void rollback_submessage() {
         protozero_assert(m_pos != 0);
-        protozero_assert(m_rollback_pos != size_is_known);
         protozero_assert(m_data);
-        buffer_customization<TBuffer>::resize(m_data, m_rollback_pos);
+        buffer_customization<TBuffer>::resize(m_data, m_rollback_pos & ~known_size_flag);
+        m_rollback_pos = 0;
         m_pos = 0;
     }
 
     void commit_submessage() {
         protozero_assert(m_pos != 0);
-        protozero_assert(m_rollback_pos != size_is_known);
+        protozero_assert(!submessage_has_known_size());
         protozero_assert(m_data);
         const auto length = pbf_length_type(buffer_customization<TBuffer>::size(m_data) - m_pos);
 
@@ -210,7 +220,14 @@ class basic_pbf_writer {
 
     void close_submessage() {
         protozero_assert(m_data);
-        if (m_pos == 0 || m_rollback_pos == size_is_known) {
+        if (m_pos == 0) {
+            return;
+        }
+        if (submessage_has_known_size()) {
+            // The length was already written when the submessage was opened,
+            // m_pos is the position where the data must end.
+            protozero_assert(buffer_customization<TBuffer>::size(m_data) == m_pos && "number of bytes written to submessage doesn't match the size given when it was opened");
+            m_rollback_pos = 0;
             m_pos = 0;
             return;
         }
@@ -252,7 +269,10 @@ public:
      * @param tag Tag (field number) of the field that will be written
      * @param size Optional size of the submessage in bytes (use 0 for unknown).
      *        Setting this allows some optimizations but is only possible in
-     *        a few very specific cases.
+     *        a few very specific cases. If you set it, you must write
+     *        exactly this many bytes to the submessage before committing
+     *        it, otherwise the resulting message is broken. Debug builds
+     *        check this with an assert.
      */
     basic_pbf_writer(basic_pbf_writer& parent_writer, pbf_tag_type tag, std::size_t size = 0) :
         m_data{parent_writer.m_data},

@@ -65,4 +65,46 @@ TEST_CASE("write repeated packed fixed32 field using packed field with known siz
         // field 3, length 10, containing the packed field
         REQUIRE(buffer == std::string{"\x1a\x0a", 2} + packed);
     }
+
+    SECTION("rollback before adding elements") {
+        pw.add_uint32(2, 5);
+        {
+            protozero::packed_field_fixed32 field{pw, 1, 2};
+            field.rollback();
+        }
+        pw.add_uint32(2, 5);
+
+        REQUIRE(buffer == scalar + scalar);
+    }
+
+    SECTION("rollback after adding elements") {
+        pw.add_uint32(2, 5);
+        {
+            protozero::packed_field_fixed32 field{pw, 1, 2};
+            field.add_element(17);
+            field.add_element(1);
+            field.rollback();
+        }
+        pw.add_uint32(2, 5);
+
+        REQUIRE(buffer == scalar + scalar);
+    }
+
+    SECTION("commit() with fewer elements than promised asserts") {
+        protozero::packed_field_fixed32 field{pw, 1, 2};
+        field.add_element(17);
+        REQUIRE_THROWS_AS(field.commit(), assert_error);
+        field.rollback();
+        REQUIRE(buffer.empty());
+    }
+
+    SECTION("commit() with more elements than promised asserts") {
+        protozero::packed_field_fixed32 field{pw, 1, 2};
+        field.add_element(17);
+        field.add_element(1);
+        field.add_element(2);
+        REQUIRE_THROWS_AS(field.commit(), assert_error);
+        field.rollback();
+        REQUIRE(buffer.empty());
+    }
 }

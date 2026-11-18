@@ -20,6 +20,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 - Fix `-Wsign-conversion` warning in `basic_pbf_writer::commit_submessage()`.
 - `pbf_reader` (and `pbf_message`) now actually provide the documented strong exception guarantee. Previously `next()` on an invalid tag or wire type, `skip()`, `get_view()`, `get_message()`, `get_packed_*()` on a truncated or invalid length-delimited field, and `next(tag)` when skipping over an invalid field would throw after having already advanced the reader.
+- Calling `rollback()` on a submessage or packed field that was opened with a known size (for example `packed_field_fixed32 field{pw, 1, 2}`) failed an assert in debug builds and threw `std::length_error` in release builds, leaving a partially written field in the buffer. It now rolls back the field like for any other submessage.
+- Committing a submessage or packed field that was opened with a known size now asserts in debug builds that exactly that many bytes were written. Previously writing too few or too many bytes silently produced a broken message.
 
 ## [1.8.2] - 2026-06-30
 
