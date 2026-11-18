@@ -634,6 +634,30 @@ The result is the same as if the lines inside the nested brackets had never
 been called. Do not try to call any of the `add_*` functions on the submessage
 after a rollback.
 
+When a submessage writer is destructed, it always commits the submessage, even
+if the destructor runs because an exception is leaving its scope. If you catch
+the exception and keep using the parent writer, it would contain a half-written
+submessage. To avoid this, catch the exception and roll back the submessage
+while it is still in scope:
+
+```cpp
+std::string data;
+protozero::pbf_writer pbf_parent{data};
+
+for (const auto& feature : features) {
+    protozero::pbf_writer pbf_sub{pbf_parent, 1};
+    try {
+        encode(pbf_sub, feature); // might throw
+    } catch (const std::exception&) {
+        // skip this feature, pbf_parent can still be used
+        pbf_sub.rollback();
+    }
+}
+```
+
+If opening the submessage itself throws (e.g. because a
+`fixed_size_buffer_adaptor` is full), the parent writer is left unchanged.
+
 ## Writing protobuf-encoded messages using `pbf_builder`
 
 Just like the `pbf_message` template class wraps the `pbf_reader` class, there

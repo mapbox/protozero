@@ -183,17 +183,26 @@ class basic_pbf_writer {
         protozero_assert(m_data);
         const auto rollback_pos = buffer_customization<TBuffer>::size(m_data);
         protozero_assert((rollback_pos & known_size_flag) == 0);
-        if (size == 0) {
-            add_field(tag, pbf_wire_type::length_delimited);
-            buffer_customization<TBuffer>::append_zeros(m_data, std::size_t(reserve_bytes));
-            m_rollback_pos = rollback_pos;
-            m_pos = buffer_customization<TBuffer>::size(m_data);
-        } else {
-            protozero_assert(size <= std::numeric_limits<pbf_length_type>::max());
-            add_length_varint(tag, static_cast<pbf_length_type>(size));
-            reserve(size);
-            m_rollback_pos = rollback_pos | known_size_flag;
-            m_pos = buffer_customization<TBuffer>::size(m_data) + size;
+        try {
+            if (size == 0) {
+                add_field(tag, pbf_wire_type::length_delimited);
+                buffer_customization<TBuffer>::append_zeros(m_data, std::size_t(reserve_bytes));
+                m_rollback_pos = rollback_pos;
+                m_pos = buffer_customization<TBuffer>::size(m_data);
+            } else {
+                protozero_assert(size <= std::numeric_limits<pbf_length_type>::max());
+                add_length_varint(tag, static_cast<pbf_length_type>(size));
+                reserve(size);
+                m_rollback_pos = rollback_pos | known_size_flag;
+                m_pos = buffer_customization<TBuffer>::size(m_data) + size;
+            }
+        } catch (...) {
+            // Remove the partially written header, so that this writer is
+            // unchanged.
+            if (buffer_customization<TBuffer>::size(m_data) > rollback_pos) {
+                buffer_customization<TBuffer>::resize(m_data, rollback_pos);
+            }
+            throw;
         }
     }
 
