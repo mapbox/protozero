@@ -525,7 +525,9 @@ protozero::pbf_writer pw{data};
 ```
 
 In this case you have to supply exactly as many elements as you promised,
-otherwise you will get a broken protobuf message.
+otherwise you will get a broken protobuf message. In debug builds an assert
+checks this when the field is committed. You can still call `rollback()` on such
+a field.
 
 This works for `packed_field_fixed32`, `packed_field_sfixed32`,
 `packed_field_fixed64`, `packed_field_sfixed64`, `packed_field_float`, and
