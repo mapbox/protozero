@@ -14,6 +14,7 @@ set(UNIT_TESTS data_view
                exceptions
                iterators
                varint
+               writer_exceptions
                zigzag)
 
 string(REGEX REPLACE "([^;]+)" "test_\\1.cpp" _test_sources "${UNIT_TESTS}")
